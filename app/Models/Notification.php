@@ -6,18 +6,12 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CreditCard extends Model
+class Notification extends Model
 {
     use HasFactory, HasUuids;
-    protected $table = 'credit_card';
+    protected $table = 'notification';
     protected $fillable = [
-        'card_number',
-        'expired_date',
-        'cvv',
-        'name_on_card',
-        'billing_address',
-        'postal_code',
-        'user_id'
+        'content'  
     ];
     public function getIncrement()
     {
@@ -29,6 +23,6 @@ class CreditCard extends Model
     }
     public function user()
     {
-        return $this->belongsTo(User::class, 'id', 'user_id');
+        return $this->belongsToMany(User::class, 'notif_user', 'user_id', 'id');
     }
 }

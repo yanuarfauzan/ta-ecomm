@@ -3,10 +3,11 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Notification;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
@@ -82,6 +83,11 @@ class User extends Authenticatable
 
     public function creditCard()
     {
-        return $this->hasMany(CreditCard::class, 'user_id', 'id');
+        return $this->hasOne(CreditCard::class, 'id', 'user_id');
+    }
+
+    public function notification()
+    {
+        return $this->belongsToMany(Notification::class, 'notif_user', 'notification_id', 'id');
     }
 }

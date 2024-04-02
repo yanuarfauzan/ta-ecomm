@@ -18,6 +18,9 @@ class Product extends Model
         'product_image',
         'price',
         'desc',
+        'discount',
+        'weight',
+        'dimensions'
     ];
 
     public function getIncrement()

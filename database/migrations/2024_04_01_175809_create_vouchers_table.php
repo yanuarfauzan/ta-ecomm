@@ -10,17 +10,16 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('product', function (Blueprint $table) {
+        Schema::create('voucher', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name')->nullable();
-            $table->string('SKU')->nullable();
-            $table->integer('stock')->nullable();
-            $table->string('product_image')->nullable();
-            $table->integer('price')->nullable();
+            $table->string('voucher_icon')->nullable();
+            $table->string('voucher_code')->nullable();
             $table->string('desc')->nullable();
-            $table->decimal('dicount')->nullable();
-            $table->decimal('weight')->nullable();
-            $table->decimal('dimensions')->nullable();
+            $table->string('requirement')->nullable();
+            $table->decimal('discount_value')->nullable();
+            $table->date('expired_at')->nullable();
+            $table->boolean('is_active')->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('product');
+        Schema::dropIfExists('voucher');
     }
 };
