@@ -26,7 +26,7 @@ class User extends Authenticatable
         'phone_number',
         'is_verified',
         'gender',
-        'birthdate',
+        'birtdate',
         'profile_image',
         'role',
         'otp',
@@ -66,7 +66,7 @@ class User extends Authenticatable
         return 'string';
     }
 
-    public function address()
+    public function usersAddress()
     {
         return $this->hasMany(Address::class, 'user_id', 'id');
     }

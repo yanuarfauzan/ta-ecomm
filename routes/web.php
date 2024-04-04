@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UsersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,3 +32,10 @@ Route::middleware(['splade'])->group(function () {
 
     
 });
+
+#ROLE:ADMIN = USERS + ALAMAT
+Route::get('/admin/list-users', [UsersController::class, 'index']);
+Route::get('/admin/create-users', [UsersController::class, 'create']);
+Route::post('/admin/store-users', [UsersController::class, 'store']);
+Route::get('/admin/edit-users/{id}', [UsersController::class, 'edit']);
+Route::put('/admin/update-users/{id}', [UsersController::class, 'update']);

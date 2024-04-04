@@ -14,12 +14,12 @@ class Address extends Model
 
     protected $fillable = [
         'user_id',
-        'unit_number',
+        'detail',
         'postal_code',
-        'street_name',
+        'address',
         'city',
         'province',
-        'is_verified',
+        'is_default',
     ];
 
     public function getIncrement()
@@ -35,5 +35,10 @@ class Address extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function usersAddress()
+    {
+        return $this->hasMany(Address::class);
     }
 }
