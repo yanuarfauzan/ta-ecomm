@@ -14,7 +14,7 @@
             <h4>Edit User</h4>
         </div>
         <div class="card-body col">
-            <form action="{{ url('/admin/update-users/'.$user->id) }}" method="post">
+            <form action="{{ url('/admin/update-users/' . $user->id) }}" method="post">
                 @csrf
                 @method('PUT')
                 <div class="mb-3">
@@ -44,8 +44,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="birtdate" class="form-label">Birtdate</label>
-                    <input type="date" class="form-control" id="birtdate" name="birtdate"
-                        value="{{ $user->birtdate }}">
+                    <input type="date" class="form-control" id="birtdate" name="birtdate" value="{{ $user->birtdate }}">
                 </div>
                 <div class="mb-3">
                     <label for="profile_image" class="form-label">Profile Image</label>
@@ -60,54 +59,35 @@
                         <option value="operator" {{ $user->role == 'operator' ? 'selected' : '' }}>Operator</option>
                     </select>
                 </div>
-                <div class="mb-3">
-                    <label for="address" class="form-label">Address</label>
-                    @if ($user->usersAddress->isNotEmpty())
-                        <input type="text" class="form-control" id="address" name="address[0][address]"
-                            value="{{ $user->usersAddress->first()->address }}">
-                    @else
-                        <input type="text" class="form-control" id="address" name="address[0][address]" value="">
-                    @endif
-                </div>
-                <div class="mb-3">
-                    <label for="detail" class="form-label">Detail</label>
-                    @if ($user->usersAddress->isNotEmpty())
-                        <input type="text" class="form-control" id="detail" name="address[0][detail]"
-                            value="{{ $user->usersAddress->first()->detail }}">
-                    @else
-                        <input type="text" class="form-control" id="detail" name="address[0][detail]" value="">
-                    @endif
-                </div>
-                <div class="mb-3">
-                    <label for="postal_code" class="form-label">Postal Code</label>
-                    @if ($user->usersAddress->isNotEmpty())
-                        <input type="text" class="form-control" id="postal_code" name="address[0][postal_code]"
-                            value="{{ $user->usersAddress->first()->postal_code }}">
-                    @else
-                        <input type="text" class="form-control" id="postal_code" name="address[0][postal_code]"
-                            value="">
-                    @endif
-                </div>
-                <div class="mb-3">
-                    <label for="city" class="form-label">City</label>
-                    @if ($user->usersAddress->isNotEmpty())
-                        <input type="text" class="form-control" id="city" name="address[0][city]"
-                            value="{{ $user->usersAddress->first()->city }}">
-                    @else
-                        <input type="text" class="form-control" id="city" name="address[0][city]"
-                            value="">
-                    @endif
-                </div>
-                <div class="mb-3">
-                    <label for="province" class="form-label">Province</label>
-                    @if ($user->usersAddress->isNotEmpty())
-                        <input type="text" class="form-control" id="province" name="address[0][province]"
-                            value="{{ $user->usersAddress->first()->province }}">
-                    @else
-                        <input type="text" class="form-control" id="province" name="address[0][province]"
-                            value="">
-                    @endif
-                </div>
+                @foreach ($user->usersAddress as $index => $address)
+                    <h6>Address {{ $index + 1 }}</h6>
+                    <input type="hidden" name="address[{{ $index }}][id]" value="{{ $address->id }}">
+                    <div class="mb-3">
+                        <label for="address{{ $index }}" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="address{{ $index }}"
+                            name="address[{{ $index }}][address]" value="{{ $address->address }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="detail{{ $index }}" class="form-label">Detail</label>
+                        <input type="text" class="form-control" id="detail{{ $index }}"
+                            name="address[{{ $index }}][detail]" value="{{ $address->detail }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="postal_code{{ $index }}" class="form-label">Postal Code</label>
+                        <input type="text" class="form-control" id="postal_code{{ $index }}"
+                            name="address[{{ $index }}][postal_code]" value="{{ $address->postal_code }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="city{{ $index }}" class="form-label">City</label>
+                        <input type="text" class="form-control" id="city{{ $index }}"
+                            name="address[{{ $index }}][city]" value="{{ $address->city }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="province{{ $index }}" class="form-label">Province</label>
+                        <input type="text" class="form-control" id="province{{ $index }}"
+                            name="address[{{ $index }}][province]" value="{{ $address->province }}">
+                    </div>
+                @endforeach
                 <button type="submit" class="btn btn-primary">Update</button>
             </form>
         </div>

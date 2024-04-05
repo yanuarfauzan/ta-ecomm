@@ -19,3 +19,8 @@ Route::put('/user/reset-password/{token}', [AuthController::class, 'resetPasswor
 Route::get('/user/list-admin', [UsersController::class, 'index']);
 Route::get('/user/create-admin', [UsersController::class, 'create']);
 Route::post('/user/store-admin', [UsersController::class, 'store']);
+
+Route::middleware('auth')->group(function () {
+    Route::post('/user/add-address', [UserController::class, 'addAddresses']);
+    Route::post('/user/add-product-to-cart/{productId}', [UserController::class, 'addProductToCart']);
+});

@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Address;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class UsersController extends Controller
 {
@@ -92,22 +93,24 @@ class UsersController extends Controller
 
         $user->save();
 
-        // Update address
-        $validatedAddressData = $request->validate([
-            'address.*.id' => 'required|exists:addresses,id,user_id,' . $user->id,
-            'address.*.detail' => 'required|string',
-            'address.*.postal_code' => 'required|string',
-            'address.*.address' => 'required|string',
-            'address.*.city' => 'required|string',
-            'address.*.province' => 'required|string',
-        ]);
-
-        foreach ($validatedAddressData['address'] as $addressData) {
-            $address = Address::findOrFail($addressData['id']);
-            $address->fill($addressData);
-            $address->save();
+        if ($request->filled('address')) {
+            foreach ($request->address as $addressData) {
+                // Periksa apakah alamat memiliki ID
+                if (isset($addressData['id'])) {
+                    // Temukan alamat berdasarkan ID
+                    $address = Address::findOrFail($addressData['id']);
+                    // Update data alamat
+                    $address->update([
+                        'address' => $addressData['address'],
+                        'detail' => $addressData['detail'],
+                        'postal_code' => $addressData['postal_code'],
+                        'city' => $addressData['city'],
+                        'province' => $addressData['province'],
+                    ]);
+                }
+            }
         }
 
-        return view('users.list')->with('success', 'User updated successfully');
+        return redirect()->to('/admin/list-users')->with('success', 'User updated successfully');
     }
 }

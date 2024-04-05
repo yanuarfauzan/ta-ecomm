@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->string('address')->nullable();
             $table->string('city')->nullable();
             $table->string('province')->nullable();
-            $table->boolean('is_verified')->nullable();
+            $table->boolean('is_default')->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
         });

@@ -18,8 +18,6 @@ use App\Http\Controllers\UsersController;
 Route::middleware(['splade'])->group(function () {
 
     // ori splade start
-    Route::get('/', fn() => view('home'))->name('home');
-    Route::get('/docs', fn() => view('docs'))->name('docs');
     // Registers routes to support the interactive components...
     Route::spladeWithVueBridge();
     // Registers routes to support password confirmation in Form and Link components...
@@ -30,7 +28,11 @@ Route::middleware(['splade'])->group(function () {
     Route::spladeUploads();
     // ori splade end
 
-    
+    Route::get('/test', function () {
+        return view('user.test');
+    });
+
+
 });
 
 #ROLE:ADMIN = USERS + ALAMAT
