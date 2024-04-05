@@ -90,4 +90,8 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Notification::class, 'notif_user', 'notification_id', 'id');
     }
+    public function cart()
+    {
+        return $this->hasMany(Cart::class, 'user_id', 'id');
+    }
 }

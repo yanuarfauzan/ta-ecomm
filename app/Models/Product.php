@@ -33,9 +33,9 @@ class Product extends Model
         return 'string';
     }
 
-    public function category()
+    public function hasCategory()
     {
-        return $this->belongsToMany(Category::class, 'product_category_variation', 'category_id', 'id');
+        return $this->belongsToMany(Category::class, 'product_category_variation')->withPivot('variation_id', 'id');
     }
 
     public function variation()
@@ -50,8 +50,15 @@ class Product extends Model
 
     public function cart()
     {
-        return $this->belongsToMany(Cart::class, 'cart_product', 'cart_id', 'id');
+        return $this->belongsToMany(Cart::class, 'cart_product')->withPivot('id', 'is_locked');
     }
-
+    public function pickedVariation()
+    {
+        return $this->belongsToMany(Variation::class, 'picked_variation');
+    }
+    public function pickedVariationOption()
+    {
+        return $this->belongsToMany(VariationOption::class, 'picked_variation')->withPivot('variation_option_id', 'id');
+    }
 
 }

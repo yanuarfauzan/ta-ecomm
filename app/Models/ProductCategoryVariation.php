@@ -39,6 +39,6 @@ class ProductCategoryVariation extends Model
 
     public function variation()
     {
-        return $this->belongsTo(Variation::class, 'variation_id', 'id');
+        return $this->hasMany(Variation::class, 'variation_id', 'id');
     }
 }
