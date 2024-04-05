@@ -2,17 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Variation extends Model
+class VariationOption extends Model
 {
-    use HasFactory, HasUuids;
-    protected $table = 'variation';
+    use HasFactory;
+    protected $table = 'variation_option';
     protected $fillable = [
+        'user_id',
         'name'
     ];
+
     public function getIncrement()
     {
         return false;
@@ -21,17 +22,12 @@ class Variation extends Model
     {
         return 'string';
     }
-    public function variationOption()
+    public function variation()
     {
-        return $this->hasMany(VariationOption::class, 'variation_id', 'id');
-    }
-    public function productCategoryVariation()
-    {
-        return $this->belongsTo(ProductCategoryVariation::class, 'variation_id', 'id');
+        return $this->belongsTo(Variation::class, 'variation_id', 'id');
     }
     public function hasProduct()
     {
         return $this->belongsToMany(Product::class, 'picked_variation');
     }
 }
-

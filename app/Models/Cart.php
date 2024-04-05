@@ -31,8 +31,8 @@ class Cart extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function product()
+    public function hasProduct()
     {
-        return $this->belongsToMany(Product::class, 'cart_product', 'product_id', 'id');
+        return $this->belongsToMany(Product::class, 'cart_product')->withPivot('id', 'is_locked');
     }
 }

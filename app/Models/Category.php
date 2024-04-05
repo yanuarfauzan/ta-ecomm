@@ -25,4 +25,8 @@ class Category extends Model
     {
         return 'string';
     }
+    public function product()
+    {
+        return $this->belongsToMany(Product::class, 'product_category_variation', 'product_id', 'id')->withPivot('variation_id');
+    }
 }
