@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('notif_user', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('user_id');
-            $table->uuid('notification_id');
+            $table->unsignedBigInteger('notification_id');
             $table->boolean('is_read')->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');

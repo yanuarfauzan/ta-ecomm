@@ -10,10 +10,12 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('notification', function (Blueprint $table) {
+        Schema::create('variation_option', function (Blueprint $table) {
             $table->id();
-            $table->string('content')->nullable();
+            $table->uuid('variation_id');
+            $table->string('name')->nullable();
             $table->timestamps();
+            $table->foreign('variation_id')->references('id')->on('variation')->onDelete('cascade');
         });
     }
 
@@ -22,6 +24,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('notification');
+        Schema::dropIfExists('variation_option');
     }
 };
