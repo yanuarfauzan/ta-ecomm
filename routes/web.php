@@ -1,8 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\UsersController;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,8 +35,8 @@ Route::middleware(['splade'])->group(function () {
 });
 
 #ROLE:ADMIN = USERS + ALAMAT
-Route::get('/admin/list-users', [UsersController::class, 'index']);
-Route::get('/admin/create-users', [UsersController::class, 'create']);
-Route::post('/admin/store-users', [UsersController::class, 'store']);
-Route::get('/admin/edit-users/{id}', [UsersController::class, 'edit']);
-Route::put('/admin/update-users/{id}', [UsersController::class, 'update']);
+Route::get('/admin/list-users', [AdminController::class, 'index']);
+Route::get('/admin/create-users', [AdminController::class, 'create']);
+Route::post('/admin/store-users', [AdminController::class, 'store']);
+Route::get('/admin/edit-users/{id}', [AdminController::class, 'edit']);
+Route::put('/admin/update-users/{id}', [AdminController::class, 'update']);
