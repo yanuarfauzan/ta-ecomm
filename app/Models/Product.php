@@ -60,5 +60,9 @@ class Product extends Model
     {
         return $this->belongsToMany(VariationOption::class, 'picked_variation')->withPivot('variation_option_id', 'id');
     }
+    public function favByUser()
+    {
+        return $this->belongsToMany(User::class, 'has_been_favourite_product');
+    }
 
 }
