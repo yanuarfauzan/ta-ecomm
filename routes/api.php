@@ -3,7 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\UsersController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -16,9 +17,9 @@ Route::post('/user/logout', [AuthController::class, 'logout']);
 Route::post('/user/forgot-password', [AuthController::class, 'forgotPassword']);
 Route::put('/user/reset-password/{token}', [AuthController::class, 'resetPassword']);
 
-Route::get('/user/list-admin', [UsersController::class, 'index']);
-Route::get('/user/create-admin', [UsersController::class, 'create']);
-Route::post('/user/store-admin', [UsersController::class, 'store']);
+Route::get('/user/list-admin', [AdminController::class, 'index']);
+Route::get('/user/create-admin', [AdminController::class, 'create']);
+Route::post('/user/store-admin', [AdminController::class, 'store']);
 
 Route::middleware('auth')->group(function () {
     Route::post('/user/add-address', [UserController::class, 'addAddresses']);
