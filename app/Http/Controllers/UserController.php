@@ -31,6 +31,15 @@ class UserController extends Controller
             return response()->json(['message' => 'Anda harus login terlebih dahulu']);
         }
     }
+    public function showCart()
+    {
+        if ($this->user) {
+            $userCart = $this->user->cart()->with('hasProduct', 'hasProduct.pickedVariation', 'hasProduct.pickedVariationOption')->get();
+            return response()->json(['message' => 'Berhasil mengambil data keranjang', 'data' => $userCart]);
+        } else {
+            return response()->json(['message' => 'Anda harus login terlebih dahulu']);
+        }
+    }
     public function addProductToCart(AddProductToCartRequest $request, $productId)
     {
         if ($this->user) {
