@@ -28,7 +28,7 @@ class UserController extends Controller
             });
             return response()->json(['message' => 'Berhasil menambahkan alamat']);
         } else {
-            return response()->json(['message' => 'Gagal menambahkan alamat']);
+            return response()->json(['message' => 'Anda harus login terlebih dahulu']);
         }
     }
     public function addProductToCart(AddProductToCartRequest $request, $productId)
@@ -47,7 +47,22 @@ class UserController extends Controller
             });
             return response()->json(['message' => 'Berhasil menambahkan produk ke keranjang']);
         } else {
-            return response()->json(['message' => 'Gagal menambahkan produk ke keranjang']);
+            return response()->json(['message' => 'Anda harus login terlebih dahulu']);
+        }
+    }
+    public function addProductToFav($productId)
+    {
+        if ($this->user) {
+            $favouriteProduct = $this->user->favouriteProduct();
+            if (!$this->user->favouriteProduct->contains($productId)) {
+                $favouriteProduct->attach($productId, ['id' => Str::uuid(36)]);
+                return response()->json(['message' => 'Berhasil menambahkan produk ke favorit']);
+            } else {
+                $favouriteProduct->detach($productId);
+                return response()->json(['message' => 'Berhasil menghapus produk dari favorit']);
+            }
+        } else {
+            return response()->json(['message' => 'Anda harus login terlebih dahulu']);
         }
     }
 }

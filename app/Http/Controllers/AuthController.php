@@ -126,13 +126,10 @@ class AuthController extends Controller
     }
     public function generateOTP()
     {
-        // Panjang kode OTP
         $length = 6;
 
-        // Daftar karakter yang akan digunakan untuk membuat kode OTP
         $characters = '0123456789';
 
-        // Mengacak karakter untuk membuat kode OTP
         $otp = '';
         for ($i = 0; $i < $length; $i++) {
             $otp .= $characters[rand(0, strlen($characters) - 1)];
