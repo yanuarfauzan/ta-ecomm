@@ -26,8 +26,8 @@ class VariationOption extends Model
     {
         return $this->belongsTo(Variation::class, 'variation_id', 'id');
     }
-    public function hasProduct()
+    public function belongsToVariation()
     {
-        return $this->belongsToMany(Product::class, 'picked_variation');
+        return $this->belongsTo(PickedVariation::class, 'id', 'variation_option_id');
     }
 }

@@ -54,7 +54,7 @@ class Product extends Model
     }
     public function pickedVariation()
     {
-        return $this->belongsToMany(Variation::class, 'picked_variation');
+        return $this->belongsToMany(Variation::class, 'picked_variation')->withPivot('variation_option_id', 'id');
     }
     public function pickedVariationOption()
     {

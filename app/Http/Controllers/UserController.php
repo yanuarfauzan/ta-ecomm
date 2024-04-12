@@ -40,21 +40,69 @@ class UserController extends Controller
             return response()->json(['message' => 'Anda harus login terlebih dahulu']);
         }
     }
+    public function isCartExist($productId)
+    {
+        $userCart = $this->user->cart()->get()->each(function ($cart) use ($productId) {
+            $cart->hasProduct()->wherePivot('product_id', $productId);
+        })->first()?->hasProduct()->first();
+        return $userCart;
+    }
+    public function isVariationDifferent($cartProduct, $request)
+    {
+        $isDifferent = false;
+        collect($request['variation'])->each(function ($variationItem, $index) use (&$isDifferent, $cartProduct) {
+            $variation = $cartProduct->pickedVariation()->wherePivot('variation_id', $variationItem['variation_id'])->first();
+            $variationOption = $cartProduct->pickedVariationOption()->wherePivot('variation_option_id', $variationItem['variation_option_id'])->first();
+            if (!isset($variation) || !isset($variationOption)) {
+                $isDifferent = true;
+            } else {
+                $isDifferent = false;
+            }
+        });
+
+        return $isDifferent;
+    }
+    // FIXME: buat agar ketika sudah ada produk di dalam cart maka cuma qty yang ditambahkan
     public function addProductToCart(AddProductToCartRequest $request, $productId)
     {
-        if ($this->user) {
-            $user = $this->user;
-
-            $cart = $user->cart()->create([
-                'qty' => $request->qty,
-            ]);
+        $user = $this->user;
+        $cartProduct = $this->isCartExist($productId);
+        if ($user) {
             $cartProductId = Str::uuid(36);
-            $cart->hasProduct()->attach($productId, ['id' => $cartProductId]);
-            $cartProduct = $cart->hasProduct()->wherePivot('id', $cartProductId)->first();
-            collect($request->variation)->each(function ($variationItem) use ($cartProduct) {
-                $cartProduct->pickedVariation()->attach($variationItem['variation_id'], ['variation_option_id' => $variationItem['variation_option_id'], 'id' => Str::uuid(36)]);
-            });
-            return response()->json(['message' => 'Berhasil menambahkan produk ke keranjang']);
+            if ($cartProduct?->all() == []) {
+                $cart = $user->cart()->create([
+                    'qty' => $request->qty,
+                ]);
+                $cart->hasProduct()->attach($productId, ['id' => $cartProductId]);
+                $cartProduct = $cart->hasProduct()->wherePivot('id', $cartProductId)->first();
+                collect($request->variation)->each(function ($variationItem) use ($cartProduct) {
+                    $cartProduct->pickedVariation()->attach([
+                        $variationItem['variation_id'] => ['variation_option_id' => $variationItem['variation_option_id'], 'id' => Str::uuid(36)]
+                    ]);
+                });
+                return response()->json(['message' => 'Berhasil menambahkan produk ke keranjang']);
+            } else {
+                $cartProductId = Str::uuid(36);
+                if ($this->isVariationDifferent($cartProduct, $request->all())) {
+                    $cart = $user->cart()->create([
+                        'qty' => $request->qty,
+                    ]);
+                    $cart->hasProduct()->attach($productId, ['id' => $cartProductId]);
+                    $cartProduct = $cart->hasProduct()->wherePivot('id', $cartProductId)->first();
+                    collect($request->variation)->each(function ($variationItem) use ($cartProduct) {
+                        $cartProduct->pickedVariation()->attach([
+                            $variationItem['variation_id'] => ['variation_option_id' => $variationItem['variation_option_id'], 'id' => Str::uuid(36)]
+                        ]);
+                    });
+                    return response()->json(['message' => 'Berhasil menambahkan produk dengan variasi berbeda ke keranjang']);
+                } else {
+                    $cartProduct = $cartProduct->cart()->first();
+                    $cartProduct->update([
+                        'qty' => $cartProduct->qty + $request->qty
+                    ]);
+                    return response()->json(['message' => 'Produk sudah dimasukkan ke keranjang, jumlah ditambahkan']);
+                }
+            }
         } else {
             return response()->json(['message' => 'Anda harus login terlebih dahulu']);
         }

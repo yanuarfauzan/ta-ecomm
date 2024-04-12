@@ -29,7 +29,7 @@ class Variation extends Model
     {
         return $this->belongsTo(ProductCategoryVariation::class, 'variation_id', 'id');
     }
-    public function hasProduct()
+    public function belongsToProduct()
     {
         return $this->belongsToMany(Product::class, 'picked_variation');
     }

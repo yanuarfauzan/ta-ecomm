@@ -30,7 +30,7 @@ class PickedVariation extends Model
     }
     public function variationOption()
     {
-        return $this->belongsTo(VariationOption::class);
+        return $this->hasOne(VariationOption::class, 'id', 'variation_option_id');
     }
     public function variation()
     {
