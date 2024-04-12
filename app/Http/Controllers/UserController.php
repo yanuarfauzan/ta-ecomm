@@ -47,13 +47,28 @@ class UserController extends Controller
         })->first()?->hasProduct()->first();
         return $userCart;
     }
+    public function isVariationDifferent($cartProduct, $request)
+    {
+        $isDifferent = false;
+        collect($request['variation'])->each(function ($variationItem, $index) use (&$isDifferent, $cartProduct) {
+            $variation = $cartProduct->pickedVariation()->wherePivot('variation_id', $variationItem['variation_id'])->first();
+            $variationOption = $cartProduct->pickedVariationOption()->wherePivot('variation_option_id', $variationItem['variation_option_id'])->first();
+            if (!isset($variation) || !isset($variationOption)) {
+                $isDifferent = true;
+            } else {
+                $isDifferent = false;
+            }
+        });
+
+        return $isDifferent;
+    }
     // FIXME: buat agar ketika sudah ada produk di dalam cart maka cuma qty yang ditambahkan
     public function addProductToCart(AddProductToCartRequest $request, $productId)
     {
         $user = $this->user;
+        $cartProduct = $this->isCartExist($productId);
         if ($user) {
             $cartProductId = Str::uuid(36);
-            $cartProduct = $this->isCartExist($productId);
             if ($cartProduct?->all() == []) {
                 $cart = $user->cart()->create([
                     'qty' => $request->qty,
@@ -61,32 +76,31 @@ class UserController extends Controller
                 $cart->hasProduct()->attach($productId, ['id' => $cartProductId]);
                 $cartProduct = $cart->hasProduct()->wherePivot('id', $cartProductId)->first();
                 collect($request->variation)->each(function ($variationItem) use ($cartProduct) {
-                    $cartProduct->pickedVariation()->syncWithoutDetaching([
+                    $cartProduct->pickedVariation()->attach([
                         $variationItem['variation_id'] => ['variation_option_id' => $variationItem['variation_option_id'], 'id' => Str::uuid(36)]
                     ]);
                 });
                 return response()->json(['message' => 'Berhasil menambahkan produk ke keranjang']);
             } else {
-                $isPickedVariation = false;
-                collect($request->variation)->each(function ($variationItem, $index) use (&$isPickedVariation, $cartProduct) {
-                    $variation = $cartProduct->pickedVariation()->wherePivot('variation_id', $variationItem['variation_id'])->get();
-                    $variationOption = $cartProduct->pickedVariationOption()->wherePivot('variation_option_id', $variationItem['variation_option_id'])->get();
-                    if (!isset($variation) || !isset($variationOption)) {
+                $cartProductId = Str::uuid(36);
+                if ($this->isVariationDifferent($cartProduct, $request->all())) {
+                    $cart = $user->cart()->create([
+                        'qty' => $request->qty,
+                    ]);
+                    $cart->hasProduct()->attach($productId, ['id' => $cartProductId]);
+                    $cartProduct = $cart->hasProduct()->wherePivot('id', $cartProductId)->first();
+                    collect($request->variation)->each(function ($variationItem) use ($cartProduct) {
                         $cartProduct->pickedVariation()->attach([
                             $variationItem['variation_id'] => ['variation_option_id' => $variationItem['variation_option_id'], 'id' => Str::uuid(36)]
                         ]);
-                    } else {
-                        $isPickedVariation = true;
-                    }
-                });
-                if ($isPickedVariation) {
+                    });
+                    return response()->json(['message' => 'Berhasil menambahkan produk dengan variasi berbeda ke keranjang']);
+                } else {
                     $cartProduct = $cartProduct->cart()->first();
                     $cartProduct->update([
                         'qty' => $cartProduct->qty + $request->qty
                     ]);
-                    return response()->json(['message' => 'Produk ini sudah dimasukkan ke keranjang, jumlah ditambahkan']);
-                } else {
-                    return response()->json(['message' => 'Produk dengan variasi berbeda berhasil ditambahkan ke keranjang']);
+                    return response()->json(['message' => 'Produk sudah dimasukkan ke keranjang, jumlah ditambahkan']);
                 }
             }
         } else {
