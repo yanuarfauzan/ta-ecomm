@@ -14,12 +14,12 @@ class AdminController extends Controller
     {
         $users = User::all();
         $address = Address::all();
-        return view('users.list', compact('users', 'address'));
+        return view('admin.list', compact('users', 'address'));
     }
 
     public function create()
     {
-        return view('users.create');
+        return view('admin.create');
     }
 
     public function store(Request $request)
@@ -60,13 +60,13 @@ class AdminController extends Controller
         $users = User::all();
         $address = Address::all();
 
-        return view('users.list', compact('users', 'address'));
+        return view('admin.list', compact('users', 'address'));
     }
 
     public function edit($id)
     {
         $user = User::findOrFail($id);
-        return view('users.edit', compact('user'));
+        return view('admin.edit', compact('user'));
     }
 
     public function update(Request $request, $id)

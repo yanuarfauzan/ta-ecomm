@@ -31,12 +31,12 @@ Route::middleware(['splade'])->group(function () {
         return view('user.test');
     });
 
+    #ROLE:ADMIN = USERS + ALAMAT
+    Route::get('/admin/list-users', [AdminController::class, 'index']);
+    Route::get('/admin/create-users', [AdminController::class, 'create']);
+    Route::post('/admin/store-users', [AdminController::class, 'store']);
+    Route::get('/admin/edit-users/{id}', [AdminController::class, 'edit']);
+    Route::put('/admin/update-users/{id}', [AdminController::class, 'update']);
 
 });
 
-#ROLE:ADMIN = USERS + ALAMAT
-Route::get('/admin/list-users', [AdminController::class, 'index']);
-Route::get('/admin/create-users', [AdminController::class, 'create']);
-Route::post('/admin/store-users', [AdminController::class, 'store']);
-Route::get('/admin/edit-users/{id}', [AdminController::class, 'edit']);
-Route::put('/admin/update-users/{id}', [AdminController::class, 'update']);
