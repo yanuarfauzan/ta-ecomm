@@ -14,6 +14,10 @@ class UserController extends Controller
     {
         $this->user = auth()->user();
     }
+    public function home()
+    {
+        return view('user.home');
+    }
     public function addAddresses(AddAddressessRequest $request)
     {
         if ($this->user) {

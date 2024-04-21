@@ -1,0 +1,57 @@
+   /* Animasi untuk dropdown */
+   @keyframes scaleIn {
+        from {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .dropdown-menu {
+        animation: scaleIn 0.3s ease forwards;
+        opacity: 0;
+        display: none;
+        position: absolute;
+        top: calc(100% + 10px); /* Menempatkan dropdown di bawah ikon */
+        right: 0;
+        z-index: 1000;
+    }
+
+    .dropdown-toggle:hover + .dropdown-menu,
+    .dropdown-menu:hover {
+        display: block;
+    }
+
+    .bg-main-color {
+        background-color: #6777ef;
+    }
+
+    .font-main-color {
+        color: #6777ef;
+    }
+
+    .emphasized a {
+        color: red; /* Ubah warna tautan menjadi merah */
+        font-weight: bold; /* Tambahkan tebal pada teks tautan */
+        text-decoration: underline; /* Beri garis bawah pada tautan */
+    }
+
+    .divider {
+        width: 1px;
+        background-color: white; /* Sesuaikan warna dengan tema situs Anda */
+        height: 20px; /* Atur tinggi sesuai kebutuhan */
+        align-self: center; /* Vertikal tengah */
+    }
+
+    .low-divider {
+        width: 1px;
+        background-color: white; /* Sesuaikan warna dengan tema situs Anda */
+        height: 15px; /* Atur tinggi sesuai kebutuhan */
+        align-self: center; /* Vertikal tengah */
+    }
+
+    
+    
