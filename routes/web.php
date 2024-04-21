@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 
 /*
@@ -37,6 +38,9 @@ Route::middleware(['splade'])->group(function () {
     Route::post('/admin/store-users', [AdminController::class, 'store']);
     Route::get('/admin/edit-users/{id}', [AdminController::class, 'edit']);
     Route::put('/admin/update-users/{id}', [AdminController::class, 'update']);
+
+    #ROLE:USER
+    Route::get('/user/home', [UserController::class, 'home']);
 
 });
 
