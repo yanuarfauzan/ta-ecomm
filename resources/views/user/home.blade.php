@@ -34,8 +34,10 @@
                         <div class="col mt-4">
                             <div class="card border-0 position-relative shadow" id="card-product"
                                 style="width: 18rem; height: auto; cursor: pointer;">
-                                <img src="{{ Storage::url('public/product_pictures/' . $product->product_image) }}"
-                                    class="card-img-top" alt="...">
+                                <div style="overflow: hidden;">
+                                    <img src="{{ Storage::url('public/product_pictures/' . $product->product_image) }}"
+                                    class="card-img-top" alt="..." id="image-product">
+                                </div>
                                 @if ($product->stock == 0)
                                     <div class="rounded-circle bg-secondary text-white position-absolute d-flex align-items-center justify-content-center opacity-25"
                                         style="top: 40px; left: 45px; width:200px; height:200px; ">
@@ -98,7 +100,7 @@
             </div>
         </div>
 
-        <div class="container">
+        <div class="container" id="more-product-container" style="display: none;">
             <div class="row row-cols-4 ms-0" id="more-product">
             </div>
         </div>
