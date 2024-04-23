@@ -1,0 +1,10 @@
+    #card-product {
+        /* Tambahkan transisi untuk efek yang lebih halus */
+        transition: opacity 0.3s ease;
+    }
+
+    /* Atur opasitas normal */
+    #card-product:hover {
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        opacity: 0.8;
+    }

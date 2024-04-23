@@ -9,10 +9,11 @@
     <link href="{{ asset('/bootstrap-icons/font/bootstrap-icons.css') }}" rel="stylesheet">
     <link href="{{ asset('/bootstrap-icons/font/bootstrap-icons.min.css') }}" rel="stylesheet">
     <link href="{{ asset('/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
-    {{-- Our CSS --}}
-    <link href="{{ asset('/ourcss/navbar.css') }}" rel="stylesheet">
     {{-- Swiper --}}
     <link href="{{ asset('/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
+    {{-- Our CSS --}}
+    <link href="{{ asset('/ourcss/navbar.css') }}" rel="stylesheet">
+    <link href="{{ asset('/ourcss/home.css') }}" rel="stylesheet">
 </head>
 
 <body style="overflow-x: hidden">

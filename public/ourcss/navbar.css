@@ -1,4 +1,8 @@
-   /* Animasi untuk dropdown */
+
+    body {
+        background-color : #fff;
+    }
+/* Animasi untuk dropdown */
    @keyframes scaleIn {
         from {
             opacity: 0;
@@ -53,5 +57,45 @@
         align-self: center; /* Vertikal tengah */
     }
 
+    .low-divider-black {
+        width: 1px;
+        background-color: black; /* Sesuaikan warna dengan tema situs Anda */
+        height: 15px; /* Atur tinggi sesuai kebutuhan */
+        align-self: center; /* Vertikal tengah */
+    }
+
+    .swiper-pagination-bullet-active {
+        background: #6777ef;
+    }
+
+    .swiper-button-next, .swiper-button-prev {
+        width: 40px; /* Atur lebar */
+        height: 40px; /* Atur tinggi */
+        background: #6777ef; /* Warna background */
+        border-radius: 50%; /* Membuat bentuk bulat */
+        position: absolute;
+        top: 50%; /* Menengahkan vertikal */
+        transform: translateY(-50%); /* Ajustmen tengah vertikal */
+        color: white; /* Warna teks atau ikon */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10; /* Pastikan tombol ada di atas konten swiper lainnya */
+    }
+    
+    .swiper-button-next::after, .swiper-button-prev::after {
+        font-size: 20px; /* Besar font ikon */
+        content: ''; /* Kosongkan jika ingin menggunakan gambar atau ikon kustom */
+    }
+    
+    /* Khusus styling untuk 'next' button */
+    .swiper-button-next {
+        right: 9px; /* Jarak dari kanan */
+    }
+    
+    /* Khusus styling untuk 'prev' button */
+    .swiper-button-prev {
+        left: 9px; /* Jarak dari kiri */
+    }
     
     

@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use App\Models\VariationOption;
 use App\Http\Requests\AddAddressessRequest;
 use App\Http\Requests\AddProductToCartRequest;
@@ -14,9 +17,16 @@ class UserController extends Controller
     {
         $this->user = auth()->user();
     }
-    public function home()
+    public function home(Request $request)
     {
-        return view('user.home');
+        $categories = Category::all();
+        $take = $request->loadMoreProduct == true ? 16 : 16;
+        $startIndex = $request->input('startIndex', 0); 
+        $products = Product::skip($startIndex)->take($take)->get();
+        if ($request->loadMoreProduct == true) {
+            return response()->json(['message' => 'load more products success', 'data' => $products, 'startIndex' => $startIndex + $take], 200);
+        }
+        return view('user.home', compact('products', 'categories', 'startIndex'));
     }
     public function addAddresses(AddAddressessRequest $request)
     {
@@ -57,7 +67,7 @@ class UserController extends Controller
         collect($request['variation'])->each(function ($variationItem, $index) use (&$isDifferent, $cartProduct) {
             $variation = $cartProduct->pickedVariation()->wherePivot('variation_id', $variationItem['variation_id'])->first();
             $variationOption = $cartProduct->pickedVariationOption()->wherePivot('variation_option_id', $variationItem['variation_option_id'])->first();
-            if (!isset($variation) || !isset($variationOption)) {
+            if (!isset ($variation) || !isset ($variationOption)) {
                 $isDifferent = true;
             } else {
                 $isDifferent = false;
@@ -66,7 +76,6 @@ class UserController extends Controller
 
         return $isDifferent;
     }
-    // FIXME: buat agar ketika sudah ada produk di dalam cart maka cuma qty yang ditambahkan
     public function addProductToCart(AddProductToCartRequest $request, $productId)
     {
         $user = $this->user;

@@ -18,9 +18,10 @@ return new class extends Migration {
             $table->string('product_image')->nullable();
             $table->integer('price')->nullable();
             $table->string('desc')->nullable();
-            $table->decimal('dicount')->nullable();
+            $table->decimal('discount')->nullable();
             $table->decimal('weight')->nullable();
             $table->decimal('dimensions')->nullable();
+            $table->integer('rate', 5)->nullable();
             $table->timestamps();
         });
     }
