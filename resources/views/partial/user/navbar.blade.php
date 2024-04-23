@@ -1,10 +1,10 @@
-<nav class="navbar navbar-expand-lg fixed-top d-flex justify-content-center text-white bg-main-color"
+<nav class="navbar navbar-expand-lg fixed-top d-flex justify-content-center text-white bg-main-color shadow"
     style="height: 125px;">
     <div class="container-fluid mx-4" style="width: 84%">
         <div class="d-flex align-items-center justify-content-evenly" style="width: 17%;">
             <a class="navbar-brand text-white" href="#">E-COMM</a>
-            <a href="#categoryCollapse" class="text-white" style="text-decoration: none;"
-                data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="categoryCollapse"
+            <a href="#categoryCollapse" class="text-white" style="text-decoration: none;" data-bs-toggle="collapse"
+                role="button" aria-expanded="false" aria-controls="categoryCollapse"
                 id="categoryCollapseToggle">Category</a>
         </div>
         <div class="d-flex flex-column gap-2 mt-2">
@@ -12,6 +12,7 @@
                 <a href="#" style="font-size: 12px; text-decoration: none;"
                     class=" text-center d-flex gap-1 align-items-center text-white">Ikuti kami di <i
                         class="bi bi-facebook"></i> <i class="bi bi-instagram"></i></a>
+                <div class="low-divider"></div>
                 <a href="#" style="font-size: 12px; text-decoration: none;"
                     class=" text-center d-flex gap-1 align-items-center text-white"><i
                         class="bi bi-question-circle"></i> Bantuan</a>
@@ -28,25 +29,24 @@
                     </div>
                 </div>
             </form>
+            {{-- TODO (menampilkan produk yang total jualnya tinggi), produk relasi order --}}
             <div class="d-flex gap-2 ms-1">
-                <a href="#" style="font-size: 12px; text-decoration: none;"
-                    class=" text-white">produk
-                    1</a>
-                <a href="#" style="font-size: 12px; text-decoration: none;"
-                    class=" text-white">produk
-                    2</a>
+                @foreach ($products->slice(0, 4) as $product)
+                    <a href="#" style="font-size: 12px; text-decoration: none;"
+                        class=" text-white">{{ $product->name }}</a>
+                @endforeach
             </div>
         </div>
         <div class="d-flex justify-content-between gap-2 me-2" style="width: 17%;">
-            <a href="" class=" text-white" style="text-decoration: none">
+            <a href="{{ route('admin-list-user') }}" class=" text-white" style="text-decoration: none">
                 <span role="button">
-                    <i class="bi bi-cart-fill" style="font-size: 25px"></i>
+                    <i class="bi bi-cart" style="font-size: 25px"></i>
                 </span>
             </a>
 
             <a href="" class=" text-white" style="text-decoration: none">
                 <span role="button">
-                    <i class="bi bi-bell-fill" style="font-size: 25px"></i>
+                    <i class="bi bi-bell" style="font-size: 25px"></i>
                 </span>
             </a>
 
@@ -105,275 +105,39 @@
 <div class="collapse position-fixed rounded-0" id="categoryCollapse"
     style="width: 85%; top: 125px; z-index: 1040; height : 50%; left: 115px;">
     <!-- Konten collapse di sini -->
-    <div class="card card-body text-danger rounded-0 border-0 d-flex pb-4 bg-main-color"
+    <div class="card card-body text-danger rounded-0 border-0 d-flex pb-4 bg-light shadow-lg"
         style="height : 100%; width: 100%;">
         <div class="swiper-container swiper mySwiper">
             <div class="swiper-wrapper">
-                <div class="swiper-slide">
-                    <div class="row row-cols-8 ms-0">
-                        <div class="col mt-3">
-                            <div class="card rounded-0 border-0" style="width: 145px; cursor: pointer; height: auto">
-                                <img src="https://placehold.co/600x500/white/black" class="card-img-top rounded-0"
-                                    alt="..." style="width: 100%">
-                                <div class="card-body">
-                                    <p class="card-text text-center">Category name </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col mt-3">
-                            <div class="card rounded-0 border-0" style="width: 145px; cursor: pointer; height: auto">
-                                <img src="https://placehold.co/600x500/white/black" class="card-img-top rounded-0"
-                                    alt="..." style="width: 100%">
-                                <div class="card-body">
-                                    <p class="card-text text-center">Category name </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col mt-3">
-                            <div class="card rounded-0 border-0" style="width: 145px; cursor: pointer; height: auto">
-                                <img src="https://placehold.co/600x500/white/black" class="card-img-top rounded-0"
-                                    alt="..." style="width: 100%">
-                                <div class="card-body">
-                                    <p class="card-text text-center">Category name </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col mt-3">
-                            <div class="card rounded-0 border-0" style="width: 145px; cursor: pointer; height: auto">
-                                <img src="https://placehold.co/600x500/white/black" class="card-img-top rounded-0"
-                                    alt="..." style="width: 100%">
-                                <div class="card-body">
-                                    <p class="card-text text-center">Category name </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col mt-3">
-                            <div class="card rounded-0 border-0" style="width: 145px; cursor: pointer; height: auto">
-                                <img src="https://placehold.co/600x500/white/black" class="card-img-top rounded-0"
-                                    alt="..." style="width: 100%">
-                                <div class="card-body">
-                                    <p class="card-text text-center">Category name </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col mt-3">
-                            <div class="card rounded-0 border-0" style="width: 145px; cursor: pointer; height: auto">
-                                <img src="https://placehold.co/600x500/white/black" class="card-img-top rounded-0"
-                                    alt="..." style="width: 100%">
-                                <div class="card-body">
-                                    <p class="card-text text-center">Category name </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col mt-3">
-                            <div class="card rounded-0 border-0" style="width: 145px; cursor: pointer; height: auto">
-                                <img src="https://placehold.co/600x500/white/black" class="card-img-top rounded-0"
-                                    alt="..." style="width: 100%">
-                                <div class="card-body">
-                                    <p class="card-text text-center">Category name </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col mt-3">
-                            <div class="card rounded-0 border-0" style="width: 145px; cursor: pointer; height: auto">
-                                <img src="https://placehold.co/600x500/white/black" class="card-img-top rounded-0"
-                                    alt="..." style="width: 100%">
-                                <div class="card-body">
-                                    <p class="card-text text-center">Category name </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col mt-3">
-                            <div class="card rounded-0 border-0" style="width: 145px; cursor: pointer; height: auto">
-                                <img src="https://placehold.co/600x500/white/black" class="card-img-top rounded-0"
-                                    alt="..." style="width: 100%">
-                                <div class="card-body">
-                                    <p class="card-text text-center">Category name </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col mt-3">
-                            <div class="card rounded-0 border-0" style="width: 145px; cursor: pointer; height: auto">
-                                <img src="https://placehold.co/600x500/white/black" class="card-img-top rounded-0"
-                                    alt="..." style="width: 100%">
-                                <div class="card-body">
-                                    <p class="card-text text-center">Category name </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col mt-3">
-                            <div class="card rounded-0 border-0" style="width: 145px; cursor: pointer; height: auto">
-                                <img src="https://placehold.co/600x500/white/black" class="card-img-top rounded-0"
-                                    alt="..." style="width: 100%">
-                                <div class="card-body">
-                                    <p class="card-text text-center">Category name </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col mt-3">
-                            <div class="card rounded-0 border-0" style="width: 145px; cursor: pointer; height: auto">
-                                <img src="https://placehold.co/600x500/white/black" class="card-img-top rounded-0"
-                                    alt="..." style="width: 100%">
-                                <div class="card-body">
-                                    <p class="card-text text-center">Category name </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col mt-3">
-                            <div class="card rounded-0 border-0" style="width: 145px; cursor: pointer; height: auto">
-                                <img src="https://placehold.co/600x500/white/black" class="card-img-top rounded-0"
-                                    alt="..." style="width: 100%">
-                                <div class="card-body">
-                                    <p class="card-text text-center">Category name </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col mt-3">
-                            <div class="card rounded-0 border-0" style="width: 145px; cursor: pointer; height: auto">
-                                <img src="https://placehold.co/600x500/white/black" class="card-img-top rounded-0"
-                                    alt="..." style="width: 100%">
-                                <div class="card-body">
-                                    <p class="card-text text-center">Category name </p>
-                                </div>
-                            </div>
+                @foreach ($categories->chunk(7) as $chunkedCategories)
+                    <div class="swiper-slide">
+                        <div class="row row-cols-8 ms-0">
+                            @foreach ($chunkedCategories as $category)
+                                <a href="{{ $category->id }}" style="text-decoration: none" class="col mt-3">
+                                    <div>
+                                        <div class="card rounded-0 border-0 shadow"
+                                            style="width: 145px; cursor: pointer; height: auto">
+                                            <img src="{{ Storage::url('public/icon_category/' . $category->icon) }}"
+                                                class="card-img-top rounded-0" alt="..." style="width: 100%">
+                                            <div class="card-body">
+                                                <p class="card-text text-center"><strong>{{ $category->name }}</strong>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            @endforeach
                         </div>
                     </div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="row row-cols-8 ms-0">
-                        <div class="col mt-3">
-                            <div class="card rounded-0 border-0" style="width: 145px; cursor: pointer; height: auto">
-                                <img src="https://placehold.co/600x500/white/black" class="card-img-top rounded-0"
-                                    alt="..." style="width: 100%">
-                                <div class="card-body">
-                                    <p class="card-text text-center">Category name </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col mt-3">
-                            <div class="card rounded-0 border-0" style="width: 145px; cursor: pointer; height: auto">
-                                <img src="https://placehold.co/600x500/white/black" class="card-img-top rounded-0"
-                                    alt="..." style="width: 100%">
-                                <div class="card-body">
-                                    <p class="card-text text-center">Category name </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col mt-3">
-                            <div class="card rounded-0 border-0" style="width: 145px; cursor: pointer; height: auto">
-                                <img src="https://placehold.co/600x500/white/black" class="card-img-top rounded-0"
-                                    alt="..." style="width: 100%">
-                                <div class="card-body">
-                                    <p class="card-text text-center">Category name </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col mt-3">
-                            <div class="card rounded-0 border-0" style="width: 145px; cursor: pointer; height: auto">
-                                <img src="https://placehold.co/600x500/white/black" class="card-img-top rounded-0"
-                                    alt="..." style="width: 100%">
-                                <div class="card-body">
-                                    <p class="card-text text-center">Category name </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col mt-3">
-                            <div class="card rounded-0 border-0" style="width: 145px; cursor: pointer; height: auto">
-                                <img src="https://placehold.co/600x500/white/black" class="card-img-top rounded-0"
-                                    alt="..." style="width: 100%">
-                                <div class="card-body">
-                                    <p class="card-text text-center">Category name </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col mt-3">
-                            <div class="card rounded-0 border-0" style="width: 145px; cursor: pointer; height: auto">
-                                <img src="https://placehold.co/600x500/white/black" class="card-img-top rounded-0"
-                                    alt="..." style="width: 100%">
-                                <div class="card-body">
-                                    <p class="card-text text-center">Category name </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col mt-3">
-                            <div class="card rounded-0 border-0" style="width: 145px; cursor: pointer; height: auto">
-                                <img src="https://placehold.co/600x500/white/black" class="card-img-top rounded-0"
-                                    alt="..." style="width: 100%">
-                                <div class="card-body">
-                                    <p class="card-text text-center">Category name </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col mt-3">
-                            <div class="card rounded-0 border-0" style="width: 145px; cursor: pointer; height: auto">
-                                <img src="https://placehold.co/600x500/white/black" class="card-img-top rounded-0"
-                                    alt="..." style="width: 100%">
-                                <div class="card-body">
-                                    <p class="card-text text-center">Category name </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col mt-3">
-                            <div class="card rounded-0 border-0" style="width: 145px; cursor: pointer; height: auto">
-                                <img src="https://placehold.co/600x500/white/black" class="card-img-top rounded-0"
-                                    alt="..." style="width: 100%">
-                                <div class="card-body">
-                                    <p class="card-text text-center">Category name </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col mt-3">
-                            <div class="card rounded-0 border-0" style="width: 145px; cursor: pointer; height: auto">
-                                <img src="https://placehold.co/600x500/white/black" class="card-img-top rounded-0"
-                                    alt="..." style="width: 100%">
-                                <div class="card-body">
-                                    <p class="card-text text-center">Category name </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col mt-3">
-                            <div class="card rounded-0 border-0" style="width: 145px; cursor: pointer; height: auto">
-                                <img src="https://placehold.co/600x500/white/black" class="card-img-top rounded-0"
-                                    alt="..." style="width: 100%">
-                                <div class="card-body">
-                                    <p class="card-text text-center">Category name </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col mt-3">
-                            <div class="card rounded-0 border-0" style="width: 145px; cursor: pointer; height: auto">
-                                <img src="https://placehold.co/600x500/white/black" class="card-img-top rounded-0"
-                                    alt="..." style="width: 100%">
-                                <div class="card-body">
-                                    <p class="card-text text-center">Category name </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col mt-3">
-                            <div class="card rounded-0 border-0" style="width: 145px; cursor: pointer; height: auto">
-                                <img src="https://placehold.co/600x500/white/black" class="card-img-top rounded-0"
-                                    alt="..." style="width: 100%">
-                                <div class="card-body">
-                                    <p class="card-text text-center">Category name </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col mt-3">
-                            <div class="card rounded-0 border-0" style="width: 145px; cursor: pointer; height: auto">
-                                <img src="https://placehold.co/600x500/white/black" class="card-img-top rounded-0"
-                                    alt="..." style="width: 100%">
-                                <div class="card-body">
-                                    <p class="card-text text-center">Category name </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
+
             </div>
             <div class="mt-5">
                 <div class="swiper-pagination"></div>
             </div>
         </div>
     </div>
+    <div class="swiper-button-next text-light"><i class="bi bi-chevron-right"></i></div>
+    <div class="swiper-button-prev text-light"><i class="bi bi-chevron-left"></i></div>
 </div>
 <script src="{{ asset('/ourjs/navbar.js') }}"></script>

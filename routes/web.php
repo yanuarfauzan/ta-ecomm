@@ -33,14 +33,14 @@ Route::middleware(['splade'])->group(function () {
     });
 
     #ROLE:ADMIN = USERS + ALAMAT
-    Route::get('/admin/list-users', [AdminController::class, 'index']);
+    Route::get('/admin/list-users', [AdminController::class, 'index'])->name('admin-list-user');
     Route::get('/admin/create-users', [AdminController::class, 'create']);
     Route::post('/admin/store-users', [AdminController::class, 'store']);
     Route::get('/admin/edit-users/{id}', [AdminController::class, 'edit']);
     Route::put('/admin/update-users/{id}', [AdminController::class, 'update']);
 
     #ROLE:USER
-    Route::get('/user/home', [UserController::class, 'home']);
+    Route::get('/user/home', [UserController::class, 'home'])->name('user-home');
 
 });
 
