@@ -2,9 +2,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const btnLoadMore = document.getElementById('load-more')
     const moreProduct = document.getElementById('more-product')
     const loaderProduct = document.getElementById('loader-product')
+    const moreProductContainer = document.getElementById('more-product-container')
     btnLoadMore.addEventListener('click', function () {
+        moreProductContainer.style.display = 'block'
         loaderProduct.style.display = 'block'
-
         var startIndex = this.getAttribute('data-start-index')
         var moreProductUrl = this.getAttribute('data-next-page-url') + '?loadMoreProduct=true&startIndex=' + startIndex;
         setTimeout(function () {
@@ -24,8 +25,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="col mt-4">
                         <div class="card border-0 position-relative shadow" id="card-product"
                             style="width: 18rem; height: auto; cursor: pointer;">
+                            <div style="overflow: hidden;">
                             <img src="/storage/product_pictures/${product.product_image}"
-                                class="card-img-top" alt="...">
+                                class="card-img-top" alt="..." id="image-product">
+                            </div>
                             ${product.stock == 0 ? `<div class="rounded-circle bg-secondary text-white position-absolute d-flex align-items-center justify-content-center opacity-25"
                             style="top: 40px; left: 45px; width:200px; height:200px; ">
                             <div class="d-flex flex-column align-items-center gap-2">

@@ -8,3 +8,9 @@
         box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
         opacity: 0.8;
     }
+
+    /* Tambahkan efek zoom ketika gambar dihover */
+    #image-product:hover {
+        transform: scale(1.2); /* Skala gambar menjadi 110% */
+        transition: transform 0.3s ease; /* Efek transisi untuk perubahan transformasi */
+    }
