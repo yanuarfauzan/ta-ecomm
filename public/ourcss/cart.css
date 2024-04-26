@@ -1,0 +1,144 @@
+
+.form-check-input:checked {
+  background-color: #6777ef; /* Ubah warna sesuai keinginan Anda */
+}
+
+#counter {
+    border: 1px solid #ccc; /* Warna border awal */
+    transition: border-color 0.3s; 
+}
+
+#counter:hover {
+    border-color: #6777ef;
+}
+
+#decrease {
+    background-color: white;
+    color: black;
+    transition: background-color 0.3s; 
+}
+
+#decrease:hover {
+    color: white;
+    background-color: #6777ef;
+}
+
+#increase {
+    background-color: white;
+    color: black;
+    transition: background-color 0.3s; 
+}
+
+#increase:hover {
+    color: white;
+    background-color: #6777ef;
+}
+
+#number-counter {
+    transition: border-color 0.2s;
+
+}
+
+#number-counter:focus {
+    border-color: #6777ef;
+}
+
+.card-product {
+    border: 2px solid #ccc;
+    transition: border-color 0.3s; 
+}
+
+.card-product-active {
+    border: 2px solid #6777ef;
+    transition: border-color 0.3s; 
+}
+
+.card-product:hover {
+    border-color: #6777ef; 
+}
+
+.variation-first {
+    font-weight: normal;
+    border : 1px solid grey;
+    background-color : white;
+    color: black;
+    transition: border-color 0.3s; 
+    transition: background-color 0.3s; 
+}
+
+.variation-scnd {
+    font-weight: normal;
+    border : 1px solid grey;
+    background-color : white;
+    color: black;
+    transition: border-color 0.3s; 
+    transition: background-color 0.3s; 
+}
+
+.variation-first:hover {
+    border-color: #6777ef;
+}
+
+.variation-scnd:hover {
+    border-color: #6777ef;
+}
+
+.active-var-item {
+    color: white;
+    background-color: #6777ef; 
+}
+
+#card-variation {
+    border : 1px solid #ccc;
+    transition: border-color 0.3s; 
+}
+
+#card-variation:hover {
+    border-color: #6777ef;
+}
+
+.variation-confirm:hover {
+    border: 1px solid #6777ef;
+    background-color: #6777ef;
+}
+
+.variation-click {
+    border-color: #6777ef;
+    background-color: #6777ef;
+}
+
+span {
+    cursor: default
+}
+
+.form-check-input {
+    border: 2px solid #ccc;
+}
+
+.head-check-input {
+    border: 2px solid #6777ef;
+}
+
+.card-summary {
+    border: 2px solid #ccc;
+    transition: border-color 0.3s;
+}
+
+.card-summary:hover {
+    border-color: #6777ef; 
+}
+
+.transition {
+    transition: opacity 0.3s ease; /* Transisi hanya untuk opacity */
+}
+
+#reload-similar-product {
+    position: absolute;
+    top: 11%;
+    left: 60%
+}
+
+#checkout:hover {
+    border: 1px solid #6777ef;
+    background-color: #6777ef;
+}

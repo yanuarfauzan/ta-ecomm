@@ -32,11 +32,11 @@
                 @foreach ($products as $index => $product)
                     <a href="{{ $product->name }}" style="text-decoration: none">
                         <div class="col mt-4">
-                            <div class="card border-0 position-relative shadow" id="card-product"
+                            <div class="card border-0 position-relative shadow rounded-0" id="card-product"
                                 style="width: 18rem; height: auto; cursor: pointer;">
                                 <div style="overflow: hidden;">
                                     <img src="{{ Storage::url('public/product_pictures/' . $product->product_image) }}"
-                                    class="card-img-top" alt="..." id="image-product">
+                                    class="card-img-top rounded-0" alt="..." id="image-product">
                                 </div>
                                 @if ($product->stock == 0)
                                     <div class="rounded-circle bg-secondary text-white position-absolute d-flex align-items-center justify-content-center opacity-25"

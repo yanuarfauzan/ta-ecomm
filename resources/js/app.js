@@ -8,7 +8,6 @@ import Swiper from "swiper";
 
 
 const el = document.getElementById("app");
-
 createApp({
     render: renderSpladeApp({ el })
 })

@@ -30,17 +30,15 @@ document.addEventListener("DOMContentLoaded", function () {
         pagination: {
             el: ".swiper-pagination",
         },
-        mousewheel: true,
-        keyboard: true,
-        grabCursor: true,
+        mousewheel: false,
+        keyboard: false,
+        grabCursor: false,
     });
 
     // Ambil elemen collapse dan tombol yang digunakan untuk membuka/collapse
     const collapseElement = document.getElementById('categoryCollapse');
     const toggleButton = document.getElementById('categoryCollapseToggle');
 
-    console.log(collapseElement);
-    console.log(toggleButton);
     // Tambahkan event listener ke elemen dokumen
     document.addEventListener('click', function (event) {
         // Periksa apakah klik terjadi di luar collapse dan button toggle

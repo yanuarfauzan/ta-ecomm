@@ -19,7 +19,7 @@
             </div>
             <form class="d-flex" role="search">
                 <div class="input-group">
-                    <input type="text" class="form-control rounded-0" placeholder="Search..."
+                    <input type="text" class="form-control rounded-0" id="search-home" placeholder="Search..."
                         style="box-shadow: none; width: 720px;">
                     <div class="input-group-append" style="height : 80%;">
                         <button class="btn btn-light input-group-text rounded-0 border-2 text-white bg-main-color"
@@ -30,15 +30,17 @@
                 </div>
             </form>
             {{-- TODO (menampilkan produk yang total jualnya tinggi), produk relasi order --}}
-            <div class="d-flex gap-2 ms-1">
-                @foreach ($products->slice(0, 4) as $product)
-                    <a href="#" style="font-size: 12px; text-decoration: none;"
-                        class=" text-white">{{ $product->name }}</a>
-                @endforeach
+            <div class="d-flex gap-2 ms-1" style="height: 22px">
+                @if (isset($products))
+                    @foreach ($products->slice(0, 4) as $product)
+                        <a href="#" style="font-size: 12px; text-decoration: none;"
+                            class=" text-white">{{ $product?->name }}</a>
+                    @endforeach
+                @endif
             </div>
         </div>
         <div class="d-flex justify-content-between gap-2 me-2" style="width: 17%;">
-            <a href="{{ route('admin-list-user') }}" class=" text-white" style="text-decoration: none">
+            <a href="{{ route('user-cart') }}" class=" text-white" style="text-decoration: none">
                 <span role="button">
                     <i class="bi bi-cart" style="font-size: 25px"></i>
                 </span>
