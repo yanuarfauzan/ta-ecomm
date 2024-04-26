@@ -1,6 +1,6 @@
 
     body {
-        background-color : #fff;
+        background-color : #F8F9FA;
     }
 /* Animasi untuk dropdown */
    @keyframes scaleIn {
@@ -37,6 +37,10 @@
         color: #6777ef;
     }
 
+    .border-main-color {
+        border: 1px solid #6777ef;
+    }
+
     .emphasized a {
         color: red; /* Ubah warna tautan menjadi merah */
         font-weight: bold; /* Tambahkan tebal pada teks tautan */
@@ -60,7 +64,7 @@
     .low-divider-black {
         width: 1px;
         background-color: black; /* Sesuaikan warna dengan tema situs Anda */
-        height: 15px; /* Atur tinggi sesuai kebutuhan */
+        height: 10px; /* Atur tinggi sesuai kebutuhan */
         align-self: center; /* Vertikal tengah */
     }
 
@@ -97,5 +101,19 @@
     .swiper-button-prev {
         left: 9px; /* Jarak dari kiri */
     }
+
+    #search-cart {
+        transition: border-color 0.2s;
+    }
+
+    #search-cart:focus {
+        border-color: #6777ef;
+    }
+
+    #search-home:focus {
+        border-color: #6777ef;
+    }
+    
+
     
     

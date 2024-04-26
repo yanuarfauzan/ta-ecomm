@@ -28,6 +28,11 @@ class UserController extends Controller
         }
         return view('user.home', compact('products', 'categories', 'startIndex'));
     }
+    public function cart()
+    {
+        $categories = Category::all();
+        return view('user.cart', compact('categories'));
+    }
     public function addAddresses(AddAddressessRequest $request)
     {
         if ($this->user) {
