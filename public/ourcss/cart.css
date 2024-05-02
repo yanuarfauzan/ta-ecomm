@@ -57,7 +57,7 @@
     border-color: #6777ef; 
 }
 
-.variation-first {
+.variation-item {
     font-weight: normal;
     border : 1px solid grey;
     background-color : white;
@@ -66,7 +66,7 @@
     transition: background-color 0.3s; 
 }
 
-.variation-scnd {
+.variation-item {
     font-weight: normal;
     border : 1px solid grey;
     background-color : white;
@@ -75,11 +75,7 @@
     transition: background-color 0.3s; 
 }
 
-.variation-first:hover {
-    border-color: #6777ef;
-}
-
-.variation-scnd:hover {
+.variation-item:hover {
     border-color: #6777ef;
 }
 

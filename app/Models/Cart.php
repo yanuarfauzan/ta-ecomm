@@ -15,7 +15,9 @@ class Cart extends Model
         'user_id',
         'product_id',
         'qty',
-        'total_price'
+        'total_price',
+        'total_price_after_discount',
+        'total_discount'
     ];
     public function getIncrement()
     {

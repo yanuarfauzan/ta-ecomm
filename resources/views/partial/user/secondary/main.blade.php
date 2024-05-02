@@ -35,6 +35,8 @@
         </div>
     </div>
 
+    {{-- livewire --}}
+    @livewireScripts
     <!-- Bootstrap -->
     <script src="{{ asset('/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
     {{-- Swiper --}}

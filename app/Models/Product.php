@@ -40,7 +40,7 @@ class Product extends Model
 
     public function variation()
     {
-        return $this->belongsToMany(Variation::class, 'product_category_variation', 'variation_id', 'id');
+        return $this->belongsToMany(Variation::class, 'product_category_variation');
     }
 
     public function user()
