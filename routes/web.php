@@ -40,7 +40,7 @@ Route::middleware(['splade'])->group(function () {
     Route::put('/admin/update-users/{id}', [AdminController::class, 'update']);
     
     #ROLE:USER
-    Route::get('/user/cart', [UserController::class, 'cart'])->name('user-cart');
+    Route::get('/user/cart', [UserController::class, 'showCart'])->name('user-cart');
     Route::get('/user/home', [UserController::class, 'home'])->name('user-home');
 
     

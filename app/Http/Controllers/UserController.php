@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Str;
@@ -21,17 +22,12 @@ class UserController extends Controller
     {
         $categories = Category::all();
         $take = $request->loadMoreProduct == true ? 16 : 16;
-        $startIndex = $request->input('startIndex', 0); 
+        $startIndex = $request->input('startIndex', 0);
         $products = Product::skip($startIndex)->take($take)->get();
         if ($request->loadMoreProduct == true) {
             return response()->json(['message' => 'load more products success', 'data' => $products, 'startIndex' => $startIndex + $take], 200);
         }
         return view('user.home', compact('products', 'categories', 'startIndex'));
-    }
-    public function cart()
-    {
-        $categories = Category::all();
-        return view('user.cart', compact('categories'));
     }
     public function addAddresses(AddAddressessRequest $request)
     {
@@ -52,18 +48,15 @@ class UserController extends Controller
     }
     public function showCart()
     {
-        if ($this->user) {
-            $userCart = $this->user->cart()->with('hasProduct', 'hasProduct.pickedVariation', 'hasProduct.pickedVariationOption')->get();
-            return response()->json(['message' => 'Berhasil mengambil data keranjang', 'data' => $userCart]);
-        } else {
-            return response()->json(['message' => 'Anda harus login terlebih dahulu']);
-        }
+        $usersCarts = User::where('id', '9bb843a9-7943-488a-bbf2-cadfce85c475')->first()->cart()->with('hasProduct', 'hasProduct.pickedVariation', 'hasProduct.pickedVariationOption', 'hasProduct.variation', 'hasProduct.variation.variationOption')->get();
+        // dd($usersCarts->toArray()); 
+        return view('user.cart', compact('usersCarts'));
     }
     public function isCartExist($productId)
     {
-        $userCart = $this->user->cart()->get()->each(function ($cart) use ($productId) {
-            $cart->hasProduct()->wherePivot('product_id', $productId);
-        })->first()?->hasProduct()->first();
+        $userCart = $this->user->cart()->whereHas('hasProduct', function ($query) use ($productId) {
+            $query->where('product_id', $productId);
+        })->first();
         return $userCart;
     }
     public function isVariationDifferent($cartProduct, $request)
@@ -78,18 +71,19 @@ class UserController extends Controller
                 $isDifferent = false;
             }
         });
-
         return $isDifferent;
     }
     public function addProductToCart(AddProductToCartRequest $request, $productId)
     {
         $user = $this->user;
+        $product = Product::findOrFail($productId);
         $cartProduct = $this->isCartExist($productId);
         if ($user) {
             $cartProductId = Str::uuid(36);
-            if ($cartProduct?->all() == []) {
+            if ($cartProduct?->all() == null) {
                 $cart = $user->cart()->create([
                     'qty' => $request->qty,
+                    'total_price' => $product->price * $request->qty
                 ]);
                 $cart->hasProduct()->attach($productId, ['id' => $cartProductId]);
                 $cartProduct = $cart->hasProduct()->wherePivot('id', $cartProductId)->first();
@@ -104,6 +98,7 @@ class UserController extends Controller
                 if ($this->isVariationDifferent($cartProduct, $request->all())) {
                     $cart = $user->cart()->create([
                         'qty' => $request->qty,
+                        'total_price' => $product->price * $request->qty
                     ]);
                     $cart->hasProduct()->attach($productId, ['id' => $cartProductId]);
                     $cartProduct = $cart->hasProduct()->wherePivot('id', $cartProductId)->first();
@@ -116,7 +111,8 @@ class UserController extends Controller
                 } else {
                     $cartProduct = $cartProduct->cart()->first();
                     $cartProduct->update([
-                        'qty' => $cartProduct->qty + $request->qty
+                        'qty' => $cartProduct->qty + $request->qty,
+                        'total_price' => $product->price * $request->qty
                     ]);
                     return response()->json(['message' => 'Produk sudah dimasukkan ke keranjang, jumlah ditambahkan']);
                 }

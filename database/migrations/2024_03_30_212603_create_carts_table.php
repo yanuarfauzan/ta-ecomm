@@ -15,6 +15,8 @@ return new class extends Migration {
             $table->uuid('user_id');
             $table->integer('qty')->nullable();
             $table->integer('total_price')->nullable();
+            $table->integer('total_price_after_discount')->nullable();
+            $table->integer('total_discount')->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
         });
