@@ -20,11 +20,30 @@ class Counter extends Component
         $this->count = $this->userCart->qty;
         $this->user = $user;
     }
-    public function render()
+    public function changeCountFromInput($value)
     {
-        return view('livewire.counter');
-    }
+        $countFromInput =  $value - $this->count;
+        $this->count += $countFromInput;
 
+        $newQty = $this->userCart->qty + $countFromInput;
+        $this->userCart->update([
+            'qty' => $newQty
+        ]);
+        
+        $this->userCart->update([
+            'total_price' => $this->product->price * $newQty,
+        ]);
+        $discountProduct = null;
+        if (isset($this->product->discount)) {
+            $discountProduct = $this->product->price * $this->product->discount / 100;
+            $this->userCart->update([
+                'total_price_after_discount' => ($this->product->price - $discountProduct) * $this->userCart->qty,
+                'total_discount' => $discountProduct * $this->userCart->qty
+            ]);
+        }
+
+        $this->dispatch('increaseQtyProduct', userCartId: $this->userCart->id, productPrice: $this->product->price, discountProduct: $discountProduct);
+    }
     public function increase()
     {
         $this->count = $this->userCart->qty + 1;
@@ -92,6 +111,10 @@ class Counter extends Component
         }
 
         $this->userCartId = $this->userCart->id;
+    }
+    public function render()
+    {
+        return view('livewire.counter');
     }
     
 }
