@@ -1,24 +1,20 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-    var mySwiper = new Swiper('.swiper-container', {
-        // Konfigurasi Swiper di sini
-        slidesPerView: 'auto', // Jumlah slide yang ditampilkan per view
-        spaceBetween: 10, // Jarak antara setiap slide
-        loop: true, // Mengaktifkan mode loop
-        navigation: {
-            nextEl: '.swiper-button-next', // Selector untuk tombol geser ke kanan
-            prevEl: '.swiper-button-prev', // Selector untuk tombol geser ke kiri
-        },
-        pagination: {
-            el: ".swiper-pagination",
-        },
-        mousewheel: false,
-        keyboard: false,
-        grabCursor: false,
-        allowTouchMove: false
+
+    const checkboxesRelatedProducts = document.querySelectorAll('.btn-check-outlined');
+
+    checkboxesRelatedProducts.forEach(checkbox => {
+        checkbox.addEventListener('click', function () {
+            checkboxesRelatedProducts.forEach(cb => {
+                if (cb !== checkbox) {
+                    cb.checked = false;
+                }
+            });
+        });
     });
 
     var countUserCart = userCarts.length;
+
     for (let i = 0; i < countUserCart; i++) {
         const checkProduct = document.querySelector('.check-product-' + userCarts[i].id);
         const cardProduct = document.getElementById('card-product-' + userCarts[i].id);
@@ -28,11 +24,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (checkProduct.checked) {
                     cardProduct.classList.remove('card-product');
                     cardProduct.classList.add('card-product-active');
-                    Livewire.dispatchTo('product', 'toggleChecked', { 'userCartId' :  userCarts[i].id })
+                    Livewire.dispatchTo('product', 'toggleChecked', { 'userCartId': userCarts[i].id })
                 } else {
                     cardProduct.classList.remove('card-product-active');
                     cardProduct.classList.add('card-product');
-                    Livewire.dispatchTo('product', 'toggleChecked', { 'userCartId' :  userCarts[i].id })
+                    Livewire.dispatchTo('product', 'toggleChecked', { 'userCartId': userCarts[i].id })
                 }
             });
         }

@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
@@ -28,7 +29,8 @@ Route::middleware(['splade'])->group(function () {
     Route::spladeUploads();
     // ori splade end
 
-    Route::get('/test', function () {
+    Route::get('/test', function (Request $request) {
+        dd($request->all());
         return view('user.test');
     });
 

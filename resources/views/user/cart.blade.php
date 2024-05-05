@@ -1,5 +1,4 @@
 @extends('partial.user.secondary.main')
 @section('container')
-    @livewire('product', ['usersCarts' => $usersCarts])
+    @livewire('product', ['usersCarts' => $usersCarts, 'user' => $user])
 @endsection
-<script src="{{ asset('/ourjs/cart.js') }}"></script>

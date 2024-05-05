@@ -48,9 +48,10 @@ class UserController extends Controller
     }
     public function showCart()
     {
-        $usersCarts = User::where('id', '9bb843a9-7943-488a-bbf2-cadfce85c475')->first()->cart()->with('hasProduct', 'hasProduct.pickedVariation', 'hasProduct.pickedVariationOption', 'hasProduct.variation', 'hasProduct.variation.variationOption')->get();
-        // dd($usersCarts->toArray()); 
-        return view('user.cart', compact('usersCarts'));
+        $user = User::where('id', '9bb843a9-7943-488a-bbf2-cadfce85c475')->first();
+        $usersCarts = $user->cart()->with('hasProduct', 'hasProduct.pickedVariation', 'hasProduct.pickedVariationOption', 'hasProduct.variation', 'hasProduct.variation.variationOption')->get();
+        // FIXME: referensi dari cart
+        return view('user.cart', compact('usersCarts', 'user'));
     }
     public function isCartExist($productId)
     {

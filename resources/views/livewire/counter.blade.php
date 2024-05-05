@@ -1,11 +1,11 @@
 <div class="d-flex justify-content-end gap-2">
     <div class="d-flex gap-2 align-items-end me-3">
-        <a href="" class="font-main-color">
-            <i class="bi bi-heart" style="font-size: 20px"></i>
-        </a>
-        <a href="" class="font-main-color">
+        <span wire:click="addCartProductToFav" class="font-main-color" style="cursor: pointer;">
+            <i class="bi bi-heart{{ $user->favouriteProduct->contains($product->id) ? '-fill' : '' }}" style="font-size: 20px"></i>
+        </span>
+        <span wire:click="deleteCartProduct" class="font-main-color" style="cursor: pointer;">
             <i class="bi bi-trash" style="font-size: 20px"></i>
-        </a>
+        </span>
     </div>
     <div class="d-flex flex-column">
         <div class="d-flex flex-column">

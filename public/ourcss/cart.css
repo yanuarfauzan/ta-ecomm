@@ -131,10 +131,52 @@ span {
 #reload-similar-product {
     position: absolute;
     top: 11%;
-    left: 60%
+    left: 84%
 }
 
 #checkout:hover {
     border: 1px solid #6777ef;
     background-color: #6777ef;
 }
+
+/* Style untuk label saat checkbox tidak dicentang */
+.btn-check-outlined + label {
+    color: #6777ef !important;             /* Mengubah warna teks */
+    border-color: #6777ef !important;      /* Mengubah warna border */
+}
+
+/* Style untuk label saat mouse hover */
+.btn-check-outlined + label:hover {
+    background-color: #6777ef !important; /* Mengubah warna background saat hover */
+    color: white !important;              /* Mengubah warna teks saat hover */
+}
+
+/* Style untuk label saat checkbox dicentang */
+.btn-check-outlined:checked + label {
+    background-color: #6777ef !important; /* Mengubah warna background saat checked */
+    color: white !important;              /* Mengubah warna teks saat checked */
+    border-color: #6777ef !important;     /* Menjaga warna border */
+}
+
+/* Style untuk label saat fokus */
+.btn-check-outlined:focus + label {
+    box-shadow: 0 0 0 0.2rem rgba(103, 119, 239, 0.5) !important; /* Shadow dengan warna yang sesuai */
+}
+
+
+.card-related-products {
+    opacity: 0;
+    transition: opacity 0.1s ease-in-out, transform 0.1s ease-in-out;
+    transform: scale(0.7);
+}
+
+.show {
+    opacity: 1; /* Atur opacity menjadi 1 ketika ditampilkan */
+    transform: scale(1);
+}
+
+.hide {
+    opacity: 0; /* Atur opacity menjadi 0 ketika disembunyikan */
+    pointer-events: none; /* Nonaktifkan interaksi pengguna saat elemen disembunyikan */
+}
+
