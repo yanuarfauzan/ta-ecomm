@@ -28,7 +28,7 @@
     </div>
 </nav>
 <div class="dropdown-menu dropdown-menu-end profile-dropdown position-fixed rounded-0"
-    style="right: 90px; top: 28px; z-index: 1041;">
+    style="right: 115px; top: 28px; z-index: 1041;">
     <!-- item-->
     <a href="" class="dropdown-item notify-item ">
         <i class="fe-user"></i>

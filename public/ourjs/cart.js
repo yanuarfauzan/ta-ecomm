@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
 
+    document.getElementById('number-counter').addEventListener('input', function(event) {
+        this.value = this.value.replace(/\D/g, '');
+    });
 
     const checkboxesRelatedProducts = document.querySelectorAll('.btn-check-outlined');
 
