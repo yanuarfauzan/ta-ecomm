@@ -324,5 +324,5 @@
             </div>
         @endif --}}
     </div>
-<script src="{{ asset('/ourjs/home.js') }}"></script>
+<script src="{{ asset('/ourjs/home.js') }}" data-navigate-track></script>
 @endsection

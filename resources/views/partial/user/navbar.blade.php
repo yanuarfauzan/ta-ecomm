@@ -142,3 +142,4 @@
     <div class="swiper-button-next text-light"><i class="bi bi-chevron-right"></i></div>
     <div class="swiper-button-prev text-light"><i class="bi bi-chevron-left"></i></div>
 </div>
+<script src="{{ asset('/ourjs/navbar.js') }}" data-navigate-track></script>

@@ -69,5 +69,5 @@
         @livewire('SearchCartProduct')
     </div>
 </nav>
-<script src="{{ asset('/ourjs/navbar.js') }}"></script>
+<script src="{{ asset('/ourjs/navbar.js') }}" data-navigate-track></script>
 
