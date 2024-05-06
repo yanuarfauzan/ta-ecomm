@@ -316,13 +316,13 @@
                 </div>
             </div>
         </div>
-        @if (count($products) >= 16)
+        {{-- @if (count($products) >= 16)
             <div>
                 <button id="load-more" data-next-page-url="{{ route('user-home') }}" data-start-index="{{ $startIndex }}"
                     class="btn rounded-0 mt-3 text-white" style="width: 300px; background: #6777ef">Muat Lebih
                     Banyak</button>
             </div>
-        @endif
+        @endif --}}
     </div>
-@endsection
 <script src="{{ asset('/ourjs/home.js') }}"></script>
+@endsection

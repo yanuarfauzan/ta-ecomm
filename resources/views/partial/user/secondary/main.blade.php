@@ -14,15 +14,10 @@
     {{-- Our CSS --}}
     <link href="{{ asset('/ourcss/navbar.css') }}" rel="stylesheet">
     <link href="{{ asset('/ourcss/cart.css') }}" rel="stylesheet">
+
 </head>
 
 <body style="overflow-x: hidden">
-    <script id="__bs_script__">
-        //<![CDATA[
-        document.write("<script async src='/browser-sync/browser-sync-client.js?v=2.27.10'><\/script>".replace("HOST",
-            location.hostname));
-        //]]>
-    </script>
 
     <div id="app">
         <div class="main-wrapper">

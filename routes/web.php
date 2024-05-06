@@ -16,19 +16,6 @@ use App\Http\Controllers\AdminController;
 |
 */
 
-Route::middleware(['splade'])->group(function () {
-
-    // ori splade start
-    // Registers routes to support the interactive components...
-    Route::spladeWithVueBridge();
-    // Registers routes to support password confirmation in Form and Link components...
-    Route::spladePasswordConfirmation();
-    // Registers routes to support Table Bulk Actions and Exports...
-    Route::spladeTable();
-    // Registers routes to support async File Uploads with Filepond...
-    Route::spladeUploads();
-    // ori splade end
-
     Route::get('/test', function (Request $request) {
         dd($request->all());
         return view('user.test');
@@ -42,8 +29,10 @@ Route::middleware(['splade'])->group(function () {
     Route::put('/admin/update-users/{id}', [AdminController::class, 'update']);
     
     #ROLE:USER
-    Route::get('/user/cart', [UserController::class, 'showCart'])->name('user-cart');
-    Route::get('/user/home', [UserController::class, 'home'])->name('user-home');
-
-    
-});
+    Route::prefix('/user')->group(function () {
+        Route::get('/cart', [UserController::class, 'showCart'])->name('user-cart');
+        Route::get('/home', [UserController::class, 'home'])->name('user-home');
+        // Route::prefix('/product')->group(function () {
+        //     Route::get('/detail-product/{productId}', [UserController::class, 'home'])->name('user-home');
+        // });
+    });

@@ -2,11 +2,11 @@
 
 namespace App\Livewire;
 
-use App\Models\Cart;
+use App\Models\Cart as  ModelsCart;
 use Livewire\Component;
 use App\Models\Product as ModelProduct;
 
-class Product extends Component
+class Cart extends Component
 {
     public $user;
     public $usersCarts;
@@ -28,11 +28,11 @@ class Product extends Component
     }
     public function showSearchedProducts($searchQuery)
     {
-        $userCarts = Cart::with('hasProduct', 'hasProduct.pickedVariation', 'hasProduct.pickedVariationOption', 'hasProduct.variation', 'hasProduct.variation.variationOption')
-        ->whereHas('hasProduct', function ($query) use ($searchQuery) {
-            $query->where('name', 'like', '%' . $searchQuery . '%');
-        })
-        ->get();
+        $userCarts = ModelsCart::with('hasProduct', 'hasProduct.pickedVariation', 'hasProduct.pickedVariationOption', 'hasProduct.variation', 'hasProduct.variation.variationOption')
+            ->whereHas('hasProduct', function ($query) use ($searchQuery) {
+                $query->where('name', 'like', '%' . $searchQuery . '%');
+            })
+            ->get();
         $this->usersCarts = $userCarts;
     }
     public function decreaseQtyProduct($userCartId, $productPrice, $discountProduct)
@@ -128,6 +128,6 @@ class Product extends Component
     }
     public function render()
     {
-        return view('livewire.product');
+        return view('livewire.cart');
     }
 }
