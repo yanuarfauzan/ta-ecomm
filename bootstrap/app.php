@@ -15,10 +15,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->use([
             \Illuminate\Session\Middleware\StartSession::class
         ]);
-        $middleware->group('splade', [\ProtoneMedia\Splade\Http\SpladeMiddleware::class]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        $exceptions->renderable(\ProtoneMedia\Splade\SpladeCore::exceptionHandler($exceptions->handler));
         //
     })->create();
 

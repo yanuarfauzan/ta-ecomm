@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-    document.getElementById('number-counter').addEventListener('input', function(event) {
+    document.getElementById('number-counter').addEventListener('input', function (event) {
         this.value = this.value.replace(/\D/g, '');
     });
 
@@ -21,17 +21,16 @@ document.addEventListener('DOMContentLoaded', function () {
     for (let i = 0; i < countUserCart; i++) {
         const checkProduct = document.querySelector('.check-product-' + userCarts[i].id);
         const cardProduct = document.getElementById('card-product-' + userCarts[i].id);
-
         if (checkProduct && cardProduct) {  // Memastikan bahwa kedua elemen tersebut ditemukan
             checkProduct.addEventListener('change', function () {
                 if (checkProduct.checked) {
                     cardProduct.classList.remove('card-product');
                     cardProduct.classList.add('card-product-active');
-                    Livewire.dispatchTo('product', 'toggleChecked', { 'userCartId': userCarts[i].id })
+                    Livewire.dispatchTo('cart', 'toggleChecked', { 'userCartId': userCarts[i].id })
                 } else {
                     cardProduct.classList.remove('card-product-active');
                     cardProduct.classList.add('card-product');
-                    Livewire.dispatchTo('product', 'toggleChecked', { 'userCartId': userCarts[i].id })
+                    Livewire.dispatchTo('cart', 'toggleChecked', { 'userCartId': userCarts[i].id })
                 }
             });
         }
@@ -44,10 +43,10 @@ document.addEventListener('DOMContentLoaded', function () {
         allCheckProduct.forEach(check => {
             if (allCheck.checked) {
                 check.checked = allCheck.checked;  // Menetapkan status checked berdasarkan master checkbox
-                Livewire.dispatchTo('product', 'toggleAllChecked')
+                Livewire.dispatchTo('cart', 'toggleAllChecked')
             } else {
                 check.checked = allCheck.checked;  // Menetapkan status checked berdasarkan master checkbox
-                Livewire.dispatchTo('product', 'toggleAllUnCheck')
+                Livewire.dispatchTo('cart', 'toggleAllUnCheck')
             }
             allCheckCardProduct.forEach(cardProduct => {
                 if (check.checked) {

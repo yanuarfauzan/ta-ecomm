@@ -1,4 +1,4 @@
 @extends('partial.user.secondary.main')
 @section('container')
-    @livewire('product', ['usersCarts' => $usersCarts, 'user' => $user])
+    @livewire('cart', ['usersCarts' => $usersCarts, 'user' => $user])
 @endsection
