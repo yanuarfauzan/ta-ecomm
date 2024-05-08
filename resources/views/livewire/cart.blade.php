@@ -11,55 +11,57 @@
             <span class="d-inline-block" style="width: 37%;">Harga satuan</span>
             <span>Total harga</span>
         </div>
-        @foreach ($usersCarts as $index => $userCart)
-            @php
-                $product = $userCart->hasProduct->first();
-                $variation = $product->variation->first();
-            @endphp
-            <div class="card-product card-all-check d-flex justify-content-between px-4 align-items-center shadow-sm gap-4"
-                style="width: 100%; height: 140px; background-color: white" id="card-product-{{ $userCart->id }}">
-                <div class="d-flex justify-content-start align-items-center gap-4" style="width: 30%;">
-                    <span>
-                        <input class="form-check-input check-product-{{ $userCart->id }} all-check" type="checkbox"
-                            id="flexCheckDefault" style="width: 20px; height: 20px; cursor: pointer;">
-                    </span>
-                    <img src="{{ Storage::url('public/product_pictures/' . $product->product_image) }}" alt=""
-                        style="width: 80px; height: 80px;">
-                    <div class="d-flex position-relative justify-content-between" style="width: auto;">
-                        @livewire('variation', ['index' => $index, 'product' => $product, 'usersCarts' => $usersCarts], key($product->id))
-                    </div>
-                </div>
-                <div class="d-flex flex-column justify-content-center align-items-center " style="width: 150px;">
-                    <div class="width: 100%">
-                        <h5 class="font-main-color"><strong>Rp
-                                {{ number_format($product->price, 2, ',', '.') }}</strong></h5>
-                    </div>
-                    @if (isset($product->discount))
-                        <div class="d-flex" style="width: auto">
-                            <span class="text-dark bg-light border-main-color text-center"
-                                style="width: 80px; height: 27px;">
-                                <p class="font-main-color">Discount</p>
-                            </span>
-                            <span class="text-dark bg-main-color border-main-color text-center"
-                                style="width: 40px; height: 27px"><i
-                                    class="text-white">{{ floor($product->discount) }}%</i></span>
+        @if (count($usersCarts) > 0)
+            @foreach ($usersCarts ?? [] as $index => $userCart)
+                @php
+                    $product = $userCart?->hasProduct->first();
+                    $variation = $product?->variation->first();
+                @endphp
+                <div class="card-product card-all-check d-flex justify-content-between px-4 align-items-center shadow-sm gap-4"
+                    style="width: 100%; height: 140px; background-color: white" id="card-product-{{ $userCart?->id }}">
+                    <div class="d-flex justify-content-start align-items-center gap-4" style="width: 30%;">
+                        <span>
+                            <input class="form-check-input check-product-{{ $userCart?->id }} all-check" type="checkbox"
+                                id="flexCheckDefault" style="width: 20px; height: 20px; cursor: pointer;">
+                        </span>
+                        <img src="{{ Storage::url('public/product_pictures/' . $product?->hasImages->first()->filepath_image) }}"
+                            alt="" style="width: 80px; height: 80px;">
+                        <div class="d-flex position-relative justify-content-between" style="width: auto;">
+                            @livewire('variation', ['index' => $index, 'product' => $product, 'usersCarts' => $usersCarts])
                         </div>
-                    @endif
-                    <span>
-                        <input type="checkbox" class="btn-check btn-check-outlined"
-                            id="btn-check-outlined-{{ $userCart->id }}" autocomplete="off"
-                            wire:click="toggleRelatedProducts('{{ $userCart->id }}')"
-                            {{ $userCartId === $userCart->id ? 'checked' : '' }}>
-                        <label class="btn rounded-0 mt-2 p-0" for="btn-check-outlined-{{ $userCart->id }}"
-                            style="width: 120px; height: 27px;">produk serupa</label><br>
-                    </span>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center align-items-center " style="width: 150px;">
+                        <div class="width: 100%">
+                            <h5 class="font-main-color"><strong>Rp
+                                    {{ number_format($product?->price, 2, ',', '.') }}</strong></h5>
+                        </div>
+                        @if (isset($product?->discount))
+                            <div class="d-flex" style="width: auto">
+                                <span class="text-dark bg-light border-main-color text-center"
+                                    style="width: 80px; height: 27px;">
+                                    <p class="font-main-color">Discount</p>
+                                </span>
+                                <span class="text-dark bg-main-color border-main-color text-center"
+                                    style="width: 40px; height: 27px"><i
+                                        class="text-white">{{ floor($product?->discount) }}%</i></span>
+                            </div>
+                        @endif
+                        <span>
+                            <input type="checkbox" class="btn-check btn-check-outlined"
+                                id="btn-check-outlined-{{ $userCart?->id }}" autocomplete="off"
+                                wire:click="toggleRelatedProducts('{{ $userCart?->id }}')"
+                                {{ $userCartId === $userCart?->id ? 'checked' : '' }}>
+                            <label class="btn rounded-0 mt-2 p-0" for="btn-check-outlined-{{ $userCart?->id }}"
+                                style="width: 120px; height: 27px;">produk serupa</label><br>
+                        </span>
+                    </div>
+                    @livewire('counter', ['userCart' => $userCart, 'product' => $product, 'user' => $user])
                 </div>
-                @livewire('counter', ['userCart' => $userCart, 'product' => $product, 'user' => $user], key($userCart->id))
-            </div>
-            @php
-                $index++;
-            @endphp
-        @endforeach
+                @php
+                    $index++;
+                @endphp
+            @endforeach
+        @endif
     </div>
     <div class="d-flex flex-column align-items-start gap-2" style="width: 30%; height: 100%;">
         <div class="shadow-sm card-summary bg-light" style="width: 100%; height: 280px;">
@@ -113,7 +115,7 @@
                                     <div class="card border position-relative shadow-sm rounded-0" id="card-product"
                                         style="width: 100%; max-width: 150px; height: auto; cursor: pointer;">
                                         <div style="overflow: hidden;">
-                                            <img src="{{ Storage::url('public/product_pictures/' . $product->product_image) }}"
+                                            <img src="{{ Storage::url('public/product_pictures/' . $product->hasImages()->first()->filepath_image) }}"
                                                 class="card-img-top rounded-0" alt="..." id="image-product"
                                                 style="width: 100%;">
                                         </div>

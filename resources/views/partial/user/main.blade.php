@@ -14,6 +14,7 @@
     {{-- Our CSS --}}
     <link href="{{ asset('/ourcss/navbar.css') }}" rel="stylesheet">
     <link href="{{ asset('/ourcss/home.css') }}" rel="stylesheet">
+    <link href="{{ asset('/ourcss/cart.css') }}" rel="stylesheet">
 
 </head>
 

@@ -124,6 +124,15 @@ span {
     border-color: #6777ef; 
 }
 
+.card-detail-product {
+    border: 2px solid #ccc;
+    transition: border-color 0.3s;
+}
+
+.card-detail-product:hover {
+    border-color: #6777ef; 
+}
+
 .transition {
     transition: opacity 0.3s ease; /* Transisi hanya untuk opacity */
 }
@@ -132,6 +141,11 @@ span {
     position: absolute;
     top: 11%;
     left: 84%
+}
+
+#add-to-cart:hover {
+    border: 1px solid #6777ef;
+    background-color: #6777ef;
 }
 
 #checkout:hover {

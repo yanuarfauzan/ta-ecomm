@@ -30,12 +30,12 @@
         <div class="container">
             <div class="row row-cols-4 ms-0">
                 @foreach ($products as $index => $product)
-                    <a href="{{ $product->name }}" style="text-decoration: none">
+                    <a href="{{ route('user-detail-product', ['product' => $product->id]) }}" wire:navigate style="text-decoration: none">
                         <div class="col mt-4">
                             <div class="card border-0 position-relative shadow rounded-0" id="card-product"
                                 style="width: 18rem; height: auto; cursor: pointer;">
                                 <div style="overflow: hidden;">
-                                    <img src="{{ Storage::url('public/product_pictures/' . $product->product_image) }}"
+                                    <img src="{{ Storage::url('public/product_pictures/' . $product->hasImages->first()->filepath_image) }}"
                                     class="card-img-top rounded-0" alt="..." id="image-product">
                                 </div>
                                 @if ($product->stock == 0)

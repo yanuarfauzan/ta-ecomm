@@ -32,7 +32,7 @@ use App\Http\Controllers\AdminController;
     Route::prefix('/user')->group(function () {
         Route::get('/cart', [UserController::class, 'showCart'])->name('user-cart');
         Route::get('/home', [UserController::class, 'home'])->name('user-home');
-        // Route::prefix('/product')->group(function () {
-        //     Route::get('/detail-product/{productId}', [UserController::class, 'home'])->name('user-home');
-        // });
+        Route::prefix('/product')->group(function () {
+            Route::get('/detail-product/{product}', [UserController::class, 'detailProduct'])->name('user-detail-product');
+        });
     });
