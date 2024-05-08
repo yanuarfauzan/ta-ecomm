@@ -8,18 +8,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
-class AdminController extends Controller
+class AdminUsersController extends Controller
 {
     public function index()
     {
-        $users = User::all();
+        $users = User::orderBy('username')->get();
         $address = Address::all();
-        return view('admin.list', compact('users', 'address'));
+        return view('ADMIN.users.list', compact('users', 'address'));
     }
 
     public function create()
     {
-        return view('admin.create');
+        return view('ADMIN.users.create');
     }
 
     public function store(Request $request)
@@ -60,13 +60,13 @@ class AdminController extends Controller
         $users = User::all();
         $address = Address::all();
 
-        return view('admin.list', compact('users', 'address'));
+        return view('ADMIN.users.list', compact('users', 'address'));
     }
 
     public function edit($id)
     {
         $user = User::findOrFail($id);
-        return view('admin.edit', compact('user'));
+        return view('ADMIN.users.edit', compact('user'));
     }
 
     public function update(Request $request, $id)
@@ -95,11 +95,8 @@ class AdminController extends Controller
 
         if ($request->filled('address')) {
             foreach ($request->address as $addressData) {
-                // Periksa apakah alamat memiliki ID
                 if (isset($addressData['id'])) {
-                    // Temukan alamat berdasarkan ID
                     $address = Address::findOrFail($addressData['id']);
-                    // Update data alamat
                     $address->update([
                         'address' => $addressData['address'],
                         'detail' => $addressData['detail'],
@@ -112,5 +109,16 @@ class AdminController extends Controller
         }
 
         return redirect()->to('/admin/list-users')->with('success', 'User updated successfully');
+    }
+
+    public function destroy($id)
+    {
+        $user = User::findOrFail($id);
+
+        $user->usersAddress()->delete();
+
+        $user->delete();
+
+        return redirect()->to('/admin/list-users')->with('delete', 'User deleted successfully');
     }
 }
