@@ -54,6 +54,13 @@
         align-self: center; /* Vertikal tengah */
     }
 
+    .divider-black {
+        width: 1px;
+        background-color: black; /* Sesuaikan warna dengan tema situs Anda */
+        height: 20px; /* Atur tinggi sesuai kebutuhan */
+        align-self: center; /* Vertikal tengah */
+    }
+
     .low-divider {
         width: 1px;
         background-color: white; /* Sesuaikan warna dengan tema situs Anda */

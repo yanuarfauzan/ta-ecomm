@@ -28,10 +28,10 @@ class DatabaseSeeder extends Seeder
             'birtdate' => '17-01-02',
             'role' => 'user',
         ]);
-        User::factory()->count(10)->create();
+        User::factory()->count(3)->create();
         Category::factory()->count(14)->create();
         Variation::factory()->count(10)->create();
-        Product::factory()->count(20)->create();
+        Product::factory()->count(16)->create();
 
         Notification::create([
             'content' => 'Selamat Datang!'

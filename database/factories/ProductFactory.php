@@ -33,18 +33,16 @@ class ProductFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function (Product $product) {
-            $product->hasImages()->create([
-                'id' => Str::uuid(36),
-                'filepath_image' => fake()->image('storage/app/public/product_pictures', 400, 400, 'product', false),
-            ]);
-            $categories = Category::inRandomOrder()->limit(2)->get();
-            $variations = Variation::inRandomOrder()->limit(2)->get();
-            foreach ($categories as $category) {
-                $variation = $variations->random();
-                $product->hasCategory()->attach($category->id, [
+            for ($i = 0; $i < 5; $i++) {
+                $product->hasImages()->create([
                     'id' => Str::uuid(36),
-                    'variation_id' => $variation->id,
+                    'filepath_image' => fake()->image('storage/app/public/product_pictures', 400, 400, 'product', false),
                 ]);
+            }
+            $category = Category::inRandomOrder()->first();
+            $variations = Variation::inRandomOrder()->limit(2)->get();
+            foreach ($variations as $variation) {
+                $product->variation()->attach($variation->id, ['id' => Str::uuid(36), 'category_id' => $category->id]);
             }
         });
     }
