@@ -18,16 +18,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
-            'username' => 'yanuarfauzan',
-            'email' => 'yanuarisnain017@gmail.com',
-            'phone_number' => '085797227164',
-            'is_verified' => true,
-            'password' => Hash::make('password'),
-            'gender' => true,
-            'birtdate' => '17-01-02',
-            'role' => 'user',
-        ]);
+        // User::create([
+        //     'username' => 'yanuarfauzan',
+        //     'email' => 'yanuarisnain017@gmail.com',
+        //     'phone_number' => '085797227164',
+        //     'is_verified' => true,
+        //     'password' => Hash::make('@Koromod17'),
+        //     'gender' => true,
+        //     'birtdate' => '17-01-02',
+        //     'role' => 'user',
+        // ]);
         User::factory()->count(3)->create();
         Category::factory()->count(14)->create();
         Variation::factory()->count(10)->create();

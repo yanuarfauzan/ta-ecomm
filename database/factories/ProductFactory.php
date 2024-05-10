@@ -43,7 +43,19 @@ class ProductFactory extends Factory
             $variations = Variation::inRandomOrder()->limit(2)->get();
             foreach ($variations as $variation) {
                 $product->variation()->attach($variation->id, ['id' => Str::uuid(36), 'category_id' => $category->id]);
+                $productImages = $product->hasImages()->get();
+                $variationOptions = $variation->variationOption;
+
+                foreach ($variationOptions as $varOption) {
+                    $productImage = $productImages->shift();
+                    if ($productImage) {
+                        $varOption->update([
+                            'product_image_id' => $productImage->id
+                        ]);
+                    }
+                }
             }
+
         });
     }
 }

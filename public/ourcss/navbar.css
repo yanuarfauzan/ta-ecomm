@@ -120,6 +120,10 @@
     #search-home:focus {
         border-color: #6777ef;
     }
+
+    a {
+        text-decoration: none !important;
+    }
     
 
     

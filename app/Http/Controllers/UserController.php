@@ -48,7 +48,7 @@ class UserController extends Controller
     }
     public function showCart()
     {
-        $user = User::where('id', '9bfdb2fb-ce9a-4354-a583-f97433d6f57f')->first();
+        $user = User::where('id', '9c009d70-4604-4deb-ade8-ed26ab815fc1')->first();
         $usersCarts = $user->cart()->with('hasProduct', 'hasProduct.pickedVariation', 'hasProduct.pickedVariationOption', 'hasProduct.variation', 'hasProduct.variation.variationOption')->get();
         // FIXME: referensi dari cart
         return view('user.cart', compact('usersCarts', 'user'));
@@ -139,9 +139,10 @@ class UserController extends Controller
             return response()->json(['message' => 'Anda harus login terlebih dahulu']);
         }
     }
-    public function detailProduct(Product $product)
+    public function detailProduct($productId)
     {
-        $product = $product->with('variation', 'variation.variationOption')->first();
+        $product = Product::where('id', $productId)->with('variation', 'variation.variationOption', 'hasCategory', 'variation.variationOption.productImage')->first();
+        // dd($product->toArray());
         $categories = Category::all();
         return view('user.detail-product', compact('categories', 'product'));
     }

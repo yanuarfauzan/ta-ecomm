@@ -1,5 +1,17 @@
 @extends('partial.user.main')
 @section('container')
+    <div class="container">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('user-home') }}">Home</a></li>
+                @foreach ($product->hasCategory()->get() as $category)
+                    <li class="breadcrumb-item"><a href="{{ $category->name }}">{{ $category->name }}</a></li>
+                @endforeach
+                <li class="breadcrumb-item active" aria-current="page"><a href="{{ route('user-detail-product', ['productId' => $product->id]) }}" style="text-decoration: none; color: black;">{{ $product->name }}</a></li>
+            </ol>
+        </nav>
+    </div>
+
     <div class="container d-flex flex-column justify-content-center gap-4 card-detail-product">
         <div class="d-flex justify-content-start gap-2 my-4 mx-4" style="width: 96%; height: 100%">
             <div class="pt-0 my-2" style="width: 32%; height: 80%">
@@ -28,7 +40,7 @@
             </div>
             <div class="d-flex flex-column gap-2 mt-2 px-4" style="width: 40%">
                 <div class="d-flex flex-column">
-                    <span class=" mt-4">
+                    <span>
                         <h2><strong>{{ $product->name }}</strong></h2>
                     </span>
                     <div class="d-flex gap-2">
@@ -53,26 +65,18 @@
                     </div>
                 </div>
                 @if ($product->discount)
-                    <div class="d-flex justify-content-start gap-2 align-items-center">
-                        <span>
+                    <div class="d-flex flex-column gap-2 align-items-start">
+                        <span class="d-flex flex-column p-0">
                             <h2><strong>Rp
                                     {{ number_format($product->price - $product->price * ($product->discount / 100), 2, ',', '.') }}</strong>
                             </h2>
+                            <div class="d-flex gap-2">
+                                <span class="text-dark bg-main-color border border-secondary text-center"
+                                    style="width: 40px;"><i class="text-white">{{ floor($product->discount) }}%</i></span>
+                                <i><strong class="text-decoration-line-through">Rp
+                                        {{ number_format($product->price, 2, ',', '.') }}</strong></i>
+                            </div>
                         </span>
-                        <span>
-                            <i><strong class="text-decoration-line-through">Rp
-                                    {{ number_format($product->price, 2, ',', '.') }}</strong></i>
-                        </span>
-                        @if (isset($product->discount))
-                        <div class="d-flex">
-                            <span class="text-dark bg-light border border-secondary text-center"
-                            style="width: 70px;">Discount</span>
-                            <span
-                            class="text-dark bg-secondary border border-secondary text-center"
-                            style="width: 40px;"><i
-                            class="text-white">{{ floor($product->discount) }}%</i></span>
-                        </div>
-                    @endif
                     </div>
                 @else
                     <div class="d-flex justify-content-start gap-2">
@@ -81,60 +85,39 @@
                         </span>
                     </div>
                 @endif
+                    @livewire('DetailProductVariation', ['product' => $product])
                 <div class="d-flex flex-column gap-4 mt-2">
                     <div class="d-flex flex-column gap-2">
-                        <span><strong>category : </strong></span>
+                        <span><strong>deskripsi : </strong></span>
+                        <div class="d-flex flex-column">
+                            <span>Package size: 21x5x12 CM</span>
+                            <span>Weight: 0,2 KG</span>
+                            <span>Shipping Weight: 0,5 KG</span>
+                        </div>
                         <div class="d-flex gap-2 justify-content-start">
-                            @foreach ($product->hasCategory()->get() as $category)
-                                <span>{{ $category->name }}{{ !$loop->last ? ',' : '' }}</span>
-                            @endforeach 
+                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Earum nesciunt sit, expedita eius
+                            pariatur minus. Quaerat atque dignissimos necessitatibus iusto. Facere voluptatem perferendis
+                            libero vitae veniam ipsa nostrum fuga perspiciatis?
                         </div>
                     </div>
-                </div>
-                <div class="d-flex justify-content-start gap-4">
-                    @foreach ($product->variation as $variation)
-                        <div class="d-flex flex-column align-items-start gap-2" style="width: auto">
-                            <span>
-                                <strong>{{ $variation->name }}</strong>
-                            </span>
-                            <div class="row row-cols-4 gap-1 ms-1">
-                                @foreach ($variation->variationOption as $varOption)
-                                    <button type="button"
-                                        class="variation-item shadow-sm badge border-sm rounded-0 text-dark"
-                                        style="width:auto">
-                                        {{ $varOption->name }}
-                                    </button>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endforeach
                 </div>
                 <div class="d-flex flex-column gap-4 mt-2">
                     <div class="d-flex flex-column gap-2">
-                        <span>
-                            <strong>quantity</strong>
-                        </span>
-                        <div class="d-flex align-items-center gap-4 shadow-sm"
-                            style="width: 129px; height: auto; background-color: white;" id="counter">
-                            <button wire:click="decrease" id="decrease" class="badge rounded-0 border-0 text-center"
-                                style="height: 30px; width: 30px;"><i class="bi bi-dash"></i></button>
-                            <input id="number-counter" type="text" role="spinbutton" pattern="[0-9]*" value="1"
-                                class="border-0 rounded-0 text-center" style="width: 20px; height: 28px;" readonly>
-                            <button wire:click="increase" id="increase" class="badge rounded-0 border-0 text-center"
-                                style="height: 30px; width: 30px;"><i class="bi bi-plus"></i></button>
+                        <span><strong>pengiriman : </strong></span>
+                        <div class="d-flex flex-column gap-2 justify-content-start">
+                            <span><i class="bi bi-geo-alt"></i> dikirim dari</span>
+                            <span><i class="bi bi-truck"></i> ongkir reguler 16 rb - 20 rb</span>
+                            <span>estimasi 2 -3 hari</span>
+                            <span class="d-flex justify-content-end font-main-color">lihat pilihan kurir</span>
+                            <span class="d-flex justify-content-between">
+                                <p>ada masalah dengan produk ini?</p>
+                                <p class="font-main-color"><i class="bi bi-flag font-main-color"></i> laporkan</p>
+                            </span>
                         </div>
-                    </div>
-                    <div>
-                        <span>tersisa 100 produk</span>
-                    </div>
-                    <div class="d-flex justify-content-start gap-4 mb-4">
-                        <button class="btn bg-main-color rounded-0 text-white" style="width: 50%" id="add-to-cart">Add to
-                            Cart</button>
-                        <button class="btn bg-main-color rounded-0 text-white" style="width: 50%" id="add-to-cart">Buy
-                            Now</button>
                     </div>
                 </div>
             </div>
+            @livewire('AmountsAndNotes', ['product' => $product])
         </div>
     </div>
     <div class="container d-flex flex-column justify-content-center gap-4 card-detail-product mt-4"
