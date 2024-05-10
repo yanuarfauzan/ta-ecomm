@@ -7,9 +7,11 @@ use Livewire\Component;
 class DetailProductVariation extends Component
 {
     public $product;
-    public function mount($product)
+    public $firstVarOption;
+    public function mount($product, $firstVarOption)
     {
         $this->product = $product;
+        $this->firstVarOption = explode('_', $firstVarOption)[0];
     }
     public function chooseVarOptions($choosedVarOptions)
     {

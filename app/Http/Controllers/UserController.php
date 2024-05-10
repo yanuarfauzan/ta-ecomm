@@ -142,8 +142,17 @@ class UserController extends Controller
     public function detailProduct($productId)
     {
         $product = Product::where('id', $productId)->with('variation', 'variation.variationOption', 'hasCategory', 'variation.variationOption.productImage')->first();
-        // dd($product->toArray());
+        
+        $firstVarOption = '';
+
+        $data = [
+            $product->variation()->first()->id,
+            $product->variation()->first()->variationOption()->first()->name,
+            $product->variation()->first()->variationOption()->first()->productImage()->first()->filepath_image
+        ];
+
+        $firstVarOption = implode('_', $data);
         $categories = Category::all();
-        return view('user.detail-product', compact('categories', 'product'));
+        return view('user.detail-product', compact('categories', 'product', 'firstVarOption'));
     }
 }
