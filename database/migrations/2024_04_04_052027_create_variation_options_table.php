@@ -13,9 +13,11 @@ return new class extends Migration {
         Schema::create('variation_option', function (Blueprint $table) {
             $table->id();
             $table->uuid('variation_id');
+            $table->uuid('product_image_id')->nullable();
             $table->string('name')->nullable();
             $table->timestamps();
             $table->foreign('variation_id')->references('id')->on('variation')->onDelete('cascade');
+            $table->foreign('product_image_id')->references('id')->on('product_image')->onDelete('cascade');
         });
     }
 

@@ -2,7 +2,7 @@
 
 namespace App\Livewire;
 
-use App\Models\Cart as  ModelsCart;
+use App\Models\Cart as ModelCart;
 use Livewire\Component;
 use App\Models\Product as ModelProduct;
 
@@ -17,7 +17,7 @@ class Cart extends Component
     public $showRelatedProducts = false;
     public $userCartId = null;
     public $categoryIds;
-    protected $listeners = ['toggleChecked', 'toggleAllChecked', 'toggleAllUnCheck', 'decreaseQtyProduct', 'increaseQtyProduct', 'showSearchedProducts'];
+    protected $listeners = ['toggleChecked', 'toggleAllChecked', 'toggleAllUnCheck', 'decreaseQtyProduct', 'increaseQtyProduct', 'showSearchedProducts', 'deleteUserCart'];
 
     public function mount($usersCarts, $user)
     {
@@ -28,7 +28,7 @@ class Cart extends Component
     }
     public function showSearchedProducts($searchQuery)
     {
-        $userCarts = ModelsCart::with('hasProduct', 'hasProduct.pickedVariation', 'hasProduct.pickedVariationOption', 'hasProduct.variation', 'hasProduct.variation.variationOption')
+        $userCarts = ModelCart::with('hasProduct', 'hasProduct.pickedVariation', 'hasProduct.pickedVariationOption', 'hasProduct.variation', 'hasProduct.variation.variationOption')
             ->whereHas('hasProduct', function ($query) use ($searchQuery) {
                 $query->where('name', 'like', '%' . $searchQuery . '%');
             })
@@ -122,9 +122,10 @@ class Cart extends Component
         })->where('id', '!=', $product->id)->take(4)->get();
         $this->relatedProducts = $relatedProducts;
     }
-    public function searchCartProduct()
+    public function deleteUserCart($userCartId)
     {
-
+        ModelCart::where('id', $userCartId)->first()->delete();
+        $this->usersCarts = ModelCart::all();
     }
     public function render()
     {

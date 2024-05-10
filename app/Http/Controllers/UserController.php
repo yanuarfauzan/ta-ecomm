@@ -23,7 +23,7 @@ class UserController extends Controller
         $categories = Category::all();
         $take = $request->loadMoreProduct == true ? 16 : 16;
         $startIndex = $request->input('startIndex', 0);
-        $products = Product::skip($startIndex)->take($take)->get();
+        $products = Product::with('hasImages')->skip($startIndex)->take($take)->get();
         if ($request->loadMoreProduct == true) {
             return response()->json(['message' => 'load more products success', 'data' => $products, 'startIndex' => $startIndex + $take], 200);
         }
@@ -48,7 +48,7 @@ class UserController extends Controller
     }
     public function showCart()
     {
-        $user = User::where('id', '9bb843a9-7943-488a-bbf2-cadfce85c475')->first();
+        $user = User::where('id', '9c009d70-4604-4deb-ade8-ed26ab815fc1')->first();
         $usersCarts = $user->cart()->with('hasProduct', 'hasProduct.pickedVariation', 'hasProduct.pickedVariationOption', 'hasProduct.variation', 'hasProduct.variation.variationOption')->get();
         // FIXME: referensi dari cart
         return view('user.cart', compact('usersCarts', 'user'));
@@ -87,10 +87,11 @@ class UserController extends Controller
                     'total_price' => $product->price * $request->qty
                 ]);
                 $cart->hasProduct()->attach($productId, ['id' => $cartProductId]);
-                $cartProduct = $cart->hasProduct()->wherePivot('id', $cartProductId)->first();
-                collect($request->variation)->each(function ($variationItem) use ($cartProduct) {
-                    $cartProduct->pickedVariation()->attach([
-                        $variationItem['variation_id'] => ['variation_option_id' => $variationItem['variation_option_id'], 'id' => Str::uuid(36)]
+                collect($request->variation)->each(function ($variationItem) use ($cart, $product) {
+                    $cart->pickedVariation()->create([
+                        'product_id' => $product->id,
+                        'variation_id' => $variationItem['variation_id'],
+                        'variation_option_id' => $variationItem['variation_option_id'],
                     ]);
                 });
                 return response()->json(['message' => 'Berhasil menambahkan produk ke keranjang']);
@@ -102,10 +103,11 @@ class UserController extends Controller
                         'total_price' => $product->price * $request->qty
                     ]);
                     $cart->hasProduct()->attach($productId, ['id' => $cartProductId]);
-                    $cartProduct = $cart->hasProduct()->wherePivot('id', $cartProductId)->first();
-                    collect($request->variation)->each(function ($variationItem) use ($cartProduct) {
-                        $cartProduct->pickedVariation()->attach([
-                            $variationItem['variation_id'] => ['variation_option_id' => $variationItem['variation_option_id'], 'id' => Str::uuid(36)]
+                    collect($request->variation)->each(function ($variationItem) use ($cart, $product) {
+                        $cart->pickedVariation()->create([
+                            'product_id' => $product->id,
+                            'variation_id' => $variationItem['variation_id'],
+                            'variation_option_id' => $variationItem['variation_option_id'],
                         ]);
                     });
                     return response()->json(['message' => 'Berhasil menambahkan produk dengan variasi berbeda ke keranjang']);
@@ -136,5 +138,12 @@ class UserController extends Controller
         } else {
             return response()->json(['message' => 'Anda harus login terlebih dahulu']);
         }
+    }
+    public function detailProduct($productId)
+    {
+        $product = Product::where('id', $productId)->with('variation', 'variation.variationOption', 'hasCategory', 'variation.variationOption.productImage')->first();
+        // dd($product->toArray());
+        $categories = Category::all();
+        return view('user.detail-product', compact('categories', 'product'));
     }
 }

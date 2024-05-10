@@ -37,4 +37,8 @@ class Cart extends Model
     {
         return $this->belongsToMany(Product::class, 'cart_product')->withPivot('id', 'is_locked');
     }
+    public function pickedVariation()
+    {
+        return $this->hasMany(PickedVariation::class, 'cart_id', 'id');
+    }
 }

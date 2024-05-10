@@ -15,9 +15,11 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->uuid('product_id');
             $table->uuid('variation_id');
+            $table->uuid('cart_id')->nullable()->default(null);
             $table->unsignedBigInteger('variation_option_id');
             $table->timestamps();
             $table->foreign('product_id')->references('id')->on('product')->onDelete('cascade');
+            $table->foreign('cart_id')->references('id')->on('cart')->onDelete('cascade');
             $table->foreign('variation_id')->references('id')->on('variation')->onDelete('cascade');
             $table->foreign('variation_option_id')->references('id')->on('variation_option')->onDelete('cascade');
         });

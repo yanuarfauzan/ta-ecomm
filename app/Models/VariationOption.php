@@ -10,7 +10,8 @@ class VariationOption extends Model
     use HasFactory;
     protected $table = 'variation_option';
     protected $fillable = [
-        'user_id',
+        'variation_id',
+        'product_image_id',
         'name'
     ];
 
@@ -29,5 +30,9 @@ class VariationOption extends Model
     public function belongsToVariation()
     {
         return $this->belongsTo(PickedVariation::class, 'id', 'variation_option_id');
+    }
+    public function productImage()
+    {
+        return $this->hasOne(ProductImage::class, 'id', 'product_image_id');
     }
 }

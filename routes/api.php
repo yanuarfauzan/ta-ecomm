@@ -23,7 +23,7 @@ Route::post('/user/store-admin', [AdminController::class, 'store']);
 
 Route::middleware('auth')->group(function () {
     Route::post('/user/add-address', [UserController::class, 'addAddresses']);
-    Route::get('/user/add-product-to-cart/{productId}', [UserController::class, 'addProductToCart']);
+    Route::get('/add-product-to-cart/{productId}', [UserController::class, 'addProductToCart'])->name('user-add-product-to-cart');
     Route::get('/user/add-product-to-fav/{productId}', [UserController::class, 'addProductToFav']);
     Route::get('/user/show-cart', [UserController::class, 'showCart']);
 });

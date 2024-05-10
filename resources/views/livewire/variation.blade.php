@@ -51,7 +51,7 @@
             </div>
         </div>
     </div>
-    <script>
+    <script data-navigate-track>
         const variation = @json($product->variation);
         const userCarts = @json($usersCarts);
     </script>

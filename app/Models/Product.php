@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\ProductImage;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
@@ -65,4 +66,8 @@ class Product extends Model
         return $this->belongsToMany(User::class, 'has_been_favourite_product');
     }
 
+    public function hasImages()
+    {
+        return $this->hasMany(ProductImage::class, 'product_id', 'id');
+    }
 }

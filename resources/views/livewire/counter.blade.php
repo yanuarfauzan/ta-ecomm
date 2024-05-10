@@ -3,7 +3,7 @@
         <span wire:click="addCartProductToFav" class="font-main-color" style="cursor: pointer;">
             <i class="bi bi-heart{{ $user->favouriteProduct->contains($product->id) ? '-fill' : '' }}" style="font-size: 20px"></i>
         </span>
-        <span wire:click="deleteCartProduct" class="font-main-color" style="cursor: pointer;">
+        <span wire:click="deleteCartProduct('{{ $userCart->id }}')" class="font-main-color" style="cursor: pointer;">
             <i class="bi bi-trash" style="font-size: 20px"></i>
         </span>
     </div>
@@ -18,7 +18,7 @@
             </p>
             @endif
         </div>
-        <div wire:poll class="d-flex align-items-center gap-4 shadow-sm"
+        <div class="d-flex align-items-center gap-4 shadow-sm"
             style="width: 129px; height: auto; background-color: white;" id="counter">
             <button wire:click="decrease" id="decrease" class="badge rounded-0 border-0 text-center"
                 style="height: 30px; width: 30px;"><i class="bi bi-dash"></i></button>

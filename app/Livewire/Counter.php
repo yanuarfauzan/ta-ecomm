@@ -71,9 +71,9 @@ class Counter extends Component
             $this->dispatch('decreaseQtyProduct', userCartId: $this->userCart->id, productPrice: $this->product->price, discountProduct: $discountProduct);
         }
     }
-    public function deleteCartProduct()
+    public function deleteCartProduct($userCartId)
     {   
-        $this->userCart->delete();
+        $this->dispatch('deleteUserCart', userCartId: $userCartId);
     }
 
     public function addCartProductToFav()
