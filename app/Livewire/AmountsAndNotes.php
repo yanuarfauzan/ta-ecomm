@@ -15,11 +15,11 @@ class AmountsAndNotes extends Component
     public $choosedVarOptions = [];
     public $choosedVarOptionsForCart = [];
     protected $listeners = ['showChoosedVarOptions'];
-    public function mount($product)
+    public function mount($product, $firstVarOption)
     {
         $this->product = $product;
         $this->totalPrice = $product->price;
-
+        $this->choosedVarOptions[] = $firstVarOption;
     }
     public function addToCart()
     {

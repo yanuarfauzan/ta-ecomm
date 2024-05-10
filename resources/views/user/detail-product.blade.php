@@ -85,19 +85,17 @@
                         </span>
                     </div>
                 @endif
-                    @livewire('DetailProductVariation', ['product' => $product])
+                    @livewire('DetailProductVariation', ['product' => $product, 'firstVarOption' => $firstVarOption])
                 <div class="d-flex flex-column gap-4 mt-2">
                     <div class="d-flex flex-column gap-2">
                         <span><strong>deskripsi : </strong></span>
                         <div class="d-flex flex-column">
                             <span>Package size: 21x5x12 CM</span>
-                            <span>Weight: 0,2 KG</span>
+                            <span>Weight: {{ $product->weight }} KG</span>
                             <span>Shipping Weight: 0,5 KG</span>
                         </div>
                         <div class="d-flex gap-2 justify-content-start">
-                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Earum nesciunt sit, expedita eius
-                            pariatur minus. Quaerat atque dignissimos necessitatibus iusto. Facere voluptatem perferendis
-                            libero vitae veniam ipsa nostrum fuga perspiciatis?
+                            {{ $product->desc }}
                         </div>
                     </div>
                 </div>
@@ -117,7 +115,7 @@
                     </div>
                 </div>
             </div>
-            @livewire('AmountsAndNotes', ['product' => $product])
+            @livewire('AmountsAndNotes', ['product' => $product, 'firstVarOption' => $firstVarOption])
         </div>
     </div>
     <div class="container d-flex flex-column justify-content-center gap-4 card-detail-product mt-4"

@@ -6,9 +6,10 @@
                     <strong>{{ $variation->name }}</strong>
                 </span>
                 <div class="row row-cols-4 gap-1 ms-1">
-                    @foreach ($variation->variationOption as $varOption)
-                    <button wire:ignore type="button" wire:click="chooseVarOptions('{{ $variation->id }}_{{ $varOption->id }}_{{ $varOption->productImage?->filepath_image }}')"
-                        class="variation-item variation-item-{{ $variation->id }} shadow-sm badge border-sm rounded-0"
+                    @foreach ($variation->variationOption as $index => $varOption)
+                    <button wire:ignore type="button" 
+                        wire:click="chooseVarOptions('{{ $variation->id }}_{{ $varOption->id }}_{{ $varOption->productImage?->filepath_image }}')"
+                        class="variation-item variation-item-{{ $variation->id }} shadow-sm badge border-sm rounded-0 {{ $loop->first && $firstVarOption == $variation->id ? 'active-var-item' : '' }}"
                         style="width: auto">{{ $varOption->name }}</button>
                     @endforeach
                 </div>
