@@ -14,8 +14,7 @@
     {{-- Our CSS --}}
     <link href="{{ asset('/ourcss/navbar.css') }}" rel="stylesheet">
     <link href="{{ asset('/ourcss/home.css') }}" rel="stylesheet">
-    <link href="{{ asset('/ourcss/cart.css') }}" rel="stylesheet">
-
+    <link href="{{ asset('/ourcss/detail_product.css') }}" rel="stylesheet">
 </head>
 
 <body style="overflow-x: hidden">
@@ -32,9 +31,9 @@
 
     
     <!-- Bootstrap -->
-    <script src="{{ asset('/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('/bootstrap/dist/js/bootstrap.bundle.min.js') }}" data-navigate-track></script>
     {{-- Swiper --}}
-    <script src="{{ asset('/swiper/swiper-bundle.min.js') }}"></script>
+    <script src="{{ asset('/swiper/swiper-bundle.min.js') }}" data-navigate-track></script>
 </body>
 
 </html>

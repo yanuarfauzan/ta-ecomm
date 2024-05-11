@@ -46,10 +46,10 @@ class UserController extends Controller
             return response()->json(['message' => 'Anda harus login terlebih dahulu']);
         }
     }
-    public function showCart()
+    public function showCart(Request $request)
     {
         $user = User::where('id', '9c009d70-4604-4deb-ade8-ed26ab815fc1')->first();
-        $usersCarts = $user->cart()->with('hasProduct', 'hasProduct.pickedVariation', 'hasProduct.pickedVariationOption', 'hasProduct.variation', 'hasProduct.variation.variationOption')->get();
+        $usersCarts = $user?->cart()->with('hasProduct', 'hasProduct.pickedVariation', 'hasProduct.pickedVariationOption', 'hasProduct.variation', 'hasProduct.variation.variationOption')->get();
         // FIXME: referensi dari cart
         return view('user.cart', compact('usersCarts', 'user'));
     }
@@ -139,7 +139,7 @@ class UserController extends Controller
             return response()->json(['message' => 'Anda harus login terlebih dahulu']);
         }
     }
-    public function detailProduct($productId)
+    public function detailProduct(Request $request, $productId)
     {
         $product = Product::where('id', $productId)->with('variation', 'variation.variationOption', 'hasCategory', 'variation.variationOption.productImage')->first();
         
@@ -150,9 +150,11 @@ class UserController extends Controller
             $product->variation()->first()->variationOption()->first()->name,
             $product->variation()->first()->variationOption()->first()->productImage()->first()->filepath_image
         ];
-
+        $take = $request->loadMoreProduct == true ? 16 : 16;
+        $startIndex = $request->input('startIndex', 0);
+        $products = Product::with('hasImages')->skip($startIndex)->take($take)->get();
         $firstVarOption = implode('_', $data);
         $categories = Category::all();
-        return view('user.detail-product', compact('categories', 'product', 'firstVarOption'));
+        return view('user.detail-product', compact('categories', 'product', 'firstVarOption', 'products'));
     }
 }
