@@ -123,7 +123,7 @@
             @livewire('AmountsAndNotes', ['product' => $product, 'firstVarOption' => $firstVarOption])
         </div>
     </div>
-    <div class="container d-flex justify-content-start gap-4 p-0">
+    <div class="container d-flex justify-content-start align-items-start gap-4 p-0">
         <div class="d-flex flex-column justify-content-center gap-4" style="width: 30%">
             <div class="d-flex flex-column justify-content-center gap-2 card-detail-product mt-4" style="width: 100%">
                 <div class="container mt-4 d-flex flex-column gap-2 ms-4">
@@ -331,6 +331,114 @@
                             <option value="2">rating tertinggi</option>
                             <option value="3">rating terendah</option>
                         </select>
+                    </div>
+                </div>
+            </div>
+            <div class="container d-flex flex-column gap-2">
+                <div class="d-flex justify-content-start align-items-center gap-2 ms-4">
+                    <span>
+                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
+                    </span>
+                    <span>
+                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
+                    </span>
+                    <span>
+                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
+                    </span>
+                    <span>
+                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
+                    </span>
+                    <span>
+                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
+                    </span>
+                    <span>lebih dari 1 tahun yang lalu</span>
+                </div>
+                <div class="d-flex justify-content-start align-items-center gap-2 ms-4">
+                    <span><img src="https://placehold.co/400x400/png" alt="" class="rounded-circle"
+                            style="width: 40px;"></span>
+                    <span><strong>Yanuar</strong></span>
+                </div>
+                <div class="d-flex justify-content-start align-items-center ms-4">
+                    <span>varian: pendek, ungu</span>
+                </div>
+                <div class="d-flex justify-content-start align-items-center ms-4">
+                    <span><strong>celananya bagus, warna ungu nya menyala, pelayanan nya memuaskan</strong></span>
+                </div>
+                <div class="accordion accordion-flush ms-2" id="accordionFlushExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" style="background-color: #F8F9FA;">
+                            <button class="accordion-button collapsed border-white shadow-0" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false"
+                                aria-controls="flush-collapseOne"
+                                style="width: 155px; height: 30px; background-color: #F8F9FA;">
+                                lihat balasan
+                            </button>
+                        </h2>
+                        <div id="flush-collapseOne" class="accordion-collapse collapse mt-2"
+                            data-bs-parent="#accordionFlushExample">
+                            <div class="d-flex justify-content-start align-items-center gap-2 ms-3 my-1">
+                                <span><img src="https://placehold.co/400x400/png" alt="" class="rounded-circle"
+                                        style="width: 40px;"></span>
+                                <span><strong>Penjual</strong></span>
+                            </div>
+                            <div class="d-flex justify-content-start align-items-center ms-3">
+                                <span><strong>terimakasih ya kak</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container d-flex flex-column gap-2">
+                <div class="d-flex justify-content-start align-items-center gap-2 ms-4">
+                    <span>
+                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
+                    </span>
+                    <span>
+                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
+                    </span>
+                    <span>
+                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
+                    </span>
+                    <span>
+                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
+                    </span>
+                    <span>
+                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
+                    </span>
+                    <span>lebih dari 1 tahun yang lalu</span>
+                </div>
+                <div class="d-flex justify-content-start align-items-center gap-2 ms-4">
+                    <span><img src="https://placehold.co/400x400/png" alt="" class="rounded-circle"
+                            style="width: 40px;"></span>
+                    <span><strong>Yanuar</strong></span>
+                </div>
+                <div class="d-flex justify-content-start align-items-center ms-4">
+                    <span>varian: pendek, ungu</span>
+                </div>
+                <div class="d-flex justify-content-start align-items-center ms-4">
+                    <span><strong>celananya bagus, warna ungu nya menyala, pelayanan nya memuaskan</strong></span>
+                </div>
+                <div class="accordion accordion-flush ms-2" id="accordionFlushExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" style="background-color: #F8F9FA;">
+                            <button class="accordion-button collapsed border-white shadow-0" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false"
+                                aria-controls="flush-collapseOne"
+                                style="width: 155px; height: 30px; background-color: #F8F9FA;">
+                                lihat balasan
+                            </button>
+                        </h2>
+                        <div id="flush-collapseOne" class="accordion-collapse collapse mt-2"
+                            data-bs-parent="#accordionFlushExample">
+                            <div class="d-flex justify-content-start align-items-center gap-2 ms-3 my-1">
+                                <span><img src="https://placehold.co/400x400/png" alt="" class="rounded-circle"
+                                        style="width: 40px;"></span>
+                                <span><strong>Penjual</strong></span>
+                            </div>
+                            <div class="d-flex justify-content-start align-items-center ms-3">
+                                <span><strong>terimakasih ya kak</strong></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
