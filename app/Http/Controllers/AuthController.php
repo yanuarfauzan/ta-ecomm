@@ -4,20 +4,42 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use App\Http\Requests\OtpRequest;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\RegisterRequest;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\ForgotPasswordRequest;
 
 class AuthController extends Controller
 {
+    public function registerPage()
+    {
+        return view('user.auth.register');
+    }
+    public function verifyPage()
+    {
+        return view('user.auth.verify');
+    }
+    public function loginPage()
+    {
+        return view('user.auth.login');
+    }
+    public function forgotPasswordPage()
+    {
+        return view('user.auth.forgot_password');
+    }
+    public function resetPasswordPage()
+    {
+        return view('user.auth.reset_password');
+    }
     public function preRegister(RegisterRequest $request)
     {
         $user = $request->all();
@@ -52,29 +74,42 @@ class AuthController extends Controller
             return response()->json(['message' => 'Waktu OTP telah habis']);
         }
     }
+
     public function login(LoginRequest $request)
     {
+        // $validator = Validator::make($request->all(), [
+        //     'login' => 'required',
+        //     'password' => 'required'
+        // ], [
+        //     'login.required' => 'Username atau email tidak boleh kosong',
+        //     'password.required' => 'Password tidak boleh kosong'
+        // ]);
+
+        // if ($validator->fails()) {
+        //     return back()->withErrors($validator->errors())->withInput();
+        // }
+
         $login = $request->login;
         if (filter_var($login, FILTER_VALIDATE_EMAIL)) {
             $user = User::where('email', $login)->first();
             if ($user) {
                 return $this->checkCredential($user, $request->all());
             } else {
-                return response()->json(['message' => 'email atau username belum terverifikasi'], 400);
+                return back()->with(['message' => 'email atau username belum terverifikasi']);
             }
         } else {
             $user = User::where('username', $login)->first();
             if ($user) {
                 return $this->checkCredential($user, $request->all());
             } else {
-                return response()->json(['message' => 'email atau username belum terverifikasi'], 400);
+                return back()->with(['message' => 'email atau username belum terverifikasi']);
             }
         }
     }
     public function checkCredential($user, $data)
     {
         if (!$user || !Hash::check($data['password'], $user->password)) {
-            return response()->json(['status' => false, 'message' => 'email, username atau password salah']);
+            return response()->with(['status' => false, 'message' => 'email, username atau password salah']);
         }
         try {
             Auth::loginUsingId($user->id);
@@ -82,7 +117,7 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
-        return response()->json(['message' => 'User berhasil login', 'data' => auth()->user()]);
+        return redirect()->route('user-home');
     }
     public function logout(Request $request)
     {
