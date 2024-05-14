@@ -14,6 +14,7 @@
     {{-- Our CSS --}}
     <link href="{{ asset('/ourcss/navbar.css') }}" rel="stylesheet">
     <link href="{{ asset('/ourcss/cart.css') }}" rel="stylesheet">
+    <link href="{{ asset('/ourcss/login.css') }}" rel="stylesheet">
 
 </head>
 
@@ -23,7 +24,7 @@
         <div class="main-wrapper">
             @include('partial.user.secondary.navbar')
             <!-- Main Content -->
-            <div class="main-content" style="margin-top: 165px;">
+            <div class="main-content" style="{{ in_array(substr(url()->current(), strrpos(url()->current(), '/') + 1), ['login', 'register', 'verify', 'forgot-password', 'reset-password']) ? "" : "margin-top: 165px" }}">
                 @yield('container')
             </div>
             @include('partial.user.footer')

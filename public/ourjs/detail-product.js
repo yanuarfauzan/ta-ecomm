@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
         },
     });
     
-
+    
     let selectedVariations = [];
     for (i = 0; i <= variation.length; i++) {
         const variationItem = document.querySelectorAll('.variation-item-' + variation[i].id);
@@ -38,5 +38,5 @@ document.addEventListener('DOMContentLoaded', function () {
             })
         })
     }
-  
+
 });
