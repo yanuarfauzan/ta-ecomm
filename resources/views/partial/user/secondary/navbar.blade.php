@@ -60,7 +60,7 @@
     <div class="container-fluid mx-4" style="width: 84%">
         <div class="d-flex align-items-center justify-content-start" style="width: 20%;">
             <a class="navbar-brand font-main-color" href="{{ route('user-home') }}"
-                wire:navigate><strong>E-COMM</strong></a>
+                ><strong>E-COMM</strong></a>
             <div class="divider" style="background-color: #6777ef"></div>
             <a href="#categoryCollapse" class="font-main-color ms-2" style="text-decoration: none;"
                 data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="categoryCollapse"

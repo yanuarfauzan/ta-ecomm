@@ -51,6 +51,7 @@ class UserController extends Controller
     {
         $user = $this->user;
         $usersCarts = $user?->cart()->with('hasProduct', 'hasProduct.pickedVariation', 'hasProduct.pickedVariationOption', 'hasProduct.variation', 'hasProduct.variation.variationOption')->get();
+        // dd($usersCarts->toArray());
         return view('user.cart', compact('usersCarts', 'user'));
     }
     public function isCartExist($productId)
@@ -141,20 +142,29 @@ class UserController extends Controller
     }
     public function detailProduct(Request $request, $productId)
     {
+        $user = $this->user;
+
         $product = Product::where('id', $productId)->with('variation', 'variation.variationOption', 'hasCategory', 'variation.variationOption.productImage')->first();
 
         $firstVarOption = '';
 
-        $data = [
+        $dataForAmounts = [
             $product->variation()->first()->id,
             $product->variation()->first()->variationOption()->first()->name,
             $product->variation()->first()->variationOption()->first()->productImage()->first()->filepath_image
         ];
+        $dataForCart = [
+            $product->variation()->first()->id,
+            $product->variation()->first()->variationOption()->first()->id,
+            $product->variation()->first()->variationOption()->first()->productImage()->first()->filepath_image
+        ];
+
         $take = $request->loadMoreProduct == true ? 16 : 16;
         $startIndex = $request->input('startIndex', 0);
         $products = Product::with('hasImages')->skip($startIndex)->take($take)->get();
-        $firstVarOption = implode('_', $data);
+        $firstVarOption = implode('_', $dataForAmounts);
+        $firstVarOptionForCart = implode('_', $dataForCart);
         $categories = Category::all();
-        return view('user.detail-product', compact('categories', 'product', 'firstVarOption', 'products'));
+        return view('user.detail-product', compact('categories', 'product', 'firstVarOption', 'firstVarOptionForCart', 'products', 'user'));
     }
 }

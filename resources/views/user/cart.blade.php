@@ -10,7 +10,6 @@
                     <strong class="opacity-50"><h1>keranjang anda kosong</h1></strong>
                 </span>
             </div>
-
     </div>
     @endif
 @endsection

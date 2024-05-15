@@ -30,7 +30,7 @@
         <div class="container">
             <div class="row row-cols-4 ms-0">
                 @foreach ($products as $index => $product)
-                    <a href="{{ route('user-detail-product', ['productId' => $product->id]) }}" wire:navigate style="text-decoration: none">
+                    <a href="{{ route('user-detail-product', ['productId' => $product->id]) }}" style="text-decoration: none">
                         <div class="col mt-4">
                             <div class="card border-0 position-relative shadow rounded-0" id="card-product"
                                 style="width: 18rem; height: auto; cursor: pointer;">

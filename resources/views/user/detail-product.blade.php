@@ -120,7 +120,7 @@
                     </div>
                 </div>
             </div>
-            @livewire('AmountsAndNotes', ['product' => $product, 'firstVarOption' => $firstVarOption])
+            @livewire('AmountsAndNotes', ['product' => $product, 'firstVarOption' => $firstVarOption, 'firstVarOptionForCart' => $firstVarOptionForCart, 'user' => $user])
         </div>
     </div>
     <div class="container d-flex justify-content-start align-items-start gap-4 p-0">
@@ -618,7 +618,7 @@
             </div>
             <div class="row row-cols-4 ms-0">
                 @foreach ($products as $index => $product)
-                    <a href="{{ route('user-detail-product', ['productId' => $product->id]) }}" wire:navigate
+                    <a href="{{ route('user-detail-product', ['productId' => $product->id]) }}"
                         style="text-decoration: none">
                         <div class="col mt-4">
                             <div class="card border-0 position-relative shadow rounded-0" id="card-product"
