@@ -95,14 +95,10 @@
     </a>
     <div class="dropdown-divider"></div>
     <!-- item-->
-    <a class="dropdown-item notify-item  text-danger" href=""
-        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+    <a class="dropdown-item notify-item  text-danger" href="{{ route('user-logout-act') }}">
         <i class="fe-log-out"></i>
         <span>Logout</span>
     </a>
-    <form id="logout-form" action="{{ url('/logout') }}" method="POST" class="d-none">
-        @csrf
-    </form>
 </div>
 <div class="collapse position-fixed rounded-0" id="categoryCollapse"
     style="width: 85%; top: 125px; z-index: 1040; height : 50%; left: 115px;">

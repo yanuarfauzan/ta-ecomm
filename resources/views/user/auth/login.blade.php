@@ -17,16 +17,19 @@
                         <div class="input-group">
                             <label for="username">email / username</label>
                             <input type="text" class="form-control rounded-0 mt-2" id="username" name="login"
-                                value="{{ old('username') }}" style="box-shadow: none; width: 100%; height: 50px;">
+                                value="mathilde03@example.org" style="box-shadow: none; width: 100%; height: 50px;">
                             @if ($errors->has('login'))
                                 <span class="text-danger">{{ $errors->first('login') }}</span>
+                            @endif
+                            @if (session('message'))
+                                <span class="text-danger">{{ session('message') }}</span>
                             @endif
                         </div>
                         <div class="d-flex flex-column input-group">
                             <label for="password">password</label>
                             <div class="d-flex justify-content-start position-relative">
                                 <input type="password" class="form-control rounded-0 mt-2" id="password" name="password"
-                                    style="box-shadow: none; width: 100%; height: 50px;">
+                                    style="box-shadow: none; width: 100%; height: 50px;" value="password">
                                 <span class="position-absolute" style="height: 50px; top: 40%; right: 20px;">
                                     <i class="bi bi-eye-slash opacity-50" style="font-size: 20px; cursor: pointer;"
                                         id="togglePassword"></i>

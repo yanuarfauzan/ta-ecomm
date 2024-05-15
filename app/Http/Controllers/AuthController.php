@@ -77,39 +77,27 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
-        // $validator = Validator::make($request->all(), [
-        //     'login' => 'required',
-        //     'password' => 'required'
-        // ], [
-        //     'login.required' => 'Username atau email tidak boleh kosong',
-        //     'password.required' => 'Password tidak boleh kosong'
-        // ]);
-
-        // if ($validator->fails()) {
-        //     return back()->withErrors($validator->errors())->withInput();
-        // }
-
         $login = $request->login;
         if (filter_var($login, FILTER_VALIDATE_EMAIL)) {
             $user = User::where('email', $login)->first();
             if ($user) {
                 return $this->checkCredential($user, $request->all());
             } else {
-                return back()->with(['message' => 'email atau username belum terverifikasi']);
+                return back()->with(['message' => 'email atau username belum terdaftar']);
             }
         } else {
             $user = User::where('username', $login)->first();
             if ($user) {
                 return $this->checkCredential($user, $request->all());
             } else {
-                return back()->with(['message' => 'email atau username belum terverifikasi']);
+                return back()->with(['message' => 'email atau username belum terdaftar']);
             }
         }
     }
     public function checkCredential($user, $data)
     {
         if (!$user || !Hash::check($data['password'], $user->password)) {
-            return response()->with(['status' => false, 'message' => 'email, username atau password salah']);
+            return back()->with(['message' => 'email, username atau password salah']);
         }
         try {
             Auth::loginUsingId($user->id);
@@ -123,6 +111,7 @@ class AuthController extends Controller
     {
         Auth::logout();
         $request->session()->invalidate();
+        return redirect()->route('user-login');
     }
     public function forgotPassword(ForgotPasswordRequest $request)
     {
