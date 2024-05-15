@@ -49,6 +49,7 @@ Route::prefix('/user')->group(function () {
         Route::get('/logout', [AuthController::class, 'logout'])->name('user-logout-act');
         Route::get('/cart', [UserController::class, 'showCart'])->name('user-cart');
         Route::get('/home', [UserController::class, 'home'])->name('user-home');
+        Route::get('/add-product-to-cart/{productId}', [UserController::class, 'addProductToCart'])->name('user-add-product-to-cart');
         Route::prefix('/product')->group(function () {
             Route::get('/detail-product/{productId}', [UserController::class, 'detailProduct'])->name('user-detail-product');
         });

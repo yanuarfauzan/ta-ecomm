@@ -3,10 +3,10 @@
         <strong>Atur jumlah dan catatan</strong>
         <div class="d-flex gap-2 justify-content-start align-items-center">
             @foreach ($choosedVarOptions as $varOption)
-            @if (!explode('_', $varOption)[2] == null)
-                <img src="{{ Storage::url('public/product_pictures/' .explode('_', $varOption)[2]) }}"
-                alt="" style="width: 60px">
-            @endif
+                @if (!explode('_', $varOption)[2] == null)
+                    <img src="{{ Storage::url('public/product_pictures/' . explode('_', $varOption)[2]) }}" alt=""
+                        style="width: 60px">
+                @endif
             @endforeach
             <h4>
                 @foreach ($choosedVarOptions as $varOption)
@@ -20,8 +20,9 @@
                     style="width: 129px; height: auto; background-color: white;" id="counter">
                     <button wire:click="decrease" id="decrease" class="badge rounded-0 border-0 text-center"
                         style="height: 30px; width: 30px;"><i class="bi bi-dash"></i></button>
-                    <input id="number-counter" type="text" role="spinbutton" pattern="[0-9]*" value="{{ $count }}"
-                        class="border-0 rounded-0 text-center" style="width: 20px; height: 28px;" readonly>
+                    <input id="number-counter" type="text" role="spinbutton" pattern="[0-9]*"
+                        value="{{ $count }}" class="border-0 rounded-0 text-center"
+                        style="width: 20px; height: 28px;" readonly>
                     <button wire:click="increase" id="increase" class="badge rounded-0 border-0 text-center"
                         style="height: 30px; width: 30px;"><i class="bi bi-plus"></i></button>
                 </div>
@@ -35,10 +36,19 @@
                     {{ number_format($totalPrice - $totalPrice * ($product->discount / 100), 2, ',', '.') }}</strong></span>
         </div>
         <div class="d-flex flex-column gap-4">
-            <button type="submit" wire:click="addToCart" class="btn bg-main-color rounded-0 text-white" style="width: 100%" id="add-to-cart">Add to
-                Cart</button>
-            <button class="btn bg-main-color rounded-0 text-white" style="width: 100%" id="add-to-cart">Buy
-                Now</button>
+            @if (count($product->variation) == count($choosedVarOptions))
+                <button wire:click="addToCart" class="btn bg-main-color rounded-0 text-white" style="width: 100%"
+                    id="add-to-cart">Add to
+                    Cart</button>
+                <button class="btn bg-main-color rounded-0 text-white" style="width: 100%" id="add-to-cart">Buy
+                    Now</button>
+            @else
+                <button class="btn bg-main-color rounded-0 text-white opacity-50" style="width: 100%"
+                    id="add-to-cart">Add to
+                    Cart</button>
+                <button class="btn bg-main-color rounded-0 text-white opacity-50" style="width: 100%" id="add-to-cart">Buy
+                    Now</button>
+            @endif
         </div>
         <div class="d-flex justify-content-center align-items-center gap-2">
             <span><i class="bi bi-heart"></i> wishlist</span>

@@ -40,7 +40,7 @@
             </div>
         </div>
         <div class="d-flex justify-content-between gap-2 me-2" style="width: 17%;">
-            <a href="{{ route('user-cart') }}" wire:navigate class=" text-white" style="text-decoration: none">
+            <a href="{{ route('user-cart') }}" class=" text-white" style="text-decoration: none">
                 <span role="button">
                     <i class="bi bi-cart" style="font-size: 25px"></i>
                 </span>

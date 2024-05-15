@@ -25,7 +25,9 @@
                         <div class="row row-cols-4 gap-2 mt-2 ms-3 border-0">
                             @foreach ($variation->variationOption as $varOption)
                                 @php
-                                    $pivotExists = $product->pickedVariation->contains(function ($item) use ($varOption) {
+                                    $pivotExists = $product->pickedVariation->contains(function ($item) use (
+                                        $varOption,
+                                    ) {
                                         return $item->pivot->variation_option_id == $varOption->id;
                                     });
                                 @endphp
@@ -55,4 +57,5 @@
         const variation = @json($product->variation);
         const userCarts = @json($usersCarts);
     </script>
+    <script src="{{ asset('/ourjs/component-variation-product.js') }}" data-navigate-track></script>
 </div>

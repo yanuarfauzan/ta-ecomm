@@ -124,6 +124,11 @@
     a {
         text-decoration: none !important;
     }
+
+    .btn:hover {
+        border: 1px solid #6777ef;
+        background-color: #6777ef;
+    }
     
 
     

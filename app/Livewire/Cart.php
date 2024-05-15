@@ -28,12 +28,18 @@ class Cart extends Component
     }
     public function showSearchedProducts($searchQuery)
     {
-        $userCarts = ModelCart::with('hasProduct', 'hasProduct.pickedVariation', 'hasProduct.pickedVariationOption', 'hasProduct.variation', 'hasProduct.variation.variationOption')
-            ->whereHas('hasProduct', function ($query) use ($searchQuery) {
-                $query->where('name', 'like', '%' . $searchQuery . '%');
-            })
-            ->get();
-        $this->usersCarts = $userCarts;
+        if (!$searchQuery == null) {
+            $userCarts = ModelCart::with('hasProduct', 'hasProduct.pickedVariation', 'hasProduct.pickedVariationOption', 'hasProduct.variation', 'hasProduct.variation.variationOption')
+                ->whereHas('hasProduct', function ($query) use ($searchQuery) {
+                    $query->where('name', 'like', '%' . $searchQuery . '%');
+                })
+                ->get();
+            $this->usersCarts = $userCarts;
+        } else {
+            $userCarts = ModelCart::with('hasProduct', 'hasProduct.pickedVariation', 'hasProduct.pickedVariationOption', 'hasProduct.variation', 'hasProduct.variation.variationOption')
+                ->get();
+            $this->usersCarts = $userCarts;
+        }
     }
     public function decreaseQtyProduct($userCartId, $productPrice, $discountProduct)
     {
