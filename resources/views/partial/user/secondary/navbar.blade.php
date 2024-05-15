@@ -49,14 +49,10 @@
         </a>
         <div class="dropdown-divider"></div>
         <!-- item-->
-        <a class="dropdown-item notify-item  text-danger" href=""
-            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+        <a class="dropdown-item notify-item  text-danger" href="{{ route('user-logout-act') }}">
             <i class="fe-log-out"></i>
             <span>Logout</span>
         </a>
-        <form id="logout-form" action="{{ url('/logout') }}" method="POST" class="d-none">
-            @csrf
-        </form>
     </div>
 @endif
 <nav class="navbar navbar-expand-lg fixed-top d-flex justify-content-center text-white bg-light shadow"

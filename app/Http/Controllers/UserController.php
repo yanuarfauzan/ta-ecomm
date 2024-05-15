@@ -8,6 +8,7 @@ use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\VariationOption;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\AddAddressessRequest;
 use App\Http\Requests\AddProductToCartRequest;
 
@@ -48,9 +49,8 @@ class UserController extends Controller
     }
     public function showCart(Request $request)
     {
-        $user = User::where('id', '9c009d70-4604-4deb-ade8-ed26ab815fc1')->first();
+        $user = $this->user;
         $usersCarts = $user?->cart()->with('hasProduct', 'hasProduct.pickedVariation', 'hasProduct.pickedVariationOption', 'hasProduct.variation', 'hasProduct.variation.variationOption')->get();
-        // FIXME: referensi dari cart
         return view('user.cart', compact('usersCarts', 'user'));
     }
     public function isCartExist($productId)
@@ -142,7 +142,7 @@ class UserController extends Controller
     public function detailProduct(Request $request, $productId)
     {
         $product = Product::where('id', $productId)->with('variation', 'variation.variationOption', 'hasCategory', 'variation.variationOption.productImage')->first();
-        
+
         $firstVarOption = '';
 
         $data = [
