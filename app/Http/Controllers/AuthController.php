@@ -11,10 +11,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\RegisterRequest;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\ForgotPasswordRequest;
 
@@ -37,9 +35,9 @@ class AuthController extends Controller
     {
         return view('user.auth.forgot_password');
     }
-    public function resetPasswordPage()
+    public function resetPasswordPage($token)
     {
-        return view('user.auth.reset_password');
+        return view('user.auth.reset_password', compact('token'));
     }   
     public function preRegister(RegisterRequest $request)
     {
@@ -130,7 +128,7 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
-        return response()->json(['message' => 'Silahkan cek email']);
+        return back()->with(['message' => 'Berhasil mengirim email, silahkan cek email anda']);
     }
     public function resetPassword($token, ResetPasswordRequest $request)
     {
@@ -138,15 +136,15 @@ class AuthController extends Controller
             $user = User::where('token_reset', $token)->first();
             if ($user) {
                 $user->update([
-                    'password' => $request->password
+                    'password' => $request->new_password
                 ]);
             } else {
-                return response()->json(['message' => 'Token tidak valid'], 401);
+                return back()->route('user-login');
             }
 
-            return response()->json(['message' => 'Berhasil merubah password']);
+            return redirect()->route('user-login');
         } else {
-            return response()->json(['message' => 'Link reset password kadaluarsa']);
+            return redirect()->route('user-login');
         }
 
     }

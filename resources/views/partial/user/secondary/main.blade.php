@@ -24,7 +24,7 @@
         <div class="main-wrapper">
             @include('partial.user.secondary.navbar')
             <!-- Main Content -->
-            <div class="main-content" style="{{ in_array(substr(url()->current(), strrpos(url()->current(), '/') + 1), ['login', 'register', 'verify', 'forgot-password', 'reset-password']) ? "" : "margin-top: 165px" }}">
+            <div class="main-content" style="{{ in_array(substr(url()->current(), strrpos(url()->current(), '/') + 1), ['login', 'register', 'verify', 'forgot-password', $token ?? null]) ? "" : "margin-top: 165px" }}">
                 @yield('container')
             </div>
             @include('partial.user.footer')

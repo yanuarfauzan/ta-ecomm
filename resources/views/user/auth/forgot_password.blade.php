@@ -11,11 +11,17 @@
                     <span>
                         <img src="{{ asset('/oursvg/forgot_password.svg') }}" alt="" style="width: 200px;">
                     </span>
-                    <form action="" class="d-flex flex-column gap-2 mt-4" style="width: 100%;">
-                        <div class="input-group">
-                            <label for="username">email</label>
-                            <input type="text" class="form-control rounded-0 mt-2" id="username"
-                            style="box-shadow: none; width: 100%; height: 50px;">
+                    <span class="text-success" style="font-size: 0.8em;">{{ session('message') ? session('message') : '' }}</span>
+                    <form action="{{ route('user-forgot-password-act') }}" method="POST"
+                        class="d-flex flex-column gap-2 mt-2" style="width: 100%;">
+                        @csrf
+                        <div class="input-group" style="height: 100px;">
+                            <label for="email">email</label>
+                            <input type="text" class="form-control rounded-0 mt-2" id="email" name="email"
+                                value="{{ old('email') }}" style="box-shadow: none; width: 100%; height: 50px;">
+                            @if ($errors->has('email'))
+                                <span class="text-danger" style="font-size: 0.8em;">{{ $errors->first('email') }}</span>
+                            @endif
                         </div>
                         <div class="input-group mt-4">
                             <button type="submit" class="rounded-0 bg-main-color text-white border-0"

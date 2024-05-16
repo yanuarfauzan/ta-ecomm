@@ -35,10 +35,9 @@ class ForgotPasswordRequest extends FormRequest
             'email.exists' => 'Email belum terdaftar',
         ];
     }
-    public function failedValidation(Validator $validator)
+
+    public function withInput()
     {
-        throw new HttpResponseException(response()->json([
-            'errors' => $validator->errors()
-        ]));
+        return $this->validator($this->errors());
     }
 }

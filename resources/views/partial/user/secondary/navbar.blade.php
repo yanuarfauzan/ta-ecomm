@@ -1,4 +1,4 @@
-@if (!in_array(substr(url()->current(), strrpos(url()->current(), '/') + 1), ['login', 'register', 'verify', 'forgot-password', 'reset-password']))
+@if (!in_array(substr(url()->current(), strrpos(url()->current(), '/') + 1), ['login', 'register', 'verify', 'forgot-password', $token ?? null]))
     <nav class="navbar navbar-expand-lg fixed-top d-flex justify-content-center text-white bg-main-color shadow"
         style="height: 35px;">
         <div class="container-fluid mx-4" style="width: 84%">
@@ -56,7 +56,7 @@
     </div>
 @endif
 <nav class="navbar navbar-expand-lg fixed-top d-flex justify-content-center text-white bg-light shadow"
-    style="height: 80px; {{ in_array(substr(url()->current(), strrpos(url()->current(), '/') + 1), ['login', 'register', 'verify', 'forgot-password', 'reset-password']) ? "" : "margin-top: 36px" }}">
+    style="height: 80px; {{ in_array(substr(url()->current(), strrpos(url()->current(), '/') + 1), ['login', 'register', 'verify', 'forgot-password', $token ?? null]) ? "" : "margin-top: 36px" }}">
     <div class="container-fluid mx-4" style="width: 84%">
         <div class="d-flex align-items-center justify-content-start" style="width: 20%;">
             <a class="navbar-brand font-main-color" href="{{ route('user-home') }}"
@@ -64,9 +64,9 @@
             <div class="divider" style="background-color: #6777ef"></div>
             <a href="#categoryCollapse" class="font-main-color ms-2" style="text-decoration: none;"
                 data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="categoryCollapse"
-                id="categoryCollapseToggle">{{ in_array(substr(url()->current(), strrpos(url()->current(), '/') + 1), ['login', 'register', 'verify', 'forgot-password', 'reset-password']) ? substr(url()->current(), strrpos(url()->current(), '/') + 1) : "Keranjang Belanja" }}</a>
+                id="categoryCollapseToggle">{{ in_array(substr(url()->current(), strrpos(url()->current(), '/') + 1), ['login', 'register', 'verify', 'forgot-password', $token ?? null]) ? $token ?? null ? 'reset password' : substr(url()->current(), strrpos(url()->current(), '/') + 1) : "Keranjang Belanja" }}</a>
         </div>
-        @if (!in_array(substr(url()->current(), strrpos(url()->current(), '/') + 1), ['login', 'register', 'verify', 'forgot-password', 'reset-password']))
+        @if (!in_array(substr(url()->current(), strrpos(url()->current(), '/') + 1), ['login', 'register', 'verify', 'forgot-password', $token ?? null]))
             @livewire('SearchCartProduct')
         @endif
     </div>

@@ -45,7 +45,7 @@
                         </div>
                     </form>
                     <div class="d-flex justify-content-between align-items-center" style="width: 100%">
-                        <span><a href="#" class="font-main-color">lupa password</a></span>
+                        <span><a href="{{ route('user-forgot-password') }}" class="font-main-color">lupa password</a></span>
                         <span><a href="{{ route('user-register') }}" class="font-main-color">daftar</a></span>
                     </div>
                 </div>
