@@ -35,17 +35,18 @@ class AmountsAndNotes extends Component
     }
     public function isVariationDifferent($cartProduct, $request)
     {
-        $isDifferent = false;
-        collect($request['variation'])->each(function ($variationItem, $index) use (&$isDifferent, $cartProduct) {
-            $variation = $cartProduct->pickedVariation()->where('variation_id', $variationItem['variation_id'])->first();
-            $variationOption = $cartProduct->pickedVariation()->where('variation_option_id', $variationItem['variation_option_id'])->first();
-            if (!isset ($variation) || !isset ($variationOption)) {
-                $isDifferent = true;
-            } else {
-                $isDifferent = false;
+        $allDifferent = true; // Start assuming all are different
+
+        collect($request['variation'])->each(function ($variationItem, $index) use (&$allDifferent, $cartProduct) {
+            $variation = $cartProduct->pickedVariation()->where('variation_id', $variationItem['variation_id'])
+                ->where('variation_option_id', $variationItem['variation_option_id'])->first();
+
+            if ($variation) {
+                $allDifferent = false; // If any variation matches, set to false
             }
         });
-        return $isDifferent;
+
+        return $allDifferent;
     }
     public function addToCart()
     {
@@ -106,7 +107,7 @@ class AmountsAndNotes extends Component
         } else {
             return response()->json(['message' => 'Anda harus login terlebih dahulu']);
         }
-        
+
     }
     public function showChoosedVarOptions($choosedVarOptions)
     {
@@ -132,7 +133,6 @@ class AmountsAndNotes extends Component
         if (count($this->choosedVarOptions) > 2) {
             $this->choosedVarOptions = array_slice($this->choosedVarOptions, 0, 2);
         }
-        // dd($this->choosedVarOptionsForCart);
     }
     public function increase()
     {

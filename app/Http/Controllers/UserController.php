@@ -51,7 +51,6 @@ class UserController extends Controller
     {
         $user = $this->user;
         $usersCarts = $user?->cart()->with('hasProduct', 'hasProduct.pickedVariation', 'hasProduct.pickedVariationOption', 'hasProduct.variation', 'hasProduct.variation.variationOption')->get();
-        // dd($usersCarts->toArray());
         return view('user.cart', compact('usersCarts', 'user'));
     }
     public function isCartExist($productId)
