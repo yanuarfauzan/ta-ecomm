@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
+use App\Http\Middleware\IsUserRegistered;
 use App\Http\Middleware\IsUserAuthenticated;
 
 /*
@@ -39,7 +40,11 @@ Route::put('/admin/update-users/{id}', [AdminController::class, 'update']);
 Route::prefix('/user')->group(function () {
     Route::middleware(IsUserAuthenticated::class)->prefix('/auth')->group(function () {
         Route::get('/register', [AuthController::class, 'registerPage'])->name('user-register');
-        Route::get('/verify', [AuthController::class, 'verifyPage'])->name('user-verify');
+        Route::post('/preRegister', [AuthController::class, 'preRegister'])->name('user-preRegister-act');
+        Route::post('/register', [AuthController::class, 'register'])->name('user-register-act');
+        Route::middleware(IsUserRegistered::class)->group(function () {
+            Route::get('/verify', [AuthController::class, 'verifyPage'])->name('user-verify');
+        });        
         Route::get('/forgot-password', [AuthController::class, 'forgotPasswordPage'])->name('user-forgot-password');
         Route::get('/reset-password', [AuthController::class, 'resetPasswordPage'])->name('user-reset-password');
         Route::get('/login', [AuthController::class, 'loginPage'])->name('user-login');

@@ -35,4 +35,9 @@ class LoginRequest extends FormRequest
             'password.required' => 'Password tidak boleh kosong'
         ];
     }
+
+    public function withInput()
+    {
+        return $this->validator->withErrors($this->errors());
+    }
 }

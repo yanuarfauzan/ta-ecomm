@@ -15,16 +15,32 @@
                         kode telah di kirimkan ke email :
                     </span>
                     <span>
-                        <strong>yanuarisnain017@gmail.com</strong>
+                        <strong>{{ $user['email'] }}</strong>
                     </span>
-                    <form action="" class="d-flex flex-column gap-2" style="width: 100%;">
-                        <div class="d-flex justify-content-center align-items-center gap-1 input-group mt-3">
-                            <input type="text" class="form-control rounded-0 otp-input" maxlength="1" style="box-shadow: none; height: 40px; text-align: center;">
-                            <input type="text" class="form-control rounded-0 otp-input" maxlength="1" style="box-shadow: none; height: 40px; text-align: center;">
-                            <input type="text" class="form-control rounded-0 otp-input" maxlength="1" style="box-shadow: none; height: 40px; text-align: center;">
-                            <input type="text" class="form-control rounded-0 otp-input" maxlength="1" style="box-shadow: none; height: 40px; text-align: center;">
-                            <input type="text" class="form-control rounded-0 otp-input" maxlength="1" style="box-shadow: none; height: 40px; text-align: center;">
-                            <input type="text" class="form-control rounded-0 otp-input" maxlength="1" style="box-shadow: none; height: 40px; text-align: center;">
+                    <form action="{{ route('user-register-act') }}" method="POST" class="d-flex flex-column gap-2"
+                        style="width: 100%;">
+                        @csrf
+                        <div class="d-flex flex-column align-items-center gap-1" style="height: 50px;">
+                            <div class="d-flex justify-content-center align-items-center gap-1 input-group mt-3">
+                                <input type="text" class="form-control rounded-0 otp-input" maxlength="1"
+                                    style="box-shadow: none; height: 40px; text-align: center;" name="first" value="{{ old('first') }}">
+                                <input type="text" class="form-control rounded-0 otp-input" maxlength="1"
+                                    style="box-shadow: none; height: 40px; text-align: center;" name="second" value="{{ old('second') }}">
+                                <input type="text" class="form-control rounded-0 otp-input" maxlength="1"
+                                    style="box-shadow: none; height: 40px; text-align: center;" name="third" value="{{ old('third') }}">
+                                <input type="text" class="form-control rounded-0 otp-input" maxlength="1"
+                                    style="box-shadow: none; height: 40px; text-align: center;" name="fourth" value="{{ old('fourth') }}">
+                                <input type="text" class="form-control rounded-0 otp-input" maxlength="1"
+                                    style="box-shadow: none; height: 40px; text-align: center;" name="fivth" value="{{ old('fivth') }}">
+                                <input type="text" class="form-control rounded-0 otp-input" maxlength="1"
+                                    style="box-shadow: none; height: 40px; text-align: center;" name="sixth" value="{{ old('sixth') }}">
+                            </div>
+                            @if (session('message'))
+                                <span class="text-danger" style="font-size: 0.8em;">{{ session('message') }}</span>
+                            @endif
+                            @if ($errors->has('first'))
+                                <span class="text-danger" style="font-size: 0.8em;">{{ $errors->first('first') }}</span>
+                            @endif
                         </div>
                         <div class="input-group mt-4">
                             <button type="submit" class="rounded-0 bg-main-color text-white border-0"

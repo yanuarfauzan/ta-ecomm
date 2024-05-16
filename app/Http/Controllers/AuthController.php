@@ -26,7 +26,8 @@ class AuthController extends Controller
     }
     public function verifyPage()
     {
-        return view('user.auth.verify');
+        $user = Session::get('pre-regis');
+        return view('user.auth.verify', compact('user'));
     }
     public function loginPage()
     {
@@ -39,7 +40,7 @@ class AuthController extends Controller
     public function resetPasswordPage()
     {
         return view('user.auth.reset_password');
-    }
+    }   
     public function preRegister(RegisterRequest $request)
     {
         $user = $request->all();
@@ -52,9 +53,9 @@ class AuthController extends Controller
                 $message->subject('OTP VERIFIKASI EMAIL');
             });
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()]);
+            return Log::error($e->getMessage());
         }
-        return response()->json(['message' => 'Kode OTP berhasil dikirim, silahkan cek email']);
+        return redirect()->route('user-verify');
     }
     public function register(OtpRequest $request)
     {
@@ -65,13 +66,14 @@ class AuthController extends Controller
             $otp = $request->first . $request->second . $request->third . $request->fourth . $request->fivth . $request->sixth;
             if ($user['otp'] == $otp) {
                 User::create($user);
-                return response()->json(['message' => 'Kode OTP benar, email berhasil di verifikasi']);
+                Session::forget('pre-regis');
+                return redirect()->route('user-login');
             } else {
-                return response()->json(['message' => 'Kode OTP salah, email gagal di verifikasi']);
+                return back()->with(['message' => 'Kode OTP salah, email gagal di verifikasi']);
             }
         } else {
             Session::forget('pre-regis');
-            return response()->json(['message' => 'Waktu OTP telah habis']);
+            return back()->with(['message' => 'Waktu OTP telah habis']);
         }
     }
 

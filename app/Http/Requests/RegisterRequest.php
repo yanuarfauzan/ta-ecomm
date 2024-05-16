@@ -25,7 +25,7 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'username' => ['required', 'alpha_dash', 'min:3', 'max:20', Rule::unique('user', 'username')],
+            'username' => ['required', 'alpha_dash', 'min:3', 'max:20', 'unique:user,username'],
             'email' => ['required', 'email', Rule::unique('user', 'email'), 'max:255'],
             'phone_number' => 'required|numeric|digits_between:10,15',
             'password' => [
@@ -63,11 +63,8 @@ class RegisterRequest extends FormRequest
         ];
     }
 
-    public function failedValidation(Validator $validator)
+    public function withInput()
     {
-        throw new HttpResponseException(response()->json([
-            'errors' => $validator->errors()
-        ]));
-        // return back()->withErrors($validator->errors())->withInput();
+        return $this->validator->withErrors($this->errors());
     }
 }
