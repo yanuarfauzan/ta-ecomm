@@ -46,7 +46,9 @@ Route::prefix('/user')->group(function () {
             Route::get('/verify', [AuthController::class, 'verifyPage'])->name('user-verify');
         });        
         Route::get('/forgot-password', [AuthController::class, 'forgotPasswordPage'])->name('user-forgot-password');
-        Route::get('/reset-password', [AuthController::class, 'resetPasswordPage'])->name('user-reset-password');
+        Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('user-forgot-password-act');
+        Route::get('/reset-password/{token}', [AuthController::class, 'resetPasswordPage'])->name('user-reset-password');
+        Route::put('reset-password/{token}', [AuthController::class, 'resetPassword'])->name('user-reset-password-act');
         Route::get('/login', [AuthController::class, 'loginPage'])->name('user-login');
         Route::post('/login', [AuthController::class, 'login'])->name('user-login-act');
     });
