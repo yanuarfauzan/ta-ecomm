@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\Category;
@@ -168,6 +169,20 @@ class UserController extends Controller
         return view('user.detail-product', compact('categories', 'product', 'firstVarOption', 'firstVarOptionForCart', 'products', 'user'));
     }
 
+    public function order(Request $request)
+    {
+        $user = $this->user;
+        $usersCarts = $user->cart()->whereIn('id', $request->cartIds)
+            ->with(
+                'hasProduct',
+                'hasProduct.pickedVariation',
+                'hasProduct.pickedVariationOption',
+                'hasProduct.variation',
+                'hasProduct.variation.variationOption'
+            )
+            ->get();
+        return view('user.order', compact('usersCarts', 'user'));
+    }
     public function callBackPaymentGateway(Request $request)
     {
         Log::info('Callback Duitku received:', $request->all());

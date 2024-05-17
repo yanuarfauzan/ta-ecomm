@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Http;
 class AmountsAndNotes extends Component
 {
     public $product;
-
     public $user;
     public $count = 1;
     public $totalPrice;
@@ -25,6 +24,7 @@ class AmountsAndNotes extends Component
         $this->totalPrice = $product->price;
         $this->choosedVarOptions[] = $firstVarOption;
         $this->choosedVarOptionsForCart[] = $firstVarOptionForCart;
+        $this->count = 1;
     }
     public function isCartExist($productId)
     {
@@ -45,7 +45,6 @@ class AmountsAndNotes extends Component
                 $allDifferent = false; // If any variation matches, set to false
             }
         });
-
         return $allDifferent;
     }
     public function addToCart()
@@ -96,10 +95,9 @@ class AmountsAndNotes extends Component
                     });
                     return response()->json(['message' => 'Berhasil menambahkan produk dengan variasi berbeda ke keranjang']);
                 } else {
-                    $cartProduct = $cartProduct?->cart()->first();
                     $cartProduct->update([
                         'qty' => $cartProduct->qty + $results['qty'],
-                        'total_price' => $product->price * $results['qty']
+                        'total_price' => $product->price * ($cartProduct->qty + $results['qty'])
                     ]);
                     return response()->json(['message' => 'Produk sudah dimasukkan ke keranjang, jumlah ditambahkan']);
                 }

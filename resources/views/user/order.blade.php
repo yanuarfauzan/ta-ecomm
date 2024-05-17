@@ -1,3 +1,5 @@
+@extends('partial.user.secondary.main')
+@section('container')
 <div class="container d-flex justify-content-between gap-4" style="width: 100%; height: 100%">
     <div class="d-flex flex-column gap-2" style="width: 70%; height: 100%;">
         <div id="head-cart"
@@ -11,57 +13,19 @@
             <span class="d-inline-block" style="width: 37%;">Harga satuan</span>
             <span>Total harga</span>
         </div>
-        @foreach ($usersCarts ?? [] as $index => $userCart)
+        {{-- @foreach ($usersCarts ?? [] as $index => $userCart)
             @php
                 $product = $userCart?->hasProduct->first();
                 $variation = $product?->variation->first();
-            @endphp
+            @endphp --}}
             <div class="card-product card-all-check d-flex justify-content-between px-4 align-items-center shadow-sm gap-4"
-                style="width: 100%; height: 140px; background-color: white" id="card-product-{{ $userCart?->id }}">
-                <div class="d-flex justify-content-start align-items-center gap-4" style="width: 30%;">
-                    <span>
-                        <input class="form-check-input check-product-{{ $userCart?->id }} all-check" type="checkbox"
-                            id="flexCheckDefault" style="width: 20px; height: 20px; cursor: pointer;">
-                    </span>
-                    <img src="{{ Storage::url('public/product_pictures/' . $product?->hasImages->first()->filepath_image) }}"
-                        alt="" style="width: 80px; height: 80px;">
-                    <div wire:ignore class="d-flex position-relative justify-content-between" style="width: auto;">
-                        @livewire('variation', ['index' => $index, 'product' => $product, 'usersCarts' => $usersCarts])
-                    </div>
-                </div>
-                <div class="d-flex flex-column justify-content-center align-items-center " style="width: 150px;">
-                    <div class="width: 100%">
-                        <h5 class="font-main-color"><strong>Rp
-                                {{ number_format($product?->price, 2, ',', '.') }}</strong></h5>
-                    </div>
-                    @if (isset($product?->discount))
-                        <div class="d-flex" style="width: auto">
-                            <span class="text-dark bg-light border-main-color text-center"
-                                style="width: 80px; height: 27px;">
-                                <p class="font-main-color">Discount</p>
-                            </span>
-                            <span class="text-dark bg-main-color border-main-color text-center"
-                                style="width: 40px; height: 27px"><i
-                                    class="text-white">{{ floor($product?->discount) }}%</i></span>
-                        </div>
-                    @endif
-                    <span>
-                        <input type="checkbox" class="btn-check btn-check-outlined"
-                            id="btn-check-outlined-{{ $userCart?->id }}" autocomplete="off"
-                            wire:click="toggleRelatedProducts('{{ $userCart?->id }}')"
-                            {{ $userCartId === $userCart?->id ? 'checked' : '' }}>
-                        <label class="btn rounded-0 mt-2 p-0" for="btn-check-outlined-{{ $userCart?->id }}"
-                            style="width: 120px; height: 27px;">produk serupa</label><br>
-                    </span>
-                </div>
-                <div wire:ignore>
-                    @livewire('counter', ['userCart' => $userCart, 'product' => $product, 'user' => $user])
-                </div>
+                style="width: 100%; height: 140px; background-color: white" id="card-product">
+                <h4><strong>ulasan pembeli</strong></h4>
             </div>
-            @php
+            {{-- @php
                 $index++;
             @endphp
-        @endforeach
+        @endforeach --}}
     </div>
     <div class="d-flex flex-column align-items-start gap-2" style="width: 30%; height: 100%;">
         <div class="shadow-sm card-summary bg-light" style="width: 100%; height: 280px;">
@@ -77,16 +41,16 @@
                         <span><strong>Discount</strong></span>
                     </div>
                     <div class="d-flex flex-column align-items-center">
-                        <span><strong>Rp {{ number_format($totalPrice, 2, ',', '.') }}</strong></span>
-                        <span><strong>- Rp {{ number_format($totalDiscount, 2, ',', '.') }}</strong></span>
+                        <span><strong>Rp 20.0000</strong></span>
+                        <span><strong>- Rp 30.000</strong></span>
                     </div>
                 </div>
                 <hr class="border border-secondary bg-main-color opacity-50">
                 <div class="d-flex justify-content-between align-items-center">
                     <span><strong>Total :</strong></span>
-                    <span><strong>Rp {{ number_format($totalPrice - $totalDiscount, 2, ',', '.') }}</strong></span>
+                    <span><strong>Rp 50.000</strong></span>
                 </div>
-                <a href="{{ route('user-order') . '?' . http_build_query(['cartIds' => $checkedProducts]) }}" role="button" id="checkout" class="btn rounded-0 mt-3 bg-main-color text-white"
+                <a href="#" role="button" id="checkout" class="btn rounded-0 mt-3 bg-main-color text-white"
                     style="width: 100%;"><strong>Checkout</strong></a>
             </div>
         </div>
@@ -99,10 +63,10 @@
                             <h5>Related Product</h5>
                         </strong>
                         <form action="/test" method="GET">
-                            @csrf
+                            {{-- @csrf
                             @for ($i = 0; $i < count($categoryIds ?? []); $i++)
                                 <input type="hidden" name="categoryIds[]" value="{{ $categoryIds[$i] ?? null }}">
-                            @endfor
+                            @endfor --}}
                             <button type="submit" class="font-main-color bg-transparent border-0">
                                 <p>view more..</p>
                             </button>
@@ -176,4 +140,4 @@
         </div>
     </div>
 </div>
-<script src="{{ asset('/ourjs/cart.js') }}" data-navigate-track></script>
+@endsection

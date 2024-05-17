@@ -59,6 +59,7 @@ Route::prefix('/user')->group(function () {
         Route::get('/add-product-to-cart/{productId}', [UserController::class, 'addProductToCart'])->name('user-add-product-to-cart');
         Route::prefix('/product')->group(function () {
             Route::get('/detail-product/{productId}', [UserController::class, 'detailProduct'])->name('user-detail-product');
+            Route::get('/checkout', [UserController::class, 'order'])->name('user-order');
         });
     });
 
