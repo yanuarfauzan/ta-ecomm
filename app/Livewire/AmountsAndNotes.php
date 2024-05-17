@@ -96,7 +96,7 @@ class AmountsAndNotes extends Component
                     });
                     return response()->json(['message' => 'Berhasil menambahkan produk dengan variasi berbeda ke keranjang']);
                 } else {
-                    $cartProduct = $cartProduct->cart()->first();
+                    $cartProduct = $cartProduct?->cart()->first();
                     $cartProduct->update([
                         'qty' => $cartProduct->qty + $results['qty'],
                         'total_price' => $product->price * $results['qty']

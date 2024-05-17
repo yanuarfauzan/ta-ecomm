@@ -27,3 +27,22 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/add-product-to-fav/{productId}', [UserController::class, 'addProductToFav']);
     Route::get('/user/show-cart', [UserController::class, 'showCart']);
 });
+
+// CallBack Payment Gateway
+
+Route::post('/callback', [UserController::class, 'callBackPaymentGateway']);
+
+Route::post('/hashMaker/{apikey}', function (Request $request, $apikey) {
+    dd([
+        'amount' => $request->amount,
+        'datetime' => $request->datetime,
+        'merchantcode' => $request->merchant,
+        'signature' => hash('sha256', $request->merchant . $request->amount . $request->datetime . $apikey),
+    ]);
+});
+
+Route::post('/hashMaker/transaksi/{apikey}', function (Request $request, $apikey) {
+    dd([
+        'signature' => md5($request->merchantCode . $request->merchantOrderId . $request->paymentAmount . $apikey),
+    ]);
+});
