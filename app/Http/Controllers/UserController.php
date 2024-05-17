@@ -8,6 +8,7 @@ use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\VariationOption;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\AddAddressessRequest;
 use App\Http\Requests\AddProductToCartRequest;
@@ -165,5 +166,10 @@ class UserController extends Controller
         $firstVarOptionForCart = implode('_', $dataForCart);
         $categories = Category::all();
         return view('user.detail-product', compact('categories', 'product', 'firstVarOption', 'firstVarOptionForCart', 'products', 'user'));
+    }
+
+    public function callBackPaymentGateway(Request $request)
+    {
+        Log::info('Callback Duitku received:', $request->all());
     }
 }
