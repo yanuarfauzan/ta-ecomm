@@ -14,7 +14,7 @@
         }
     }
 
-    .dropdown-menu {
+    .dropdown-menu-profile {
         animation: scaleIn 0.3s ease forwards;
         opacity: 0;
         display: none;
@@ -24,8 +24,8 @@
         z-index: 1000;
     }
 
-    .dropdown-toggle:hover + .dropdown-menu,
-    .dropdown-menu:hover {
+    .dropdown-toggle-profile:hover + .dropdown-menu-profile,
+    .dropdown-menu-profile:hover {
         display: block;
     }
 

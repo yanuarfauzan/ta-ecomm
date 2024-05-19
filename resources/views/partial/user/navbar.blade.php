@@ -53,7 +53,7 @@
             </a>
 
             <div class="d-flex justify-content-between align-items-center">
-                <div class="dropdown-toggle d-flex justify-content-start align-items-center" data-bs-toggle="dropdown"
+                <div class="dropdown-toggle dropdown-toggle-profile d-flex justify-content-start align-items-center" data-bs-toggle="dropdown"
                     role="button" aria-haspopup="false" aria-expanded="false">
                     <a href="" class="" style="text-decoration: none" data-bs-toggle="dropdown"
                         role="button" aria-haspopup="false" aria-expanded="false">
@@ -75,7 +75,7 @@
         </div>
     </div>
 </nav>
-<div class="dropdown-menu dropdown-menu-end profile-dropdown position-fixed rounded-0"
+<div class="dropdown-menu dropdown-menu-profile dropdown-menu-end profile-dropdown position-fixed rounded-0"
     style="right: 133px; top: 75px; z-index: 1041;">
     <!-- item-->
     <a href="" class="dropdown-item notify-item ">

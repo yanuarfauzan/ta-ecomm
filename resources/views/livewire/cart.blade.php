@@ -86,8 +86,8 @@
                     <span><strong>Total :</strong></span>
                     <span><strong>Rp {{ number_format($totalPrice - $totalDiscount, 2, ',', '.') }}</strong></span>
                 </div>
-                <button id="checkout" class="btn rounded-0 mt-3 bg-main-color text-white"
-                    style="width: 100%;"><strong>Checkout</strong></button>
+                <a href="{{ route('user-order') . '?' . http_build_query(['cartIds' => $checkedProducts]) }}" role="button" id="checkout" class="btn rounded-0 mt-3 bg-main-color text-white"
+                    style="width: 100%;"><strong>Checkout</strong></a>
             </div>
         </div>
         <div class="shadow-sm card-related-products card-summary bg-light {{ count($relatedProducts ?? []) > 0 ? 'show' : 'hide' }}"

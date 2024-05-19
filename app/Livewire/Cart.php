@@ -86,7 +86,6 @@ class Cart extends Component
             $this->checkedProducts[] = $userCartId;
             $this->calculateTotalPrice(); // Perbarui total harga setelah menambahkan produk yang dicentang
         }
-
     }
     public function calculateTotalPrice()
     {
@@ -101,6 +100,7 @@ class Cart extends Component
                 }
             }
         }
+
     }
     public function toggleRelatedProducts($userCartId)
     {
