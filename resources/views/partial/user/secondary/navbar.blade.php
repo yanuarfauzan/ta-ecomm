@@ -16,7 +16,7 @@
                     class=" text-center d-flex gap-1 align-items-center text-white"><i class="bi bi-bell"></i>
                     Notifikasi</i></a>
                 <div class="low-divider"></div>
-                <div class="dropdown-toggle d-flex justify-content-start align-items-center" data-bs-toggle="dropdown"
+                <div class="dropdown-toggle dropdown-toggle-profile d-flex justify-content-start align-items-center" data-bs-toggle="dropdown"
                     role="button" aria-haspopup="false" aria-expanded="false">
                     <a href="#" style="font-size: 12px; text-decoration: none;" role="button"
                         data-bs-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false"
@@ -29,7 +29,7 @@
             </div>
         </div>
     </nav>
-    <div class="dropdown-menu dropdown-menu-end profile-dropdown position-fixed rounded-0"
+    <div class="dropdown-menu dropdown-menu-profile dropdown-menu-end profile-dropdown position-fixed rounded-0"
         style="right: 115px; top: 28px; z-index: 1041;">
         <!-- item-->
         <a href="" class="dropdown-item notify-item ">

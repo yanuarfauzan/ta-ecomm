@@ -66,7 +66,7 @@ class User extends Authenticatable
         return 'string';
     }
 
-    public function usersAddress()
+    public function userAddresses()
     {
         return $this->hasMany(Address::class, 'user_id', 'id');
     }
