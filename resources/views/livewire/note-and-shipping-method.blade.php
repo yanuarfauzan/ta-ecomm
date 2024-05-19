@@ -18,7 +18,7 @@
             </select>
         </div>
     </div>
-    <h5 class="my-2" ><strong>Pilih Opsi pengiriman</strong></h5>
+    <h5 class="mt-4" ><strong>Pilih Opsi pengiriman</strong></h5>
     <ul class="list-group rounded-0" style="width: 100%">
         @if ($product->id == $costs['product_id'])
             @foreach ($costs['costs'] as $cost)

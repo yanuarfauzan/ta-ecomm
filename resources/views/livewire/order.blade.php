@@ -9,10 +9,8 @@
             style="width: 100%; background-color: white" id="card-product">
             <div class="d-flex flex-column gap" style="width: 100%; height: 100%">
                 <h5><strong>Alamat pengiriman</strong></h5>
-                <span><i class="bi bi-geo-alt"></i> Kost AA</span>
-                <span>{{ $defaultUserAdress->address }},
+                <span><i class="bi bi-geo-alt"></i> {{ $defaultUserAdress->address }},
                     {{ $user->phone_number }}</span>
-                <span>Note: Rumah tingkat 2 warna putih, Gerbang coklat</span>
                 <div class="d-flex justify-content-end mt-2">
                     <button id="checkout" class="btn rounded-0 bg-main-color text-white"
                         style="width: 20%;"><strong>ganti alamat</strong></button>
