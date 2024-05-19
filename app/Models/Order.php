@@ -18,6 +18,7 @@ class Order extends Model
         'order_date',
         'total_price',
         'order_status',
+        'note'
     ];
 
     public function getIncement()
@@ -29,14 +30,9 @@ class Order extends Model
     {
         return 'string';
     }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id', 'id');
-    }
     public function cartProduct()
     {
-        return $this->belongsTo(CartProduct::class, 'cart_product_id', 'id');
+        return $this->hasMany(CartProduct::class, 'order_id', 'id');
     }
     public function shipping()
     {

@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->string('SKU')->nullable();
             $table->integer('stock')->nullable();
             $table->integer('price')->nullable();
+            $table->integer('price_after_dsicount')->nullable();
             $table->string('desc')->nullable();
             $table->decimal('discount')->nullable();
             $table->decimal('weight')->nullable();

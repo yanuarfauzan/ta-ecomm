@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\User;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\VariationOption;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\AddAddressessRequest;
@@ -76,56 +78,6 @@ class UserController extends Controller
         });
         return $isDifferent;
     }
-    public function addProductToCart(AddProductToCartRequest $request, $productId)
-    {
-        $user = $this->user;
-        $product = Product::findOrFail($productId);
-        $cartProduct = $this->isCartExist($productId);
-        if ($user) {
-            $cartProductId = Str::uuid(36);
-            if ($cartProduct?->all() == null) {
-                $cart = $user->cart()->create([
-                    'qty' => $request->qty,
-                    'total_price' => $product->price * $request->qty
-                ]);
-                $cart->hasProduct()->attach($productId, ['id' => $cartProductId]);
-                collect($request->variation)->each(function ($variationItem) use ($cart, $product) {
-                    $cart->pickedVariation()->create([
-                        'product_id' => $product->id,
-                        'variation_id' => $variationItem['variation_id'],
-                        'variation_option_id' => $variationItem['variation_option_id'],
-                    ]);
-                });
-                return response()->json(['message' => 'Berhasil menambahkan produk ke keranjang']);
-            } else {
-                $cartProductId = Str::uuid(36);
-                if ($this->isVariationDifferent($cartProduct, $request->all())) {
-                    $cart = $user->cart()->create([
-                        'qty' => $request->qty,
-                        'total_price' => $product->price * $request->qty
-                    ]);
-                    $cart->hasProduct()->attach($productId, ['id' => $cartProductId]);
-                    collect($request->variation)->each(function ($variationItem) use ($cart, $product) {
-                        $cart->pickedVariation()->create([
-                            'product_id' => $product->id,
-                            'variation_id' => $variationItem['variation_id'],
-                            'variation_option_id' => $variationItem['variation_option_id'],
-                        ]);
-                    });
-                    return response()->json(['message' => 'Berhasil menambahkan produk dengan variasi berbeda ke keranjang']);
-                } else {
-                    $cartProduct = $cartProduct->cart()->first();
-                    $cartProduct->update([
-                        'qty' => $cartProduct->qty + $request->qty,
-                        'total_price' => $product->price * $request->qty
-                    ]);
-                    return response()->json(['message' => 'Produk sudah dimasukkan ke keranjang, jumlah ditambahkan']);
-                }
-            }
-        } else {
-            return response()->json(['message' => 'Anda harus login terlebih dahulu']);
-        }
-    }
     public function addProductToFav($productId)
     {
         if ($this->user) {
@@ -172,6 +124,8 @@ class UserController extends Controller
     public function order(Request $request)
     {
         $user = $this->user;
+        $defaultUserAdress = $this->user->userAddresses->where('is_default', true)->first();
+
         $usersCarts = $user->cart()->whereIn('id', $request->cartIds)
             ->with(
                 'hasProduct',
@@ -181,7 +135,30 @@ class UserController extends Controller
                 'hasProduct.variation.variationOption'
             )
             ->get();
-        return view('user.order', compact('usersCarts', 'user'));
+
+        $order = Order::create([
+            'order_number' => $this->generateOrderNumber(),
+            'order_date' => date('Ymd'),
+            'order_status' => 'pending'
+        ]);
+        $usersCarts->each(function ($cart) use ($order) {
+            DB::table('cart_product')
+                ->where('product_id', $cart->hasProduct->first()->id)
+                ->update(['order_id' => $order->id]);
+        });
+        $totalAllPrice = $usersCarts->pluck('total_price')->sum();
+        $order->update([
+            'total_price' => $totalAllPrice,
+        ]);
+
+        return view('user.order', compact('usersCarts', 'user', 'defaultUserAdress', 'order'));
+    }
+    private function generateOrderNumber()
+    {
+        $prefix = 'ECM-';
+        $date = date('Ymd');
+        $randomNumber = rand(10000, 99999);
+        return $prefix . $date . '-' . $randomNumber;
     }
     public function callBackPaymentGateway(Request $request)
     {
