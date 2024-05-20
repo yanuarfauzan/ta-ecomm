@@ -46,6 +46,7 @@
 .card-product {
     border: 2px solid #ccc;
     transition: border-color 0.3s; 
+    background-color: white;
 }
 
 .card-product-active {
@@ -125,7 +126,7 @@ span {
 }
 
 .card-detail-product {
-    border: 2px solid #ccc;
+    background-color: white;
     transition: border-color 0.3s;
 }
 

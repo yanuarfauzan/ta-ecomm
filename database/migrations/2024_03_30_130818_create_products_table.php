@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->string('desc')->nullable();
             $table->decimal('discount')->nullable();
             $table->decimal('weight')->nullable();
-            $table->decimal('dimensions')->nullable();
+            $table->string('dimensions')->nullable();
             $table->integer('rate')->nullable();
             $table->timestamps();
         });

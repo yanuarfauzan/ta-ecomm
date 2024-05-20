@@ -43,9 +43,9 @@
                         @if (isset($productBuyNow->discount))
                             <div class="d-flex flex-column align-items-end">
                                 <span>{{ $count }} x Rp
-                                    {{ number_format($productBuyNow->price_after_discount, 2, ',', '.') }}</span>
+                                    {{ number_format($productBuyNow->price_after_dsicount, 2, ',', '.') }}</span>
                                 <span><strong>
-                                        <h4>Rp {{ number_format($productBuyNow->price_after_discount, 2, ',', '.') }}
+                                        <h4>Rp {{ number_format($productBuyNow->price_after_dsicount, 2, ',', '.') }}
                                         </h4>
                                     </strong></span>
                             </div>

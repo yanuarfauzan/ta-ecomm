@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\ProvinciesAndCities;
 use App\Models\User;
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
@@ -49,38 +50,18 @@ class NoteAndShippingMethod extends Component
         }
 
         $this->courier = $courier;
-        $operatorAddressCacheKey = 'operator_default_address';
-        $operatorAddress = cache()->remember($operatorAddressCacheKey, now()->addHours(1), function () {
-            return User::where('role', 'operator')
-                ->first()
-                ->userAddresses()
-                ->where('is_default', true)
-                ->first();
-        });
+
+        $operatorAddress = User::where('role', 'operator')->first()->userAddresses()->where('is_default', true)->first();
         $userAddress = $this->user->userAddresses->where('is_default', true)->first();
-
-        $cityCacheKey = 'rajaongkir_cities';
-
-        $cityResults = cache()->remember($cityCacheKey, now()->addHours(24), function () {
-            $response = Http::withHeaders([
-                'key' => env('API_KEY_RAJAONGKIR')
-            ])->get(env('API_BASE_URL_RAJA_ONGKIR') . '/city');
-            return $response->json()['rajaongkir']['results'];
-        });
-
-        $cityOriginId = null;
-        $cityDestinationId = null;
-
-        $cityLookup = collect($cityResults)->pluck('city_id', 'city_name');
-        $cityOriginId = $cityLookup[$operatorAddress->city] ?? null;
-        $cityDestinationId = $cityLookup[$userAddress->city] ?? null;
+        $cityOriginId = ProvinciesAndCities::where('city_name', $operatorAddress->city)->first()->city_id;
+        $cityDestinationId = ProvinciesAndCities::where('city_name', $userAddress->city)->first()->city_id;
         if ($cityOriginId && $cityDestinationId) {
             $costs = Http::withHeaders([
                 'key' => env('API_KEY_RAJAONGKIR')
             ])->post(env('API_BASE_URL_RAJA_ONGKIR') . '/cost', [
                         'origin' => $cityOriginId,
                         'destination' => $cityDestinationId,
-                        'weight' => 1000,
+                        'weight' => $this->product->weight,
                         'courier' => $courier
                     ]);
 

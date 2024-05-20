@@ -9,7 +9,7 @@ class Order extends Component
 {
     public $usersCarts;
     public $user;
-    public $count;
+    public $count = 1;
     public $defaultUserAdress;
     public $totalPrice;
     public $totalDiscount;
@@ -38,6 +38,7 @@ class Order extends Component
         $this->user = $user;
         $this->defaultUserAdress = $defaultUserAdress;
         $this->count = $countBuyNow;
+        $this->productBuyNow = $productBuyNow;
         count($productBuyNow->toArray()) > 0 ? $this->totalPrice = $productBuyNow->price : $this->totalPrice = $usersCarts->sum('total_price');
         $this->addCostValueToTotalPrice(17000);
     }

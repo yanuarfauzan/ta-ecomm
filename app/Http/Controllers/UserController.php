@@ -11,8 +11,10 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\VariationOption;
 use Illuminate\Support\Facades\DB;
+use App\Models\ProvinciesAndCities;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use App\Http\Requests\AddAddressessRequest;
 use App\Http\Requests\AddProductToCartRequest;
 
@@ -98,7 +100,6 @@ class UserController extends Controller
         $user = $this->user;
 
         $product = Product::where('id', $productId)->with('variation', 'variation.variationOption', 'hasCategory', 'variation.variationOption.productImage')->first();
-
         $firstVarOption = '';
 
         $dataForAmounts = [
@@ -115,10 +116,30 @@ class UserController extends Controller
         $take = $request->loadMoreProduct == true ? 16 : 16;
         $startIndex = $request->input('startIndex', 0);
         $products = Product::with('hasImages')->skip($startIndex)->take($take)->get();
+        
         $firstVarOption = implode('_', $dataForAmounts);
         $firstVarOptionForCart = implode('_', $dataForCart);
         $categories = Category::all();
-        return view('user.detail-product', compact('categories', 'product', 'firstVarOption', 'firstVarOptionForCart', 'products', 'user'));
+
+        $defaultOperatorAddress = User::where('role', 'operator')->first()->userAddresses->where('is_default')->first();
+        $defaultUserAddress = $user->userAddresses->where('is_default', true)->first();
+        $userCityId = ProvinciesAndCities::where('city_name', $defaultUserAddress->city)->first()->city_id;
+        $operatorCityId = ProvinciesAndCities::where('city_name', $defaultOperatorAddress->city)->first()->city_id;
+        try {
+            $costs = Http::withHeaders([
+                'key' => env('API_KEY_RAJAONGKIR')
+            ])->post(env('API_BASE_URL_RAJA_ONGKIR') . '/cost', [
+                        'origin' => $operatorCityId,
+                        'destination' => $userCityId,
+                        'weight' => $product->weight,
+                        'courier' => 'jne'
+                    ]);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+        }
+        $costResults = $costs->json()['rajaongkir']['results'][0];
+        $defaultCost = $costs->json()['rajaongkir']['results'][0]['costs'][0];
+        return view('user.detail-product', compact('categories', 'product', 'firstVarOption', 'firstVarOptionForCart', 'products', 'user', 'defaultUserAddress', 'costResults', 'defaultCost'));
     }
 
     public function order(Request $request)
@@ -167,7 +188,7 @@ class UserController extends Controller
     {
         $user = $this->user;
         $variationBuyNow = $request->variation;
-        $countBuyNow = $request->count;
+        $countBuyNow = $request->qty;
         $defaultUserAdress = $this->user->userAddresses->where('is_default', true)->first();
         $productBuyNow = Product::findOrFail($request->productId);
         $order = $user->order()->create([
@@ -179,7 +200,7 @@ class UserController extends Controller
         ]);
 
         return view('user.order', compact('productBuyNow', 'order', 'user', 'defaultUserAdress', 'countBuyNow', 'variationBuyNow'));
-        
+
     }
     private function generateOrderNumber()
     {
