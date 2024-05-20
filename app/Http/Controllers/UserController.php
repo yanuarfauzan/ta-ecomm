@@ -136,27 +136,55 @@ class UserController extends Controller
             )
             ->get();
 
-        $order = Order::create([
+        $cartProductIds = $usersCarts->map(function ($userCart) {
+            return $userCart->hasProduct->pluck('pivot.id');
+        })->flatten();
+        $cartProductIds = $cartProductIds->unique();
+        $existOrders = Order::whereHas('cartProduct', function ($query) use ($cartProductIds) {
+            $query->whereIn('id', $cartProductIds);
+        })->get();
+        if (!count($existOrders) == 0) {
+            $order = $existOrders->first();
+        } else {
+            $order = Order::create([
+                'order_number' => $this->generateOrderNumber(),
+                'order_date' => date('Ymd'),
+                'order_status' => 'pending'
+            ]);
+            $usersCarts->each(function ($cart) use ($order) {
+                DB::table('cart_product')
+                    ->where('product_id', $cart->hasProduct->first()->id)
+                    ->update(['order_id' => $order->id]);
+            });
+            $totalAllPrice = $usersCarts->pluck('total_price')->sum();
+            $order->update([
+                'total_price' => $totalAllPrice,
+            ]);
+        }
+        return view('user.order', compact('usersCarts', 'user', 'defaultUserAdress', 'order'));
+    }
+    public function buyNow(Request $request)
+    {
+        $user = $this->user;
+        $variationBuyNow = $request->variation;
+        $countBuyNow = $request->count;
+        $defaultUserAdress = $this->user->userAddresses->where('is_default', true)->first();
+        $productBuyNow = Product::findOrFail($request->productId);
+        $order = $user->order()->create([
+            'product_id' => $request->productId,
             'order_number' => $this->generateOrderNumber(),
             'order_date' => date('Ymd'),
+            'total_price' => isset($productBuyNow->discount) ? $productBuyNow->price_after_discount : $productBuyNow->price,
             'order_status' => 'pending'
         ]);
-        $usersCarts->each(function ($cart) use ($order) {
-            DB::table('cart_product')
-                ->where('product_id', $cart->hasProduct->first()->id)
-                ->update(['order_id' => $order->id]);
-        });
-        $totalAllPrice = $usersCarts->pluck('total_price')->sum();
-        $order->update([
-            'total_price' => $totalAllPrice,
-        ]);
 
-        return view('user.order', compact('usersCarts', 'user', 'defaultUserAdress', 'order'));
+        return view('user.order', compact('productBuyNow', 'order', 'user', 'defaultUserAdress', 'countBuyNow', 'variationBuyNow'));
+        
     }
     private function generateOrderNumber()
     {
         $prefix = 'ECM-';
-        $date = date('Ymd');
+        $date = date('YmdHis');
         $randomNumber = rand(10000, 99999);
         return $prefix . $date . '-' . $randomNumber;
     }

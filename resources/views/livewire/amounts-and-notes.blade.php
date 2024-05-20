@@ -40,14 +40,14 @@
                 <button wire:click="addToCart" class="btn bg-main-color rounded-0 text-white" style="width: 100%"
                     id="add-to-cart">Add to
                     Cart</button>
-                <button class="btn bg-main-color rounded-0 text-white" style="width: 100%" id="add-to-cart">Buy
-                    Now</button>
+                <a href="{{ route('user-buy-now') . '?productId=' . $product->id . '&' . http_build_query(['variation' => $choosedVarOptionsForCart]) . '&qty=' . $count }}" class="btn bg-main-color rounded-0 text-white" style="width: 100%" id="add-to-cart">Buy
+                    Now</a>
             @else
                 <button class="btn bg-main-color rounded-0 text-white opacity-50" style="width: 100%"
                     id="add-to-cart">Add to
                     Cart</button>
-                <button class="btn bg-main-color rounded-0 text-white opacity-50" style="width: 100%" id="add-to-cart">Buy
-                    Now</button>
+                <a href="" class="btn bg-main-color rounded-0 text-white opacity-50" style="width: 100%" id="add-to-cart">Buy
+                    Now</a>
             @endif
         </div>
         <div class="d-flex justify-content-center align-items-center gap-2">
