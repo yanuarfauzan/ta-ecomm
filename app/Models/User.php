@@ -98,4 +98,8 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Product::class, 'has_been_favourite_product')->withPivot('id');
     }
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'id', 'user_id');
+    }
 }

@@ -58,7 +58,8 @@ Route::prefix('/user')->group(function () {
         Route::get('/home', [UserController::class, 'home'])->name('user-home');
         Route::prefix('/product')->group(function () {
             Route::get('/detail-product/{productId}', [UserController::class, 'detailProduct'])->name('user-detail-product');
-            Route::get('/checkout', [UserController::class, 'order'])->name('user-order');
+            Route::get('/order', [UserController::class, 'order'])->name('user-order');
+            Route::get('/buy-now', [UserController::class, 'buyNow'])->name('user-buy-now');
         });
     });
 

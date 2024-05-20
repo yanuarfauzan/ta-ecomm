@@ -17,53 +17,101 @@
                 </div>
             </div>
         </div>
-        <div class="card-product card-all-check d-flex flex-column px-4 py-4 align-items-start shadow-sm gap-2"
-            style="width: 100%; background-color: white">
-            @foreach ($usersCarts as $index => $userCarts)
-                @php
-                    $product = $userCarts?->hasProduct->first();
-                    $variation = $product?->variation->first();
-                @endphp
-                <div class="card-product px-2 py-2 d-flex justify-content-between align-items-center"
-                    style="width: 100%;">
-                    <div class="d-flex justify-content-start align-items-center gap-4 position-relative">
-                        <img src="{{ Storage::url('public/product_pictures/' . $product->hasImages->first()->filepath_image) }}"
-                            alt="" style="width: 80px; height: 80px;">
-                        <span style="width: 150px">
-                            <h4>{{ $product->name }}</h4>
-                        </span>
-                    </div>
-                    <div class="d-flex justify-content-start align-items-center gap-2 variation-container">
-                        @foreach ($product->pickedVariationOption as $variationOption)
-                            <img src="{{ Storage::url('public/product_pictures/' . $variationOption->productImage->filepath_image) }}"
-                                alt="" class="variation-image">
-                        @endforeach
-                        <h4 class="variation-options">
-                            @foreach ($product->pickedVariationOption as $variationOption)
-                                {{ $variationOption->name }}{{ $loop->last ? '' : ',' }}
+        @if (count($productBuyNow->toArray()) > 0)
+            <div class="card-product card-all-check d-flex flex-column px-4 py-4 align-items-start shadow-sm gap-2"
+                style="width: 100%; background-color: white">
+                    <div class="card-product px-2 py-2 d-flex justify-content-between align-items-center"
+                        style="width: 100%;">
+                        <div class="d-flex justify-content-start align-items-center gap-4 position-relative">
+                            <img src="{{ Storage::url('public/product_pictures/' . $productBuyNow->hasImages->first()->filepath_image) }}"
+                                alt="" style="width: 80px; height: 80px;">
+                            <span style="width: 150px">
+                                <h4>{{ $productBuyNow->name }}</h4>
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-start align-items-center gap-2 variation-container">
+                            @foreach ($variationBuyNow as $variationOption)
+                                <img src="{{ Storage::url('public/product_pictures/' . $variationOption->productImage->filepath_image) }}"
+                                    alt="" class="variation-image">
                             @endforeach
-                        </h4>
+                            <h4 class="variation-options">
+                                @foreach ($variationBuyNow as $variationOption)
+                                    {{ $variationOption->name }}{{ $loop->last ? '' : ',' }}
+                                @endforeach
+                            </h4>
+                        </div>
+                        @if (isset($productBuyNow->discount))
+                            <div class="d-flex flex-column align-items-end">
+                                <span>{{ $count }} x Rp
+                                    {{ number_format($productBuyNow->price_after_dsicount, 2, ',', '.') }}</span>
+                                <span><strong>
+                                        <h4>Rp {{ number_format($productBuyNow->price_after_dsicount, 2, ',', '.') }}
+                                        </h4>
+                                    </strong></span>
+                            </div>
+                        @else
+                            <div class="d-flex flex-column align-items-end">
+                                <span>{{ $count }} x Rp
+                                    {{ number_format($productBuyNow->price, 2, ',', '.') }}</span>
+                                <span><strong>
+                                        <h4>Rp {{ number_format($productBuyNow->price, 2, ',', '.') }}</h4>
+                                    </strong></span>
+                            </div>
+                        @endif
                     </div>
-                    @if (isset($product->discount))
-                        <div class="d-flex flex-column align-items-end">
-                            <span>{{ $userCarts->qty }} x Rp
-                                {{ number_format($product->price_after_discount, 2, ',', '.') }}</span>
-                            <span><strong>
-                                    <h4>Rp {{ number_format($userCarts->total_price_after_discount, 2, ',', '.') }}</h4>
-                                </strong></span>
+                @livewire('NoteAndShippingMethod', ['product' => $productBuyNow, 'order' => $order])
+            </div>
+        @else
+            <div class="card-product card-all-check d-flex flex-column px-4 py-4 align-items-start shadow-sm gap-2"
+                style="width: 100%; background-color: white">
+                @foreach ($usersCarts as $index => $userCarts)
+                    @php
+                        $product = $userCarts?->hasProduct->first();
+                        $variation = $product?->variation->first();
+                    @endphp
+                    <div class="card-product px-2 py-2 d-flex justify-content-between align-items-center"
+                        style="width: 100%;">
+                        <div class="d-flex justify-content-start align-items-center gap-4 position-relative">
+                            <img src="{{ Storage::url('public/product_pictures/' . $product->hasImages->first()->filepath_image) }}"
+                                alt="" style="width: 80px; height: 80px;">
+                            <span style="width: 150px">
+                                <h4>{{ $product->name }}</h4>
+                            </span>
                         </div>
-                    @else
-                        <div class="d-flex flex-column align-items-end">
-                            <span>{{ $userCarts->qty }} x Rp {{ number_format($product->price, 2, ',', '.') }}</span>
-                            <span><strong>
-                                    <h4>Rp {{ number_format($userCarts->total_price, 2, ',', '.') }}</h4>
-                                </strong></span>
+                        <div class="d-flex justify-content-start align-items-center gap-2 variation-container">
+                            @foreach ($product->pickedVariationOption as $variationOption)
+                                <img src="{{ Storage::url('public/product_pictures/' . $variationOption->productImage->filepath_image) }}"
+                                    alt="" class="variation-image">
+                            @endforeach
+                            <h4 class="variation-options">
+                                @foreach ($product->pickedVariationOption as $variationOption)
+                                    {{ $variationOption->name }}{{ $loop->last ? '' : ',' }}
+                                @endforeach
+                            </h4>
                         </div>
-                    @endif
-                </div>
-            @endforeach
-            @livewire('NoteAndShippingMethod', ['product' => $product, 'order' => $order])
-        </div>
+                        @if (isset($product->discount))
+                            <div class="d-flex flex-column align-items-end">
+                                <span>{{ $userCarts->qty }} x Rp
+                                    {{ number_format($product->price_after_discount, 2, ',', '.') }}</span>
+                                <span><strong>
+                                        <h4>Rp {{ number_format($userCarts->total_price_after_discount, 2, ',', '.') }}
+                                        </h4>
+                                    </strong></span>
+                            </div>
+                        @else
+                            <div class="d-flex flex-column align-items-end">
+                                <span>{{ $userCarts->qty }} x Rp
+                                    {{ number_format($product->price, 2, ',', '.') }}</span>
+                                <span><strong>
+                                        <h4>Rp {{ number_format($userCarts->total_price, 2, ',', '.') }}</h4>
+                                    </strong></span>
+                            </div>
+                        @endif
+                    </div>
+                @endforeach
+                @livewire('NoteAndShippingMethod', ['product' => $product, 'order' => $order])
+            </div>
+        @endif
     </div>
     <div class="d-flex flex-column align-items-start gap-2" style="width: 30%; height: 100%;">
         <div class="shadow-sm card-summary bg-light" style="width: 100%; height: 280px;">

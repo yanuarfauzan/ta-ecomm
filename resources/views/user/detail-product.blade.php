@@ -14,7 +14,7 @@
         </nav>
     </div>
 
-    <div class="container d-flex flex-column justify-content-center gap-4 card-detail-product">
+    <div class="container d-flex flex-column justify-content-center gap-4 card-detail-product bg-white">
         <div class="d-flex justify-content-start gap-2 my-4 mx-4" style="width: 96%; height: 100%">
             <div class="pt-0 my-2" style="width: 32%; height: 80%">
                 <div class="swiper mySwiperImageProduct2">
@@ -95,9 +95,8 @@
                     <div class="d-flex flex-column gap-2">
                         <span><strong>deskripsi : </strong></span>
                         <div class="d-flex flex-column">
-                            <span>Package size: 21x5x12 CM</span>
-                            <span>Weight: {{ $product->weight }} KG</span>
-                            <span>Shipping Weight: 0,5 KG</span>
+                            <span>Package size: {{ $product->dimensions }}cm</span>
+                            <span>Weight: {{ $product->weight / 1000 }}kg</span>
                         </div>
                         <div class="d-flex gap-2 justify-content-start">
                             {{ $product->desc }}
@@ -108,14 +107,15 @@
                     <div class="d-flex flex-column gap-2">
                         <span><strong>pengiriman : </strong></span>
                         <div class="d-flex flex-column gap-2 justify-content-start">
-                            <span><i class="bi bi-geo-alt"></i> dikirim dari</span>
-                            <span><i class="bi bi-truck"></i> ongkir reguler 16 rb - 20 rb</span>
-                            <span>estimasi 2 -3 hari</span>
-                            <span class="d-flex justify-content-end font-main-color">lihat pilihan kurir</span>
-                            <span class="d-flex justify-content-between">
-                                <p>ada masalah dengan produk ini?</p>
-                                <p class="font-main-color"><i class="bi bi-flag font-main-color"></i> laporkan</p>
-                            </span>
+                            <span><i class="bi bi-geo-alt"></i> Pengiriman ke
+                                <strong>{{ $defaultUserAddress->city }}</strong></span>
+                            <span><i class="bi bi-truck"></i> Ongkir {{ $defaultCost['service'] }}
+                                ({{ $defaultCost['description'] }}) <strong>Rp
+                                    {{ number_format($defaultCost['cost'][0]['value'], 2, ',', '.') }}</strong></span>
+                            <span>{{ $costResults['name'] }}</span>
+                            <span>Estimasi {{ $defaultCost['cost'][0]['etd'] }} hari</span>
+                            <span class="d-flex justify-content-end"><a href="" class="font-main-color"
+                                    data-bs-toggle="modal" data-bs-target="#exampleModal">lihat pilihan kurir</a></span>
                         </div>
                     </div>
                 </div>
@@ -123,9 +123,10 @@
             @livewire('AmountsAndNotes', ['product' => $product, 'firstVarOption' => $firstVarOption, 'firstVarOptionForCart' => $firstVarOptionForCart, 'user' => $user])
         </div>
     </div>
+
     <div class="container d-flex justify-content-start align-items-start gap-4 p-0">
         <div class="d-flex flex-column justify-content-center gap-4" style="width: 30%">
-            <div class="d-flex flex-column justify-content-center gap-2 card-detail-product mt-4" style="width: 100%">
+            <div class="d-flex flex-column justify-content-center gap-2 card-detail-product mt-4 bg-white" style="width: 100%">
                 <div class="container mt-4 d-flex flex-column gap-2 ms-4">
                     <h4><strong>ulasan pembeli</strong></h4>
                 </div>
@@ -210,7 +211,7 @@
                     </div>
                 </div>
             </div>
-            <div class="d-flex flex-column justify-content-center gap-2 card-detail-product" style="width: 100%">
+            <div class="d-flex flex-column justify-content-center gap-2 card-detail-product bg-white" style="width: 100%">
                 <div class="container my-2 d-flex flex-column gap-2">
                     <h4 class="ms-4 mt-4"><strong>filter ulasan</strong></h4>
                     <div class="container d-flex flex-column">
@@ -295,7 +296,7 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex flex-column gap-2 card-detail-product mt-4" style="width: 70%">
+        <div class="d-flex flex-column gap-2 card-detail-product mt-4 bg-white" style="width: 70%">
             <div class="container my-4 d-flex flex-column gap-2" style="100%;">
                 <h4 class="ms-4"><strong>foto & video pembeli</strong></h4>
                 <div class="d-flex align-items-center justify-content-start gap-2 ms-4">
@@ -606,7 +607,7 @@
             </div>
         </div>
     </div>
-    <div class="container d-flex flex-column justify-content-center gap-4 card-detail-product mt-4">
+    <div class="container d-flex flex-column justify-content-center gap-4 card-detail-product mt-4 bg-white">
         <div class="container mb-4 mt-2">
             <div class="d-flex justify-content-between ms-2 mt-3">
                 <span><strong>
@@ -689,6 +690,30 @@
             </div>
         </div>
 
+    </div>
+    <div class="modal fade" style="top: 10%" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content rounded-0">
+                <div class="modal-body">
+                    <span><strong>Pilihan Kurir Pengiriman</strong></span>
+                    <hr>
+                    @foreach ($costResults['costs'] as $cost)
+                        <div class="d-flex flex-column gap-2 justify-content-start mt-4 mx-4">
+                                <span><i class="bi bi-geo-alt"></i> Pengiriman ke
+                                    <strong>{{ $defaultUserAddress->city }}</strong></span>
+                                <span><i class="bi bi-truck"></i> Ongkir {{ $cost['service'] }}
+                                    ({{ $cost['description'] }})
+                                    <strong>Rp
+                                        {{ number_format($cost['cost'][0]['value'], 2, ',', '.') }}</strong></span>
+                                <span>{{ $costResults['name'] }}</span>
+                                <span>Estimasi {{ $cost['cost'][0]['etd'] }} hari</span>
+                        </div>
+                        <hr>
+                    @endforeach
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 <script src="{{ asset('/ourjs/detail-product.js') }}" data-navigate-track></script>

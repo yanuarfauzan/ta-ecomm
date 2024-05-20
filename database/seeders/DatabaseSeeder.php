@@ -9,7 +9,9 @@ use App\Models\Category;
 use App\Models\Variation;
 use App\Models\Notification;
 use Illuminate\Database\Seeder;
+use App\Models\ProvinciesAndCities;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 
 class DatabaseSeeder extends Seeder
 {
@@ -28,6 +30,7 @@ class DatabaseSeeder extends Seeder
         //     'birtdate' => '17-01-02',
         //     'role' => 'user',
         // ]);
+        
         User::factory()->count(1)->create();
         Category::factory()->count(14)->create();
         Variation::factory()->count(10)->create();

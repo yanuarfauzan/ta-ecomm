@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('order', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('shipping_id')->nullable();
+            $table->uuid('product_id')->nullable();
             $table->string('order_number')->nullable();
             $table->date('order_date')->nullable();
             $table->integer('total_price')->nullable();
@@ -20,6 +21,7 @@ return new class extends Migration {
             $table->string('note')->nullable();
             $table->timestamps();
             $table->foreign('shipping_id')->references('id')->on('shipping')->onDelete('cascade');
+            $table->foreign('product_id')->references('id')->on('product')->onDelete('cascade');
         });
     }
 

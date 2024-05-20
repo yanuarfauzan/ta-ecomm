@@ -21,6 +21,7 @@ class AmountsAndNotes extends Component
     public function mount($product, $firstVarOption, $user, $firstVarOptionForCart)
     {
         $this->product = $product;
+        $this->cartProductId = $product->cart();
         $this->totalPrice = $product->price;
         $this->choosedVarOptions[] = $firstVarOption;
         $this->choosedVarOptionsForCart[] = $firstVarOptionForCart;

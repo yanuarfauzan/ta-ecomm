@@ -12,6 +12,7 @@ class Order extends Model
     protected $table = 'order';
     protected $fillable = [
         'user_id',
+        'product_id',
         'cart_id',
         'shipping_id',
         'order_number',
@@ -38,4 +39,13 @@ class Order extends Model
     {
         return $this->hasOne(Shipping::class, 'id', 'shipping_id');
     }
+    public function product()
+    {
+        return $this->hasOne(Product::class, 'id', 'product_id');
+    }
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
 }
+
