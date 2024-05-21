@@ -4,7 +4,7 @@
             <span for="note" class="bg-main-color px-4 text-white"
                 style="padding-top: 12px; padding-bottom: 12px">pesan:
             </span>
-            <input wire:model.lazy="note" type="text" class="form-control rounded-0" id="note" name="note" value="{{ $order->note }}"
+            <input wire:model.lazy="note" type="text" class="form-control rounded-0" id="note" name="note"
                 placeholder="tuliskan pesan anda disini" style="box-shadow: none; width: 100%; height: 50px;">
         </div>
         <div class="d-flex justify-content-start gap-2 align-items-center" style="width: 45%">

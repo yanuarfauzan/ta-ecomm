@@ -100,6 +100,6 @@ class User extends Authenticatable
     }
     public function order()
     {
-        return $this->belongsTo(Order::class, 'id', 'user_id');
+        return $this->hasOne(Order::class, 'user_id', 'id');
     }
 }

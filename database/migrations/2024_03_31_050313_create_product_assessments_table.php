@@ -13,13 +13,11 @@ return new class extends Migration {
         Schema::create('product_assessment', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('cart_id');
-            $table->uuid('product_id');
             $table->integer('rating')->nullable();
             $table->string('content')->nullable();
             $table->string('attachment')->nullable();
             $table->timestamps();
             $table->foreign('cart_id')->references('id')->on('cart')->onDelete('cascade');
-            $table->foreign('product_id')->references('id')->on('product')->onDelete('cascade');
         });
     }
 

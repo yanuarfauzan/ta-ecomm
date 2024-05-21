@@ -17,8 +17,15 @@ class NoteAndShippingMethod extends Component
     public $courier;
     public $costValue;
     public $order;
-    public function mount($product, $order)
+    public $totalWeight;
+    public function mount($product, $order, $userCarts)
     {
+        $totalWeight = 0;
+        $this->note = $order->note;
+        $userCarts->each(function ($cart) use (&$totalWeight) {
+            $totalWeight += $cart->hasProduct->first()->weight;
+        });
+        $this->totalWeight = $totalWeight;
         $this->order = $order;
         $this->product = $product;
         $this->user = auth()->user();
@@ -37,15 +44,12 @@ class NoteAndShippingMethod extends Component
         switch ($courier) {
             case 'jne':
                 $service = 'OKE';
-                $costValue = '17000';
                 break;
             case 'pos':
                 $service = 'Pos Reguler';
-                $costValue = '17000';
                 break;
             case 'tiki':
                 $service = 'ECO';
-                $costValue = '16000';
                 break;
         }
 
@@ -61,7 +65,7 @@ class NoteAndShippingMethod extends Component
             ])->post(env('API_BASE_URL_RAJA_ONGKIR') . '/cost', [
                         'origin' => $cityOriginId,
                         'destination' => $cityDestinationId,
-                        'weight' => $this->product->weight,
+                        'weight' => $this->totalWeight,
                         'courier' => $courier
                     ]);
 
@@ -74,7 +78,7 @@ class NoteAndShippingMethod extends Component
             }
             $costResults['product_id'] = $this->product->id;
             $this->costs = $costResults;
-            $this->dispatch('addCostValueToTotalPrice', costValue: $costValue);
+            $this->dispatch('addCostValueToTotalPrice', costValue: $this->costValue);
         } else {
             $this->costs = null;
         }
