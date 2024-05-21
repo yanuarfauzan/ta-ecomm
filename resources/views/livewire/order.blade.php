@@ -17,7 +17,7 @@
                 </div>
             </div>
         </div>
-        @if (count($productBuyNow->toArray()) > 0)
+        @if (count($productBuyNow) > 0)
             <div class="card-product card-all-check d-flex flex-column px-4 py-4 align-items-start shadow-sm gap-2"
                 style="width: 100%; background-color: white">
                     <div class="card-product px-2 py-2 d-flex justify-content-between align-items-center"
@@ -109,7 +109,7 @@
                         @endif
                     </div>
                 @endforeach
-                @livewire('NoteAndShippingMethod', ['product' => $product, 'order' => $order])
+                @livewire('NoteAndShippingMethod', ['product' => $product, 'order' => $order, 'userCarts' => $usersCarts])
             </div>
         @endif
     </div>
@@ -124,20 +124,20 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="d-flex flex-column align-items-start">
                         <span><strong>Subtotal</strong></span>
-                        <span><strong>Discount</strong></span>
+                        <span><strong>Ongkos kirim</strong></span>
                     </div>
                     <div class="d-flex flex-column align-items-center">
-                        <span><strong>Rp {{ number_format($totalPrice, 2, ',', '.') }}</strong></span>
-                        <span><strong>- Rp {{ number_format($totalDiscount, 2, ',', '.') }}</strong></span>
+                        <span><strong>Rp {{ number_format($subTotal, 2, ',', '.') }}</strong></span>
+                        <span><strong>Rp {{ number_format($costValue, 2, ',', '.') }}</strong></span>
                     </div>
                 </div>
                 <hr class="border border-secondary bg-main-color opacity-50">
                 <div class="d-flex justify-content-between align-items-center">
                     <span><strong>Total :</strong></span>
-                    <span><strong>Rp {{ number_format($totalPrice - $totalDiscount, 2, ',', '.') }}</strong></span>
+                    <span><strong>Rp {{ number_format($totalPrice, 2, ',', '.') }}</strong></span>
                 </div>
                 <button id="checkout-payment" class="btn rounded-0 mt-3 bg-main-color text-white"
-                    style="width: 100%;"><strong>Checkout</strong></button>
+                    style="width: 100%;"><strong>Pay</strong></button>
             </div>
         </div>
     </div>

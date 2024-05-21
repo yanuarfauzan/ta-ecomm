@@ -11,13 +11,14 @@ class Order extends Component
     public $user;
     public $count = 1;
     public $defaultUserAdress;
+    public $subTotal;
     public $totalPrice;
-    public $totalDiscount;
     public $snapToken;
     public $order;
     public $previousCostValue;
     public $productBuyNow;
     public $variationBuyNow;
+    public $costValue;
     public $listeners = ['addCostValueToTotalPrice'];
     public function mount($usersCarts, $productBuyNow, $user, $defaultUserAdress, $order, $countBuyNow, $variationBuyNow)
     {
@@ -39,28 +40,25 @@ class Order extends Component
         $this->defaultUserAdress = $defaultUserAdress;
         $this->count = $countBuyNow;
         $this->productBuyNow = $productBuyNow;
-        count($productBuyNow->toArray()) > 0 ? $this->totalPrice = $productBuyNow->price : $this->totalPrice = $usersCarts->sum('total_price');
-        $this->addCostValueToTotalPrice(17000);
+
+        $productPriceBuyNow = isset($productBuyNow) && isset($productBuyNow->discount) ? $productBuyNow->price_after_dsicount : $productBuyNow['price'] ?? 0;
+        count($productBuyNow) > 0 ? $this->subTotal = $productPriceBuyNow : $this->subTotal = $usersCarts->sum('total_price');
     }
     public function addCostValueToTotalPrice($costValue)
     {
+        $this->costValue = $costValue;
         $this->totalPrice -= $this->previousCostValue;
-        $this->totalPrice += $costValue;
+        $this->totalPrice = $this->subTotal + $this->costValue;
         $this->previousCostValue = $costValue;
         $params['transaction_details'] = [
             'order_id' => $this->order->order_number,
             'gross_amount' => $this->totalPrice
         ];
 
-        // Set your Merchant Server Key
         \Midtrans\Config::$serverKey = config('midtrans.serverKey');
-        // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
         \Midtrans\Config::$isProduction = false;
-        // Set sanitization on (default)
         \Midtrans\Config::$isSanitized = true;
-        // Set 3DS transaction for credit card to true
         \Midtrans\Config::$is3ds = true;
-
 
         $this->snapToken = \Midtrans\Snap::getSnapToken($params);
         $this->dispatch('snapTokenGenerated', ['snapToken' => $this->snapToken]);
