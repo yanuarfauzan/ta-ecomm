@@ -21,11 +21,15 @@ class NoteAndShippingMethod extends Component
     public function mount($product, $order, $userCarts)
     {
         $totalWeight = 0;
+        if ($userCarts != []) {
+            collect($userCarts)->each(function ($cart) use (&$totalWeight) {
+                $totalWeight += $cart->hasProduct->first()->weight;
+            });
+            $this->totalWeight = $totalWeight;
+        } else {
+            $this->totalWeight = $product->weight;
+        }
         $this->note = $order->note;
-        $userCarts->each(function ($cart) use (&$totalWeight) {
-            $totalWeight += $cart->hasProduct->first()->weight;
-        });
-        $this->totalWeight = $totalWeight;
         $this->order = $order;
         $this->product = $product;
         $this->user = auth()->user();
@@ -35,8 +39,8 @@ class NoteAndShippingMethod extends Component
     public function updated($propertyName)
     {
         $this->order->update([
-            $propertyName => $this->note 
-        ]);        
+            $propertyName => $this->note
+        ]);
     }
     public function showCost($courier)
     {

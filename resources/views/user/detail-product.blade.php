@@ -96,7 +96,7 @@
                         <span><strong>deskripsi : </strong></span>
                         <div class="d-flex flex-column">
                             <span>Package size: {{ $product->dimensions }}cm</span>
-                            <span>Weight: {{ $product->weight / 1000 }}kg</span>
+                            <span>Weight: {{ $product->weight }}kg</span>
                         </div>
                         <div class="d-flex gap-2 justify-content-start">
                             {{ $product->desc }}
@@ -126,7 +126,8 @@
 
     <div class="container d-flex justify-content-start align-items-start gap-4 p-0">
         <div class="d-flex flex-column justify-content-center gap-4" style="width: 30%">
-            <div class="d-flex flex-column justify-content-center gap-2 card-detail-product mt-4 bg-white" style="width: 100%">
+            <div class="d-flex flex-column justify-content-center gap-2 card-detail-product mt-4 bg-white"
+                style="width: 100%">
                 <div class="container mt-4 d-flex flex-column gap-2 ms-4">
                     <h4><strong>ulasan pembeli</strong></h4>
                 </div>
@@ -137,7 +138,7 @@
                                 <i class="bi bi-star-fill" style="color: #ffd900; font-size: 30px;"></i>
                             </span>
                             <span class="d-flex align-items-center mt-2" style="height: 80px">
-                                <p style="font-size: 100px; font-weight: 100;">{{ $product->rate }}</p>
+                                <p style="font-size: 100px; font-weight: 100;">{{ $acumulatedRating }}</p>
                                 <div class="d-flex align-items-end mt-5">
                                     <p style="font-size: 20px; font-weight: 100;">/</p>
                                     <p style="font-size: 20px; font-weight: 100;">5</p>
@@ -150,64 +151,64 @@
                 </div>
                 <div class="container d-flex flex-column align-items-center">
                     <span>
-                        86% pembeli merasa puas
+                        {{ $acumulatedInPercentRating }}% pembeli merasa puas
                     </span>
                     <div class="d-flex gap-2 justify-content-center align-items-center">
-                        <span>1.823 rating</span>
+                        <span>{{ $totalRating }} rating</span>
                         <div class="low-divider-black"></div>
-                        <span>768 ulasan</span>
+                        <span>{{ $totalReviews }} ulasan</span>
                     </div>
                 </div>
                 <div class="d-flex flex-column mb-4">
-                    <div class="d-flex justify-content-center align-items-center mx-3 gap-2">
+                    <div class="d-flex justify-content-center align-items-center mx-3 gap-2 me-4">
                         <!-- Elemen span dengan bintang -->
                         <span><i class="bi bi-star-fill" style="color: #ffd900;"></i> 5</span>
                         <!-- Elemen progress -->
                         <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0"
                             aria-valuemin="0" aria-valuemax="100" style="width: 50%;">
-                            <div class="progress-bar bg-main-color" style="width: 50%"></div>
+                            <div class="progress-bar bg-main-color" style="width: {{ $percentFiveStars }}%"></div>
                         </div>
-                        <span>13</span>
+                        <span>{{ $fiveStarsCount }}</span>
                     </div>
-                    <div class="d-flex justify-content-center align-items-center mx-3 gap-2">
+                    <div class="d-flex justify-content-center align-items-center mx-3 gap-2 me-4">
                         <!-- Elemen span dengan bintang -->
                         <span><i class="bi bi-star-fill" style="color: #ffd900;"></i> 4</span>
                         <!-- Elemen progress -->
                         <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0"
                             aria-valuemin="0" aria-valuemax="100" style="width: 50%;">
-                            <div class="progress-bar bg-main-color" style="width: 50%"></div>
+                            <div class="progress-bar bg-main-color" style="width: {{ $percentFourStars }}%"></div>
                         </div>
-                        <span>13</span>
+                        <span>{{ $fourStarsCount }}</span>
                     </div>
-                    <div class="d-flex justify-content-center align-items-center mx-3 gap-2">
+                    <div class="d-flex justify-content-center align-items-center mx-3 gap-2 me-4">
                         <!-- Elemen span dengan bintang -->
                         <span><i class="bi bi-star-fill" style="color: #ffd900;"></i> 3</span>
                         <!-- Elemen progress -->
                         <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0"
                             aria-valuemin="0" aria-valuemax="100" style="width: 50%;">
-                            <div class="progress-bar bg-main-color" style="width: 50%"></div>
+                            <div class="progress-bar bg-main-color" style="width: {{ $percentThreeStars }}%"></div>
                         </div>
-                        <span>13</span>
+                        <span>{{ $threeStarsCount }}</span>
                     </div>
-                    <div class="d-flex justify-content-center align-items-center mx-3 gap-2">
+                    <div class="d-flex justify-content-center align-items-center mx-3 gap-2 me-4">
                         <!-- Elemen span dengan bintang -->
                         <span><i class="bi bi-star-fill" style="color: #ffd900;"></i> 2</span>
                         <!-- Elemen progress -->
                         <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0"
                             aria-valuemin="0" aria-valuemax="100" style="width: 50%;">
-                            <div class="progress-bar bg-main-color" style="width: 50%"></div>
+                            <div class="progress-bar bg-main-color" style="width: {{ $percentTwoStars }}%"></div>
                         </div>
-                        <span>13</span>
+                        <span>{{ $twoStarsCount }}</span>
                     </div>
-                    <div class="d-flex justify-content-center align-items-center mx-3 gap-2">
+                    <div class="d-flex justify-content-center align-items-center mx-3 gap-2 me-4">
                         <!-- Elemen span dengan bintang -->
                         <span><i class="bi bi-star-fill" style="color: #ffd900;"></i> 1</span>
                         <!-- Elemen progress -->
                         <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0"
                             aria-valuemin="0" aria-valuemax="100" style="width: 50%;">
-                            <div class="progress-bar bg-main-color" style="width: 50%"></div>
+                            <div class="progress-bar bg-main-color" style="width: {{ $percentOneStars }}%"></div>
                         </div>
-                        <span>13</span>
+                        <span>{{ $oneStarsCount }}</span>
                     </div>
                 </div>
             </div>
@@ -321,289 +322,82 @@
                 <div class="d-flex justify-content-between ms-4">
                     <div class="d-flex flex-column gap-2">
                         <h4><strong>ulasan pilihan</strong></h4>
-                        <span class="opacity-50">menampilkan 5 dari 10 ulasan</span>
+                        <div>
+                            <p class="small text-muted">
+                                {!! __('Menampilkan') !!}
+                                <span class="fw-semibold">{{ $productAssessments->lastItem() }}</span>
+                                {!! __('dari') !!}
+                                <span class="fw-semibold">{{ $productAssessments->total() }}</span>
+                                {!! __('ulasan') !!}
+                            </p>
+                        </div>
                     </div>
                     <div class="d-flex justify-content-start align-items-center gap-2 rounded-0 custom-div me-5">
                         <span class="mb-3"><strong>urutkan</strong></span>
                         <select class="form-select form-select-lg mb-3 rounded-0 custom-select" style="height: 50px"
                             aria-label="Large select example">
-                            <option selected>paling membantu</option>
-                            <option value="1">terbaru</option>
+                            <option value="1" selected>terbaru</option>
                             <option value="2">rating tertinggi</option>
                             <option value="3">rating terendah</option>
                         </select>
                     </div>
                 </div>
             </div>
-            <div class="container d-flex flex-column gap-2">
-                <div class="d-flex justify-content-start align-items-center gap-2 ms-4">
-                    <span>
-                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
-                    </span>
-                    <span>
-                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
-                    </span>
-                    <span>
-                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
-                    </span>
-                    <span>
-                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
-                    </span>
-                    <span>
-                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
-                    </span>
-                    <span>lebih dari 1 tahun yang lalu</span>
-                </div>
-                <div class="d-flex justify-content-start align-items-center gap-2 ms-4">
-                    <span><img src="https://placehold.co/400x400/png" alt="" class="rounded-circle"
-                            style="width: 40px;"></span>
-                    <span><strong>Yanuar</strong></span>
-                </div>
-                <div class="d-flex justify-content-start align-items-center ms-4">
-                    <span>varian: pendek, ungu</span>
-                </div>
-                <div class="d-flex justify-content-start align-items-center ms-4">
-                    <span><strong>celananya bagus, warna ungu nya menyala, pelayanan nya memuaskan</strong></span>
-                </div>
-                <div class="accordion accordion-flush ms-2" id="accordionFlushExample">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" style="background-color: #F8F9FA;">
-                            <button class="accordion-button collapsed border-white shadow-0" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false"
-                                aria-controls="flush-collapseOne"
-                                style="width: 155px; height: 30px; background-color: #F8F9FA;">
-                                lihat balasan
-                            </button>
-                        </h2>
-                        <div id="flush-collapseOne" class="accordion-collapse collapse mt-2"
-                            data-bs-parent="#accordionFlushExample">
-                            <div class="d-flex justify-content-start align-items-center gap-2 ms-3 my-1">
-                                <span><img src="https://placehold.co/400x400/png" alt="" class="rounded-circle"
-                                        style="width: 40px;"></span>
-                                <span><strong>Penjual</strong></span>
-                            </div>
-                            <div class="d-flex justify-content-start align-items-center ms-3">
-                                <span><strong>terimakasih ya kak</strong></span>
+            @foreach ($productAssessments as $productAssessment)
+                <div class="container d-flex flex-column gap-2 mb-2">
+                    <div class="d-flex justify-content-start align-items-center gap-2 ms-4">
+                        @for ($i = 1; $i <= $productAssessment->rating; $i++)
+                            <span>
+                                <i class="bi bi-star-fill" style="color: #ffd900"></i>
+                            </span>
+                        @endfor
+                        <span>{{ floor($productAssessment->created_at->diffInDays()) }} hari yang lalu</span>
+                    </div>
+                    <div class="d-flex justify-content-start align-items-center gap-2 ms-4">
+                        <span><img src="https://placehold.co/400x400/png" alt="" class="rounded-circle"
+                                style="width: 40px;"></span>
+                        <span><strong>{{ $productAssessment->user->username }}</strong></span>
+                    </div>
+                    <div class="d-flex justify-content-start align-items-center ms-4">
+                        <span>
+                            @foreach ($productAssessment->user?->cart->first()?->hasProduct->first()?->pickedVariationOption ?? [] as $variationOption)
+                                {{ $variationOption->name }}{{ !$loop->last ? ',' : '' }}
+                            @endforeach
+                        </span>
+                    </div>
+                    <div class="d-flex justify-content-start align-items-center ms-4">
+                        <span><strong>{{ $productAssessment->content }}</strong></span>
+                    </div>
+                    @if ($productAssessment->response_operator)
+                        <div class="accordion accordion-flush ms-2" id="accordionFlushExample">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header bg-white">
+                                    <button class="accordion-button collapsed border-white shadow-0 bg-white"
+                                        type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne"
+                                        aria-expanded="false" aria-controls="flush-collapseOne"
+                                        style="width: 155px; height: 30px; background-color: #F8F9FA;">
+                                        lihat balasan
+                                    </button>
+                                </h2>
+                                <div id="flush-collapseOne" class="accordion-collapse collapse mt-2"
+                                    data-bs-parent="#accordionFlushExample">
+                                    <div class="d-flex justify-content-start align-items-center gap-2 ms-3 my-1">
+                                        <span><img src="https://placehold.co/400x400/png" alt=""
+                                                class="rounded-circle" style="width: 40px;"></span>
+                                        <span><strong>Penjual</strong></span>
+                                    </div>
+                                    <div class="d-flex justify-content-start align-items-center ms-3">
+                                        <span><strong>{{ $productAssessment->response_operator }}</strong></span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
                 </div>
-            </div>
-            <div class="container d-flex flex-column gap-2">
-                <div class="d-flex justify-content-start align-items-center gap-2 ms-4">
-                    <span>
-                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
-                    </span>
-                    <span>
-                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
-                    </span>
-                    <span>
-                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
-                    </span>
-                    <span>
-                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
-                    </span>
-                    <span>
-                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
-                    </span>
-                    <span>lebih dari 1 tahun yang lalu</span>
-                </div>
-                <div class="d-flex justify-content-start align-items-center gap-2 ms-4">
-                    <span><img src="https://placehold.co/400x400/png" alt="" class="rounded-circle"
-                            style="width: 40px;"></span>
-                    <span><strong>Yanuar</strong></span>
-                </div>
-                <div class="d-flex justify-content-start align-items-center ms-4">
-                    <span>varian: pendek, ungu</span>
-                </div>
-                <div class="d-flex justify-content-start align-items-center ms-4">
-                    <span><strong>celananya bagus, warna ungu nya menyala, pelayanan nya memuaskan</strong></span>
-                </div>
-                <div class="accordion accordion-flush ms-2" id="accordionFlushExample">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" style="background-color: #F8F9FA;">
-                            <button class="accordion-button collapsed border-white shadow-0" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false"
-                                aria-controls="flush-collapseOne"
-                                style="width: 155px; height: 30px; background-color: #F8F9FA;">
-                                lihat balasan
-                            </button>
-                        </h2>
-                        <div id="flush-collapseOne" class="accordion-collapse collapse mt-2"
-                            data-bs-parent="#accordionFlushExample">
-                            <div class="d-flex justify-content-start align-items-center gap-2 ms-3 my-1">
-                                <span><img src="https://placehold.co/400x400/png" alt="" class="rounded-circle"
-                                        style="width: 40px;"></span>
-                                <span><strong>Penjual</strong></span>
-                            </div>
-                            <div class="d-flex justify-content-start align-items-center ms-3">
-                                <span><strong>terimakasih ya kak</strong></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="container d-flex flex-column gap-2">
-                <div class="d-flex justify-content-start align-items-center gap-2 ms-4">
-                    <span>
-                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
-                    </span>
-                    <span>
-                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
-                    </span>
-                    <span>
-                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
-                    </span>
-                    <span>
-                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
-                    </span>
-                    <span>
-                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
-                    </span>
-                    <span>lebih dari 1 tahun yang lalu</span>
-                </div>
-                <div class="d-flex justify-content-start align-items-center gap-2 ms-4">
-                    <span><img src="https://placehold.co/400x400/png" alt="" class="rounded-circle"
-                            style="width: 40px;"></span>
-                    <span><strong>Yanuar</strong></span>
-                </div>
-                <div class="d-flex justify-content-start align-items-center ms-4">
-                    <span>varian: pendek, ungu</span>
-                </div>
-                <div class="d-flex justify-content-start align-items-center ms-4">
-                    <span><strong>celananya bagus, warna ungu nya menyala, pelayanan nya memuaskan</strong></span>
-                </div>
-                <div class="accordion accordion-flush ms-2" id="accordionFlushExample">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" style="background-color: #F8F9FA;">
-                            <button class="accordion-button collapsed border-white shadow-0" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false"
-                                aria-controls="flush-collapseOne"
-                                style="width: 155px; height: 30px; background-color: #F8F9FA;">
-                                lihat balasan
-                            </button>
-                        </h2>
-                        <div id="flush-collapseOne" class="accordion-collapse collapse mt-2"
-                            data-bs-parent="#accordionFlushExample">
-                            <div class="d-flex justify-content-start align-items-center gap-2 ms-3 my-1">
-                                <span><img src="https://placehold.co/400x400/png" alt="" class="rounded-circle"
-                                        style="width: 40px;"></span>
-                                <span><strong>Penjual</strong></span>
-                            </div>
-                            <div class="d-flex justify-content-start align-items-center ms-3">
-                                <span><strong>terimakasih ya kak</strong></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="container d-flex flex-column gap-2">
-                <div class="d-flex justify-content-start align-items-center gap-2 ms-4">
-                    <span>
-                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
-                    </span>
-                    <span>
-                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
-                    </span>
-                    <span>
-                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
-                    </span>
-                    <span>
-                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
-                    </span>
-                    <span>
-                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
-                    </span>
-                    <span>lebih dari 1 tahun yang lalu</span>
-                </div>
-                <div class="d-flex justify-content-start align-items-center gap-2 ms-4">
-                    <span><img src="https://placehold.co/400x400/png" alt="" class="rounded-circle"
-                            style="width: 40px;"></span>
-                    <span><strong>Yanuar</strong></span>
-                </div>
-                <div class="d-flex justify-content-start align-items-center ms-4">
-                    <span>varian: pendek, ungu</span>
-                </div>
-                <div class="d-flex justify-content-start align-items-center ms-4">
-                    <span><strong>celananya bagus, warna ungu nya menyala, pelayanan nya memuaskan</strong></span>
-                </div>
-                <div class="accordion accordion-flush ms-2" id="accordionFlushExample">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" style="background-color: #F8F9FA;">
-                            <button class="accordion-button collapsed border-white shadow-0" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false"
-                                aria-controls="flush-collapseOne"
-                                style="width: 155px; height: 30px; background-color: #F8F9FA;">
-                                lihat balasan
-                            </button>
-                        </h2>
-                        <div id="flush-collapseOne" class="accordion-collapse collapse mt-2"
-                            data-bs-parent="#accordionFlushExample">
-                            <div class="d-flex justify-content-start align-items-center gap-2 ms-3 my-1">
-                                <span><img src="https://placehold.co/400x400/png" alt="" class="rounded-circle"
-                                        style="width: 40px;"></span>
-                                <span><strong>Penjual</strong></span>
-                            </div>
-                            <div class="d-flex justify-content-start align-items-center ms-3">
-                                <span><strong>terimakasih ya kak</strong></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="container d-flex flex-column gap-2">
-                <div class="d-flex justify-content-start align-items-center gap-2 ms-4">
-                    <span>
-                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
-                    </span>
-                    <span>
-                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
-                    </span>
-                    <span>
-                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
-                    </span>
-                    <span>
-                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
-                    </span>
-                    <span>
-                        <i class="bi bi-star-fill" style="color: #ffd900"></i>
-                    </span>
-                    <span>lebih dari 1 tahun yang lalu</span>
-                </div>
-                <div class="d-flex justify-content-start align-items-center gap-2 ms-4">
-                    <span><img src="https://placehold.co/400x400/png" alt="" class="rounded-circle"
-                            style="width: 40px;"></span>
-                    <span><strong>Yanuar</strong></span>
-                </div>
-                <div class="d-flex justify-content-start align-items-center ms-4">
-                    <span>varian: pendek, ungu</span>
-                </div>
-                <div class="d-flex justify-content-start align-items-center ms-4">
-                    <span><strong>celananya bagus, warna ungu nya menyala, pelayanan nya memuaskan</strong></span>
-                </div>
-                <div class="accordion accordion-flush ms-2" id="accordionFlushExample">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" style="background-color: #F8F9FA;">
-                            <button class="accordion-button collapsed border-white shadow-0" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false"
-                                aria-controls="flush-collapseOne"
-                                style="width: 155px; height: 30px; background-color: #F8F9FA;">
-                                lihat balasan
-                            </button>
-                        </h2>
-                        <div id="flush-collapseOne" class="accordion-collapse collapse mt-2"
-                            data-bs-parent="#accordionFlushExample">
-                            <div class="d-flex justify-content-start align-items-center gap-2 ms-3 my-1">
-                                <span><img src="https://placehold.co/400x400/png" alt="" class="rounded-circle"
-                                        style="width: 40px;"></span>
-                                <span><strong>Penjual</strong></span>
-                            </div>
-                            <div class="d-flex justify-content-start align-items-center ms-3">
-                                <span><strong>terimakasih ya kak</strong></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            @endforeach
+            <div class="d-flex justify-content-between align-items-center mx-4 mb-4 mt-3">
+                {{ $productAssessments->links() }}
+                <span class="font-main-color"><strong>lihat semua ulasan</strong></span>
             </div>
         </div>
     </div>
@@ -613,8 +407,8 @@
                 <span><strong>
                         <h4>produk serupa</h4>
                     </strong></span>
-                <span>
-                    <h5><a href="#">lihat lainnya</a></h5>
+                <span class="font-main-color">
+                    <strong>lihat lainnya</strong>
                 </span>
             </div>
             <div class="row row-cols-4 ms-0">
@@ -700,14 +494,14 @@
                     <hr>
                     @foreach ($costResults['costs'] as $cost)
                         <div class="d-flex flex-column gap-2 justify-content-start mt-4 mx-4">
-                                <span><i class="bi bi-geo-alt"></i> Pengiriman ke
-                                    <strong>{{ $defaultUserAddress->city }}</strong></span>
-                                <span><i class="bi bi-truck"></i> Ongkir {{ $cost['service'] }}
-                                    ({{ $cost['description'] }})
-                                    <strong>Rp
-                                        {{ number_format($cost['cost'][0]['value'], 2, ',', '.') }}</strong></span>
-                                <span>{{ $costResults['name'] }}</span>
-                                <span>Estimasi {{ $cost['cost'][0]['etd'] }} hari</span>
+                            <span><i class="bi bi-geo-alt"></i> Pengiriman ke
+                                <strong>{{ $defaultUserAddress->city }}</strong></span>
+                            <span><i class="bi bi-truck"></i> Ongkir {{ $cost['service'] }}
+                                ({{ $cost['description'] }})
+                                <strong>Rp
+                                    {{ number_format($cost['cost'][0]['value'], 2, ',', '.') }}</strong></span>
+                            <span>{{ $costResults['name'] }}</span>
+                            <span>Estimasi {{ $cost['cost'][0]['etd'] }} hari</span>
                         </div>
                         <hr>
                     @endforeach

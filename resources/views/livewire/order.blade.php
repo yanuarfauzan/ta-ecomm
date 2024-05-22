@@ -17,7 +17,7 @@
                 </div>
             </div>
         </div>
-        @if (count($productBuyNow) > 0)
+        @if ($productBuyNow != [])
             <div class="card-product card-all-check d-flex flex-column px-4 py-4 align-items-start shadow-sm gap-2"
                 style="width: 100%; background-color: white">
                     <div class="card-product px-2 py-2 d-flex justify-content-between align-items-center"
@@ -59,7 +59,7 @@
                             </div>
                         @endif
                     </div>
-                @livewire('NoteAndShippingMethod', ['product' => $productBuyNow, 'order' => $order])
+                @livewire('NoteAndShippingMethod', ['product' => $productBuyNow, 'order' => $order, 'userCarts' => $usersCarts])
             </div>
         @else
             <div class="card-product card-all-check d-flex flex-column px-4 py-4 align-items-start shadow-sm gap-2"
@@ -79,15 +79,11 @@
                             </span>
                         </div>
                         <div class="d-flex justify-content-start align-items-center gap-2 variation-container">
-                            @foreach ($product->pickedVariationOption as $variationOption)
-                                <img src="{{ Storage::url('public/product_pictures/' . $variationOption->productImage->filepath_image) }}"
-                                    alt="" class="variation-image">
-                            @endforeach
-                            <h4 class="variation-options">
+                            <span class="variation-options">
                                 @foreach ($product->pickedVariationOption as $variationOption)
                                     {{ $variationOption->name }}{{ $loop->last ? '' : ',' }}
                                 @endforeach
-                            </h4>
+                            </span>
                         </div>
                         @if (isset($product->discount))
                             <div class="d-flex flex-column align-items-end">
@@ -126,7 +122,7 @@
                         <span><strong>Subtotal</strong></span>
                         <span><strong>Ongkos kirim</strong></span>
                     </div>
-                    <div class="d-flex flex-column align-items-center">
+                    <div class="d-flex flex-column align-items-start">
                         <span><strong>Rp {{ number_format($subTotal, 2, ',', '.') }}</strong></span>
                         <span><strong>Rp {{ number_format($costValue, 2, ',', '.') }}</strong></span>
                     </div>

@@ -57,7 +57,7 @@ class RegisterRequest extends FormRequest
             'phone_number.digits_between' => 'Panjang nomor handphone antara 10 sampai dengan 15 digit',
             'password.required' => 'Password tidak boleh kosong',
             'password.confirmed' => 'Konfirmasi password tidak cocok',
-            'password.regex' => 'Password harus mengandung kombinasi huruf besar, huruf kecil, angka, dan simbol',
+            'password.regex' => 'Harus mengandung huruf besar, kecil, angka, dan simbol',
             'password.different' => 'Password dan username tidak boleh sama',
             'gender.required' => 'Jenis kelamin wajib di isi'
         ];

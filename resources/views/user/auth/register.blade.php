@@ -29,7 +29,7 @@
                             @endif
                         </div>
                         <div class="input-group" style="height: 55px">
-                            <input type="text" class="form-control rounded-0" id="no_handphone" name="phone_number" value="{{ old('phone_number') }}"
+                            <input type="number" class="form-control rounded-0" id="no_handphone" name="phone_number" value="{{ old('phone_number') }}"
                                 placeholder="no handphone" style="box-shadow: none; width: 100%; height: 40px;">
                             @if ($errors->has('phone_number'))
                                 <span class="text-danger" style="font-size: 0.8em;">{{ $errors->first('phone_number') }}</span>
