@@ -98,8 +98,15 @@ class UserController extends Controller
     public function detailProduct(Request $request, $productId)
     {
         $user = $this->user;
+        $defaultUserAddress = $user->userAddresses->where('is_default', true)->first();
 
-        $product = Product::where('id', $productId)->with('variation', 'variation.variationOption', 'hasCategory', 'variation.variationOption.productImage')->first();
+        $product = Product::where('id', $productId)->with(
+            'variation',
+            'variation.variationOption',
+            'hasCategory',
+            'variation.variationOption.productImage',
+            'productAssessment'
+            )->first();
         $firstVarOption = '';
 
         $dataForAmounts = [
@@ -121,8 +128,65 @@ class UserController extends Controller
         $firstVarOptionForCart = implode('_', $dataForCart);
         $categories = Category::all();
 
+        $productAssessments = $product->productAssessment()->paginate(4);
+        $totalReviews = $product->productAssessment()->count();
+        $positiveReviews = $product->productAssessment()->whereIn('rating', [4, 5])->count();
+        
+        $fiveStarsCount = $product->productAssessment()->where('rating', 5)->count();
+        $percentFiveStars = number_format(($fiveStarsCount / $totalReviews) * 100, 0);
+        
+        $fourStarsCount = $product->productAssessment()->where('rating', 4)->count();
+        $percentFourStars = number_format(($fourStarsCount / $totalReviews) * 100, 0);
+        
+        $threeStarsCount = $product->productAssessment()->where('rating', 3)->count();
+        $percentThreeStars = number_format(($threeStarsCount / $totalReviews) * 100, 0);
+        
+        $twoStarsCount = $product->productAssessment()->where('rating', 2)->count();
+        $percentTwoStars = number_format(($twoStarsCount / $totalReviews) * 100, 0);
+        
+        $oneStarsCount = $product->productAssessment()->where('rating', 1)->count();
+        $percentOneStars = number_format(($oneStarsCount / $totalReviews) * 100, 0);
+        
+        $acumulatedRating = ($positiveReviews / $totalReviews) * 5;
+        $acumulatedInPercentRating = ($positiveReviews / $totalReviews) * 100;
+        $totalRating = $product->productAssessment()->sum('rating');
+
+        $costs = $this->getCostValueShipping($product, $defaultUserAddress);
+        $costResults = $costs->json()['rajaongkir']['results'][0];
+        $defaultCost = $costs->json()['rajaongkir']['results'][0]['costs'][0];
+
+        return view('user.detail-product', compact(
+            'categories',
+            'product',
+            'firstVarOption',
+            'firstVarOptionForCart',
+            'products',
+            'user',
+            'defaultUserAddress',
+            'costResults',
+            'defaultCost',
+            'acumulatedRating',
+            'acumulatedInPercentRating',
+            'totalRating',
+            'totalReviews',
+            'percentFiveStars',
+            'fiveStarsCount',
+            'percentFourStars',
+            'fourStarsCount',
+            'percentThreeStars',
+            'threeStarsCount',
+            'percentTwoStars',
+            'twoStarsCount',
+            'percentOneStars',
+            'oneStarsCount',
+            'productAssessments'
+        ));
+    }
+
+    public function getCostValueShipping($product, $defaultUserAddress)
+    {
+        $user = $this->user;
         $defaultOperatorAddress = User::where('role', 'operator')->first()->userAddresses->where('is_default')->first();
-        $defaultUserAddress = $user->userAddresses->where('is_default', true)->first();
         $userCityId = ProvinciesAndCities::where('city_name', $defaultUserAddress->city)->first()->city_id;
         $operatorCityId = ProvinciesAndCities::where('city_name', $defaultOperatorAddress->city)->first()->city_id;
         try {
@@ -137,9 +201,7 @@ class UserController extends Controller
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
-        $costResults = $costs->json()['rajaongkir']['results'][0];
-        $defaultCost = $costs->json()['rajaongkir']['results'][0]['costs'][0];
-        return view('user.detail-product', compact('categories', 'product', 'firstVarOption', 'firstVarOptionForCart', 'products', 'user', 'defaultUserAddress', 'costResults', 'defaultCost'));
+        return $costs;
     }
 
     public function order(Request $request)
@@ -168,6 +230,7 @@ class UserController extends Controller
             $order = $existOrders->first();
         } else {
             $order = Order::create([
+                'user_id' => $user->id,
                 'order_number' => $this->generateOrderNumber(),
                 'order_date' => date('Ymd'),
                 'order_status' => 'pending'

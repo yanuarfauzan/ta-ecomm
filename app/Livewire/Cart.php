@@ -104,7 +104,6 @@ class Cart extends Component
     }
     public function toggleRelatedProducts($userCartId)
     {
-
         if ($this->userCartId === $userCartId) {
             $this->showRelatedProducts = !$this->showRelatedProducts;
         } else {

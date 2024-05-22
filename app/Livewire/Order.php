@@ -42,7 +42,7 @@ class Order extends Component
         $this->productBuyNow = $productBuyNow;
 
         $productPriceBuyNow = isset($productBuyNow) && isset($productBuyNow->discount) ? $productBuyNow->price_after_dsicount : $productBuyNow['price'] ?? 0;
-        count($productBuyNow) > 0 ? $this->subTotal = $productPriceBuyNow : $this->subTotal = $usersCarts->sum('total_price');
+        $productBuyNow != [] ? $this->subTotal = $productPriceBuyNow : $this->subTotal = $usersCarts->sum('total_price');
     }
     public function addCostValueToTotalPrice($costValue)
     {

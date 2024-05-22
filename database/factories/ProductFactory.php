@@ -25,8 +25,12 @@ class ProductFactory extends Factory
             'name' => fake()->unique()->word(),
             'SKU' => fake()->bothify('SKU-????-####'),
             'stock' => fake()->numberBetween(0, 1000),
-            'price' => fake()->randomFloat(2, 100, 1000),
-            'desc' => fake()->sentence()
+            'price' => fake()->numberBetween(10, 1000) * 1000,
+            'desc' => fake()->paragraph(),
+            'dimensions' => fake()->numberBetween(1, 100) . 'x' . fake()->numberBetween(1, 100),
+            'weight' => round(fake()->numberBetween(100, 10000) / 1000, 2),
+            'rate' => fake()->numberBetween(1, 5)
+
         ];
     }
 

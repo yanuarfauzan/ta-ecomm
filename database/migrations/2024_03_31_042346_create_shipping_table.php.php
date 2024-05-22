@@ -12,14 +12,14 @@ return new class extends Migration {
     {
         Schema::create('shipping', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('shipping_provider_id');
-            $table->enum('shipping_type', ['standart', 'express'])->nullable();
-            $table->enum('shipping_status', ['proccess', 'sent', 'received'])->nullable();
-            $table->string('resi_number')->nullable();
-            $table->string('shipping_address')->nullable();
-            $table->integer('shipping_cost')->unsigned();
+            $table->string('provider_code')->nullable();
+            $table->string('provider_name')->nullable();
+            $table->string('service')->nullable();
+            $table->string('desc')->nullable();
+            $table->integer('cost')->nullable();
+            $table->string('etd')->nullable();
+            $table->string('resi')->nullable();
             $table->timestamps();
-            $table->foreign('shipping_provider_id')->references('id')->on('shipping_provider')->onDelete('cascade');
         });
     }
 

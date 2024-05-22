@@ -47,5 +47,9 @@ class Order extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+    public function productAssessment()
+    {
+        return $this->hasMany(ProductAssessment::class, 'order_id', 'id');
+    }
 }
 

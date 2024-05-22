@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Notification;
+use App\Models\ProductAssessment;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -101,5 +102,9 @@ class User extends Authenticatable
     public function order()
     {
         return $this->hasOne(Order::class, 'user_id', 'id');
+    }
+    public function productAssessment()
+    {
+        return $this->belongsTo(ProductAssessment::class, 'user_id', 'id');
     }
 }

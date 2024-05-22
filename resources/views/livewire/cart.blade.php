@@ -76,8 +76,8 @@
                         <span><strong>Subtotal</strong></span>
                         <span><strong>Discount</strong></span>
                     </div>
-                    <div class="d-flex flex-column align-items-center">
-                        <span><strong>Rp {{ number_format($totalPrice, 2, ',', '.') }}</strong></span>
+                    <div class="d-flex flex-column align-items-start">
+                        <span style="margin-left: 11px;"><strong>Rp {{ number_format($totalPrice, 2, ',', '.') }}</strong></span>
                         <span><strong>- Rp {{ number_format($totalDiscount, 2, ',', '.') }}</strong></span>
                     </div>
                 </div>
@@ -86,8 +86,14 @@
                     <span><strong>Total :</strong></span>
                     <span><strong>Rp {{ number_format($totalPrice - $totalDiscount, 2, ',', '.') }}</strong></span>
                 </div>
+                @if($checkedProducts)
                 <a href="{{ route('user-order') . '?' . http_build_query(['cartIds' => $checkedProducts]) }}" role="button" id="checkout" class="btn rounded-0 mt-3 bg-main-color text-white"
                     style="width: 100%;"><strong>Checkout</strong></a>
+                @else
+                    <button role="button" id="checkout" class="btn rounded-0 mt-3 bg-main-color text-white opacity-50"
+                        style="width: 100%; cursor: default;" disable><strong>Checkout</strong></button>
+                @endif
+
             </div>
         </div>
         <div class="shadow-sm card-related-products card-summary bg-light {{ count($relatedProducts ?? []) > 0 ? 'show' : 'hide' }}"
@@ -124,7 +130,7 @@
                                                 class="text-dark bg-light position-absolute border border-secondary text-center"
                                                 style="top: 127px; width: 50px; font-size: 10px;">Discount</span>
                                             <span
-                                                class="text-dark bg-secondary position-absolute border border-secondary text-center"
+                                                class="text-dark bg-main-color position-absolute border border-secondary text-center"
                                                 style="top: 127px; left: 50px; width: 30px; font-size: 10px;"><i
                                                     class="text-white">{{ floor($product->discount) }}%</i></span>
                                         @endif

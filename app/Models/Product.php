@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\ProductImage;
+use App\Models\ProductAssessment;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -74,5 +75,9 @@ class Product extends Model
     public function order()
     {
         return $this->belongsTo(Order::class, 'id', 'product_id');
+    }
+    public function productAssessment()
+    {
+        return $this->hasMany(ProductAssessment::class, 'product_id', 'id');
     }
 }
