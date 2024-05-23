@@ -3,7 +3,7 @@
     <section class="section">
         <div class="section-header">
             <div class="section-header-back">
-                <a href="{{ url('/admin/list-users') }}"><i class="fas fa-arrow-left"></i></a>
+                <a href="{{ url('/admin/list-category') }}"><i class="fas fa-arrow-left"></i></a>
             </div>
             <h1>EDIT CATEGORY</h1>
         </div>

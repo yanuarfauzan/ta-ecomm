@@ -42,6 +42,7 @@
                             <th scope="col">Gender</th>
                             <th scope="col">Birthdate</th>
                             <th scope="col">Role</th>
+                            <th scope="col">profil</th>
                             <th scope="col">Address</th>
                             <th scope="col">Aksi</th>
                         </tr>
@@ -65,6 +66,13 @@
                                 </td>
                                 <td>{{ $user->birtdate }}</td>
                                 <td>{{ $user->role }}</td>
+                                <td>
+                                    @if($user->profile_image)
+                                        <img src="{{ asset('storage/' . $user->profile_image) }}" alt="Profile Image" width="50" height="50">
+                                    @else
+                                        No Image
+                                    @endif
+                                </td>
                                 <td>
                                     <button type="button" class="btn btn-info" data-toggle="modal"
                                         data-target="#addressModal{{ $user->id }}">

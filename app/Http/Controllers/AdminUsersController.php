@@ -24,7 +24,6 @@ class AdminUsersController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
         $validatedUserData = $request->validate([
             'username' => 'required|string|unique:user',
             'email' => 'required|string|email|unique:user',
@@ -32,33 +31,44 @@ class AdminUsersController extends Controller
             'password' => 'required|string|min:6',
             'gender' => 'required|integer|in:0,1',
             'birtdate' => 'required|date',
-            'profile_image' => 'nullable|string',
+            'profile_image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:5120',
             'role' => 'required|in:user,admin,operator'
         ]);
 
+
         $user = new User();
-        $user->fill($validatedUserData);
+        $user->username = $validatedUserData['username'];
+        $user->email = $validatedUserData['email'];
+        $user->phone_number = $validatedUserData['phone_number'];
         $user->password = Hash::make($validatedUserData['password']);
+        $user->gender = $validatedUserData['gender'];
+        $user->birtdate = $validatedUserData['birtdate'];
+        $user->role = $validatedUserData['role'];
         $user->is_verified = 1;
-        $user->save();
 
-        $validatedAddressData = $request->validate([
-            'address.*.detail' => 'required|string',
-            'address.*.postal_code' => 'required|string',
-            'address.*.address' => 'required|string',
-            'address.*.city' => 'required|string',
-            'address.*.province' => 'required|string',
-        ]);
-
-        foreach ($validatedAddressData['address'] as $addressData) {
-            $address = new Address();
-            $address->fill($addressData);
-            $address->is_default = 1;
-            $user->usersAddress()->save($address);
+        if ($request->hasFile('profile_image')) {
+            $path = $request->file('profile_image')->store('profile_images', 'public');
+            $user->profile_image = $path;
         }
 
-        $users = User::all();
-        $address = Address::all();
+        $user->save();
+        
+        if ($request->role == 'user') {
+            $validatedAddressData = $request->validate([
+                'address.*.detail' => 'required|string',
+                'address.*.postal_code' => 'required|string',
+                'address.*.address' => 'required|string',
+                'address.*.city' => 'required|string',
+                'address.*.province' => 'required|string',
+            ]);
+
+            foreach ($validatedAddressData['address'] as $addressData) {
+                $address = new Address();
+                $address->fill($addressData);
+                $address->is_default = 1;
+                $user->usersAddress()->save($address);
+            }
+        }
 
         return view('ADMIN.users.list', compact('users', 'address'));
     }
@@ -66,13 +76,11 @@ class AdminUsersController extends Controller
     public function edit($id)
     {
         $user = User::findOrFail($id);
-        return view('ADMIN.users.edit', compact('user'));
+        return view('ADMIN.users.edit', compact('user'))->with('success', 'User Berhasil ditambahkan');
     }
 
     public function update(Request $request, $id)
     {
-        // dd('update method is called');
-        // dd($request->all());
         $validatedUserData = $request->validate([
             'username' => 'required|string',
             'email' => 'required|string|email',
