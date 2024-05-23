@@ -2,8 +2,10 @@
 
 namespace Database\Factories;
 
-use App\Models\Category;
 use App\Models\Product;
+use App\Models\Category;
+use App\Models\Variation;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -23,9 +25,41 @@ class ProductFactory extends Factory
             'name' => fake()->unique()->word(),
             'SKU' => fake()->bothify('SKU-????-####'),
             'stock' => fake()->numberBetween(0, 1000),
-            'product_image' => fake()->image('storage/app/public/product_pictures', 400, 400, 'product', false),
-            'price' => fake()->randomFloat(2, 100, 1000),
-            'desc' => fake()->sentence()
+            'price' => fake()->numberBetween(10, 1000) * 1000,
+            'desc' => fake()->paragraph(),
+            'dimensions' => fake()->numberBetween(1, 100) . 'x' . fake()->numberBetween(1, 100),
+            'weight' => round(fake()->numberBetween(100, 10000) / 1000, 2),
+            'rate' => fake()->numberBetween(1, 5)
+
         ];
+    }
+
+    public function configure()
+    {
+        return $this->afterCreating(function (Product $product) {
+            for ($i = 0; $i < 5; $i++) {
+                $product->hasImages()->create([
+                    'id' => Str::uuid(36),
+                    'filepath_image' => fake()->image('storage/app/public/product_pictures', 400, 400, 'product', false),
+                ]);
+            }
+            $category = Category::inRandomOrder()->first();
+            $variations = Variation::inRandomOrder()->limit(2)->get();
+            foreach ($variations as $variation) {
+                $product->variation()->attach($variation->id, ['id' => Str::uuid(36), 'category_id' => $category->id]);
+                $productImages = $product->hasImages()->get();
+                $variationOptions = $variation->variationOption;
+
+                foreach ($variationOptions as $varOption) {
+                    $productImage = $productImages->shift();
+                    if ($productImage) {
+                        $varOption->update([
+                            'product_image_id' => $productImage->id
+                        ]);
+                    }
+                }
+            }
+
+        });
     }
 }

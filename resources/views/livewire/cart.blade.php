@@ -11,30 +11,30 @@
             <span class="d-inline-block" style="width: 37%;">Harga satuan</span>
             <span>Total harga</span>
         </div>
-        @foreach ($usersCarts as $index => $userCart)
+        @foreach ($usersCarts ?? [] as $index => $userCart)
             @php
-                $product = $userCart->hasProduct->first();
-                $variation = $product->variation->first();
+                $product = $userCart?->hasProduct->first();
+                $variation = $product?->variation->first();
             @endphp
             <div class="card-product card-all-check d-flex justify-content-between px-4 align-items-center shadow-sm gap-4"
-                style="width: 100%; height: 140px; background-color: white" id="card-product-{{ $userCart->id }}">
+                style="width: 100%; height: 140px; background-color: white" id="card-product-{{ $userCart?->id }}">
                 <div class="d-flex justify-content-start align-items-center gap-4" style="width: 30%;">
                     <span>
-                        <input class="form-check-input check-product-{{ $userCart->id }} all-check" type="checkbox"
+                        <input class="form-check-input check-product-{{ $userCart?->id }} all-check" type="checkbox"
                             id="flexCheckDefault" style="width: 20px; height: 20px; cursor: pointer;">
                     </span>
-                    <img src="{{ Storage::url('public/product_pictures/' . $product->product_image) }}" alt=""
-                        style="width: 80px; height: 80px;">
-                    <div class="d-flex position-relative justify-content-between" style="width: auto;">
-                        @livewire('variation', ['index' => $index, 'product' => $product, 'usersCarts' => $usersCarts], key($product->id))
+                    <img src="{{ Storage::url('public/product_pictures/' . $product?->hasImages->first()->filepath_image) }}"
+                        alt="" style="width: 80px; height: 80px;">
+                    <div wire:ignore class="d-flex position-relative justify-content-between" style="width: auto;">
+                        @livewire('variation', ['index' => $index, 'product' => $product, 'usersCarts' => $usersCarts])
                     </div>
                 </div>
                 <div class="d-flex flex-column justify-content-center align-items-center " style="width: 150px;">
                     <div class="width: 100%">
                         <h5 class="font-main-color"><strong>Rp
-                                {{ number_format($product->price, 2, ',', '.') }}</strong></h5>
+                                {{ number_format($product?->price, 2, ',', '.') }}</strong></h5>
                     </div>
-                    @if (isset($product->discount))
+                    @if (isset($product?->discount))
                         <div class="d-flex" style="width: auto">
                             <span class="text-dark bg-light border-main-color text-center"
                                 style="width: 80px; height: 27px;">
@@ -42,19 +42,21 @@
                             </span>
                             <span class="text-dark bg-main-color border-main-color text-center"
                                 style="width: 40px; height: 27px"><i
-                                    class="text-white">{{ floor($product->discount) }}%</i></span>
+                                    class="text-white">{{ floor($product?->discount) }}%</i></span>
                         </div>
                     @endif
                     <span>
                         <input type="checkbox" class="btn-check btn-check-outlined"
-                            id="btn-check-outlined-{{ $userCart->id }}" autocomplete="off"
-                            wire:click="toggleRelatedProducts('{{ $userCart->id }}')"
-                            {{ $userCartId === $userCart->id ? 'checked' : '' }}>
-                        <label class="btn rounded-0 mt-2 p-0" for="btn-check-outlined-{{ $userCart->id }}"
+                            id="btn-check-outlined-{{ $userCart?->id }}" autocomplete="off"
+                            wire:click="toggleRelatedProducts('{{ $userCart?->id }}')"
+                            {{ $userCartId === $userCart?->id ? 'checked' : '' }}>
+                        <label class="btn rounded-0 mt-2 p-0" for="btn-check-outlined-{{ $userCart?->id }}"
                             style="width: 120px; height: 27px;">produk serupa</label><br>
                     </span>
                 </div>
-                @livewire('counter', ['userCart' => $userCart, 'product' => $product, 'user' => $user], key($userCart->id))
+                <div wire:ignore>
+                    @livewire('counter', ['userCart' => $userCart, 'product' => $product, 'user' => $user])
+                </div>
             </div>
             @php
                 $index++;
@@ -74,8 +76,8 @@
                         <span><strong>Subtotal</strong></span>
                         <span><strong>Discount</strong></span>
                     </div>
-                    <div class="d-flex flex-column align-items-center">
-                        <span><strong>Rp {{ number_format($totalPrice, 2, ',', '.') }}</strong></span>
+                    <div class="d-flex flex-column align-items-start">
+                        <span style="margin-left: 11px;"><strong>Rp {{ number_format($totalPrice, 2, ',', '.') }}</strong></span>
                         <span><strong>- Rp {{ number_format($totalDiscount, 2, ',', '.') }}</strong></span>
                     </div>
                 </div>
@@ -84,8 +86,14 @@
                     <span><strong>Total :</strong></span>
                     <span><strong>Rp {{ number_format($totalPrice - $totalDiscount, 2, ',', '.') }}</strong></span>
                 </div>
-                <button id="checkout" class="btn rounded-0 mt-3 bg-main-color text-white"
-                    style="width: 100%;"><strong>Checkout</strong></button>
+                @if($checkedProducts)
+                <a href="{{ route('user-order') . '?' . http_build_query(['cartIds' => $checkedProducts]) }}" role="button" id="checkout" class="btn rounded-0 mt-3 bg-main-color text-white"
+                    style="width: 100%;"><strong>Checkout</strong></a>
+                @else
+                    <button role="button" id="checkout" class="btn rounded-0 mt-3 bg-main-color text-white opacity-50"
+                        style="width: 100%; cursor: default;" disable><strong>Checkout</strong></button>
+                @endif
+
             </div>
         </div>
         <div class="shadow-sm card-related-products card-summary bg-light {{ count($relatedProducts ?? []) > 0 ? 'show' : 'hide' }}"
@@ -113,7 +121,7 @@
                                     <div class="card border position-relative shadow-sm rounded-0" id="card-product"
                                         style="width: 100%; max-width: 150px; height: auto; cursor: pointer;">
                                         <div style="overflow: hidden;">
-                                            <img src="{{ Storage::url('public/product_pictures/' . $product->product_image) }}"
+                                            <img src="{{ Storage::url('public/product_pictures/' . $product->hasImages()->first()->filepath_image) }}"
                                                 class="card-img-top rounded-0" alt="..." id="image-product"
                                                 style="width: 100%;">
                                         </div>
@@ -122,7 +130,7 @@
                                                 class="text-dark bg-light position-absolute border border-secondary text-center"
                                                 style="top: 127px; width: 50px; font-size: 10px;">Discount</span>
                                             <span
-                                                class="text-dark bg-secondary position-absolute border border-secondary text-center"
+                                                class="text-dark bg-main-color position-absolute border border-secondary text-center"
                                                 style="top: 127px; left: 50px; width: 30px; font-size: 10px;"><i
                                                     class="text-white">{{ floor($product->discount) }}%</i></span>
                                         @endif

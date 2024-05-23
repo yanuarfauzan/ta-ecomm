@@ -2,12 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
 use App\Models\User;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\VariationOption;
+use Illuminate\Support\Facades\DB;
+use App\Models\ProvinciesAndCities;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use App\Http\Requests\AddAddressessRequest;
 use App\Http\Requests\AddProductToCartRequest;
 
@@ -23,7 +30,7 @@ class UserController extends Controller
         $categories = Category::all();
         $take = $request->loadMoreProduct == true ? 16 : 16;
         $startIndex = $request->input('startIndex', 0);
-        $products = Product::skip($startIndex)->take($take)->get();
+        $products = Product::with('hasImages')->skip($startIndex)->take($take)->get();
         if ($request->loadMoreProduct == true) {
             return response()->json(['message' => 'load more products success', 'data' => $products, 'startIndex' => $startIndex + $take], 200);
         }
@@ -46,11 +53,10 @@ class UserController extends Controller
             return response()->json(['message' => 'Anda harus login terlebih dahulu']);
         }
     }
-    public function showCart()
+    public function showCart(Request $request)
     {
-        $user = User::where('id', '9bb843a9-7943-488a-bbf2-cadfce85c475')->first();
-        $usersCarts = $user->cart()->with('hasProduct', 'hasProduct.pickedVariation', 'hasProduct.pickedVariationOption', 'hasProduct.variation', 'hasProduct.variation.variationOption')->get();
-        // FIXME: referensi dari cart
+        $user = $this->user;
+        $usersCarts = $user?->cart()->with('hasProduct', 'hasProduct.pickedVariation', 'hasProduct.pickedVariationOption', 'hasProduct.variation', 'hasProduct.variation.variationOption')->get();
         return view('user.cart', compact('usersCarts', 'user'));
     }
     public function isCartExist($productId)
@@ -74,54 +80,6 @@ class UserController extends Controller
         });
         return $isDifferent;
     }
-    public function addProductToCart(AddProductToCartRequest $request, $productId)
-    {
-        $user = $this->user;
-        $product = Product::findOrFail($productId);
-        $cartProduct = $this->isCartExist($productId);
-        if ($user) {
-            $cartProductId = Str::uuid(36);
-            if ($cartProduct?->all() == null) {
-                $cart = $user->cart()->create([
-                    'qty' => $request->qty,
-                    'total_price' => $product->price * $request->qty
-                ]);
-                $cart->hasProduct()->attach($productId, ['id' => $cartProductId]);
-                $cartProduct = $cart->hasProduct()->wherePivot('id', $cartProductId)->first();
-                collect($request->variation)->each(function ($variationItem) use ($cartProduct) {
-                    $cartProduct->pickedVariation()->attach([
-                        $variationItem['variation_id'] => ['variation_option_id' => $variationItem['variation_option_id'], 'id' => Str::uuid(36)]
-                    ]);
-                });
-                return response()->json(['message' => 'Berhasil menambahkan produk ke keranjang']);
-            } else {
-                $cartProductId = Str::uuid(36);
-                if ($this->isVariationDifferent($cartProduct, $request->all())) {
-                    $cart = $user->cart()->create([
-                        'qty' => $request->qty,
-                        'total_price' => $product->price * $request->qty
-                    ]);
-                    $cart->hasProduct()->attach($productId, ['id' => $cartProductId]);
-                    $cartProduct = $cart->hasProduct()->wherePivot('id', $cartProductId)->first();
-                    collect($request->variation)->each(function ($variationItem) use ($cartProduct) {
-                        $cartProduct->pickedVariation()->attach([
-                            $variationItem['variation_id'] => ['variation_option_id' => $variationItem['variation_option_id'], 'id' => Str::uuid(36)]
-                        ]);
-                    });
-                    return response()->json(['message' => 'Berhasil menambahkan produk dengan variasi berbeda ke keranjang']);
-                } else {
-                    $cartProduct = $cartProduct->cart()->first();
-                    $cartProduct->update([
-                        'qty' => $cartProduct->qty + $request->qty,
-                        'total_price' => $product->price * $request->qty
-                    ]);
-                    return response()->json(['message' => 'Produk sudah dimasukkan ke keranjang, jumlah ditambahkan']);
-                }
-            }
-        } else {
-            return response()->json(['message' => 'Anda harus login terlebih dahulu']);
-        }
-    }
     public function addProductToFav($productId)
     {
         if ($this->user) {
@@ -136,5 +94,186 @@ class UserController extends Controller
         } else {
             return response()->json(['message' => 'Anda harus login terlebih dahulu']);
         }
+    }
+    public function detailProduct(Request $request, $productId)
+    {
+        $user = $this->user;
+        $defaultUserAddress = $user->userAddresses->where('is_default', true)->first();
+
+        $product = Product::where('id', $productId)->with(
+            'variation',
+            'variation.variationOption',
+            'hasCategory',
+            'variation.variationOption.productImage',
+            'productAssessment'
+            )->first();
+        $firstVarOption = '';
+
+        $dataForAmounts = [
+            $product->variation()->first()->id,
+            $product->variation()->first()->variationOption()->first()->name,
+            $product->variation()->first()->variationOption()->first()->productImage()->first()->filepath_image
+        ];
+        $dataForCart = [
+            $product->variation()->first()->id,
+            $product->variation()->first()->variationOption()->first()->id,
+            $product->variation()->first()->variationOption()->first()->productImage()->first()->filepath_image
+        ];
+
+        $take = $request->loadMoreProduct == true ? 16 : 16;
+        $startIndex = $request->input('startIndex', 0);
+        $products = Product::with('hasImages')->skip($startIndex)->take($take)->get();
+        
+        $firstVarOption = implode('_', $dataForAmounts);
+        $firstVarOptionForCart = implode('_', $dataForCart);
+        $categories = Category::all();
+
+        $productAssessments = $product->productAssessment()->paginate(4);
+        $totalReviews = $product->productAssessment()->count();
+        $positiveReviews = $product->productAssessment()->whereIn('rating', [4, 5])->count();
+        
+        $fiveStarsCount = $product->productAssessment()->where('rating', 5)->count();
+        $percentFiveStars = number_format(($fiveStarsCount / $totalReviews) * 100, 0);
+        
+        $fourStarsCount = $product->productAssessment()->where('rating', 4)->count();
+        $percentFourStars = number_format(($fourStarsCount / $totalReviews) * 100, 0);
+        
+        $threeStarsCount = $product->productAssessment()->where('rating', 3)->count();
+        $percentThreeStars = number_format(($threeStarsCount / $totalReviews) * 100, 0);
+        
+        $twoStarsCount = $product->productAssessment()->where('rating', 2)->count();
+        $percentTwoStars = number_format(($twoStarsCount / $totalReviews) * 100, 0);
+        
+        $oneStarsCount = $product->productAssessment()->where('rating', 1)->count();
+        $percentOneStars = number_format(($oneStarsCount / $totalReviews) * 100, 0);
+        
+        $acumulatedRating = ($positiveReviews / $totalReviews) * 5;
+        $acumulatedInPercentRating = ($positiveReviews / $totalReviews) * 100;
+        $totalRating = $product->productAssessment()->sum('rating');
+
+        $costs = $this->getCostValueShipping($product, $defaultUserAddress);
+        $costResults = $costs->json()['rajaongkir']['results'][0];
+        $defaultCost = $costs->json()['rajaongkir']['results'][0]['costs'][0];
+
+        return view('user.detail-product', compact(
+            'categories',
+            'product',
+            'firstVarOption',
+            'firstVarOptionForCart',
+            'products',
+            'user',
+            'defaultUserAddress',
+            'costResults',
+            'defaultCost',
+            'acumulatedRating',
+            'acumulatedInPercentRating',
+            'totalRating',
+            'totalReviews',
+            'percentFiveStars',
+            'fiveStarsCount',
+            'percentFourStars',
+            'fourStarsCount',
+            'percentThreeStars',
+            'threeStarsCount',
+            'percentTwoStars',
+            'twoStarsCount',
+            'percentOneStars',
+            'oneStarsCount',
+            'productAssessments'
+        ));
+    }
+
+    public function getCostValueShipping($product, $defaultUserAddress)
+    {
+        $user = $this->user;
+        $defaultOperatorAddress = User::where('role', 'operator')->first()->userAddresses->where('is_default')->first();
+        $userCityId = ProvinciesAndCities::where('city_name', $defaultUserAddress->city)->first()->city_id;
+        $operatorCityId = ProvinciesAndCities::where('city_name', $defaultOperatorAddress->city)->first()->city_id;
+        try {
+            $costs = Http::withHeaders([
+                'key' => env('API_KEY_RAJAONGKIR')
+            ])->post(env('API_BASE_URL_RAJA_ONGKIR') . '/cost', [
+                        'origin' => $operatorCityId,
+                        'destination' => $userCityId,
+                        'weight' => $product->weight,
+                        'courier' => 'jne'
+                    ]);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+        }
+        return $costs;
+    }
+
+    public function order(Request $request)
+    {
+        $user = $this->user;
+        $defaultUserAdress = $this->user->userAddresses->where('is_default', true)->first();
+
+        $usersCarts = $user->cart()->whereIn('id', $request->cartIds)
+            ->with(
+                'hasProduct',
+                'hasProduct.pickedVariation',
+                'hasProduct.pickedVariationOption',
+                'hasProduct.variation',
+                'hasProduct.variation.variationOption'
+            )
+            ->get();
+
+        $cartProductIds = $usersCarts->map(function ($userCart) {
+            return $userCart->hasProduct->pluck('pivot.id');
+        })->flatten();
+        $cartProductIds = $cartProductIds->unique();
+        $existOrders = Order::whereHas('cartProduct', function ($query) use ($cartProductIds) {
+            $query->whereIn('id', $cartProductIds);
+        })->get();
+        if (!count($existOrders) == 0) {
+            $order = $existOrders->first();
+        } else {
+            $order = Order::create([
+                'user_id' => $user->id,
+                'order_number' => $this->generateOrderNumber(),
+                'order_date' => date('Ymd'),
+                'order_status' => 'pending'
+            ]);
+            $usersCarts->each(function ($cart) use ($order) {
+                DB::table('cart_product')
+                    ->where('product_id', $cart->hasProduct->first()->id)
+                    ->update(['order_id' => $order->id]);
+            });
+            $totalAllPrice = $usersCarts->pluck('total_price')->sum();
+            $order->update([
+                'total_price' => $totalAllPrice,
+            ]);
+        }
+        return view('user.order', compact('usersCarts', 'user', 'defaultUserAdress', 'order'));
+    }
+    public function buyNow(Request $request)
+    {
+        $user = $this->user;
+        $variationBuyNow = $request->variation;
+        $countBuyNow = $request->qty;
+        $defaultUserAdress = $this->user->userAddresses->where('is_default', true)->first();
+        $productBuyNow = Product::findOrFail($request->productId);
+        $order = $user->order()->create([
+            'product_id' => $request->productId,
+            'order_number' => $this->generateOrderNumber(),
+            'order_date' => date('Ymd'),
+            'total_price' => isset($productBuyNow->discount) ? $productBuyNow->price_after_discount : $productBuyNow->price,
+            'order_status' => 'pending'
+        ]);
+
+        return view('user.order', compact('productBuyNow', 'order', 'user', 'defaultUserAdress', 'countBuyNow', 'variationBuyNow'));
+
+    }
+    private function generateOrderNumber()
+    {
+        $prefix = 'ECM-';
+        $date = date('YmdHis');
+        $randomNumber = rand(10000, 99999);
+        return $prefix . $date . '-' . $randomNumber;
+    }
+    public function callBackPaymentGateway(Request $request)
+    {
+        Log::info('Callback Duitku received:', $request->all());
     }
 }

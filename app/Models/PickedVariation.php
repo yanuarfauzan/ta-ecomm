@@ -22,6 +22,7 @@ class PickedVariation extends Model
     protected $fillable = [
         'variation_id',
         'product_id',
+        'cart_id',
         'variation_option_id'
     ];
     public function product()
@@ -36,6 +37,9 @@ class PickedVariation extends Model
     {
         return $this->belongsTo(Variation::class);
     }
-
+    public function cart()
+    {
+        return $this->belongsTo(Cart::class, 'cart_id', 'id');
+    }
 
 }

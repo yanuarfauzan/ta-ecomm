@@ -25,7 +25,6 @@ class AddProductToCartRequest extends FormRequest
     {
         return [
             'qty' => 'required|numeric',
-            'category_id' => 'required',
             'variation' => 'required|array',
             'variation.*.variation_id' => 'required',
             'variation.*.variation_option_id' => 'required'
@@ -36,7 +35,6 @@ class AddProductToCartRequest extends FormRequest
     {
         return [
             'qty.required' => 'Jumlah minimal satu',
-            'category_id.required' => 'Category id tidak boleh kosong',
             'variation.*.variation_id.required' => 'Variation id tidak boleh kosong',
             'variation.*.variation_option_id.required' => 'Variation Option id tidak boleh kosong'
         ];

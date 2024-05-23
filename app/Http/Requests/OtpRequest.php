@@ -40,11 +40,9 @@ class OtpRequest extends FormRequest
             'numeric' => 'Otp harus berupa nomor' 
         ];
     }
-    public function failedValidation(Validator $validator)
+
+    public function withInput()
     {
-        throw new HttpResponseException(response()->json([
-            'errors' => $validator->errors()
-        ]));
-        // return back()->withErrors($validator->errors())->withInput();
+        return $this->validator->withErrors($this->errors());
     }
 }

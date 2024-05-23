@@ -10,10 +10,12 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.4",
+        "midtrans/midtrans-php": "^2.5",
         "pusher/pusher-php-server": "^7.2",
         "spatie/laravel-query-builder": "^5.8"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.13",
         "fakerphp/faker": "^1.23",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.26",

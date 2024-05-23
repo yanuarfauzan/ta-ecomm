@@ -19,6 +19,7 @@ class LoginRequest extends FormRequest
      * Get the validation rules that apply to the request.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * 
      */
     public function rules(): array
     {
@@ -34,8 +35,9 @@ class LoginRequest extends FormRequest
             'password.required' => 'Password tidak boleh kosong'
         ];
     }
-    public function failedValidation(Validator $validator)
+
+    public function withInput()
     {
-        return back()->withErrors($validator->errors())->withInput();
+        return $this->validator->withErrors($this->errors());
     }
 }

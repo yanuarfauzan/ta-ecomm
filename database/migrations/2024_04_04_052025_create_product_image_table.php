@@ -4,18 +4,19 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('shipping_provider', function (Blueprint $table) {
+        Schema::create('product_image', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name')->nullable();
-            $table->string('desc')->nullable();
-            $table->integer('base_rate')->nullable();
+            $table->uuid('product_id');
+            $table->string('filepath_image', 225)->nullable();
             $table->timestamps();
+            $table->foreign('product_id')->references('id')->on('product')->onDelete('cascade');
         });
     }
 
@@ -24,6 +25,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('shipping_provider');
-    }
+        Schema::dropIfExists('product_image');
+    }   
 };

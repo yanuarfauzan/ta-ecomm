@@ -12,6 +12,7 @@ class CartProduct extends Model
     protected $table = 'cart_product';
     protected $fillable = [
         'product_id',
+        'order_id',
         'cart_id',
         'is_locked'
     ];
@@ -33,6 +34,6 @@ class CartProduct extends Model
     }
     public function order()
     {
-        return $this->belongsTo(Order::class, 'cart_product_id', 'id');
+        return $this->belongsTo(Order::class, 'order_id', 'id');
     }
 }

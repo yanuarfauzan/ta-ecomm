@@ -14,7 +14,7 @@
         }
     }
 
-    .dropdown-menu {
+    .dropdown-menu-profile {
         animation: scaleIn 0.3s ease forwards;
         opacity: 0;
         display: none;
@@ -24,8 +24,8 @@
         z-index: 1000;
     }
 
-    .dropdown-toggle:hover + .dropdown-menu,
-    .dropdown-menu:hover {
+    .dropdown-toggle-profile:hover + .dropdown-menu-profile,
+    .dropdown-menu-profile:hover {
         display: block;
     }
 
@@ -50,6 +50,13 @@
     .divider {
         width: 1px;
         background-color: white; /* Sesuaikan warna dengan tema situs Anda */
+        height: 20px; /* Atur tinggi sesuai kebutuhan */
+        align-self: center; /* Vertikal tengah */
+    }
+
+    .divider-black {
+        width: 1px;
+        background-color: black; /* Sesuaikan warna dengan tema situs Anda */
         height: 20px; /* Atur tinggi sesuai kebutuhan */
         align-self: center; /* Vertikal tengah */
     }
@@ -112,6 +119,15 @@
 
     #search-home:focus {
         border-color: #6777ef;
+    }
+
+    a {
+        text-decoration: none !important;
+    }
+
+    .btn:hover {
+        border: 1px solid #6777ef;
+        background-color: #6777ef;
     }
     
 

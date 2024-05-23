@@ -15,13 +15,13 @@ return new class extends Migration {
             $table->string('name')->nullable();
             $table->string('SKU')->nullable();
             $table->integer('stock')->nullable();
-            $table->string('product_image')->nullable();
             $table->integer('price')->nullable();
+            $table->integer('price_after_dsicount')->nullable();
             $table->string('desc')->nullable();
             $table->decimal('discount')->nullable();
             $table->decimal('weight')->nullable();
-            $table->decimal('dimensions')->nullable();
-            $table->integer('rate', 5)->nullable();
+            $table->string('dimensions')->nullable();
+            $table->integer('rate')->nullable();
             $table->timestamps();
         });
     }

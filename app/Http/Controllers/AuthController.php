@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use App\Http\Requests\OtpRequest;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Log;
@@ -11,13 +12,33 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\RegisterRequest;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\ForgotPasswordRequest;
 
 class AuthController extends Controller
 {
+    public function registerPage()
+    {
+        return view('user.auth.register');
+    }
+    public function verifyPage()
+    {
+        $user = Session::get('pre-regis');
+        return view('user.auth.verify', compact('user'));
+    }
+    public function loginPage()
+    {
+        return view('user.auth.login');
+    }
+    public function forgotPasswordPage()
+    {
+        return view('user.auth.forgot_password');
+    }
+    public function resetPasswordPage($token)
+    {
+        return view('user.auth.reset_password', compact('token'));
+    }   
     public function preRegister(RegisterRequest $request)
     {
         $user = $request->all();
@@ -30,9 +51,9 @@ class AuthController extends Controller
                 $message->subject('OTP VERIFIKASI EMAIL');
             });
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()]);
+            return Log::error($e->getMessage());
         }
-        return response()->json(['message' => 'Kode OTP berhasil dikirim, silahkan cek email']);
+        return redirect()->route('user-verify');
     }
     public function register(OtpRequest $request)
     {
@@ -43,15 +64,17 @@ class AuthController extends Controller
             $otp = $request->first . $request->second . $request->third . $request->fourth . $request->fivth . $request->sixth;
             if ($user['otp'] == $otp) {
                 User::create($user);
-                return response()->json(['message' => 'Kode OTP benar, email berhasil di verifikasi']);
+                Session::forget('pre-regis');
+                return redirect()->route('user-login');
             } else {
-                return response()->json(['message' => 'Kode OTP salah, email gagal di verifikasi']);
+                return back()->with(['message' => 'Kode OTP salah, email gagal di verifikasi']);
             }
         } else {
             Session::forget('pre-regis');
-            return response()->json(['message' => 'Waktu OTP telah habis']);
+            return back()->with(['message' => 'Waktu OTP telah habis']);
         }
     }
+
     public function login(LoginRequest $request)
     {
         $login = $request->login;
@@ -60,21 +83,21 @@ class AuthController extends Controller
             if ($user) {
                 return $this->checkCredential($user, $request->all());
             } else {
-                return response()->json(['message' => 'email atau username belum terverifikasi'], 400);
+                return back()->with(['message' => 'email atau username belum terdaftar']);
             }
         } else {
             $user = User::where('username', $login)->first();
             if ($user) {
                 return $this->checkCredential($user, $request->all());
             } else {
-                return response()->json(['message' => 'email atau username belum terverifikasi'], 400);
+                return back()->with(['message' => 'email atau username belum terdaftar']);
             }
         }
     }
     public function checkCredential($user, $data)
     {
         if (!$user || !Hash::check($data['password'], $user->password)) {
-            return response()->json(['status' => false, 'message' => 'email, username atau password salah']);
+            return back()->with(['message' => 'email, username atau password salah']);
         }
         try {
             Auth::loginUsingId($user->id);
@@ -82,12 +105,13 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
-        return response()->json(['message' => 'User berhasil login', 'data' => auth()->user()]);
+        return redirect()->route('user-home');
     }
     public function logout(Request $request)
     {
         Auth::logout();
         $request->session()->invalidate();
+        return redirect()->route('user-login');
     }
     public function forgotPassword(ForgotPasswordRequest $request)
     {
@@ -104,7 +128,7 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
-        return response()->json(['message' => 'Silahkan cek email']);
+        return back()->with(['message' => 'Berhasil mengirim email, silahkan cek email anda']);
     }
     public function resetPassword($token, ResetPasswordRequest $request)
     {
@@ -112,15 +136,15 @@ class AuthController extends Controller
             $user = User::where('token_reset', $token)->first();
             if ($user) {
                 $user->update([
-                    'password' => $request->password
+                    'password' => $request->new_password
                 ]);
             } else {
-                return response()->json(['message' => 'Token tidak valid'], 401);
+                return back()->route('user-login');
             }
 
-            return response()->json(['message' => 'Berhasil merubah password']);
+            return redirect()->route('user-login');
         } else {
-            return response()->json(['message' => 'Link reset password kadaluarsa']);
+            return redirect()->route('user-login');
         }
 
     }

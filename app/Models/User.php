@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Notification;
+use App\Models\ProductAssessment;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -66,7 +67,7 @@ class User extends Authenticatable
         return 'string';
     }
 
-    public function usersAddress()
+    public function userAddresses()
     {
         return $this->hasMany(Address::class, 'user_id', 'id');
     }
@@ -97,5 +98,13 @@ class User extends Authenticatable
     public function favouriteProduct()
     {
         return $this->belongsToMany(Product::class, 'has_been_favourite_product')->withPivot('id');
+    }
+    public function order()
+    {
+        return $this->hasOne(Order::class, 'user_id', 'id');
+    }
+    public function productAssessment()
+    {
+        return $this->belongsTo(ProductAssessment::class, 'user_id', 'id');
     }
 }

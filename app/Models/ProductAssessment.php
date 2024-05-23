@@ -2,16 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\Product;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
 class ProductAssessment extends Model
 {
     use HasFactory, HasUuids;
     protected $table = 'product_assessment';
     protected $fillable = [
-        'cart_id',
+        'order_id',
+        'user_id',
         'product_id',
         'rating',
         'content',
@@ -30,8 +32,16 @@ class ProductAssessment extends Model
     {
         return $this->belongsTo(Cart::class, 'cart_id', 'id');
     }
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'order_id', 'id');
+    }
     public function product()
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
+    }
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 }

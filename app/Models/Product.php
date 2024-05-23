@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\ProductImage;
+use App\Models\ProductAssessment;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
@@ -16,6 +18,7 @@ class Product extends Model
         'SKU',
         'stock',
         'product_image',
+        'price_after_discount',
         'price',
         'desc',
         'discount',
@@ -65,4 +68,16 @@ class Product extends Model
         return $this->belongsToMany(User::class, 'has_been_favourite_product');
     }
 
+    public function hasImages()
+    {
+        return $this->hasMany(ProductImage::class, 'product_id', 'id');
+    }
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'id', 'product_id');
+    }
+    public function productAssessment()
+    {
+        return $this->hasMany(ProductAssessment::class, 'product_id', 'id');
+    }
 }

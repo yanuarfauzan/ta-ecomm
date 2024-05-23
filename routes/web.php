@@ -1,11 +1,16 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Http\Middleware\IsUser;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\AdminUsersController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
+use App\Http\Middleware\IsUserRegistered;
+use App\Http\Middleware\IsUserAuthenticated;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,11 +22,6 @@ use App\Http\Controllers\AdminUsersController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-    Route::get('/test', function (Request $request) {
-        dd($request->all());
-        return view('user.test');
-    });
 
     //ROLE:ADMIN 
     # USERS + ALAMAT
@@ -55,4 +55,34 @@ use App\Http\Controllers\AdminUsersController;
     Route::get('/admin/edit-voucher/{id}', [VoucherController::class, 'edit']);
     Route::put('/admin/update-voucher/{voucher}', [VoucherController::class, 'update']);
     Route::delete('/admin/delete-voucher/{voucher}', [VoucherController::class, 'destroy']);
+
+
+#ROLE:USER
+Route::prefix('/user')->group(function () {
+    Route::middleware(IsUserAuthenticated::class)->prefix('/auth')->group(function () {
+        Route::get('/register', [AuthController::class, 'registerPage'])->name('user-register');
+        Route::post('/preRegister', [AuthController::class, 'preRegister'])->name('user-preRegister-act');
+        Route::post('/register', [AuthController::class, 'register'])->name('user-register-act');
+        Route::middleware(IsUserRegistered::class)->group(function () {
+            Route::get('/verify', [AuthController::class, 'verifyPage'])->name('user-verify');
+        });        
+        Route::get('/forgot-password', [AuthController::class, 'forgotPasswordPage'])->name('user-forgot-password');
+        Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('user-forgot-password-act');
+        Route::get('/reset-password/{token}', [AuthController::class, 'resetPasswordPage'])->name('user-reset-password');
+        Route::put('reset-password/{token}', [AuthController::class, 'resetPassword'])->name('user-reset-password-act');
+        Route::get('/login', [AuthController::class, 'loginPage'])->name('user-login');
+        Route::post('/login', [AuthController::class, 'login'])->name('user-login-act');
+    });
+    Route::middleware(IsUser::class)->group(function () {
+        Route::get('/logout', [AuthController::class, 'logout'])->name('user-logout-act');
+        Route::get('/cart', [UserController::class, 'showCart'])->name('user-cart');
+        Route::get('/home', [UserController::class, 'home'])->name('user-home');
+        Route::prefix('/product')->group(function () {
+            Route::get('/detail-product/{productId}', [UserController::class, 'detailProduct'])->name('user-detail-product');
+            Route::get('/order', [UserController::class, 'order'])->name('user-order');
+            Route::get('/buy-now', [UserController::class, 'buyNow'])->name('user-buy-now');
+        });
+    });
+
+});
 

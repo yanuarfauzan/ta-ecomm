@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Product;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Category;
+use App\Models\Variation;
 use App\Models\Notification;
 use Illuminate\Database\Seeder;
 
@@ -16,15 +17,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->count(5)->create();
-        Category::factory()->count(5)->create();
-        Product::factory()->count(5)->create();
+        $this->call([
+            UserSeeder::class,
+        ]);
+        
+        User::factory()->count(1)->create();
+        Category::factory()->count(14)->create();
+        Variation::factory()->count(10)->create();
+        Product::factory()->count(16)->create();
 
-        Notification::create([
-            'content' => 'Selamat Datang!'
-        ]);
-        Notification::create([
-            'content' => 'Selamat!, Pesanan Anda Sedang'
-        ]);
+        // Notification::create([
+        //     'content' => 'Selamat Datang!'
+        // ]);
+        // Notification::create([
+        //     'content' => 'Selamat!, Pesanan Anda Sedang'
+        // ]);
     }
 }

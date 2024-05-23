@@ -1,0 +1,104 @@
+/* Ganti warna border ketika elemen select mendapat fokus */
+.custom-select:focus {
+    border-color: #6777ef; /* warna border ketika focus */
+}
+
+/* Ganti warna latar belakang untuk opsi dropdown */
+.custom-select select {
+    background-color: #f0f0f0; /* warna latar belakang */
+}
+
+/* Ganti warna teks untuk opsi dropdown */
+.custom-select select option {
+    color: #333; /* warna teks */
+}
+
+/* Ganti warna latar belakang opsi dropdown ketika dihover */
+.custom-select select option:hover {
+    background-color: #6777ef; /* warna latar belakang */
+    color: #fff; /* warna teks */
+}
+
+.card-detail-product {
+    border: 2px solid #ccc;
+    transition: border-color 0.3s;
+}
+
+.card-detail-product:hover {
+    border-color: #6777ef; 
+}
+
+.variation-item {
+    font-weight: normal;
+    border : 1px solid grey;
+    background-color : white;
+    color: black;
+    transition: border-color 0.3s; 
+    transition: background-color 0.3s; 
+}
+
+.variation-item {
+    font-weight: normal;
+    border : 1px solid grey;
+    background-color : white;
+    color: black;
+    transition: border-color 0.3s; 
+    transition: background-color 0.3s; 
+}
+
+.variation-item:hover {
+    border-color: #6777ef;
+}
+
+.active-var-item {
+    color: white;
+    background-color: #6777ef; 
+}
+#counter {
+    border: 1px solid #ccc; /* Warna border awal */
+    transition: border-color 0.3s; 
+}
+
+#counter:hover {
+    border-color: #6777ef;
+}
+
+#decrease {
+    background-color: white;
+    color: black;
+    transition: background-color 0.3s; 
+}
+
+#decrease:hover {
+    color: white;
+    background-color: #6777ef;
+}
+
+#increase {
+    background-color: white;
+    color: black;
+    transition: background-color 0.3s; 
+}
+
+#increase:hover {
+    color: white;
+    background-color: #6777ef;
+}
+
+#number-counter {
+    transition: border-color 0.2s;
+
+}
+
+#number-counter:focus {
+    border-color: #6777ef;
+}
+
+.img-product {
+    transition: transform 0.3s ease;
+}
+
+.img-product:hover {
+    transform: scale(1.1); /* Gambar akan diperbesar 1.1 kali saat dihover */
+}
+

@@ -24,7 +24,6 @@ class ResetPasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'old_password' => 'required',
             'new_password' => [
                 'required',
                 'confirmed',
@@ -39,7 +38,6 @@ class ResetPasswordRequest extends FormRequest
     public function messages()
     {
         return [
-            'old_password.required' => 'Password lama tidak boleh kosong',
             'new_password.required' => 'Password baru tidak boleh kosong',
             'new_password.confirmed' => 'Konfirmasi password baru salah',
             'new_password.string' => 'Password harus berupa string',
@@ -47,11 +45,5 @@ class ResetPasswordRequest extends FormRequest
             'new_password.regex' => 'Password harus mengandung huruf besar dan huruf kecil, angka, simbol dan spasi',
             'new_password.different' => 'Password dan username tidak boleh sama',
         ];
-    }
-    public function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(response()->json([
-            'error' => $validator->errors()
-        ]));
     }
 }

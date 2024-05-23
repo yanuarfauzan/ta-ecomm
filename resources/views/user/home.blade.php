@@ -30,12 +30,12 @@
         <div class="container">
             <div class="row row-cols-4 ms-0">
                 @foreach ($products as $index => $product)
-                    <a href="{{ $product->name }}" style="text-decoration: none">
+                    <a href="{{ route('user-detail-product', ['productId' => $product->id]) }}" style="text-decoration: none">
                         <div class="col mt-4">
                             <div class="card border-0 position-relative shadow rounded-0" id="card-product"
                                 style="width: 18rem; height: auto; cursor: pointer;">
                                 <div style="overflow: hidden;">
-                                    <img src="{{ Storage::url('public/product_pictures/' . $product->product_image) }}"
+                                    <img src="{{ Storage::url('public/product_pictures/' . $product->hasImages->first()->filepath_image) }}"
                                     class="card-img-top rounded-0" alt="..." id="image-product">
                                 </div>
                                 @if ($product->stock == 0)
@@ -54,7 +54,7 @@
                                     <span class="text-dark bg-light position-absolute border border-secondary text-center"
                                         style="top: 262px; width: 70px;">Discount</span>
                                     <span
-                                        class="text-dark bg-secondary position-absolute border border-secondary text-center"
+                                        class="text-dark bg-main-color position-absolute border border-secondary text-center"
                                         style="top: 262px; left: 70px; width: 40px;"><i
                                             class="text-white">{{ floor($product->discount) }}%</i></span>
                                 @endif
@@ -316,13 +316,13 @@
                 </div>
             </div>
         </div>
-        {{-- @if (count($products) >= 16)
+        @if (count($products) >= 16)
             <div>
                 <button id="load-more" data-next-page-url="{{ route('user-home') }}" data-start-index="{{ $startIndex }}"
                     class="btn rounded-0 mt-3 text-white" style="width: 300px; background: #6777ef">Muat Lebih
                     Banyak</button>
             </div>
-        @endif --}}
+        @endif
     </div>
-<script src="{{ asset('/ourjs/home.js') }}"></script>
+<script src="{{ asset('/ourjs/home.js') }}" data-navigate-track></script>
 @endsection

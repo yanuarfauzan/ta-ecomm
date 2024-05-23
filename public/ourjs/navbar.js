@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const dropdownToggle = document.querySelector('.dropdown-toggle');
-    const dropdownMenu = document.querySelector('.dropdown-menu');
+    const dropdownToggle = document.querySelector('.dropdown-toggle-profile');
+    const dropdownMenu = document.querySelector('.dropdown-menu-profile');
 
     dropdownToggle.addEventListener('mouseenter', function () {
         dropdownMenu.style.display = 'block';
@@ -47,5 +47,6 @@ document.addEventListener("DOMContentLoaded", function () {
             collapseElement.classList.remove('show');
         }
     });
+
 
 });

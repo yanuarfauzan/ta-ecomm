@@ -12,12 +12,14 @@ class Order extends Model
     protected $table = 'order';
     protected $fillable = [
         'user_id',
+        'product_id',
         'cart_id',
         'shipping_id',
         'order_number',
         'order_date',
         'total_price',
         'order_status',
+        'note'
     ];
 
     public function getIncement()
@@ -29,17 +31,25 @@ class Order extends Model
     {
         return 'string';
     }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id', 'id');
-    }
     public function cartProduct()
     {
-        return $this->belongsTo(CartProduct::class, 'cart_product_id', 'id');
+        return $this->hasMany(CartProduct::class, 'order_id', 'id');
     }
     public function shipping()
     {
         return $this->hasOne(Shipping::class, 'id', 'shipping_id');
     }
+    public function product()
+    {
+        return $this->hasOne(Product::class, 'id', 'product_id');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+    public function productAssessment()
+    {
+        return $this->hasMany(ProductAssessment::class, 'order_id', 'id');
+    }
 }
+

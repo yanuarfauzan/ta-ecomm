@@ -25,7 +25,7 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'username' => ['required', 'alpha_dash', 'min:3', 'max:20', Rule::unique('user', 'username')],
+            'username' => ['required', 'alpha_dash', 'min:3', 'max:20', 'unique:user,username'],
             'email' => ['required', 'email', Rule::unique('user', 'email'), 'max:255'],
             'phone_number' => 'required|numeric|digits_between:10,15',
             'password' => [
@@ -57,17 +57,14 @@ class RegisterRequest extends FormRequest
             'phone_number.digits_between' => 'Panjang nomor handphone antara 10 sampai dengan 15 digit',
             'password.required' => 'Password tidak boleh kosong',
             'password.confirmed' => 'Konfirmasi password tidak cocok',
-            'password.regex' => 'Password harus mengandung kombinasi huruf besar, huruf kecil, angka, dan simbol',
+            'password.regex' => 'Harus mengandung huruf besar, kecil, angka, dan simbol',
             'password.different' => 'Password dan username tidak boleh sama',
             'gender.required' => 'Jenis kelamin wajib di isi'
         ];
     }
 
-    public function failedValidation(Validator $validator)
+    public function withInput()
     {
-        throw new HttpResponseException(response()->json([
-            'errors' => $validator->errors()
-        ]));
-        // return back()->withErrors($validator->errors())->withInput();
+        return $this->validator->withErrors($this->errors());
     }
 }

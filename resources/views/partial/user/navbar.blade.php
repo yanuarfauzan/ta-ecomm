@@ -40,7 +40,7 @@
             </div>
         </div>
         <div class="d-flex justify-content-between gap-2 me-2" style="width: 17%;">
-            <a href="{{ route('user-cart') }}" wire:navigate class=" text-white" style="text-decoration: none">
+            <a href="{{ route('user-cart') }}" class=" text-white" style="text-decoration: none">
                 <span role="button">
                     <i class="bi bi-cart" style="font-size: 25px"></i>
                 </span>
@@ -53,7 +53,7 @@
             </a>
 
             <div class="d-flex justify-content-between align-items-center">
-                <div class="dropdown-toggle d-flex justify-content-start align-items-center" data-bs-toggle="dropdown"
+                <div class="dropdown-toggle dropdown-toggle-profile d-flex justify-content-start align-items-center" data-bs-toggle="dropdown"
                     role="button" aria-haspopup="false" aria-expanded="false">
                     <a href="" class="" style="text-decoration: none" data-bs-toggle="dropdown"
                         role="button" aria-haspopup="false" aria-expanded="false">
@@ -75,7 +75,7 @@
         </div>
     </div>
 </nav>
-<div class="dropdown-menu dropdown-menu-end profile-dropdown position-fixed rounded-0"
+<div class="dropdown-menu dropdown-menu-profile dropdown-menu-end profile-dropdown position-fixed rounded-0"
     style="right: 133px; top: 75px; z-index: 1041;">
     <!-- item-->
     <a href="" class="dropdown-item notify-item ">
@@ -95,14 +95,10 @@
     </a>
     <div class="dropdown-divider"></div>
     <!-- item-->
-    <a class="dropdown-item notify-item  text-danger" href=""
-        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+    <a class="dropdown-item notify-item  text-danger" href="{{ route('user-logout-act') }}">
         <i class="fe-log-out"></i>
         <span>Logout</span>
     </a>
-    <form id="logout-form" action="{{ url('/logout') }}" method="POST" class="d-none">
-        @csrf
-    </form>
 </div>
 <div class="collapse position-fixed rounded-0" id="categoryCollapse"
     style="width: 85%; top: 125px; z-index: 1040; height : 50%; left: 115px;">
@@ -142,3 +138,4 @@
     <div class="swiper-button-next text-light"><i class="bi bi-chevron-right"></i></div>
     <div class="swiper-button-prev text-light"><i class="bi bi-chevron-left"></i></div>
 </div>
+<script src="{{ asset('/ourjs/navbar.js') }}" data-navigate-track></script>

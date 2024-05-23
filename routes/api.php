@@ -23,7 +23,26 @@ Route::post('/user/store-admin', [AdminController::class, 'store']);
 
 Route::middleware('auth')->group(function () {
     Route::post('/user/add-address', [UserController::class, 'addAddresses']);
-    Route::get('/user/add-product-to-cart/{productId}', [UserController::class, 'addProductToCart']);
+    // Route::get('/add-product-to-cart/{productId}', [UserController::class, 'addProductToCart'])->name('user-add-product-to-cart');
     Route::get('/user/add-product-to-fav/{productId}', [UserController::class, 'addProductToFav']);
     Route::get('/user/show-cart', [UserController::class, 'showCart']);
+});
+
+// CallBack Payment Gateway
+
+Route::post('/callback', [UserController::class, 'callBackPaymentGateway']);
+
+Route::post('/hashMaker/{apikey}', function (Request $request, $apikey) {
+    dd([
+        'amount' => $request->amount,
+        'datetime' => $request->datetime,
+        'merchantcode' => $request->merchant,
+        'signature' => hash('sha256', $request->merchant . $request->amount . $request->datetime . $apikey),
+    ]);
+});
+
+Route::post('/hashMaker/transaksi/{apikey}', function (Request $request, $apikey) {
+    dd([
+        'signature' => md5($request->merchantCode . $request->merchantOrderId . $request->paymentAmount . $apikey),
+    ]);
 });

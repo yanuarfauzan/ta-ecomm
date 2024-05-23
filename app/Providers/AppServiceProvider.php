@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\URL;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
 
@@ -20,8 +22,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Validator::extend('is_verified', function ($attribute, $value, $parameters, $validator) {
-            return $value === true;
-        });
+        Paginator::useBootstrapFive();
+        // if (config('app.env') === 'local'){
+        //     URL::forceScheme('https');
+        // }
     }
 }
