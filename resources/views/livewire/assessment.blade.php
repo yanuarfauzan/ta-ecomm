@@ -101,7 +101,7 @@
                     <hr class="m-0">
                     <div class="d-flex justify-content-start align-items-center gap-2 my-2 ms-2">
                         <span>
-                            <input wire:model.lazy="filterByMedia" class="form-check-input" type="checkbox"
+                            <input wire:model.lazy="filterByMedia" class="form-check-input btn-check-outlined" type="checkbox"
                                 id="flexCheckDefault" style="width: 20px; height: 20px; cursor: pointer;"
                                 value="true">
                             <span>dengan foto dan video</span>
@@ -115,27 +115,27 @@
                     <hr class="m-0">
                     <div class="d-flex flex-column justify-content-start align-items-start gap-2 my-2 ms-2">
                         <span>
-                            <input wire:model.lazy="fiveStar" class="form-check-input" type="checkbox"
+                            <input wire:model.lazy="fiveStar" class="form-check-input btn-check-outlined" type="checkbox"
                                 id="flexCheckDefault" style="width: 20px; height: 20px; cursor: pointer;">
                             <span><i class="bi bi-star-fill" style="color: #ffd900;"></i> 5</span>
                         </span>
                         <span>
-                            <input wire:model.lazy="fourStar" class="form-check-input" type="checkbox"
+                            <input wire:model.lazy="fourStar" class="form-check-input btn-check-outlined" type="checkbox"
                                 id="flexCheckDefault" style="width: 20px; height: 20px; cursor: pointer;">
                             <span><i class="bi bi-star-fill" style="color: #ffd900;"></i> 4</span>
                         </span>
                         <span>
-                            <input wire:model.lazy="threeStar" class="form-check-input" type="checkbox"
+                            <input wire:model.lazy="threeStar" class="form-check-input btn-check-outlined" type="checkbox"
                                 id="flexCheckDefault" style="width: 20px; height: 20px; cursor: pointer;">
                             <span><i class="bi bi-star-fill" style="color: #ffd900;"></i> 3</span>
                         </span>
                         <span>
-                            <input wire:model.lazy="twoStar" class="form-check-input" type="checkbox"
+                            <input wire:model.lazy="twoStar" class="form-check-input btn-check-outlined" type="checkbox"
                                 id="flexCheckDefault" style="width: 20px; height: 20px; cursor: pointer;">
                             <span><i class="bi bi-star-fill" style="color: #ffd900;"></i> 2</span>
                         </span>
                         <span>
-                            <input wire:model.lazy="oneStar" class="form-check-input" type="checkbox"
+                            <input wire:model.lazy="oneStar" class="form-check-input btn-check-outlined" type="checkbox"
                                 id="flexCheckDefault" style="width: 20px; height: 20px; cursor: pointer;">
                             <span><i class="bi bi-star-fill" style="color: #ffd900;"></i> 1</span>
                         </span>
@@ -148,32 +148,32 @@
                     <hr class="m-0">
                     <div class="d-flex flex-column justify-content-start align-items-start gap-2 my-2 ms-2">
                         <span>
-                            <input wire:model.lazy="quality" class="form-check-input" type="checkbox"
+                            <input wire:model.lazy="quality" class="form-check-input btn-check-outlined" type="checkbox"
                                 id="flexCheckDefault" style="width: 20px; height: 20px; cursor: pointer;">
                             <span>kualitas barang</span>
                         </span>
                         <span>
-                            <input wire:model.lazy="price" class="form-check-input" type="checkbox"
+                            <input wire:model.lazy="price" class="form-check-input btn-check-outlined" type="checkbox"
                                 id="flexCheckDefault" style="width: 20px; height: 20px; cursor: pointer;">
                             <span>harga barang</span>
                         </span>
                         <span>
-                            <input wire:model.lazy="desc" class="form-check-input" type="checkbox"
+                            <input wire:model.lazy="desc" class="form-check-input btn-check-outlined" type="checkbox"
                                 id="flexCheckDefault" style="width: 20px; height: 20px; cursor: pointer;">
                             <span>sesuai deskripsi</span>
                         </span>
                         <span>
-                            <input wire:model.lazy="shipping" class="form-check-input" type="checkbox"
+                            <input wire:model.lazy="shipping" class="form-check-input btn-check-outlined" type="checkbox"
                                 id="flexCheckDefault" style="width: 20px; height: 20px; cursor: pointer;">
                             <span>pengiriman</span>
                         </span>
                         <span>
-                            <input wire:model.lazy="packaging" class="form-check-input" type="checkbox"
+                            <input wire:model.lazy="packaging" class="form-check-input btn-check-outlined" type="checkbox"
                                 id="flexCheckDefault" style="width: 20px; height: 20px; cursor: pointer;">
                             <span>kemasan barang</span>
                         </span>
                         <span>
-                            <input wire:model.lazy="service" class="form-check-input" type="checkbox"
+                            <input wire:model.lazy="service" class="form-check-input btn-check-outlined" type="checkbox"
                                 id="flexCheckDefault" style="width: 20px; height: 20px; cursor: pointer;">
                             <span>pelayanan penjual</span>
                         </span>

@@ -136,7 +136,7 @@
             'percentFourStars' => $percentFourStars,
             'percentThreeStars' => $percentThreeStars,
             'threeStarsCount' => $threeStarsCount,
-            'percentTwoStars' => $percentTwoStars,
+            'percentTwoStars' => $percentTwoStars,  
             'twoStarsCount' => $twoStarsCount,
             'percentOneStars' => $percentOneStars,
             'oneStarsCount' => $oneStarsCount

@@ -107,3 +107,26 @@
     overflow-y: auto; /* Aktifkan scrolling vertikal jika konten melebihi ketinggian maksimum */
 }
 
+//* Style untuk label saat checkbox tidak dicentang */
+.btn-check-outlined + label {
+    color: #6777ef !important;             /* Mengubah warna teks */
+    border-color: #6777ef !important;      /* Mengubah warna border */
+}
+
+/* Style untuk label saat mouse hover */
+.btn-check-outlined + label:hover {
+    background-color: #6777ef !important; /* Mengubah warna background saat hover */
+    color: white !important;              /* Mengubah warna teks saat hover */
+}
+
+/* Style untuk label saat checkbox dicentang */
+.btn-check-outlined:checked + label {
+    background-color: #6777ef !important; /* Mengubah warna background saat checked */
+    color: white !important;              /* Mengubah warna teks saat checked */
+    border-color: #6777ef !important;     /* Menjaga warna border */
+}
+
+/* Style untuk label saat fokus */
+.btn-check-outlined:focus + label {
+    box-shadow: 0 0 0 0.2rem rgba(103, 119, 239, 0.5) !important; /* Shadow dengan warna yang sesuai */
+}
