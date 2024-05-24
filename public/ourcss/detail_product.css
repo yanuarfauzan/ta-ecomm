@@ -102,3 +102,8 @@
     transform: scale(1.1); /* Gambar akan diperbesar 1.1 kali saat dihover */
 }
 
+.review-container {
+    max-height: 500px; /* Atur ketinggian maksimum container */
+    overflow-y: auto; /* Aktifkan scrolling vertikal jika konten melebihi ketinggian maksimum */
+}
+

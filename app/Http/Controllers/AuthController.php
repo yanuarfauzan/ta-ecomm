@@ -83,21 +83,21 @@ class AuthController extends Controller
             if ($user) {
                 return $this->checkCredential($user, $request->all());
             } else {
-                return back()->with(['message' => 'email atau username belum terdaftar']);
+                return back()->with(['message' => 'email atau username belum terdaftar'])->withInput();
             }
         } else {
             $user = User::where('username', $login)->first();
             if ($user) {
                 return $this->checkCredential($user, $request->all());
             } else {
-                return back()->with(['message' => 'email atau username belum terdaftar']);
+                return back()->with(['message' => 'email atau username belum terdaftar'])->withInput();
             }
         }
     }
     public function checkCredential($user, $data)
     {
         if (!$user || !Hash::check($data['password'], $user->password)) {
-            return back()->with(['message' => 'email, username atau password salah']);
+            return back()->with(['message' => 'email, username atau password salah'])->withInput();
         }
         try {
             Auth::loginUsingId($user->id);
