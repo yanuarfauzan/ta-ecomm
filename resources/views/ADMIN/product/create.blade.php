@@ -61,7 +61,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="dimensions" class="form-label">Dimensi Produk (cm)</label>
-                    <input type="number" step="0.01" class="form-control" id="dimensions" name="dimensions" required>
+                    <input type="text" class="form-control" id="dimensions" name="dimensions" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>

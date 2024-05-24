@@ -56,7 +56,7 @@
                 </div>
                 <div class="form-group">
                     <label for="dimensions">Dimensi Produk (cm):</label>
-                    <input type="text" step="0.01" class="form-control" id="dimensions" name="dimensions" value="{{ $product->dimensions }}" required>
+                    <input type="text" class="form-control" id="dimensions" name="dimensions" value="{{ $product->dimensions }}" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Update</button>
             </form>

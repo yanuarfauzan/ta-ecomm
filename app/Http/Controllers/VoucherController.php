@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Ramsey\Uuid\Uuid;
 use App\Models\Voucher;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -53,7 +54,7 @@ class VoucherController extends Controller
         $is_active = $request->is_active === '1' ? true : false;
 
         $voucher = new Voucher();
-        // $voucher->id = 'some_unique_value';
+        $voucher->id = Uuid::uuid4()->toString();
         $voucher->name = $request->name;
         $voucher->voucher_icon = $voucherIconPath;
         $voucher->voucher_code = $request->voucher_code;
@@ -63,7 +64,6 @@ class VoucherController extends Controller
         $voucher->expired_at = $request->expired_at;
         $voucher->is_active = $is_active;
 
-        // $voucher = new Voucher();
         $voucher->save();
 
         return redirect('/admin/list-voucher')->with('success', 'Category created successfully');
