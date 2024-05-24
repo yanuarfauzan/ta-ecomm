@@ -44,4 +44,8 @@ class ProductAssessment extends Model
     {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
+    public function attachments()
+    {
+        return $this->hasMany(Attachments::class, 'product_assessment_id', 'id');
+    }
 }

@@ -15,6 +15,7 @@
     <link href="{{ asset('/ourcss/navbar.css') }}" rel="stylesheet">
     <link href="{{ asset('/ourcss/home.css') }}" rel="stylesheet">
     <link href="{{ asset('/ourcss/detail_product.css') }}" rel="stylesheet">
+    @livewireStyles
 </head>
 
 <body style="overflow-x: hidden">
@@ -29,6 +30,7 @@
         </div>
     </div>
 
+    @livewireScripts
 
     <!-- Bootstrap -->
     <script src="{{ asset('/bootstrap/dist/js/bootstrap.bundle.min.js') }}" data-navigate-track></script>

@@ -106,7 +106,7 @@ class UserController extends Controller
             'hasCategory',
             'variation.variationOption.productImage',
             'productAssessment'
-            )->first();
+        )->first();
         $firstVarOption = '';
 
         $dataForAmounts = [
@@ -123,64 +123,86 @@ class UserController extends Controller
         $take = $request->loadMoreProduct == true ? 16 : 16;
         $startIndex = $request->input('startIndex', 0);
         $products = Product::with('hasImages')->skip($startIndex)->take($take)->get();
-        
+
         $firstVarOption = implode('_', $dataForAmounts);
         $firstVarOptionForCart = implode('_', $dataForCart);
         $categories = Category::all();
 
-        $productAssessments = $product->productAssessment()->paginate(4);
-        $totalReviews = $product->productAssessment()->count();
-        $positiveReviews = $product->productAssessment()->whereIn('rating', [4, 5])->count();
-        
-        $fiveStarsCount = $product->productAssessment()->where('rating', 5)->count();
-        $percentFiveStars = number_format(($fiveStarsCount / $totalReviews) * 100, 0);
-        
-        $fourStarsCount = $product->productAssessment()->where('rating', 4)->count();
-        $percentFourStars = number_format(($fourStarsCount / $totalReviews) * 100, 0);
-        
-        $threeStarsCount = $product->productAssessment()->where('rating', 3)->count();
-        $percentThreeStars = number_format(($threeStarsCount / $totalReviews) * 100, 0);
-        
-        $twoStarsCount = $product->productAssessment()->where('rating', 2)->count();
-        $percentTwoStars = number_format(($twoStarsCount / $totalReviews) * 100, 0);
-        
-        $oneStarsCount = $product->productAssessment()->where('rating', 1)->count();
-        $percentOneStars = number_format(($oneStarsCount / $totalReviews) * 100, 0);
-        
-        $acumulatedRating = ($positiveReviews / $totalReviews) * 5;
-        $acumulatedInPercentRating = ($positiveReviews / $totalReviews) * 100;
-        $totalRating = $product->productAssessment()->sum('rating');
+
+        $totalReviews = 0;
+        $positiveReviews = 0;
+        $fiveStarsCount = 0;
+        $percentFiveStars = 0;
+        $fourStarsCount = 0;
+        $percentFourStars = 0;
+        $threeStarsCount = 0;
+        $percentThreeStars = 0;
+        $twoStarsCount = 0;
+        $percentTwoStars = 0;
+        $oneStarsCount = 0;
+        $percentOneStars = 0;
+        $acumulatedRating = 0;
+        $acumulatedInPercentRating = 0;
+        $totalRating = 0;
+
+        if ($totalReviews = $product->productAssessment()->count()) {
+            $positiveReviews = $product->productAssessment()->whereIn('rating', [4, 5])->count();
+
+            $fiveStarsCount = $product->productAssessment()->where('rating', 5)->count();
+            $percentFiveStars = number_format(($fiveStarsCount / $totalReviews) * 100, 2);
+
+            $fourStarsCount = $product->productAssessment()->where('rating', 4)->count();
+            $percentFourStars = number_format(($fourStarsCount / $totalReviews) * 100, 2);
+
+            $threeStarsCount = $product->productAssessment()->where('rating', 3)->count();
+            $percentThreeStars = number_format(($threeStarsCount / $totalReviews) * 100, 2);
+
+            $twoStarsCount = $product->productAssessment()->where('rating', 2)->count();
+            $percentTwoStars = number_format(($twoStarsCount / $totalReviews) * 100, 2);
+
+            $oneStarsCount = $product->productAssessment()->where('rating', 1)->count();
+            $percentOneStars = number_format(($oneStarsCount / $totalReviews) * 100, 2);
+
+            // Average rating calculation with 2 decimal places
+            $acumulatedRating = round($product->productAssessment()->avg('rating'), 2);
+            // Percentage of positive reviews to total reviews with 2 decimal places
+            $acumulatedInPercentRating = round(($positiveReviews / $totalReviews) * 100, 2);
+
+            $totalRating = $product->productAssessment()->sum('rating');
+        }
 
         $costs = $this->getCostValueShipping($product, $defaultUserAddress);
         $costResults = $costs->json()['rajaongkir']['results'][0];
         $defaultCost = $costs->json()['rajaongkir']['results'][0]['costs'][0];
 
-        return view('user.detail-product', compact(
-            'categories',
-            'product',
-            'firstVarOption',
-            'firstVarOptionForCart',
-            'products',
-            'user',
-            'defaultUserAddress',
-            'costResults',
-            'defaultCost',
-            'acumulatedRating',
-            'acumulatedInPercentRating',
-            'totalRating',
-            'totalReviews',
-            'percentFiveStars',
-            'fiveStarsCount',
-            'percentFourStars',
-            'fourStarsCount',
-            'percentThreeStars',
-            'threeStarsCount',
-            'percentTwoStars',
-            'twoStarsCount',
-            'percentOneStars',
-            'oneStarsCount',
-            'productAssessments'
-        ));
+        return view(
+            'user.detail-product',
+            compact(
+                'categories',
+                'product',
+                'firstVarOption',
+                'firstVarOptionForCart',
+                'products',
+                'user',
+                'defaultUserAddress',
+                'costResults',
+                'defaultCost',
+                'acumulatedRating',
+                'acumulatedInPercentRating',
+                'totalRating',
+                'totalReviews',
+                'percentFiveStars',
+                'fiveStarsCount',
+                'percentFourStars',
+                'fourStarsCount',
+                'percentThreeStars',
+                'threeStarsCount',
+                'percentTwoStars',
+                'twoStarsCount',
+                'percentOneStars',
+                'oneStarsCount',
+            )
+        );
     }
 
     public function getCostValueShipping($product, $defaultUserAddress)

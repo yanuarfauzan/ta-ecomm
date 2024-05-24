@@ -12,17 +12,17 @@ return new class extends Migration {
     {
         Schema::create('product_assessment', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('order_id');
+            $table->uuid('order_id')->nullable();
             $table->uuid('user_id');
             $table->uuid('product_id');
             $table->integer('rating')->nullable();
             $table->string('content')->nullable();
-            $table->string('attachment')->nullable();
             $table->string('response_operator') ->nullable();
             $table->timestamps();
             $table->foreign('order_id')->references('id')->on('order')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
             $table->foreign('product_id')->references('id')->on('product')->onDelete('cascade');
+            $table->index('content', 'idx_content_fulltext')->fulltext();
         });
     }
 
