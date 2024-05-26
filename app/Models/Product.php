@@ -80,4 +80,8 @@ class Product extends Model
     {
         return $this->hasMany(ProductAssessment::class, 'product_id', 'id');
     }
+    public function voucher()
+    {
+        return $this->belongsToMany(Voucher::class, 'product_vouchers');
+    }
 }
