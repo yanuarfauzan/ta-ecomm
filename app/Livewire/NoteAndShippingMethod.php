@@ -13,7 +13,7 @@ class NoteAndShippingMethod extends Component
     public $user;
     public $product;
     public $costs;
-    public $note;
+    public $note;   
     public $courier;
     public $costValue;
     public $order;
@@ -36,12 +36,7 @@ class NoteAndShippingMethod extends Component
         $this->showCost('jne');
         $this->dispatch('addCostValueToTotalPrice', costValue: $this->costValue);
     }
-    public function updated($propertyName)
-    {
-        $this->order->update([
-            $propertyName => $this->note
-        ]);
-    }
+    
     public function showCost($courier)
     {
         $service = '';

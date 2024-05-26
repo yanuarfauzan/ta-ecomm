@@ -164,9 +164,9 @@ class UserController extends Controller
             $percentOneStars = number_format(($oneStarsCount / $totalReviews) * 100, 2);
 
             // Average rating calculation with 2 decimal places
-            $acumulatedRating = round($product->productAssessment()->avg('rating'), 2);
+            $acumulatedRating = round($product->productAssessment()->avg('rating'), 1);
             // Percentage of positive reviews to total reviews with 2 decimal places
-            $acumulatedInPercentRating = round(($positiveReviews / $totalReviews) * 100, 2);
+            $acumulatedInPercentRating = round(($positiveReviews / $totalReviews) * 100);
 
             $totalRating = $product->productAssessment()->sum('rating');
         }

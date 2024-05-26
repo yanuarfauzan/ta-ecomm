@@ -54,10 +54,19 @@
                                 <span>{{ $count }} x Rp
                                     {{ number_format($productBuyNow->price, 2, ',', '.') }}</span>
                                 <span><strong>
-                                        <h4>Rp {{ number_format($productBuyNow->price, 2, ',', '.') }}</h4>
+                                        <h4>Rp {{ number_format($totalPrice, 2, ',', '.') }}</h4>
                                     </strong></span>
                             </div>
                         @endif
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center gap-2" style="width: 100%;">
+                        <div class="d-flex justify-content-start gap-2 align-items-center" style="width: 100%">
+                            <span for="note" class="bg-main-color px-3 text-white text-center"
+                                style="padding-top: 12px; padding-bottom: 12px;">pesan:
+                            </span>
+                            <input wire:model.lazy="note" type="text" class="form-control rounded-0" id="note" name="note"
+                            placeholder="tuliskan pesan anda disini" style="box-shadow: none; width: 100%; height: 50px;">
+                        </div>
                     </div>
                 @livewire('NoteAndShippingMethod', ['product' => $productBuyNow, 'order' => $order, 'userCarts' => $usersCarts])
             </div>

@@ -19,6 +19,7 @@ class Order extends Component
     public $productBuyNow;
     public $variationBuyNow;
     public $costValue;
+    public $note;
     public $listeners = ['addCostValueToTotalPrice'];
     public function mount($usersCarts, $productBuyNow, $user, $defaultUserAdress, $order, $countBuyNow, $variationBuyNow)
     {
@@ -42,7 +43,13 @@ class Order extends Component
         $this->productBuyNow = $productBuyNow;
 
         $productPriceBuyNow = isset($productBuyNow) && isset($productBuyNow->discount) ? $productBuyNow->price_after_dsicount : $productBuyNow['price'] ?? 0;
-        $productBuyNow != [] ? $this->subTotal = $productPriceBuyNow : $this->subTotal = $usersCarts->sum('total_price');
+        $productBuyNow != [] ? $this->subTotal = $countBuyNow * $productPriceBuyNow : $this->subTotal = $usersCarts->sum('total_price');
+    }
+    public function updatedNote($propertyName)
+    {
+        $this->order->update([
+            $propertyName => $this->note
+        ]);
     }
     public function addCostValueToTotalPrice($costValue)
     {
