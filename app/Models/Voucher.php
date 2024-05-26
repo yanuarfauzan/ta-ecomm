@@ -2,10 +2,38 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Product;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Voucher extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUuids;
+    protected $table = 'voucher';
+    protected $fillable = [
+        'name',
+        'type',
+        'voucher_icon',
+        'voucher_code',
+        'desc',
+        'requirement',
+        'discount_value',
+        'expired_at',
+        'expired_at'
+    ];
+
+    public function getIncrement()
+    {
+        return false;
+    }
+    public function getKeyType()
+    {
+        return 'string';
+    }
+    
+    public function product()
+    {
+        return $this->belongsToMany(Product::class, 'product_vouchers');
+    }
 }

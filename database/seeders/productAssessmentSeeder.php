@@ -9,7 +9,7 @@ use Illuminate\Database\Seeder;
 use App\Models\ProductAssessment;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-class productAssessmentSeeder extends Seeder
+class ProductAssessmentSeeder extends Seeder
 {
     /**
      * Run the database seeds.

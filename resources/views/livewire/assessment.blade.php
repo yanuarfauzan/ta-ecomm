@@ -101,9 +101,9 @@
                     <hr class="m-0">
                     <div class="d-flex justify-content-start align-items-center gap-2 my-2 ms-2">
                         <span>
-                            <input wire:model.lazy="filterByMedia" class="form-check-input btn-check-outlined" type="checkbox"
-                                id="flexCheckDefault" style="width: 20px; height: 20px; cursor: pointer;"
-                                value="true">
+                            <input wire:model.lazy="filterByMedia" class="form-check-input btn-check-outlined"
+                                type="checkbox" id="flexCheckDefault"
+                                style="width: 20px; height: 20px; cursor: pointer;" value="true">
                             <span>dengan foto dan video</span>
                         </span>
                     </div>
@@ -115,28 +115,33 @@
                     <hr class="m-0">
                     <div class="d-flex flex-column justify-content-start align-items-start gap-2 my-2 ms-2">
                         <span>
-                            <input wire:model.lazy="fiveStar" class="form-check-input btn-check-outlined" type="checkbox"
-                                id="flexCheckDefault" style="width: 20px; height: 20px; cursor: pointer;">
+                            <input wire:model.lazy="fiveStar" class="form-check-input btn-check-outlined"
+                                type="checkbox" id="flexCheckDefault"
+                                style="width: 20px; height: 20px; cursor: pointer;">
                             <span><i class="bi bi-star-fill" style="color: #ffd900;"></i> 5</span>
                         </span>
                         <span>
-                            <input wire:model.lazy="fourStar" class="form-check-input btn-check-outlined" type="checkbox"
-                                id="flexCheckDefault" style="width: 20px; height: 20px; cursor: pointer;">
+                            <input wire:model.lazy="fourStar" class="form-check-input btn-check-outlined"
+                                type="checkbox" id="flexCheckDefault"
+                                style="width: 20px; height: 20px; cursor: pointer;">
                             <span><i class="bi bi-star-fill" style="color: #ffd900;"></i> 4</span>
                         </span>
                         <span>
-                            <input wire:model.lazy="threeStar" class="form-check-input btn-check-outlined" type="checkbox"
-                                id="flexCheckDefault" style="width: 20px; height: 20px; cursor: pointer;">
+                            <input wire:model.lazy="threeStar" class="form-check-input btn-check-outlined"
+                                type="checkbox" id="flexCheckDefault"
+                                style="width: 20px; height: 20px; cursor: pointer;">
                             <span><i class="bi bi-star-fill" style="color: #ffd900;"></i> 3</span>
                         </span>
                         <span>
-                            <input wire:model.lazy="twoStar" class="form-check-input btn-check-outlined" type="checkbox"
-                                id="flexCheckDefault" style="width: 20px; height: 20px; cursor: pointer;">
+                            <input wire:model.lazy="twoStar" class="form-check-input btn-check-outlined"
+                                type="checkbox" id="flexCheckDefault"
+                                style="width: 20px; height: 20px; cursor: pointer;">
                             <span><i class="bi bi-star-fill" style="color: #ffd900;"></i> 2</span>
                         </span>
                         <span>
-                            <input wire:model.lazy="oneStar" class="form-check-input btn-check-outlined" type="checkbox"
-                                id="flexCheckDefault" style="width: 20px; height: 20px; cursor: pointer;">
+                            <input wire:model.lazy="oneStar" class="form-check-input btn-check-outlined"
+                                type="checkbox" id="flexCheckDefault"
+                                style="width: 20px; height: 20px; cursor: pointer;">
                             <span><i class="bi bi-star-fill" style="color: #ffd900;"></i> 1</span>
                         </span>
                     </div>
@@ -148,13 +153,15 @@
                     <hr class="m-0">
                     <div class="d-flex flex-column justify-content-start align-items-start gap-2 my-2 ms-2">
                         <span>
-                            <input wire:model.lazy="quality" class="form-check-input btn-check-outlined" type="checkbox"
-                                id="flexCheckDefault" style="width: 20px; height: 20px; cursor: pointer;">
+                            <input wire:model.lazy="quality" class="form-check-input btn-check-outlined"
+                                type="checkbox" id="flexCheckDefault"
+                                style="width: 20px; height: 20px; cursor: pointer;">
                             <span>kualitas barang</span>
                         </span>
                         <span>
-                            <input wire:model.lazy="price" class="form-check-input btn-check-outlined" type="checkbox"
-                                id="flexCheckDefault" style="width: 20px; height: 20px; cursor: pointer;">
+                            <input wire:model.lazy="price" class="form-check-input btn-check-outlined"
+                                type="checkbox" id="flexCheckDefault"
+                                style="width: 20px; height: 20px; cursor: pointer;">
                             <span>harga barang</span>
                         </span>
                         <span>
@@ -163,18 +170,21 @@
                             <span>sesuai deskripsi</span>
                         </span>
                         <span>
-                            <input wire:model.lazy="shipping" class="form-check-input btn-check-outlined" type="checkbox"
-                                id="flexCheckDefault" style="width: 20px; height: 20px; cursor: pointer;">
+                            <input wire:model.lazy="shipping" class="form-check-input btn-check-outlined"
+                                type="checkbox" id="flexCheckDefault"
+                                style="width: 20px; height: 20px; cursor: pointer;">
                             <span>pengiriman</span>
                         </span>
                         <span>
-                            <input wire:model.lazy="packaging" class="form-check-input btn-check-outlined" type="checkbox"
-                                id="flexCheckDefault" style="width: 20px; height: 20px; cursor: pointer;">
+                            <input wire:model.lazy="packaging" class="form-check-input btn-check-outlined"
+                                type="checkbox" id="flexCheckDefault"
+                                style="width: 20px; height: 20px; cursor: pointer;">
                             <span>kemasan barang</span>
                         </span>
                         <span>
-                            <input wire:model.lazy="service" class="form-check-input btn-check-outlined" type="checkbox"
-                                id="flexCheckDefault" style="width: 20px; height: 20px; cursor: pointer;">
+                            <input wire:model.lazy="service" class="form-check-input btn-check-outlined"
+                                type="checkbox" id="flexCheckDefault"
+                                style="width: 20px; height: 20px; cursor: pointer;">
                             <span>pelayanan penjual</span>
                         </span>
                     </div>
@@ -199,19 +209,19 @@
                 <div class="d-flex flex-column gap-2">
                     <h4><strong>ulasan pilihan</strong></h4>
                     @if ($isShowAllReview == true)
-                    <div>
-                        <p class="small text-muted">Menampilkan semua ulasan</p>
-                    </div>
+                        <div>
+                            <p class="small text-muted">Menampilkan semua ulasan</p>
+                        </div>
                     @else
-                    <div>
-                        <p class="small text-muted">
-                            {!! __('Menampilkan') !!}
-                            <span class="fw-semibold">{{ $productAssessments->lastItem() }}</span>
-                            {!! __('dari') !!}
-                            <span class="fw-semibold">{{ $productAssessments->total() }}</span>
-                            {!! __('ulasan') !!}
-                        </p>
-                    </div>
+                        <div>
+                            <p class="small text-muted">
+                                {!! __('Menampilkan') !!}
+                                <span class="fw-semibold">{{ $productAssessments->lastItem() }}</span>
+                                {!! __('dari') !!}
+                                <span class="fw-semibold">{{ $productAssessments->total() }}</span>
+                                {!! __('ulasan') !!}
+                            </p>
+                        </div>
                     @endif
                 </div>
                 <div class="d-flex justify-content-start align-items-center gap-2 rounded-0 custom-div me-5">
@@ -225,72 +235,84 @@
                 </div>
             </div>
         </div>
-        @foreach ($productAssessments as $index => $productAssessment)
-            <div
-                class="container d-flex flex-column gap-2 mb-2 {{ $isShowAllReview == true ? 'review-container' : '' }}">
-                <div class="d-flex justify-content-start align-items-center gap-2 ms-4">
-                    @for ($i = 1; $i <= $productAssessment->rating; $i++)
-                        <span>
-                            <i class="bi bi-star-fill" style="color: #ffd900"></i>
-                        </span>
-                    @endfor
-                    <span>{{ floor($productAssessment->created_at->diffInDays()) }} hari yang lalu</span>
-                </div>
-                <div class="d-flex justify-content-start align-items-center gap-2 ms-4">
-                    <span><img src="https://placehold.co/400x400/png" alt="" class="rounded-circle"
-                            style="width: 40px;"></span>
-                    <span><strong>{{ $productAssessment->user->username }}</strong></span>
-                </div>
-                <div class="d-flex justify-content-start align-items-center ms-4">
-                    <span>
-                        @foreach ($productAssessment->user?->cart->first()?->hasProduct->first()?->pickedVariationOption ?? [] as $variationOption)
-                            {{ $variationOption->name }}{{ !$loop->last ? ',' : '' }}
-                        @endforeach
-                    </span>
-                </div>
-                <div class="d-flex justify-content-start align-items-center ms-4">
-                    <span><strong>{{ $productAssessment->content }}</strong></span>
-                </div>
-                <div class="ms-4">
-                    <div class="d-flex justify-content-start align-items-center gap-2">
-                        @foreach ($productAssessment->attachments()->get() as $attachment)
-                            <img src="{{ Storage::url('public/attachments/' . $attachment->filepath_image) }}"
-                                alt="" style="width: 80px; height: 80px;">
-                        @endforeach
+        <div class="d-flex flex-column align-items-start {{ $isShowAllReview == true ? 'review-container' : '' }}">
+            @foreach ($productAssessments as $index => $productAssessment)
+                <div class="container d-flex flex-column gap-2 mb-2">
+                    <div class="d-flex justify-content-start align-items-center gap-2 ms-4">
+                        @for ($i = 1; $i <= $productAssessment->rating; $i++)
+                            <span>
+                                <i class="bi bi-star-fill" style="color: #ffd900"></i>
+                            </span>
+                        @endfor
+                        <span>{{ floor($productAssessment->created_at->diffInDays()) }} hari yang lalu</span>
                     </div>
-                </div>
-                @if ($productAssessment->response_operator)
-                    <div class="accordion accordion-flush ms-2" id="accordionFlushExample">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header bg-white">
-                                <button class="accordion-button collapsed border-white shadow-0 bg-white"
-                                    type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#flush-collapse-{{ $index }}" aria-expanded="false"
-                                    aria-controls="flush-collapseOne"
-                                    style="width: 155px; height: 30px; background-color: #F8F9FA;">
-                                    lihat balasan
-                                </button>
-                            </h2>
-                            <div id="flush-collapse-{{ $index }}" class="accordion-collapse collapse mt-2"
-                                data-bs-parent="#accordionFlushExample">
-                                <div class="d-flex justify-content-start align-items-center gap-2 ms-3 my-1">
-                                    <span><img src="https://placehold.co/400x400/png" alt=""
-                                            class="rounded-circle" style="width: 40px;"></span>
-                                    <span><strong>Penjual</strong></span>
-                                </div>
-                                <div class="d-flex justify-content-start align-items-center ms-3">
-                                    <span><strong>{{ $productAssessment->response_operator }}</strong></span>
+                    <div class="d-flex justify-content-start align-items-center gap-2 ms-4">
+                        <span><img src="https://placehold.co/400x400/png" alt="" class="rounded-circle"
+                                style="width: 40px;"></span>
+                        <span><strong>{{ $productAssessment->user->username }}</strong></span>
+                    </div>
+                    <div class="d-flex justify-content-start align-items-center ms-4">
+                        <span>
+                            @foreach ($productAssessment->user?->cart->first()?->hasProduct->first()?->pickedVariationOption ?? [] as $variationOption)
+                                {{ $variationOption->name }}{{ !$loop->last ? ',' : '' }}
+                            @endforeach
+                        </span>
+                    </div>
+                    <div class="d-flex justify-content-start align-items-center ms-4">
+                        <span><strong>{{ $productAssessment->content }}</strong></span>
+                    </div>
+                    <div class="ms-4">
+                        <div class="d-flex justify-content-start align-items-center gap-2">
+                            @foreach ($productAssessment->attachments()->get() as $attachment)
+                                <img src="{{ Storage::url('public/attachments/' . $attachment->filepath_image) }}"
+                                    alt="" style="width: 80px; height: 80px;">
+                            @endforeach
+                        </div>
+                    </div>
+                    @if ($productAssessment->response_operator)
+                        <div class="accordion accordion-flush ms-2" id="accordionFlushExample">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header bg-white">
+                                    <button class="accordion-button collapsed border-white shadow-0 bg-white"
+                                        type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#flush-collapse-{{ $index }}" aria-expanded="false"
+                                        aria-controls="flush-collapseOne"
+                                        style="width: 155px; height: 30px; background-color: #F8F9FA;">
+                                        lihat balasan
+                                    </button>
+                                </h2>
+                                <div id="flush-collapse-{{ $index }}" class="accordion-collapse collapse mt-2"
+                                    data-bs-parent="#accordionFlushExample">
+                                    <div class="d-flex justify-content-start align-items-center gap-2 ms-3 my-1">
+                                        <span><img src="https://placehold.co/400x400/png" alt=""
+                                                class="rounded-circle" style="width: 40px;"></span>
+                                        <span><strong>Penjual</strong></span>
+                                    </div>
+                                    <div class="d-flex justify-content-start align-items-center ms-3">
+                                        <span><strong>{{ $productAssessment->response_operator }}</strong></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
+                </div>
+            @endforeach
+        </div>
+        <div class="d-flex justify-content-between align-items-center mx-4 mb-4 mt-3">
+            <div>
+                {{ $isShowAllReview == true ? '' : $productAssessments->links(data: ['scrollTo' => false]) }}
+            </div>
+
+            <div>
+                @if ($isShowAllReview == true)
+                    <a wire:click="showAllReviews()" class="font-main-color"
+                        style="cursor: pointer"><strong>tampilkan lebih sedikit</strong></a>
+                @else
+                    <a wire:click="showAllReviews()" class="font-main-color" style="cursor: pointer"><strong>lihat
+                            semua
+                            ulasan</strong></a> 
                 @endif
             </div>
-        @endforeach
-        <div class="d-flex justify-content-between align-items-center mx-4 mb-4 mt-3">
-            {{ $isShowAllReview == true ? '' :  $productAssessments->links('pagination::bootstrap-5') }}
-
-            <a wire:click="showAllReviews()" class="font-main-color" style="cursor: pointer"><strong>lihat semua ulasan</strong></a>
         </div>
     </div>
 </div>

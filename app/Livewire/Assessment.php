@@ -119,7 +119,7 @@ class Assessment extends Component
     }
     public function showAllReviews()
     {
-        $this->isShowAllReview = true;
+        $this->isShowAllReview == true ? $this->isShowAllReview = false : $this->isShowAllReview = true;
     }
     public function render()
     {

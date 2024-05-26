@@ -2,9 +2,10 @@
 
 namespace App\Livewire;
 
-use App\Models\ProvinciesAndCities;
 use App\Models\User;
+use App\Models\Voucher;
 use Livewire\Component;
+use App\Models\ProvinciesAndCities;
 use Illuminate\Support\Facades\Http;
 
 
@@ -17,8 +18,11 @@ class NoteAndShippingMethod extends Component
     public $courier;
     public $costValue;
     public $order;
+    public $productVoucher;
     public $totalWeight;
-    public function mount($product, $order, $userCarts)
+    public $voucherApplied;
+    public $isVoucherApplied = false;
+    public function mount($product, $order, $userCarts, $productVoucher)
     {
         $totalWeight = 0;
         if ($userCarts != []) {
@@ -32,15 +36,17 @@ class NoteAndShippingMethod extends Component
         $this->note = $order->note;
         $this->order = $order;
         $this->product = $product;
+        $this->productVoucher = $productVoucher;
         $this->user = auth()->user();
         $this->showCost('jne');
         $this->dispatch('addCostValueToTotalPrice', costValue: $this->costValue);
     }
-    public function updated($propertyName)
+
+    public function useVoucher($type, $discountValue, $voucherId)
     {
-        $this->order->update([
-            $propertyName => $this->note
-        ]);
+        $this->voucherApplied = Voucher::findOrFail($voucherId);
+        $this->isVoucherApplied = true;
+        $this->dispatch('addVoucherToTotalPrice', type: $type, discountValue: $discountValue);
     }
     public function showCost($courier)
     {
