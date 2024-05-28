@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->uuid('product_id')->nullable();
             $table->string('order_number')->nullable();
             $table->date('order_date')->nullable();
+            $table->integer('qty')->nullable();
             $table->integer('total_price')->nullable();
             $table->enum('order_status', ['pending', 'awaiting payment', 'awaiting fulfillment', 'awaiting shipment', 'shipped', 'delivered', 'cancelled', 'completed'])->nullable();
             $table->string('note')->nullable();

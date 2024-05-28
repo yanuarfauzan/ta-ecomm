@@ -268,15 +268,17 @@ class UserController extends Controller
                 'total_price' => $totalAllPrice,
             ]);
         }
-        
+
         $productVoucher = $usersCarts->map(function ($userCart) {
             $product = $userCart->hasProduct->first();
             if ($product && $product->voucher()->exists()) {
                 return $product->voucher()->get();
             }
-            return collect();  // Return empty collection if no voucher exists
+            return collect();
         })->filter()->flatten();
-        return view('user.order', compact('usersCarts', 'user', 'defaultUserAdress', 'order', 'productVoucher'));
+
+        $userAddresses = $order->user->userAddresses()->get();
+        return view('user.order', compact('usersCarts', 'user', 'defaultUserAdress', 'order', 'productVoucher', 'userAddresses'));
     }
     public function buyNow(Request $request)
     {
@@ -285,15 +287,30 @@ class UserController extends Controller
         $countBuyNow = $request->qty;
         $defaultUserAdress = $this->user->userAddresses->where('is_default', true)->first();
         $productBuyNow = Product::findOrFail($request->productId);
-        $order = $user->order()->create([
-            'product_id' => $request->productId,
-            'order_number' => $this->generateOrderNumber(),
-            'order_date' => date('Ymd'),
-            'total_price' => isset($productBuyNow->discount) ? $productBuyNow->price_after_discount : $productBuyNow->price,
-            'order_status' => 'pending'
-        ]);
 
-        return view('user.order', compact('productBuyNow', 'order', 'user', 'defaultUserAdress', 'countBuyNow', 'variationBuyNow'));
+        $order = $user->order()->where('product_id', $request->productId)->first();
+        if (!isset($order)) {
+            $order = $user->order()->create([
+                'product_id' => $request->productId,
+                'order_number' => $this->generateOrderNumber(),
+                'order_date' => date('Ymd'),
+                'qty' => $countBuyNow,
+                'total_price' => isset($productBuyNow->discount) ? $countBuyNow * $productBuyNow->price_after_dsicount : $countBuyNow * $productBuyNow->price,
+                'order_status' => 'pending'
+            ]);
+        } else {
+            if ($countBuyNow != $order->qty) {
+                $order->update([
+                    'qty' => $countBuyNow,
+                    'order_date' => date('Ymd'),
+                    'total_price' => isset($productBuyNow->discount) ? $countBuyNow * $productBuyNow->price_after_dsicount : $countBuyNow * $productBuyNow->price,
+                ]);
+            }
+        }
+        $productVoucher = $productBuyNow->voucher()->get();
+        
+        $userAddresses = $order->user->userAddresses()->get();
+        return view('user.order', compact('productBuyNow', 'order', 'user', 'defaultUserAdress', 'countBuyNow', 'variationBuyNow', 'productVoucher', 'userAddresses'));
 
     }
     private function generateOrderNumber()

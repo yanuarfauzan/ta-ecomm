@@ -42,7 +42,6 @@
     </div>
     <h5 class="mt-4"><strong>Pilih Opsi pengiriman</strong></h5>
     <ul class="list-group rounded-0" style="width: 100%">
-        @if ($product->id == $costs['product_id'])
             @foreach ($costs['costs'] as $cost)
                 <li class="list-group-item d-flex justify-content-start align-items-center gap-4">
                     <span>
@@ -64,9 +63,8 @@
                     </div>
                 </li>
             @endforeach
-        @endif
     </ul>
-    <div wire:ignore class="modal fade" style="top: 10%" id="modalVoucher" tabindex="-1"
+    <div class="modal fade" style="top: 10%" id="modalVoucher" tabindex="-1"
         aria-labelledby="modalVoucherLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content rounded-0">
@@ -90,9 +88,8 @@
                                 <span class="pe-4">
                                     <input
                                         wire:click="useVoucher('{{ $voucher->type }}', '{{ $voucher->discount_value }}', '{{ $voucher->id }}')"
-                                        class="form-check-input me-1" type="radio" name="listGroupRadio"
-                                        value="" id="firstRadio"
-                                        {{ $isVoucherApplied != true ? 'data-bs-dismiss=modal aria-label=Close' : '' }}>
+                                        class="form-check-input me-1" type="radio" id="checkbox-voucher" name="checkbox-voucher"
+                                        value="" data-bs-dismiss="modal" aria-label="Close">
                                 </span>
                             </div>
                         </div>

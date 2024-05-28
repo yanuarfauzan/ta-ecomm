@@ -23,8 +23,10 @@ class Order extends Component
     public $productVoucher;
     public $prevVoucherValue;
     public $voucherValue;
+    public $userAddresses;
+    public $isAddressChanged = false;
     public $listeners = ['addCostValueToTotalPrice', 'addVoucherToTotalPrice'];
-    public function mount($usersCarts, $productBuyNow, $user, $defaultUserAdress, $order, $countBuyNow, $variationBuyNow, $productVoucher)
+    public function mount($usersCarts, $productBuyNow, $user, $defaultUserAdress, $order, $countBuyNow, $variationBuyNow, $productVoucher, $userAddresses)
     {
         $tempVarBuyNow = [];
         collect($variationBuyNow)->each(function ($var) use (&$tempVarBuyNow) {
@@ -41,13 +43,37 @@ class Order extends Component
         $this->order = $order;
         $this->usersCarts = $usersCarts;
         $this->user = $user;
+
         $this->defaultUserAdress = $defaultUserAdress;
+
         $this->count = $countBuyNow;
         $this->productBuyNow = $productBuyNow;
         $this->productVoucher = $productVoucher;
+        $this->userAddresses = $userAddresses;
 
-        $productPriceBuyNow = isset($productBuyNow) && isset($productBuyNow->discount) ? $productBuyNow->price_after_dsicount : $productBuyNow['price'] ?? 0;
-        $productBuyNow != [] ? $this->subTotal = $countBuyNow * $productPriceBuyNow : $this->subTotal = $usersCarts->sum('total_price');
+        if ($productBuyNow != []) {
+            $this->subTotal = $order->total_price;
+        } else {
+            $this->subTotal = $usersCarts->sum(function ($cart) {
+                return isset ($cart->total_price_after_discount) ? $cart->total_price_after_discount : $cart->total_price;
+            });
+        }
+    }
+    public function changeAddress($addressId)
+    {
+        $pickedAddress = $this->userAddresses->where('is_picked', true)->first();
+        if ($pickedAddress) {
+            $pickedAddress->update([
+                'is_picked' => false
+            ]);
+        }
+        $this->userAddresses->where('id', $addressId)->first()->update([
+            'is_picked' => true
+        ]);
+        $pickedUserAddress = $this->userAddresses->where('id', $addressId)->first();
+        $this->isAddressChanged = true;
+        $this->defaultUserAdress = $pickedUserAddress;
+        $this->dispatch('changeAddressForCost', pickedUserAddress: $pickedAddress);
     }
     public function updatedNote($propertyName)
     {

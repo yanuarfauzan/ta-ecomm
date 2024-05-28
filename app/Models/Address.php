@@ -14,6 +14,9 @@ class Address extends Model
 
     protected $fillable = [
         'user_id',
+        'recipient_name',
+        'phone_number', 
+        'is_picked', 
         'detail',
         'postal_code',
         'address',
