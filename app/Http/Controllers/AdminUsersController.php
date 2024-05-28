@@ -12,7 +12,7 @@ class AdminUsersController extends Controller
 {
     public function index()
     {
-        $users = User::orderBy('username')->get();
+        $users = User::with('userAddresses')->orderBy('username')->get();
         $address = Address::all();
         return view('ADMIN.users.list', compact('users', 'address'));
     }
@@ -24,7 +24,7 @@ class AdminUsersController extends Controller
 
     public function store(Request $request)
     {
-        $validatedUserData = $request->validate([
+        $validatedUserData = Validator::make($request->all(), [
             'username' => 'required|string|unique:user',
             'email' => 'required|string|email|unique:user',
             'phone_number' => 'nullable|string|unique:user',
@@ -35,26 +35,29 @@ class AdminUsersController extends Controller
             'role' => 'required|in:user,admin,operator'
         ]);
 
+        if ($validatedUserData->fails()){
+            return response()->json(['message' => $validatedUserData->errors()]);
+        }
 
-        $user = new User();
-        $user->username = $validatedUserData['username'];
-        $user->email = $validatedUserData['email'];
-        $user->phone_number = $validatedUserData['phone_number'];
-        $user->password = Hash::make($validatedUserData['password']);
-        $user->gender = $validatedUserData['gender'];
-        $user->birtdate = $validatedUserData['birtdate'];
-        $user->role = $validatedUserData['role'];
-        $user->is_verified = 1;
+        $users = new User();
+        $users->username = $request->username;
+        $users->email = $request->email;
+        $users->phone_number = $request->phone_number;
+        $users->password = Hash::make($request->password);
+        $users->gender = $request->gender;
+        $users->birtdate = $request->birtdate;
+        $users->role = $request->role;
+        $users->is_verified = 1;
 
         if ($request->hasFile('profile_image')) {
             $path = $request->file('profile_image')->store('profile_images', 'public');
-            $user->profile_image = $path;
+            $users->profile_image = $path;
         }
 
-        $user->save();
+        $users->save();
         
         if ($request->role == 'user') {
-            $validatedAddressData = $request->validate([
+            $validatedAddressData = Validator::make($request->all(), [
                 'address.*.detail' => 'required|string',
                 'address.*.postal_code' => 'required|string',
                 'address.*.address' => 'required|string',
@@ -62,21 +65,25 @@ class AdminUsersController extends Controller
                 'address.*.province' => 'required|string',
             ]);
 
+            if ($validatedAddressData->fails()){
+                return response()->json(['message' => $validatedAddressData->errors()]);
+            }
+
+
             foreach ($validatedAddressData['address'] as $addressData) {
                 $address = new Address();
                 $address->fill($addressData);
                 $address->is_default = 1;
-                $user->usersAddress()->save($address);
+                $users->usersAddress()->save($address);
             }
         }
-
-        return view('ADMIN.users.list', compact('users', 'address'));
+        return view('ADMIN.users.list', compact('users'));
     }
 
     public function edit($id)
     {
         $user = User::findOrFail($id);
-        return view('ADMIN.users.edit', compact('user'))->with('success', 'User Berhasil ditambahkan');
+        return view('ADMIN.users.edit', compact('user'))->with('success', 'Users Berhasil Dibuat');
     }
 
     public function update(Request $request, $id)
@@ -116,17 +123,17 @@ class AdminUsersController extends Controller
             }
         }
 
-        return redirect()->to('/admin/list-users')->with('success', 'User updated successfully');
+        return redirect()->to('/admin/list-users')->with('success', 'Users Berhasil Diperbarui');
     }
 
     public function destroy($id)
     {
         $user = User::findOrFail($id);
 
-        $user->usersAddress()->delete();
+        $user->usersAddress->delete();
 
         $user->delete();
 
-        return redirect()->to('/admin/list-users')->with('delete', 'User deleted successfully');
+        return redirect()->to('/admin/list-users')->with('delete', 'Users Telah Dihapus');
     }
 }

@@ -3,14 +3,16 @@
 use Illuminate\Http\Request;
 use App\Http\Middleware\IsUser;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\VoucherController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\AdminUsersController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\IsUserRegistered;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\VoucherController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Middleware\IsUserAuthenticated;
+use App\Http\Controllers\VariationController;
+use App\Http\Controllers\AdminUsersController;
+use App\Http\Controllers\BannerHomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +42,14 @@ use App\Http\Middleware\IsUserAuthenticated;
     Route::put('/admin/update-category/{category}', [CategoryController::class, 'update']);
     Route::delete('/admin/delete-category/{category}', [CategoryController::class, 'destroy']);
     
+    #VARIATION
+    Route::get('/admin/list-variation', [VariationController::class, 'index']);
+    Route::get('/admin/create-variation', [VariationController::class, 'create']);
+    Route::post('/admin/store-variation', [VariationController::class, 'store']);
+    Route::get('/admin/edit-variation/{id}', [VariationController::class, 'edit']);
+    Route::put('/admin/update-variation/{variations}', [VariationController::class, 'update']);
+    Route::delete('/admin/delete-variation/{variations}', [VariationController::class, 'destroy']);
+    
     #PRODUCT
     Route::get('/admin/list-product', [ProductController::class, 'index']);
     Route::get('/admin/create-product', [ProductController::class, 'create']);
@@ -55,7 +65,14 @@ use App\Http\Middleware\IsUserAuthenticated;
     Route::get('/admin/edit-voucher/{id}', [VoucherController::class, 'edit']);
     Route::put('/admin/update-voucher/{voucher}', [VoucherController::class, 'update']);
     Route::delete('/admin/delete-voucher/{voucher}', [VoucherController::class, 'destroy']);
-
+    
+    #BANNER HOME
+    Route::get('/admin/list-banner', [BannerHomeController::class, 'index']);
+    Route::get('/admin/create-banner', [BannerHomeController::class, 'create']);
+    Route::post('/admin/store-banner', [BannerHomeController::class, 'store']);
+    Route::get('/admin/edit-banner/{id}', [BannerHomeController::class, 'edit']);
+    Route::put('/admin/update-banner/{bannerHome}', [BannerHomeController::class, 'update']);
+    Route::delete('/admin/delete-banner/{bannerHome}', [BannerHomeController::class, 'destroy']);
 
 #ROLE:USER
 Route::prefix('/user')->group(function () {

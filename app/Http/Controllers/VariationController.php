@@ -12,7 +12,8 @@ class VariationController extends Controller
      */
     public function index()
     {
-        //
+        $variations = Variation::all();
+        return view('ADMIN.variation.list', compact('variations'));
     }
 
     /**
@@ -20,7 +21,7 @@ class VariationController extends Controller
      */
     public function create()
     {
-        //
+        return view('ADMIN.variation.create');
     }
 
     /**
@@ -28,7 +29,15 @@ class VariationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255'
+        ]);
+
+        Variation::create([
+            'name' => $request->name,
+        ]);
+
+        return redirect('/admin/list-variation')->with('success', 'Variasi Berhasil Dibuat');
     }
 
     /**
@@ -42,24 +51,34 @@ class VariationController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Variation $variation)
+    public function edit($id)
     {
-        //
+        $variations = Variation::findOrFail($id);
+        return view('ADMIN.variation.edit', compact('variations'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Variation $variation)
+    public function update(Request $request, Variation $variations)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $variations->update([
+            'name' => $request->name,
+        ]);
+
+        return redirect('/admin/list-variation')->with('success', 'Variasi Berhasil Diperbarui');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Variation $variation)
+    public function destroy(Variation $variations)
     {
-        //
+        $variations->delete();
+        return redirect()->to('/admin/list-variation')->with('delete', 'Variasi Telah Dihapus');
     }
 }

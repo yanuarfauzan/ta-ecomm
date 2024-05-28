@@ -11,7 +11,7 @@ class BannerHome extends Model
     use HasFactory, HasUuids;
     protected $table = 'banner_home';
     protected $fillable = [
-        'banner_imae',
+        'banner_image',
         'desc'
     ];
 

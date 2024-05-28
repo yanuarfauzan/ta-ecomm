@@ -2,9 +2,9 @@
 @section('content')
     <section class="section text-center">
         <div class="section-header">
-            <h1>CATEGORY</h1>
+            <h1>BANNER HOME</h1>
             <div class="section-header-button">
-                <a href="/admin/create-category" class="btn btn-success">Add New</a>
+                <a href="/admin/create-banner" class="btn btn-success">Add New</a>
             </div>
         </div>
     </section>
@@ -28,7 +28,7 @@
 
     <div class="card mx-auto">
         <div class="card-header text-center">
-            <h4>List Category</h4>
+            <h4>List Banner Home</h4>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -36,8 +36,8 @@
                     <thead>
                         <tr>
                             <th scope="col">No.</th>
-                            <th scope="col">Nama Kategori</th>
-                            <th scope="col">Icon Kategori</th>
+                            <th scope="col">Banner Home</th>
+                            <th scope="col">Deskripsi</th>
                             <th scope="col">Aksi</th>
                         </tr>
                     </thead>
@@ -45,24 +45,21 @@
                         @php
                             $no = 1;
                         @endphp
-                        @foreach ($category as $cat)
+                        @foreach ($bannerHome as $banner)
                             <tr>
                                 <td>{{ $no++ }}</td>
-                                <td>{{ $cat->name }}</td>
                                 <td>
-                                    <img src="{{ Storage::url($cat->icon) }}" alt="{{ $cat->name }}"
+                                    <img src="{{ Storage::url($banner->banner_image) }}" alt="{{ $banner->desc }}"
                                         style="max-height: 100px;">
                                 </td>
-                                {{-- <td>
-                                    <img src="{{ asset($cat->icon) }}" alt="{{ $cat->name }}" style="max-height: 50px;">
-                                </td> --}}
+                                <td>{{ $banner->desc }}</td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <a href="/admin/edit-category/{{ $cat->id }}"
+                                        <a href="/admin/edit-banner/{{ $banner->id }}"
                                             class="btn btn-md bg-primary text-light btn-rounded mr-2">
                                             <i class="fa-solid fas fa-pen"></i>
                                         </a>
-                                        <form action="/admin/delete-category/{{ $cat->id }}" method="POST">
+                                        <form action="/admin/delete-banner/{{ $banner->id }}" method="POST">
                                             @csrf
                                             @method('delete')
                                             <button type="submit" class="btn btn-md bg-danger text-light btn-rounded">

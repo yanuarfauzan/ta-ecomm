@@ -34,7 +34,6 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'SKU' => 'required|string|max:255',
             'stock' => 'required',
-            'product_image' => 'image|mimes:jpeg,png,jpg,gif|max:5120',
             'price' => 'required',
             'desc' => 'required|string|max:255',
             'discount' => 'required',
@@ -63,7 +62,7 @@ class ProductController extends Controller
             'dimensions' => $request->dimensions,
         ]);
 
-        return redirect('/admin/list-product')->with('success', 'Category created successfully');
+        return redirect('/admin/list-product')->with('success', 'Produk Berhasil Dibuat');
     }
 
     /**
@@ -130,7 +129,7 @@ class ProductController extends Controller
             ]);
         }
 
-        return redirect('/admin/list-product')->with('success', 'Category updated successfully');
+        return redirect('/admin/list-product')->with('success', 'Produk Berhasil Diperbarui');
     }
 
     /**
@@ -139,6 +138,6 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         $product->delete();
-        return redirect()->to('/admin/list-product')->with('delete', 'Data Kategori Telah Dihapus');
+        return redirect()->to('/admin/list-product')->with('delete', 'Produk Telah Dihapus');
     }
 }

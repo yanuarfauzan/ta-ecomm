@@ -40,7 +40,8 @@ class CategoryController extends Controller
         if ($request->hasFile('icon')) {
             $icon = $request->file('icon');
             $iconName = time() . '.' . $icon->getClientOriginalExtension();
-            $icon->move(public_path('icon-category'), $iconName);
+            $iconPath = $icon->storeAs('public/icon-category', $iconName);
+            // $icon->move(public_path('icon-category'), $iconName);
             $iconPath = 'icon-category/' . $iconName;
         }
 
@@ -49,7 +50,7 @@ class CategoryController extends Controller
             'icon' => $iconPath,
         ]);
 
-        return redirect('/admin/list-category')->with('success', 'Category created successfully');
+        return redirect('/admin/list-category')->with('success', 'Kategori Berhasil Dibuat');
     }
 
     /**
@@ -95,7 +96,7 @@ class CategoryController extends Controller
             ]);
         }
 
-        return redirect('/admin/list-category')->with('success', 'Category updated successfully');
+        return redirect('/admin/list-category')->with('success', 'Kategori Berhasil Diperbarui');
     }
 
     /**
@@ -104,6 +105,6 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
-        return redirect()->to('/admin/list-category')->with('delete', 'Data Kategori Telah Dihapus');
+        return redirect()->to('/admin/list-category')->with('delete', 'Kategori Telah Dihapus');
     }
 }
