@@ -179,7 +179,7 @@
                                     <span class="text-dark bg-light position-absolute border border-secondary text-center"
                                         style="top: 262px; width: 70px;">Discount</span>
                                     <span
-                                        class="text-dark bg-secondary position-absolute border border-secondary text-center"
+                                        class="text-dark bg-main-color position-absolute border border-secondary text-center"
                                         style="top: 262px; left: 70px; width: 40px;"><i
                                             class="text-white">{{ floor($product->discount) }}%</i></span>
                                 @endif

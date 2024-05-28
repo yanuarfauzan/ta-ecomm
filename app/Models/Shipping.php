@@ -11,12 +11,13 @@ class Shipping extends Model
     use HasFactory, HasUuids;
     protected $table = 'shipping';
     protected $fillable = [
-        'shipping_provider_id',
-        'shipping_type',
-        'shipping_status',
-        'resi_number',
-        'shipping_address',
-        'shipping_cost'
+        'provider_code',
+        'provider_name',
+        'service',
+        'desc',
+        'cost',
+        'etd',
+        'resi'
     ];
 
     public function getIncrement()

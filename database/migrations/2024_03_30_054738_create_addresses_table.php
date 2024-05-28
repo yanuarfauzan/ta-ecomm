@@ -18,13 +18,15 @@ return new class extends Migration {
             $table->string('address')->nullable();
             $table->string('city')->nullable();
             $table->string('province')->nullable();
+            $table->string('phone_number')->nullable();
             $table->boolean('is_default')->nullable();
+            $table->boolean('is_picked')->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
         });
     }
 
-    /**
+    /** 
      * Reverse the migrations.
      */
     public function down(): void

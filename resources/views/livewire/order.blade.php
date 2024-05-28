@@ -6,13 +6,14 @@
             <span class="d-inline-block" style="width: 33%;"><strong>Order list</strong></span>
         </div>
         <div class="card-product card-all-check d-flex justify-content-between px-4 py-4 align-items-center shadow-sm gap-4"
-            style="width: 100%; background-color: white" id="card-product">
-            <div class="d-flex flex-column gap" style="width: 100%; height: 100%">
+        style="width: 100%; background-color: white" id="card-product">
+        <div class="d-flex flex-column" style="width: 100%; height: 100%">
                 <h5><strong>Alamat pengiriman</strong></h5>
-                <span><i class="bi bi-geo-alt"></i> {{ $defaultUserAdress->address }},
-                    {{ $user->phone_number }}</span>
+                <span class="mt-2"><strong>{{ $defaultUserAdress->recipient_name }}</strong> {{ $defaultUserAdress->phone_number }}</span>
+                <span><i class="bi bi-geo-alt"></i> {{ $defaultUserAdress->address }} - ({{ $defaultUserAdress->detail }})</span>
                 <div class="d-flex justify-content-end mt-2">
-                    <button id="checkout" class="btn rounded-0 bg-main-color text-white"
+                    <button id="checkout" class="btn rounded-0 bg-main-color text-white" data-bs-toggle="modal"
+                    data-bs-target="#modalAddress"
                         style="width: 20%;"><strong>ganti alamat</strong></button>
                 </div>
             </div>
@@ -42,10 +43,14 @@
                     </div>
                     @if (isset($productBuyNow->discount))
                         <div class="d-flex flex-column align-items-end">
-                            <span>{{ $count }} x Rp
+                            <span> 
+                                @if (isset($productBuyNow->discount))
+                                <i class="bi bi-info-circle-fill me-1" style="cursor: pointer" data-bs-toggle="tooltip" data-bs-title="harga setelah diskon"></i>
+                                @endif
+                                {{ $count }} x Rp
                                 {{ number_format($productBuyNow->price_after_dsicount, 2, ',', '.') }}</span>
                             <span><strong>
-                                    <h4>Rp {{ number_format($productBuyNow->price_after_dsicount, 2, ',', '.') }}
+                                    <h4>Rp {{ number_format($subTotal, 2, ',', '.') }}
                                     </h4>
                                 </strong></span>
                         </div>
@@ -54,7 +59,7 @@
                             <span>{{ $count }} x Rp
                                 {{ number_format($productBuyNow->price, 2, ',', '.') }}</span>
                             <span><strong>
-                                    <h4>Rp {{ number_format($totalPrice, 2, ',', '.') }}</h4>
+                                    <h4>Rp {{ number_format($subTotal, 2, ',', '.') }}</h4>
                                 </strong></span>
                         </div>
                     @endif
@@ -69,7 +74,7 @@
                             style="box-shadow: none; width: 100%; height: 50px;">
                     </div>
                 </div>
-                @livewire('NoteAndShippingMethod', ['product' => $productBuyNow, 'order' => $order, 'userCarts' => $usersCarts])
+                @livewire('NoteAndShippingMethod', ['product' => $productBuyNow, 'order' => $order, 'userCarts' => $usersCarts, 'productVoucher' => $productVoucher])
             </div>
         @else
             <div class="card-product card-all-check d-flex flex-column px-4 py-4 align-items-start shadow-sm gap-2"
@@ -98,7 +103,7 @@
                         @if (isset($product->discount))
                             <div class="d-flex flex-column align-items-end">
                                 <span>{{ $userCarts->qty }} x Rp
-                                    {{ number_format($product->price_after_discount, 2, ',', '.') }}</span>
+                                    {{ number_format($product->price_after_dsicount, 2, ',', '.') }}</span>
                                 <span><strong>
                                         <h4>Rp {{ number_format($userCarts->total_price_after_discount, 2, ',', '.') }}
                                         </h4>
@@ -146,10 +151,10 @@
                         @endif
                     </div>
                     <div class="d-flex flex-column align-items-start">
-                        <span><strong>Rp {{ number_format($subTotal, 2, ',', '.') }}</strong></span>
+                        <span class="ms-3"><strong>Rp {{ number_format($subTotal, 2, ',', '.') }}</strong></span>
                         <span><strong>+ Rp {{ number_format($costValue, 2, ',', '.') }}</strong></span>
                         @if (isset($voucherValue))
-                            <span><strong>- Rp {{ number_format($voucherValue, 2, ',', '.') }}</strong></span>
+                            <span class="ms-1"><strong>- Rp {{ number_format($voucherValue, 2, ',', '.') }}</strong></span>
                         @endif
                     </div>
                 </div>
@@ -160,6 +165,45 @@
                 </div>
                 <button id="checkout-payment" class="btn rounded-0 mt-3 bg-main-color text-white"
                     style="width: 100%;"><strong>Pay</strong></button>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" style="top: 10%" id="modalAddress" tabindex="-1"
+        aria-labelledby="modalAddressLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content rounded-0">
+                <span class="mt-4 mx-4" ><strong>Pilihan Alamat</strong></span>
+                <hr>
+                <div class="modal-body" >
+                    @foreach ($userAddresses as $address)
+                    <div class="d-flex justify-content-between align-items-center gap-2 mx-2">
+                    <div>
+                        <input wire:click="changeAddress('{{ $address->id }}')" {{ $address->is_default == true ? 'checked' : '' }}
+                        class="form-check-input me-1" type="radio" value="" id="checkbox-address" name="checkbox-address" data-bs-dismiss="modal" aria-label="Close">
+                    </div>
+                        <div class="d-flex flex-column justify-content-start align-items-start mt-1">
+                        <div class="d-flex justify-content-start align-items-center gap-2">
+                            <span><strong>{{ $address->recipient_name }}</strong></span>
+                            <span>{{ $address->phone_number }}</span>
+                        </div>
+                        <div>
+                            <span>{{ $address->address }} {{ $address->detail }}</span>
+                        </div>
+                        @if($address->is_default == true)
+                        <div>
+                            <span class="font-main-color px-1" style="border: 1px solid #6777ef">
+                                Utama
+                            </span>
+                        </div>
+                        @endif
+                    </div>
+                    <div>
+                        <span class="font-main-color">Ubah</span>
+                    </div>
+                </div>
+                <hr>
+                    @endforeach
+                </div>
             </div>
         </div>
     </div>

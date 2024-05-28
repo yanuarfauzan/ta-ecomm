@@ -19,6 +19,13 @@ class Counter extends Component
         $this->product = $product;
         $this->count = $this->userCart->qty;
         $this->user = $user;
+        if (isset($this->product->discount)) {
+            $discountProduct = $this->product->price * $this->product->discount / 100;
+            $this->userCart->update([
+                'total_price_after_discount' => ($this->product->price - $discountProduct) * $this->userCart->qty,
+                'total_discount' => $discountProduct * $this->userCart->qty
+            ]);
+        }
     }
 
     public function increase()
