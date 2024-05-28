@@ -3,9 +3,11 @@
 namespace Database\Factories;
 
 use App\Models\Product;
+use App\Models\Voucher;
 use App\Models\Category;
 use App\Models\Variation;
 use Illuminate\Support\Str;
+use App\Models\ProductVoucher;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -43,6 +45,15 @@ class ProductFactory extends Factory
                     'filepath_image' => fake()->image('storage/app/public/product_pictures', 400, 400, 'product', false),
                 ]);
             }
+            $voucher = Voucher::all();
+            ProductVoucher::create([
+                'product_id' => $product->id,
+                'voucher_id' => $voucher[0]->id
+            ]);
+            ProductVoucher::create([
+                'product_id' => $product->id,
+                'voucher_id' => $voucher[1]->id
+            ]);
             $category = Category::inRandomOrder()->first();
             $variations = Variation::inRandomOrder()->limit(2)->get();
             foreach ($variations as $variation) {

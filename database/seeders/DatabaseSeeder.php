@@ -9,6 +9,8 @@ use App\Models\Category;
 use App\Models\Variation;
 use App\Models\Notification;
 use Illuminate\Database\Seeder;
+use Database\Seeders\VoucherSeeder;
+use Database\Seeders\ProductAssessmentSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,12 +21,18 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserSeeder::class,
+            ProvinciesAndCitiesSeeder::class,
+            VoucherSeeder::class
         ]);
         
         User::factory()->count(1)->create();
         Category::factory()->count(14)->create();
         Variation::factory()->count(10)->create();
         Product::factory()->count(16)->create();
+
+        $this->call([
+            ProductAssessmentSeeder::class,
+        ]);
 
         // Notification::create([
         //     'content' => 'Selamat Datang!'

@@ -103,8 +103,8 @@
 }
 
 .review-container {
-    max-height: 500px; /* Atur ketinggian maksimum container */
-    overflow-y: auto; /* Aktifkan scrolling vertikal jika konten melebihi ketinggian maksimum */
+    max-height: 640px; /* Atur ketinggian maksimum container */
+    overflow-y: scroll; /* Aktifkan scrolling vertikal jika konten melebihi ketinggian maksimum */
 }
 
 //* Style untuk label saat checkbox tidak dicentang */

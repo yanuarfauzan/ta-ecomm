@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('voucher', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name')->nullable();
+            $table->enum('type', ['free ongkir', 'discount'])->nullable();
             $table->string('voucher_icon')->nullable();
             $table->string('voucher_code')->nullable();
             $table->string('desc')->nullable();

@@ -164,9 +164,9 @@ class UserController extends Controller
             $percentOneStars = number_format(($oneStarsCount / $totalReviews) * 100, 2);
 
             // Average rating calculation with 2 decimal places
-            $acumulatedRating = round($product->productAssessment()->avg('rating'), 2);
+            $acumulatedRating = round($product->productAssessment()->avg('rating'), 1);
             // Percentage of positive reviews to total reviews with 2 decimal places
-            $acumulatedInPercentRating = round(($positiveReviews / $totalReviews) * 100, 2);
+            $acumulatedInPercentRating = round(($positiveReviews / $totalReviews) * 100);
 
             $totalRating = $product->productAssessment()->sum('rating');
         }
@@ -237,6 +237,7 @@ class UserController extends Controller
                 'hasProduct.pickedVariation',
                 'hasProduct.pickedVariationOption',
                 'hasProduct.variation',
+                'hasProduct.voucher',
                 'hasProduct.variation.variationOption'
             )
             ->get();
@@ -267,7 +268,15 @@ class UserController extends Controller
                 'total_price' => $totalAllPrice,
             ]);
         }
-        return view('user.order', compact('usersCarts', 'user', 'defaultUserAdress', 'order'));
+        
+        $productVoucher = $usersCarts->map(function ($userCart) {
+            $product = $userCart->hasProduct->first();
+            if ($product && $product->voucher()->exists()) {
+                return $product->voucher()->get();
+            }
+            return collect();  // Return empty collection if no voucher exists
+        })->filter()->flatten();
+        return view('user.order', compact('usersCarts', 'user', 'defaultUserAdress', 'order', 'productVoucher'));
     }
     public function buyNow(Request $request)
     {
