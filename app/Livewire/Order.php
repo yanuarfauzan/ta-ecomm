@@ -73,7 +73,7 @@ class Order extends Component
         $pickedUserAddress = $this->userAddresses->where('id', $addressId)->first();
         $this->isAddressChanged = true;
         $this->defaultUserAdress = $pickedUserAddress;
-        $this->dispatch('changeAddressForCost', pickedUserAddress: $pickedAddress);
+        $this->dispatch('changeAddressForCost', pickedUserAddress: $pickedUserAddress);
     }
     public function updatedNote($propertyName)
     {

@@ -47,10 +47,12 @@ class ProductFactory extends Factory
             }
             $voucher = Voucher::all();
             ProductVoucher::create([
+                'id' => Str::uuid(36),
                 'product_id' => $product->id,
                 'voucher_id' => $voucher[0]->id
             ]);
             ProductVoucher::create([
+                'id' => Str::uuid(36),
                 'product_id' => $product->id,
                 'voucher_id' => $voucher[1]->id
             ]);
