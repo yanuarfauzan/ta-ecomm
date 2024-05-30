@@ -24,6 +24,7 @@ class NoteAndShippingMethod extends Component
     public $totalWeight;
     public $voucherApplied;
     public $pickedUserAddress;
+    public $service;
     public $isVoucherApplied = false;
     public $listeners = ['changeAddressForCost'];
     public function mount($product, $order, $userCarts, $productVoucher)
@@ -42,7 +43,15 @@ class NoteAndShippingMethod extends Component
         $this->product = $product;
         $this->productVoucher = $productVoucher;
         $this->user = auth()->user();
-        $this->showCost('jne');
+        $shipping = $this->order->shipping()->first();
+        if ($shipping) {
+            $courier = $shipping->provider_code;
+            $this->service = $shipping->service;
+            $this->showCost($courier);
+            $this->service = '';
+        } else {
+            $this->showCost('jne');
+        }
     }
 
     public function changeAddressForCost($pickedUserAddress)
@@ -58,12 +67,8 @@ class NoteAndShippingMethod extends Component
     }
     public function showCost($courier)
     {
-        $service = '';
-        $shipping = $this->order->shipping()->first();
-        if ($shipping) {
-            $courier = $shipping->provider_code;
-            $service = $shipping->service;
-        } else {
+        $service = $this->service;
+        if ($service == '') {
             switch ($courier) {
                 case 'jne':
                     $service = 'OKE';
@@ -122,7 +127,7 @@ class NoteAndShippingMethod extends Component
                 }
             }
             $this->costs = $costResults;
-
+            // dd($this->costs);
             $this->dispatch('addCostValueToTotalPrice', costValue: $this->costValue);
         } else {
             $this->costs = null;

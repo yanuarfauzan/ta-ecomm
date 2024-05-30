@@ -3,21 +3,24 @@
 namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
-use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Queue\SerializesModels;
 
-class RegisteredNotifEvent implements ShouldBroadcastNow
+class PaymentSuccessEvent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $message = 'Hello World';
+    public $userId;
     /**
      * Create a new event instance.
      */
-    public function __construct()
+    public function __construct($userId)
     {
+        $this->userId = $userId;
     }
 
     /**
@@ -28,7 +31,7 @@ class RegisteredNotifEvent implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [
-            new Channel('e-commerce'),
+            new PrivateChannel('payment-success-' . $this->userId),
         ];
     }
 }

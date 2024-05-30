@@ -34,9 +34,9 @@
                 style="padding-top: 12px; padding-bottom: 12px; width: 50%;">opsi pengiriman: </span>
             <select wire:ignore class="form-select form-select-lg rounded-0" aria-label="Large select example"
                 style="width: 50%" wire:change="showCost($event.target.value)">
-                <option value="jne">JNE</option>
-                <option value="pos">POS</option>
-                <option value="tiki">TIKI</option>
+                <option value="jne" {{ $courier == 'jne' ? 'selected' : '' }}>JNE</option>
+                <option value="pos" {{ $courier == 'pos' ? 'selected' : '' }}>POS</option>
+                <option value="tiki" {{ $courier == 'tiki' ? 'selected' : '' }}>TIKI</option>
             </select>
         </div>
     </div>

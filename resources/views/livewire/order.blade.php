@@ -6,15 +6,16 @@
             <span class="d-inline-block" style="width: 33%;"><strong>Order list</strong></span>
         </div>
         <div class="card-product card-all-check d-flex justify-content-between px-4 py-4 align-items-center shadow-sm gap-4"
-        style="width: 100%; background-color: white" id="card-product">
-        <div class="d-flex flex-column" style="width: 100%; height: 100%">
+            style="width: 100%; background-color: white" id="card-product">
+            <div class="d-flex flex-column" style="width: 100%; height: 100%">
                 <h5><strong>Alamat pengiriman</strong></h5>
-                <span class="mt-2"><strong>{{ $defaultUserAdress->recipient_name }}</strong> {{ $defaultUserAdress->phone_number }}</span>
-                <span><i class="bi bi-geo-alt"></i> {{ $defaultUserAdress->address }} - ({{ $defaultUserAdress->detail }})</span>
+                <span class="mt-2"><strong>{{ $defaultUserAdress->recipient_name }}</strong>
+                    {{ $defaultUserAdress->phone_number }}</span>
+                <span><i class="bi bi-geo-alt"></i> {{ $defaultUserAdress->address }} -
+                    ({{ $defaultUserAdress->detail }})</span>
                 <div class="d-flex justify-content-end mt-2">
                     <button id="checkout" class="btn rounded-0 bg-main-color text-white" data-bs-toggle="modal"
-                    data-bs-target="#modalAddress"
-                        style="width: 20%;"><strong>ganti alamat</strong></button>
+                        data-bs-target="#modalAddress" style="width: 20%;"><strong>ganti alamat</strong></button>
                 </div>
             </div>
         </div>
@@ -32,8 +33,10 @@
                     </div>
                     <div class="d-flex justify-content-start align-items-center gap-2 variation-container">
                         @foreach ($variationBuyNow as $variationOption)
-                            <img src="{{ Storage::url('public/product_pictures/' . $variationOption->productImage->filepath_image) }}"
-                                alt="" class="variation-image">
+                            @if (isset($variationOption->productImage->filepath_image))
+                                <img src="{{ Storage::url('public/product_pictures/' . $variationOption->productImage->filepath_image) }}"
+                                    alt="" class="variation-image">
+                            @endif
                         @endforeach
                         <h4 class="variation-options">
                             @foreach ($variationBuyNow as $variationOption)
@@ -43,12 +46,14 @@
                     </div>
                     @if (isset($productBuyNow->discount))
                         <div class="d-flex flex-column align-items-end">
-                            <span> 
+                            <span>
                                 @if (isset($productBuyNow->discount))
-                                <i class="bi bi-info-circle-fill me-1" style="cursor: pointer" data-bs-toggle="tooltip" data-bs-title="harga setelah diskon"></i>
+                                    <i class="bi bi-info-circle-fill me-1" style="cursor: pointer"
+                                        data-bs-toggle="tooltip" data-bs-title="harga setelah diskon"></i>
                                 @endif
                                 {{ $count }} x Rp
-                                {{ number_format($productBuyNow->price_after_dsicount, 2, ',', '.') }}</span>
+                                {{ number_format($productBuyNow->price_after_dsicount, 2, ',', '.') }}
+                            </span>
                             <span><strong>
                                     <h4>Rp {{ number_format($subTotal, 2, ',', '.') }}
                                     </h4>
@@ -147,14 +152,15 @@
                         <span><strong>Subtotal</strong></span>
                         <span><strong>Ongkos kirim</strong></span>
                         @if (isset($voucherValue))
-                        <span><strong>Voucher</strong></span>
+                            <span><strong>Voucher</strong></span>
                         @endif
                     </div>
                     <div class="d-flex flex-column align-items-start">
                         <span class="ms-3"><strong>Rp {{ number_format($subTotal, 2, ',', '.') }}</strong></span>
                         <span><strong>+ Rp {{ number_format($costValue, 2, ',', '.') }}</strong></span>
                         @if (isset($voucherValue))
-                            <span class="ms-1"><strong>- Rp {{ number_format($voucherValue, 2, ',', '.') }}</strong></span>
+                            <span class="ms-1"><strong>- Rp
+                                    {{ number_format($voucherValue, 2, ',', '.') }}</strong></span>
                         @endif
                     </div>
                 </div>
@@ -168,45 +174,136 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" style="top: 10%" id="modalAddress" tabindex="-1"
+    <div wire:ignore.self class="modal fade" style="top: 10%" id="modalAddress" tabindex="-1"
         aria-labelledby="modalAddressLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content rounded-0">
-                <span class="mt-4 mx-4" ><strong>Pilihan Alamat</strong></span>
+                <span class="mt-4 mx-4"><strong>Pilihan Alamat</strong></span>
                 <hr>
-                <div class="modal-body" >
+                <div class="modal-body">
                     @foreach ($userAddresses as $address)
-                    <div class="d-flex justify-content-between align-items-center gap-2 mx-2">
-                    <div>
-                        <input wire:click="changeAddress('{{ $address->id }}')" {{ $address->is_default == true ? 'checked' : '' }}
-                        class="form-check-input me-1" type="radio" value="" id="checkbox-address" name="checkbox-address" data-bs-dismiss="modal" aria-label="Close">
-                    </div>
-                        <div class="d-flex flex-column justify-content-start align-items-start mt-1">
-                        <div class="d-flex justify-content-start align-items-center gap-2">
-                            <span><strong>{{ $address->recipient_name }}</strong></span>
-                            <span>{{ $address->phone_number }}</span>
+                        <div class="d-flex justify-content-between align-items-center gap-2 mx-2">
+                            <div>
+                                <input wire:click="changeAddress('{{ $address->id }}')"
+                                    {{ $address->is_default == true ? 'checked' : '' }} class="form-check-input me-1"
+                                    type="radio" value="" id="checkbox-address" name="checkbox-address"
+                                    data-bs-dismiss="modal" aria-label="Close">
+                            </div>
+                            <div class="d-flex flex-column justify-content-start align-items-start mt-1">
+                                <div class="d-flex justify-content-start align-items-center gap-2">
+                                    <span><strong>{{ $address->recipient_name }}</strong></span>
+                                    <span>{{ $address->phone_number }}</span>
+                                </div>
+                                <div>
+                                    <span>{{ $address->address }} {{ $address->detail }}</span>
+                                </div>
+                                @if ($address->is_default == true)
+                                    <div>
+                                        <span class="font-main-color px-1" style="border: 1px solid #6777ef">
+                                            Utama
+                                        </span>
+                                    </div>
+                                @endif
+                            </div>
+                            <div>
+                                <button class="bg-main-color border-0 text-white"
+                                    wire:click="editAddress('{{ $address->id }}')" data-bs-toggle="modal"
+                                    data-bs-target="#changeAddress-{{ $address->id }}">Ubah</button>
+                            </div>
                         </div>
-                        <div>
-                            <span>{{ $address->address }} {{ $address->detail }}</span>
-                        </div>
-                        @if($address->is_default == true)
-                        <div>
-                            <span class="font-main-color px-1" style="border: 1px solid #6777ef">
-                                Utama
-                            </span>
-                        </div>
-                        @endif
-                    </div>
-                    <div>
-                        <span class="font-main-color">Ubah</span>
-                    </div>
-                </div>
-                <hr>
+                        <hr>
                     @endforeach
                 </div>
             </div>
         </div>
     </div>
+    @foreach ($userAddresses as $address)
+        <div wire:ignore.self class="modal fade" id="changeAddress-{{ $address->id }}" tabindex="-1"
+            aria-labelledby="changeAddress" aria-hidden="true" wire:key="modal-{{ $address->id }}">
+            <div class="modal-dialog">
+                <div class="modal-content rounded-0">
+                    <span class="mt-4 mx-4"><strong>Ubah Alamat</strong></span>
+                    <hr>
+                    <div class="modal-body">
+                        <form wire:submit.prevent="updateAddress('{{ $address->id }}')">
+                            <div class="mt-2">
+                                <label for="recepient_name">Nama penerima</label>
+                                <input type="text" class="form-control rounded-0 mt-2" id="username"
+                                    name="recepient_name" wire:model="recipient_name"
+                                    style="box-shadow: none; width: 100%; height: 50px;" required>
+                                @error('recipientName')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div class="">
+                                <label for="address">Alamat lengkap</label>
+                                <textarea type="text" class="form-control rounded-0 mt-2" id="address" name="address" wire:model="address"
+                                    style="box-shadow: none; width: 100%; height: 50px;" required></textarea>
+                            </div>
+                            <div class="mt-2">
+                                <label for="province">Provinsi</label>
+                                <select class="form-select form-select-lg rounded-0" aria-label="Large select example"
+                                    id="province" wire:model="province" name="province" required>
+                                    <option value="">pilih provinsi</option>
+                                    @foreach ($provincies as $key => $value)
+                                        <option value="{{ $value }}" wire:key="province-{{ $key }}"
+                                            {{ $province == $address->province ? 'selected' : '' }}>
+                                            {{ $value }}</option>
+                                    @endforeach
+                                </select>
+                                @error('province')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="mt-2">
+                                <label for="province">Kota</label>
+                                <select class="form-select form-select-lg rounded-0" aria-label="Large select example"
+                                    id="city" wire:model="city" name="city" required>
+                                    <option value="">pilih kota</option>
+                                    @foreach ($cities as $key => $value)
+                                        <option value="{{ $value }}" wire:key="city-{{ $key }}"
+                                            {{ $city == $address->city ? 'selected' : '' }}>{{ $value }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('city')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="mt-2">
+                                <label for="detail">Detail</label>
+                                <input type="text" class="form-control rounded-0 mt-2" id="username"
+                                    name="detail" wire:model="detail"
+                                    style="box-shadow: none; width: 100%; height: 50px;" required>
+                                @error('detail')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="mt-2">
+                                <label for="postal_code">Kode pos</label>
+                                <input type="text" class="form-control rounded-0 mt-2" id="username"
+                                    name="postal_code" wire:model="postal_code"
+                                    style="box-shadow: none; width: 100%; height: 50px;" required>
+                                @error('postal_code')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="d-flex justify-content-end align-items-center gap-2 mt-4 me-4 mb-4">
+                                <button class="btn rounded-0 bg-danger text-white" style="width: 20%;"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalAddress"><strong>kembali</strong></button>
+                                <button type="submit" id="checkout" class="btn rounded-0 bg-main-color text-white"
+                                    style="width: 20%;" data-bs-toggle="modal"
+                                    data-bs-target="#modalAddress"><strong>ubah</strong></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
+</div>
 </div>
 <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}"
     data-navigate-track></script>
@@ -214,19 +311,15 @@
     document.addEventListener('livewire:init', function() {
         Livewire.on('snapTokenGenerated', snapToken => {
             document.getElementById('checkout-payment').onclick = function() {
-                console.log('snap');
                 snap.pay(snapToken[0].snapToken, {
                     onSuccess: function(result) {
-                        document.getElementById('result-json').innerHTML += JSON
-                            .stringify(result, null, 2);
+                        window.location.href = "{{ route('user-home') }}"
                     },
                     onPending: function(result) {
-                        document.getElementById('result-json').innerHTML += JSON
-                            .stringify(result, null, 2);
+                        console.log('onPending', result);
                     },
                     onError: function(result) {
-                        document.getElementById('result-json').innerHTML += JSON
-                            .stringify(result, null, 2);
+                        console.log('onError', result);
                     }
                 });
             };
