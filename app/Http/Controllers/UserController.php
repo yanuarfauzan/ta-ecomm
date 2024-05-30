@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\Cart;
 use App\Models\User;
 use App\Models\Order;
@@ -11,6 +12,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\VariationOption;
 use Illuminate\Support\Facades\DB;
+use App\Events\PaymentSuccessEvent;
 use App\Models\ProvinciesAndCities;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -163,7 +165,6 @@ class UserController extends Controller
             $oneStarsCount = $product->productAssessment()->where('rating', 1)->count();
             $percentOneStars = number_format(($oneStarsCount / $totalReviews) * 100, 2);
 
-            // Average rating calculation with 2 decimal places
             $acumulatedRating = round($product->productAssessment()->avg('rating'), 1);
             // Percentage of positive reviews to total reviews with 2 decimal places
             $acumulatedInPercentRating = round(($positiveReviews / $totalReviews) * 100);
@@ -247,7 +248,7 @@ class UserController extends Controller
         })->flatten();
         $cartProductIds = $cartProductIds->unique();
         $existOrders = Order::whereHas('cartProduct', function ($query) use ($cartProductIds) {
-            $query->whereIn('id', $cartProductIds);
+            $query->whereIn('id', $cartProductIds)->where('order_status', 'unpaid');
         })->get();
         if (!count($existOrders) == 0) {
             $order = $existOrders->first();
@@ -288,7 +289,7 @@ class UserController extends Controller
         $defaultUserAdress = $this->user->userAddresses->where('is_default', true)->first();
         $productBuyNow = Product::findOrFail($request->productId);
 
-        $order = $user->order()->where('product_id', $request->productId)->first();
+        $order = $user->order()->where('product_id', $request->productId)->where('order_status', 'unpaid')->first();
         if (!isset($order)) {
             $order = $user->order()->create([
                 'product_id' => $request->productId,
@@ -296,7 +297,7 @@ class UserController extends Controller
                 'order_date' => date('Ymd'),
                 'qty' => $countBuyNow,
                 'total_price' => isset($productBuyNow->discount) ? $countBuyNow * $productBuyNow->price_after_dsicount : $countBuyNow * $productBuyNow->price,
-                'order_status' => 'pending'
+                'order_status' => 'unpaid'
             ]);
         } else {
             if ($countBuyNow != $order->qty) {
@@ -320,8 +321,24 @@ class UserController extends Controller
         $randomNumber = rand(10000, 99999);
         return $prefix . $date . '-' . $randomNumber;
     }
-    public function callBackPaymentGateway(Request $request)
+
+    public function callbackPayment(Request $request)
     {
-        Log::info('Callback Duitku received:', $request->all());
+        try {
+        $order = Order::where('order_number', $request->order_id)->first();
+        $user = $order->user()->first();
+        $serverKey = config('midtrans.serverKey');
+        $hashed = hash('sha512', $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
+        if ($hashed == $request->signature_key) {
+            if($request->transaction_status == 'settlement' || $request->transaction_status == 'capture') {
+                $order->update(['order_status' => 'paid']);
+                event(new PaymentSuccessEvent($user->id));
+            }        
+        } else {
+            Log::error('masuk else');
+        }
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+        }
     }
 }

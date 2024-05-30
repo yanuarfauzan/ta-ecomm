@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\ProvinciesAndCities;
 use App\Models\VariationOption;
 use Livewire\Component;
 
@@ -24,7 +25,32 @@ class Order extends Component
     public $prevVoucherValue;
     public $voucherValue;
     public $userAddresses;
+    public $provincies;
+    public $cities;
     public $isAddressChanged = false;
+    public $recipient_name;
+    public $address;
+    public $province;
+    public $city;
+    public $postal_code;
+    public $detail;
+    protected $rules = [
+        'address' => 'required',
+        'province' => 'required',
+        'city' => 'required',
+        'postal_code' => 'required',
+        'detail' => 'required',
+        'recipient_name' => 'required',
+    ];
+    
+    protected $messages = [
+        'address.required' => 'Alamat tidak boleh kosong',
+        'postal_code.required' => 'Kode pos tidak boleh kosong',
+        'province.required' => 'Provinsi tidak boleh kosong',
+        'city.required' => 'Kota tidak boleh kosong',
+        'detail.required' => 'Detail alamat tidak boleh kosong',
+        'vrecipient_name.required' => 'Nama penerima tidak boleh kosong',
+    ];
     public $listeners = ['addCostValueToTotalPrice', 'addVoucherToTotalPrice'];
     public function mount($usersCarts, $productBuyNow, $user, $defaultUserAdress, $order, $countBuyNow, $variationBuyNow, $productVoucher, $userAddresses)
     {
@@ -51,6 +77,9 @@ class Order extends Component
         $this->productVoucher = $productVoucher;
         $this->userAddresses = $userAddresses;
 
+        $this->provincies = collect(ProvinciesAndCities::pluck('province')->unique());
+        $this->cities = collect(ProvinciesAndCities::pluck('city_name')->unique());
+
         if ($productBuyNow != []) {
             $this->subTotal = $order->total_price;
         } else {
@@ -75,6 +104,24 @@ class Order extends Component
         $this->defaultUserAdress = $pickedUserAddress;
         $this->dispatch('changeAddressForCost', pickedUserAddress: $pickedUserAddress);
     }
+    public function editAddress($addressId)
+    {
+        $editAddress = $this->userAddresses->where('id', $addressId)->first();
+        $this->address = $editAddress->address;
+        $this->recipient_name = $editAddress->recipient_name;
+        $this->province = $editAddress->province;
+        $this->city = $editAddress->city;
+        $this->postal_code = $editAddress->postal_code;
+        $this->detail = $editAddress->detail;
+        
+    }
+    public function updateAddress($addressId)
+    {
+        $validatedData = $this->validate();
+        $updateAddress = $this->userAddresses->where('id', $addressId)->first();
+        $updateAddress->update($validatedData);
+        $this->reset(['address', 'recipient_name', 'province', 'city', 'postal_code', 'detail']);
+    }   
     public function updatedNote($propertyName)
     {
         $this->order->update([
