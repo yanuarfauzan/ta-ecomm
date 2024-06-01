@@ -41,7 +41,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="product_image">Gambar Produk</label>
-                    <input type="file" class="form-control-file" id="product_image" name="product_image">
+                    <input type="file" class="form-control-file" id="product_image" name="images[]" multiple>
                 </div>
                 <div class="mb-3">
                     <label for="price" class="form-label">Harga Produk</label>
@@ -61,7 +61,16 @@
                 </div>
                 <div class="mb-3">
                     <label for="dimensions" class="form-label">Dimensi Produk (cm)</label>
-                    <input type="text" class="form-control" id="dimensions" name="dimensions" required>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="length" name="length" placeholder="Panjang"
+                            required>
+                        <span class="input-group-text">x</span>
+                        <input type="text" class="form-control" id="width" name="width" placeholder="Lebar"
+                            required>
+                        <span class="input-group-text">x</span>
+                        <input type="text" class="form-control" id="height" name="height" placeholder="Tinggi"
+                            required>
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>

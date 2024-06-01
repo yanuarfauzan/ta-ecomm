@@ -33,7 +33,10 @@
                 </div>
                 <div class="mb-3">
                     <label for="icon">Icon</label>
-                    <input type="file" class="form-control-file" id="icon" name="icon">
+                    <input type="file" class="form-control-file @error('icon') is-invalid @enderror" id="icon" name="icon">
+                    @error('icon')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>

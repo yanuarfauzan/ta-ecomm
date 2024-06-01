@@ -39,19 +39,19 @@ class VoucherController extends Controller
             'desc' => 'nullable|string',
             'requirement' => 'nullable|string',
             'discount_value' => 'required|numeric|min:0',
-            'expired_at' => 'required|date',
-            'is_active' => 'required|boolean',
+            'expired_at' => 'required|date|after_or_equal:today',
         ]);
 
         $voucherIconPath = null;
         if ($request->hasFile('voucher_icon')) {
             $voucherIcon = $request->file('voucher_icon');
             $voucherIconName = time() . '.' . $voucherIcon->getClientOriginalExtension();
-            $voucherIcon->move(public_path('voucher_icons'), $voucherIconName);
-            $voucherIconPath = 'voucher_icons/' . $voucherIconName;
+            $voucherIconPath = $voucherIcon->storeAs('public/icon-voucher', $voucherIconName);
+            // $voucherIcon->move(public_path('voucher_icons'), $voucherIconName);
+            $voucherIconPath = 'icon-voucher/' . $voucherIconName;
         }
 
-        $is_active = $request->is_active === '1' ? true : false;
+        $is_active = $request->expired_at > now() ? 1 : 0;
 
         $voucher = new Voucher();
         $voucher->id = Uuid::uuid4()->toString();

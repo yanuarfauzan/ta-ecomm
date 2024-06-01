@@ -20,7 +20,7 @@ class Voucher extends Model
         'requirement',
         'discount_value',
         'expired_at',
-        'expired_at'
+        'is_active'
     ];
 
     public function getIncrement()

@@ -38,12 +38,12 @@
                             <th scope="col">No.</th>
                             <th scope="col">Username</th>
                             <th scope="col">Email</th>
-                            <th scope="col">Phone Number</th>
+                            <th scope="col">No. Telepon</th>
                             <th scope="col">Gender</th>
-                            <th scope="col">Birthdate</th>
+                            <th scope="col">Tanggal Lahir</th>
+                            <th scope="col">Foto Profile</th>
                             <th scope="col">Role</th>
-                            <th scope="col">profil</th>
-                            <th scope="col">Address</th>
+                            <th scope="col">Alamat</th>
                             <th scope="col">Aksi</th>
                         </tr>
                     </thead>
@@ -65,7 +65,6 @@
                                     @endif
                                 </td>
                                 <td>{{ $user->birtdate }}</td>
-                                <td>{{ $user->role }}</td>
                                 <td>
                                     @if($user->profile_image)
                                         <img src="{{ asset('storage/' . $user->profile_image) }}" alt="Profile Image" width="50" height="50">
@@ -73,6 +72,7 @@
                                         No Image
                                     @endif
                                 </td>
+                                <td>{{ $user->role }}</td>
                                 <td>
                                     <button type="button" class="btn btn-info" data-toggle="modal"
                                         data-target="#addressModal{{ $user->id }}">
@@ -113,8 +113,8 @@
                         </button> --}}
                     </div>
                     <div class="modal-body">
-                        @if (isset($user->usersAddress) && $user->usersAddress->isNotEmpty())
-                            @foreach ($user->usersAddress as $address)
+                        @if (isset($user->userAddresses) && $user->userAddresses->isNotEmpty())
+                            @foreach ($user->userAddresses as $address)
                                 <h6>Address {{ $loop->iteration }}</h6>
                                 <p><strong>Detail:</strong> {{ $address->detail }}</p>
                                 <p><strong>Postal Code:</strong> {{ $address->postal_code }}</p>

@@ -36,7 +36,7 @@
                     <thead>
                         <tr>
                             <th scope="col">No.</th>
-                            <th scope="col">Banner Home</th>
+                            <th scope="col">Banner Image</th>
                             <th scope="col">Deskripsi</th>
                             <th scope="col">Aksi</th>
                         </tr>
@@ -49,8 +49,11 @@
                             <tr>
                                 <td>{{ $no++ }}</td>
                                 <td>
-                                    <img src="{{ Storage::url($banner->banner_image) }}" alt="{{ $banner->desc }}"
-                                        style="max-height: 100px;">
+                                    @if ($banner->banner_image)
+                                        <img src="{{ Storage::url($banner->banner_image) }}" alt="{{ $banner->desc }}" style="max-height: 100px;">
+                                    @else
+                                        No Image
+                                    @endif
                                 </td>
                                 <td>{{ $banner->desc }}</td>
                                 <td>

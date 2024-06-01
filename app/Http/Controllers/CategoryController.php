@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
-use Illuminate\Auth\Events\Validated;
+use App\Rules\ImageResolution;
 use Illuminate\Http\Request;
+use Illuminate\Auth\Events\Validated;
+use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
@@ -32,7 +34,12 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'icon' => 'image|mimes:jpeg,png,jpg,gif|max:5120'
+            'icon' => [
+                'image',
+                'mimes:jpeg,png,jpg,gif',
+                'max:5120',
+                new ImageResolution(1080, 1080)
+            ]
         ]);
 
         $iconPath = null;
@@ -41,7 +48,6 @@ class CategoryController extends Controller
             $icon = $request->file('icon');
             $iconName = time() . '.' . $icon->getClientOriginalExtension();
             $iconPath = $icon->storeAs('public/icon-category', $iconName);
-            // $icon->move(public_path('icon-category'), $iconName);
             $iconPath = 'icon-category/' . $iconName;
         }
 
@@ -77,24 +83,33 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'icon' => 'image|mimes:jpeg,png,jpg,gif|max:5120'
+            'icon' => [
+                'image',
+                'mimes:jpeg,png,jpg,gif',
+                'max:5120',
+                new ImageResolution(1080, 1080)
+            ]
         ]);
 
         if ($request->hasFile('icon')) {
+            if ($category->icon && Storage::exists($category->icon)) {
+                Storage::delete($category->icon);
+            }
+    
             $icon = $request->file('icon');
             $iconName = time() . '.' . $icon->getClientOriginalExtension();
-            $icon->move(public_path('icon-category'), $iconName);
-            $iconPath = 'icon-category/' . $iconName;
-
+            $iconPath = $icon->storeAs('public/icon-category', $iconName);
+    
             $category->update([
                 'name' => $request->name,
-                'icon' => $iconPath
+                'icon' => 'icon-category/' . $iconName
             ]);
         } else {
             $category->update([
                 'name' => $request->name,
             ]);
         }
+    
 
         return redirect('/admin/list-category')->with('success', 'Kategori Berhasil Diperbarui');
     }

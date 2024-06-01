@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
 use App\Models\Product;
+use App\Models\Category;
+use Illuminate\Support\Str;
+use App\Models\ProductImage;
 use Illuminate\Http\Request;
+use App\Models\ProductAssessment;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -30,37 +34,59 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'SKU' => 'required|string|max:255',
-            'stock' => 'required',
-            'price' => 'required',
-            'desc' => 'required|string|max:255',
-            'discount' => 'required',
-            'weight' => 'required',
-            'dimensions' => 'required'
+            'SKU' => 'required|string|max:255|unique:product,SKU',
+            'stock' => 'required|integer',
+            'price' => 'required|integer',
+            'discount' => 'required|numeric|min:0|max:100',
+            'desc' => 'nullable|string',
+            'weight' => 'required|numeric',
+            'length' => 'required|numeric',
+            'width' => 'required|numeric',
+            'height' => 'required|numeric',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5120',
         ]);
 
-        $productImage_path = null;
+        // Hitung price_after_discount (diskon dalam persentase)
+        $price_after_discount = $validatedData['price'] * ((100 - $validatedData['discount']) / 100);
 
-        if ($request->hasFile('product_image')) {
-            $productImage = $request->file('product_image');
-            $productImage_name = time() . '.' . $productImage->getClientOriginalExtension();
-            $productImage->move(public_path('product_image'), $productImage_name);
-            $productImage_path = 'product_image/' . $productImage_name;
+        $dimensions = $validatedData['length'] . 'x' . $validatedData['width'] . 'x' . $validatedData['height'];
+
+        // Simpan produk
+        $product = new Product();
+        $product->name = $validatedData['name'];
+        $product->SKU = $validatedData['SKU'];
+        $product->stock = $validatedData['stock'];
+        $product->price = $validatedData['price'];
+        $product->price_after_discount = $price_after_discount;
+        $product->desc = $validatedData['desc'];
+        $product->discount = $validatedData['discount'];
+        $product->weight = $validatedData['weight'];
+        $product->dimensions = $dimensions;
+
+        // Simpan produk ke database
+        $product->save();
+
+        // Hitung dan simpan rating
+        $averageRating = ProductAssessment::where('product_id', $product->id)->avg('rating');
+        $product->rate = $averageRating ?? 0;
+        $product->save();
+
+        // Simpan gambar
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                // Simpan gambar ke folder yang ditentukan
+                $imagePath = $image->store('public/product-images');
+
+                // Buat record baru untuk gambar produk
+                $productImage = new ProductImage();
+                $productImage->id = (string) Str::uuid();
+                $productImage->product_id = $product->id;
+                $productImage->filepath_image = Storage::url($imagePath);
+                $productImage->save();
+            }
         }
-
-        Product::create([
-            'name' => $request->name,
-            'SKU' => $request->SKU,
-            'stock' => $request->stock,
-            'product_image' => $productImage_path,
-            'price' => $request->price,
-            'desc' => $request->desc,
-            'discount' => $request->discount,
-            'weight' => $request->weight,
-            'dimensions' => $request->dimensions,
-        ]);
 
         return redirect('/admin/list-product')->with('success', 'Produk Berhasil Dibuat');
     }
@@ -85,48 +111,67 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'required',
-            'SKU' => 'required',
-            'stock' => 'required',
-            'product_image' => 'image|mimes:jpeg,png,jpg,gif|max:5120',
-            'price' => 'required',
-            'desc' => 'required',
-            'discount' => 'required',
-            'weight' => 'required',
-            'dimensions' => 'required',
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'SKU' => 'required|string|max:255|unique:product,SKU,' . $id,
+            'stock' => 'required|integer',
+            'price' => 'required|integer',
+            'discount' => 'required|numeric|min:0|max:100',
+            'desc' => 'nullable|string',
+            'weight' => 'required|numeric',
+            'length' => 'required|numeric',
+            'width' => 'required|numeric',
+            'height' => 'required|numeric',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        if ($request->hasFile('product_image')) {
-            $productImage = $request->file('product_image');
-            $productImage_name = time() . '.' . $productImage->getClientOriginalExtension();
-            $productImage->move(public_path('product_image'), $productImage_name);
-            $productImage_path = 'product_image/' . $productImage_name;
+        // Hitung price_after_discount (diskon dalam persentase)
+        $price_after_discount = $validatedData['price'] * ((100 - $validatedData['discount']) / 100);
 
-            $product->update([
-                'name' => $request->name,
-                'SKU' => $request->SKU,
-                'stock' => $request->stock,
-                'product_image' => $productImage_path,
-                'price' => $request->price,
-                'desc' => $request->desc,
-                'discount' => $request->discount,
-                'weight' => $request->weight,
-                'dimensions' => $request->dimensions,
-            ]);
-        } else {
-            $product->update([
-                'name' => $request->name,
-                'SKU' => $request->SKU,
-                'stock' => $request->stock,
-                'price' => $request->price,
-                'desc' => $request->desc,
-                'discount' => $request->discount,
-                'weight' => $request->weight,
-                'dimensions' => $request->dimensions,
-            ]);
+        // Gabungkan dimensi menjadi satu string
+        $dimensions = $validatedData['length'] . 'x' . $validatedData['width'] . 'x' . $validatedData['height'];
+
+        // Cari produk berdasarkan ID
+        $product = Product::findOrFail($id);
+
+        // Perbarui data produk
+        $product->name = $validatedData['name'];
+        $product->SKU = $validatedData['SKU'];
+        $product->stock = $validatedData['stock'];
+        $product->price = $validatedData['price'];
+        $product->price_after_discount = $price_after_discount;
+        $product->desc = $validatedData['desc'];
+        $product->discount = $validatedData['discount'];
+        $product->weight = $validatedData['weight'];
+        $product->dimensions = $dimensions;
+
+        // Simpan perubahan produk ke database
+        $product->save();
+
+        // Hitung dan simpan rating
+        $averageRating = ProductAssessment::where('product_id', $product->id)->avg('rating');
+        $product->rate = $averageRating ?? 0;
+        $product->save();
+
+        // Simpan gambar baru jika ada
+        if ($request->hasFile('images')) {
+            // Hapus gambar lama
+            ProductImage::where('product_id', $product->id)->delete();
+
+            // Simpan gambar baru
+            foreach ($request->file('images') as $image) {
+                // Simpan gambar ke folder yang ditentukan
+                $imagePath = $image->store('public/product-images');
+
+                // Buat record baru untuk gambar produk
+                $productImage = new ProductImage();
+                $productImage->id = (string) Str::uuid();
+                $productImage->product_id = $product->id;
+                $productImage->filepath_image = Storage::url($imagePath);
+                $productImage->save();
+            }
         }
 
         return redirect('/admin/list-product')->with('success', 'Produk Berhasil Diperbarui');

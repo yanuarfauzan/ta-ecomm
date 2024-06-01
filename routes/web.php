@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddressController;
 use Illuminate\Http\Request;
 use App\Http\Middleware\IsUser;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +26,7 @@ use App\Http\Controllers\BannerHomeController;
 |
 */
 
+Route::get('/operator', [AddressController::class, 'index']);
     //ROLE:ADMIN 
     # USERS + ALAMAT
     Route::get('/admin/list-users', [AdminUsersController::class, 'index'])->name('admin.list.users');

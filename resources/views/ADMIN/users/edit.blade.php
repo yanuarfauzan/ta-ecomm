@@ -14,7 +14,7 @@
             <h4>Edit User</h4>
         </div>
         <div class="card-body col">
-            <form action="{{ url('/admin/update-users/' . $user->id) }}" method="post">
+            <form action="{{ url('/admin/update-users/' . $user->id) }}" method="post" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="mb-3">
@@ -47,19 +47,18 @@
                     <input type="date" class="form-control" id="birtdate" name="birtdate" value="{{ $user->birtdate }}">
                 </div>
                 <div class="mb-3">
-                    <label for="profile_image" class="form-label">Profile Image</label>
-                    <input type="text" class="form-control" id="profile_image" name="profile_image"
-                        value="{{ $user->profile_image }}">
+                    <label for="profile_image">Profile Image</label>
+                    <input type="file" class="form-control-file" id="profile_image" name="profile_image">
                 </div>
                 <div class="mb-3">
                     <label for="role" class="form-label">Role</label>
-                    <select class="form-control" id="role" name="role">
+                    <select class="form-control" id="role" name="role" disabled>
                         <option value="user" {{ $user->role == 'user' ? 'selected' : '' }}>User</option>
                         <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
                         <option value="operator" {{ $user->role == 'operator' ? 'selected' : '' }}>Operator</option>
                     </select>
                 </div>
-                @foreach ($user->usersAddress as $index => $address)
+                @foreach ($user->userAddresses as $index => $address)
                     <h6>Address {{ $index + 1 }}</h6>
                     <input type="hidden" name="address[{{ $index }}][id]" value="{{ $address->id }}">
                     <div class="mb-3">

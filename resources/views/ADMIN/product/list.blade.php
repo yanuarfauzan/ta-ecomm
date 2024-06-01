@@ -89,7 +89,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="productDetailModalLabel{{ $produk->id }}">{{ $produk->name }}</h5>
+                        <h4 class="modal-title text-primary" id="productDetailModalLabel{{ $produk->id }}">{{ $produk->name }}</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -97,19 +97,44 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <img id="modalProductImage" src="{{ asset($produk->product_image) }}"
-                                    alt="{{ $produk->name }}" class="img-fluid">
+                                <div class="main-image">
+                                    @if ($produk->hasImages && $produk->hasImages->isNotEmpty())
+                                        <img id="mainProductImage{{ $produk->id }}"
+                                            src="{{ asset($produk->hasImages->first()->filepath_image) }}"
+                                            alt="{{ $produk->name }}" class="img-fluid">
+                                    @else
+                                        <img id="mainProductImage{{ $produk->id }}"
+                                            src="{{ asset('default-image.jpg') }}" alt="Default Image" class="img-fluid">
+                                    @endif
+                                </div>
+                                <div class="thumbnail-images mt-3">
+                                    @if ($produk->hasImages && $produk->hasImages->isNotEmpty())
+                                        @foreach ($produk->hasImages as $image)
+                                            <img src="{{ asset($image->filepath_image) }}" alt="{{ $produk->name }}"
+                                                class="img-thumbnail img-fluid small-image"
+                                                onclick="document.getElementById('mainProductImage{{ $produk->id }}').src='{{ asset($image->filepath_image) }}'">
+                                        @endforeach
+                                    @endif
+                                </div>
                             </div>
                             <div class="col-md-6">
-                                <h4 id="modalProductName"></h4>
-                                {{-- <p><strong>Nama Produk:</strong> <span id="modalProductName">{{ $produk->name }}</span></p> --}}
-                                <p><strong>Kode Produk:</strong> <span id="modalProductSKU"></span>{{ $produk->SKU }}</p>
-                                <p><strong>Stock:</strong> <span id="modalProductStock"></span>{{ $produk->stock }}</p>
-                                <p><strong>Price:</strong> Rp <span id="modalProductPrice"></span>{{ $produk->price }}</p>
-                                <p><strong>Description:</strong> <span id="modalProductDesc"></span>{{ $produk->desc }}</p>
-                                <p><strong>Discount:</strong> <span id="modalProductDiscount"></span>{{ $produk->discount }}%</p>
-                                <p><strong>Weight:</strong> <span id="modalProductWeight"></span>{{ $produk->weight }} Kg</p>
-                                <p><strong>Dimensions:</strong> <span id="modalProductDimensions"></span>{{ $produk->dimensions }} cm</p>
+                                {{-- <h4>{{ $produk->name }}</h4> --}}
+                                <p><strong>Kode Produk:</strong> {{ $produk->SKU }}</p>
+                                <p><strong>Discount:</strong> {{ $produk->discount }}%</p>
+                                @if ($produk->discount > 0)
+                                    <p><strong>Harga:</strong> <span class="original-price">Rp
+                                            {{ number_format($produk->price, 0, ',', '.') }}</span> <span
+                                            class="discount-price">Rp
+                                            {{ number_format($produk->price_after_discount, 0, ',', '.') }}</span></p>
+                                @else
+                                    <p><strong>Harga:</strong> Rp {{ number_format($produk->price, 0, ',', '.') }}</p>
+                                @endif
+                                {{-- <p><strong>Rate:</strong> {{ $produk->rate }}</p> --}}
+                                <p><strong>Rata-rata Rating:</strong> {{ number_format($produk->rate, 1) }}</p>
+                                <p><strong>Description:</strong> {{ $produk->desc }}</p>
+                                <p><strong>Stock:</strong> {{ $produk->stock }}</p>
+                                <p><strong>Weight:</strong> {{ $produk->weight }} Kg</p>
+                                <p><strong>Dimensions:</strong> {{ $produk->dimensions }} cm</p>
                             </div>
                         </div>
                     </div>
@@ -120,4 +145,43 @@
             </div>
         </div>
     @endforeach
+
+    <style>
+        .main-image img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .thumbnail-images {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+        }
+
+        .thumbnail-images img {
+            cursor: pointer;
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+        }
+
+        .modal-body .row {
+            display: flex;
+        }
+
+        .modal-body .row .col-md-6 {
+            flex: 0 0 50%;
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            margin-right: 3px;
+            color: red;
+        }
+
+        /* .discount-price {
+                color: green;
+            } */
+    </style>
 @endsection

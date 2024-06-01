@@ -25,10 +25,14 @@
                     <label for="icon">Icon</label>
                     @if ($category->icon)
                         <div class="mb-2">
-                            <img src="{{ asset($category->icon) }}" alt="Category Icon" style="max-width: 100px;">
+                            <img src="{{ Storage::url($category->icon) }}" alt="Category Icon" style="max-width: 100px;">
                         </div>
                     @endif
-                    <input type="file" class="form-control-file" id="icon" name="icon">
+                    <input type="file" class="form-control-file @error('icon') is-invalid @enderror" id="icon"
+                        name="icon">
+                    @error('icon')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
                 <button type="submit" class="btn btn-primary">Update</button>
             </form>
