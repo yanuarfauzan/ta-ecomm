@@ -15,7 +15,6 @@ return new class extends Migration {
             $table->uuid('product_id');
             $table->uuid('category_id');
             $table->uuid('variation_id');
-            $table->string('which_is_picked', 100)->nullable()->default('text');
             $table->timestamps();
             $table->foreign('product_id')->references('id')->on('product')->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('category')->onDelete('cascade');

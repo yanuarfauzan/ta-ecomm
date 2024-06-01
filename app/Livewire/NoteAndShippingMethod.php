@@ -5,7 +5,9 @@ namespace App\Livewire;
 use App\Models\User;
 use App\Models\Voucher;
 use Livewire\Component;
+use App\Models\Shipping;
 use App\Models\ProvinciesAndCities;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 
 
@@ -21,7 +23,10 @@ class NoteAndShippingMethod extends Component
     public $productVoucher;
     public $totalWeight;
     public $voucherApplied;
+    public $pickedUserAddress;
+    public $service;
     public $isVoucherApplied = false;
+    public $listeners = ['changeAddressForCost'];
     public function mount($product, $order, $userCarts, $productVoucher)
     {
         $totalWeight = 0;
@@ -38,10 +43,22 @@ class NoteAndShippingMethod extends Component
         $this->product = $product;
         $this->productVoucher = $productVoucher;
         $this->user = auth()->user();
-        $this->showCost('jne');
-        $this->dispatch('addCostValueToTotalPrice', costValue: $this->costValue);
+        $shipping = $this->order->shipping()->first();
+        if ($shipping) {
+            $courier = $shipping->provider_code;
+            $this->service = $shipping->service;
+            $this->showCost($courier);
+            $this->service = '';
+        } else {
+            $this->showCost('jne');
+        }
     }
 
+    public function changeAddressForCost($pickedUserAddress)
+    {
+        $this->pickedUserAddress = $pickedUserAddress;
+        $this->showCost('jne');
+    }
     public function useVoucher($type, $discountValue, $voucherId)
     {
         $this->voucherApplied = Voucher::findOrFail($voucherId);
@@ -50,25 +67,31 @@ class NoteAndShippingMethod extends Component
     }
     public function showCost($courier)
     {
-        $service = '';
-        switch ($courier) {
-            case 'jne':
-                $service = 'OKE';
-                break;
-            case 'pos':
-                $service = 'Pos Reguler';
-                break;
-            case 'tiki':
-                $service = 'ECO';
-                break;
-        }
-
+        $service = $this->service;
+        if ($service == '') {
+            switch ($courier) {
+                case 'jne':
+                    $service = 'OKE';
+                    break;
+                case 'pos':
+                    $service = 'Pos Reguler';
+                    break;
+                case 'tiki':
+                    $service = 'ECO';
+                    break;
+            }
+    }
         $this->courier = $courier;
 
         $operatorAddress = User::where('role', 'operator')->first()->userAddresses()->where('is_default', true)->first();
-        $userAddress = $this->user->userAddresses->where('is_default', true)->first();
+        $userAddress = $this->user->userAddresses;
+        if ($this->pickedUserAddress) {
+            $userAddress = $this->pickedUserAddress;
+        } else {
+            $userAddress = $userAddress->where('is_default', true)->first()->toArray();
+        }
         $cityOriginId = ProvinciesAndCities::where('city_name', $operatorAddress->city)->first()->city_id;
-        $cityDestinationId = ProvinciesAndCities::where('city_name', $userAddress->city)->first()->city_id;
+        $cityDestinationId = ProvinciesAndCities::where('city_name', $userAddress['city'])->first()->city_id;
         if ($cityOriginId && $cityDestinationId) {
             $costs = Http::withHeaders([
                 'key' => env('API_KEY_RAJAONGKIR')
@@ -84,10 +107,27 @@ class NoteAndShippingMethod extends Component
                 if ($cost['service'] == $service) {
                     $cost['is_picked'] = true;
                     $this->costValue = $cost['cost'][0]['value'];
+
+                    $orderShipping = $this->order->shipping()->first();
+                    if (!$orderShipping) {
+                        $shipping = Shipping::create(
+                            [
+                                'provider_code' => $costResults['code'],
+                                'provider_name' => $costResults['name'],
+                                'service' => $cost['service'],
+                                'desc' => $cost['description'],
+                                'cost' => $cost['cost'][0]['value'],
+                                'etd' => $cost['cost'][0]['etd']
+                            ]
+                        );
+                        $this->order->update([
+                            'shipping_id' => $shipping->id
+                        ]);
+                    }
                 }
             }
-            $costResults['product_id'] = $this->product->id;
             $this->costs = $costResults;
+            // dd($this->costs);
             $this->dispatch('addCostValueToTotalPrice', costValue: $this->costValue);
         } else {
             $this->costs = null;
@@ -101,6 +141,29 @@ class NoteAndShippingMethod extends Component
             if ($cost['service'] == $service) {
                 $cost['is_picked'] = true;
                 $costValue = $cost['cost'][0]['value'];
+                if ($this->order->shipping()->first()) {
+                    $this->order->shipping()->update(
+                        [
+                            'provider_code' => $this->costs['code'],
+                            'provider_name' => $this->costs['name'],
+                            'service' => $cost['service'],
+                            'desc' => $cost['description'],
+                            'cost' => $cost['cost'][0]['value'],
+                            'etd' => $cost['cost'][0]['etd']
+                        ]
+                    );
+                } else {
+                    $this->order->shipping()->create(
+                        [
+                            'provider_code' => $this->costs['code'],
+                            'provider_name' => $this->costs['name'],
+                            'service' => $cost['service'],
+                            'desc' => $cost['description'],
+                            'cost' => $cost['cost'][0]['value'],
+                            'etd' => $cost['cost'][0]['etd']
+                        ]
+                    );
+                }
             }
         }
         $this->dispatch('addCostValueToTotalPrice', costValue: $costValue);

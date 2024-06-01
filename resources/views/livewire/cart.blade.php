@@ -25,14 +25,14 @@
                     </span>
                     <img src="{{ Storage::url('public/product_pictures/' . $product?->hasImages->first()->filepath_image) }}"
                         alt="" style="width: 80px; height: 80px;">
-                    <div wire:ignore class="d-flex position-relative justify-content-between" style="width: auto;">
+                    <div wire:ignore class="d-flex position-relative justify-content-between" style="width: auto; height: auto;">
                         @livewire('variation', ['index' => $index, 'product' => $product, 'usersCarts' => $usersCarts])
                     </div>
                 </div>
                 <div class="d-flex flex-column justify-content-center align-items-center " style="width: 150px;">
                     <div class="width: 100%">
                         <h5 class="font-main-color"><strong>Rp
-                                {{ number_format($product?->price, 2, ',', '.') }}</strong></h5>
+                                {{ number_format($product->price_after_additional ?? $product->price, 2, ',', '.') }}</strong></h5>
                     </div>
                     @if (isset($product?->discount))
                         <div class="d-flex" style="width: auto">
@@ -74,11 +74,15 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="d-flex flex-column align-items-start">
                         <span><strong>Subtotal</strong></span>
-                        <span><strong>Discount</strong></span>
+                        @if ($product->discount)
+                            <span><strong>Discount</strong></span>
+                        @endif
                     </div>
                     <div class="d-flex flex-column align-items-start">
                         <span style="margin-left: 11px;"><strong>Rp {{ number_format($totalPrice, 2, ',', '.') }}</strong></span>
-                        <span><strong>- Rp {{ number_format($totalDiscount, 2, ',', '.') }}</strong></span>
+                        @if ($product->discount)
+                            <span><strong>- Rp {{ number_format($totalDiscount, 2, ',', '.') }}</strong></span>
+                        @endif
                     </div>
                 </div>
                 <hr class="border border-secondary bg-main-color opacity-50">
@@ -138,7 +142,7 @@
                                             <div class="d-flex justify-content-between">
                                                 <strong style="font-size: 10px;">{{ $product->name }}</strong>
                                                 <p style="font-size: 10px;">Stock
-                                                    {{ $product->stock }}</p>
+                                                    {{ $stock ?? $product->stock }}</p>
                                             </div>
                                             @if (isset($product->discount))
                                                 <div class="d-flex gap-2 align-items-center">

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\IsUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -28,21 +29,4 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/show-cart', [UserController::class, 'showCart']);
 });
 
-// CallBack Payment Gateway
-
-Route::post('/callback', [UserController::class, 'callBackPaymentGateway']);
-
-Route::post('/hashMaker/{apikey}', function (Request $request, $apikey) {
-    dd([
-        'amount' => $request->amount,
-        'datetime' => $request->datetime,
-        'merchantcode' => $request->merchant,
-        'signature' => hash('sha256', $request->merchant . $request->amount . $request->datetime . $apikey),
-    ]);
-});
-
-Route::post('/hashMaker/transaksi/{apikey}', function (Request $request, $apikey) {
-    dd([
-        'signature' => md5($request->merchantCode . $request->merchantOrderId . $request->paymentAmount . $apikey),
-    ]);
-});
+Route::post('/callback-payment', [UserController::class, 'callbackPayment'])->name('callback-payment');

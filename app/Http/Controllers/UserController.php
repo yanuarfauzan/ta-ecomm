@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\Cart;
 use App\Models\User;
 use App\Models\Order;
@@ -11,6 +12,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\VariationOption;
 use Illuminate\Support\Facades\DB;
+use App\Events\PaymentSuccessEvent;
 use App\Models\ProvinciesAndCities;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -56,7 +58,13 @@ class UserController extends Controller
     public function showCart(Request $request)
     {
         $user = $this->user;
-        $usersCarts = $user?->cart()->with('hasProduct', 'hasProduct.pickedVariation', 'hasProduct.pickedVariationOption', 'hasProduct.variation', 'hasProduct.variation.variationOption')->get();
+        $usersCarts = $user?->cart()->with(
+            'hasProduct',
+            'hasProduct.pickedVariation',
+            'hasProduct.pickedVariationOption',
+            'hasProduct.variation',
+            'hasProduct.variation.variationOption'
+            )->get();
         return view('user.cart', compact('usersCarts', 'user'));
     }
     public function isCartExist($productId)
@@ -163,7 +171,6 @@ class UserController extends Controller
             $oneStarsCount = $product->productAssessment()->where('rating', 1)->count();
             $percentOneStars = number_format(($oneStarsCount / $totalReviews) * 100, 2);
 
-            // Average rating calculation with 2 decimal places
             $acumulatedRating = round($product->productAssessment()->avg('rating'), 1);
             // Percentage of positive reviews to total reviews with 2 decimal places
             $acumulatedInPercentRating = round(($positiveReviews / $totalReviews) * 100);
@@ -247,7 +254,7 @@ class UserController extends Controller
         })->flatten();
         $cartProductIds = $cartProductIds->unique();
         $existOrders = Order::whereHas('cartProduct', function ($query) use ($cartProductIds) {
-            $query->whereIn('id', $cartProductIds);
+            $query->whereIn('id', $cartProductIds)->where('order_status', 'unpaid');
         })->get();
         if (!count($existOrders) == 0) {
             $order = $existOrders->first();
@@ -268,32 +275,50 @@ class UserController extends Controller
                 'total_price' => $totalAllPrice,
             ]);
         }
-        
+
         $productVoucher = $usersCarts->map(function ($userCart) {
             $product = $userCart->hasProduct->first();
             if ($product && $product->voucher()->exists()) {
                 return $product->voucher()->get();
             }
-            return collect();  // Return empty collection if no voucher exists
+            return collect();
         })->filter()->flatten();
-        return view('user.order', compact('usersCarts', 'user', 'defaultUserAdress', 'order', 'productVoucher'));
+
+        $userAddresses = $order->user->userAddresses()->get();
+        return view('user.order', compact('usersCarts', 'user', 'defaultUserAdress', 'order', 'productVoucher', 'userAddresses'));
     }
     public function buyNow(Request $request)
     {
         $user = $this->user;
         $variationBuyNow = $request->variation;
         $countBuyNow = $request->qty;
+        $totalPriceBuyNow = $request->totalPrice;
         $defaultUserAdress = $this->user->userAddresses->where('is_default', true)->first();
         $productBuyNow = Product::findOrFail($request->productId);
-        $order = $user->order()->create([
-            'product_id' => $request->productId,
-            'order_number' => $this->generateOrderNumber(),
-            'order_date' => date('Ymd'),
-            'total_price' => isset($productBuyNow->discount) ? $productBuyNow->price_after_discount : $productBuyNow->price,
-            'order_status' => 'pending'
-        ]);
 
-        return view('user.order', compact('productBuyNow', 'order', 'user', 'defaultUserAdress', 'countBuyNow', 'variationBuyNow'));
+        $order = $user->order()->where('product_id', $request->productId)->where('order_status', 'unpaid')->first();
+        if (!isset($order)) {
+            $order = $user->order()->create([
+                'product_id' => $request->productId,
+                'order_number' => $this->generateOrderNumber(),
+                'order_date' => date('Ymd'),
+                'qty' => $countBuyNow,
+                'total_price' => isset($productBuyNow->discount) ? $countBuyNow * $productBuyNow->price_after_dsicount : $countBuyNow * $totalPriceBuyNow,
+                'order_status' => 'unpaid'
+            ]);
+        } else {
+            if ($countBuyNow != $order->qty) {
+                $order->update([
+                    'qty' => $countBuyNow,
+                    'order_date' => date('Ymd'),
+                    'total_price' => isset($productBuyNow->discount) ? $countBuyNow * $productBuyNow->price_after_dsicount : $countBuyNow * $totalPriceBuyNow,
+                ]);
+            }
+        }
+        $productVoucher = $productBuyNow->voucher()->get();
+        
+        $userAddresses = $order->user->userAddresses()->get();
+        return view('user.order', compact('productBuyNow', 'order', 'user', 'defaultUserAdress', 'countBuyNow', 'variationBuyNow', 'productVoucher', 'userAddresses', 'totalPriceBuyNow'));
 
     }
     private function generateOrderNumber()
@@ -303,8 +328,24 @@ class UserController extends Controller
         $randomNumber = rand(10000, 99999);
         return $prefix . $date . '-' . $randomNumber;
     }
-    public function callBackPaymentGateway(Request $request)
+
+    public function callbackPayment(Request $request)
     {
-        Log::info('Callback Duitku received:', $request->all());
+        try {
+        $order = Order::where('order_number', $request->order_id)->first();
+        $user = $order->user()->first();
+        $serverKey = config('midtrans.serverKey');
+        $hashed = hash('sha512', $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
+        if ($hashed == $request->signature_key) {
+            if($request->transaction_status == 'settlement' || $request->transaction_status == 'capture') {
+                $order->update(['order_status' => 'paid']);
+                event(new PaymentSuccessEvent($user->id));
+            }        
+        } else {
+            Log::error('masuk else');
+        }
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+        }
     }
 }

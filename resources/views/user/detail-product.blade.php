@@ -69,28 +69,7 @@
                         </div>
                     </div>
                 </div>
-                @if ($product->discount)
-                    <div class="d-flex flex-column gap-2 align-items-start">
-                        <span class="d-flex flex-column p-0">
-                            <h2><strong>Rp
-                                    {{ number_format($product->price - $product->price * ($product->discount / 100), 2, ',', '.') }}</strong>
-                            </h2>
-                            <div class="d-flex gap-2">
-                                <span class="text-dark bg-main-color border border-secondary text-center"
-                                    style="width: 40px;"><i class="text-white">{{ floor($product->discount) }}%</i></span>
-                                <i><strong class="text-decoration-line-through">Rp
-                                        {{ number_format($product->price, 2, ',', '.') }}</strong></i>
-                            </div>
-                        </span>
-                    </div>
-                @else
-                    <div class="d-flex justify-content-start gap-2">
-                        <span>
-                            <h2><strong>Rp {{ number_format($product->price, 2, ',', '.') }}</strong></h2>
-                        </span>
-                    </div>
-                @endif
-                @livewire('DetailProductVariation', ['product' => $product, 'firstVarOption' => $firstVarOption])
+                @livewire('DetailProductVariation', ['product' => $product, 'firstVarOption' => $firstVarOption, 'firstVarOptionInit' => $firstVarOptionForCart])
                 <div class="d-flex flex-column gap-4 mt-2">
                     <div class="d-flex flex-column gap-2">
                         <span><strong>deskripsi : </strong></span>
@@ -179,7 +158,7 @@
                                     <span class="text-dark bg-light position-absolute border border-secondary text-center"
                                         style="top: 262px; width: 70px;">Discount</span>
                                     <span
-                                        class="text-dark bg-secondary position-absolute border border-secondary text-center"
+                                        class="text-dark bg-main-color position-absolute border border-secondary text-center"
                                         style="top: 262px; left: 70px; width: 40px;"><i
                                             class="text-white">{{ floor($product->discount) }}%</i></span>
                                 @endif

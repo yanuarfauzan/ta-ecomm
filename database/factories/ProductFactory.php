@@ -8,6 +8,8 @@ use App\Models\Category;
 use App\Models\Variation;
 use Illuminate\Support\Str;
 use App\Models\ProductVoucher;
+use App\Models\ProductCategoryVariation;
+use App\Models\ProductCategoryVariationDetail;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -26,13 +28,12 @@ class ProductFactory extends Factory
         return [
             'name' => fake()->unique()->word(),
             'SKU' => fake()->bothify('SKU-????-####'),
+            'desc' => fake()->paragraph(),
+            'rate' => fake()->numberBetween(1, 5),
             'stock' => fake()->numberBetween(0, 1000),
             'price' => fake()->numberBetween(10, 1000) * 1000,
-            'desc' => fake()->paragraph(),
             'dimensions' => fake()->numberBetween(1, 100) . 'x' . fake()->numberBetween(1, 100),
             'weight' => round(fake()->numberBetween(100, 10000) / 1000, 2),
-            'rate' => fake()->numberBetween(1, 5)
-
         ];
     }
 
@@ -59,7 +60,11 @@ class ProductFactory extends Factory
             $category = Category::inRandomOrder()->first();
             $variations = Variation::inRandomOrder()->limit(2)->get();
             foreach ($variations as $variation) {
-                $product->variation()->attach($variation->id, ['id' => Str::uuid(36), 'category_id' => $category->id]);
+                $product->variation()->attach($variation->id, 
+                [
+                    'id' => Str::uuid(36), 
+                    'category_id' => $category->id,
+                ]);
                 $productImages = $product->hasImages()->get();
                 $variationOptions = $variation->variationOption;
 
@@ -67,7 +72,11 @@ class ProductFactory extends Factory
                     $productImage = $productImages->shift();
                     if ($productImage) {
                         $varOption->update([
-                            'product_image_id' => $productImage->id
+                            'product_image_id' => $productImage->id,
+                            'stock' => fake()->numberBetween(0, 1000),
+                            'price' => fake()->numberBetween(10, 1000) * 1000,
+                            'dimensions' => fake()->numberBetween(1, 100) . 'x' . fake()->numberBetween(1, 100),
+                            'weight' => round(fake()->numberBetween(100, 10000) / 1000, 2),
                         ]);
                     }
                 }

@@ -34,15 +34,14 @@
                 style="padding-top: 12px; padding-bottom: 12px; width: 50%;">opsi pengiriman: </span>
             <select wire:ignore class="form-select form-select-lg rounded-0" aria-label="Large select example"
                 style="width: 50%" wire:change="showCost($event.target.value)">
-                <option value="jne">JNE</option>
-                <option value="pos">POS</option>
-                <option value="tiki">TIKI</option>
+                <option value="jne" {{ $courier == 'jne' ? 'selected' : '' }}>JNE</option>
+                <option value="pos" {{ $courier == 'pos' ? 'selected' : '' }}>POS</option>
+                <option value="tiki" {{ $courier == 'tiki' ? 'selected' : '' }}>TIKI</option>
             </select>
         </div>
     </div>
     <h5 class="mt-4"><strong>Pilih Opsi pengiriman</strong></h5>
     <ul class="list-group rounded-0" style="width: 100%">
-        @if ($product->id == $costs['product_id'])
             @foreach ($costs['costs'] as $cost)
                 <li class="list-group-item d-flex justify-content-start align-items-center gap-4">
                     <span>
@@ -64,9 +63,8 @@
                     </div>
                 </li>
             @endforeach
-        @endif
     </ul>
-    <div wire:ignore class="modal fade" style="top: 10%" id="modalVoucher" tabindex="-1"
+    <div class="modal fade" style="top: 10%" id="modalVoucher" tabindex="-1"
         aria-labelledby="modalVoucherLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content rounded-0">
@@ -83,16 +81,17 @@
                             <div class="d-flex justify-content-between align-items-center gap-1 ps-4"
                                 style="border: 4px solid #6777ef; width: 70%; height: 88px;">
                                 <div class="d-flex flex-column justify-content-center align-items-start">
-                                    <span><strong>{{ $voucher->name }} {{ isset($voucher->discount_value) ? 's.d Rp ' . number_format($voucher->discount_value, 2, ',', '.') : ''  }}</strong></span>
+                                    <span style="width: 250px;">
+                                        <strong>{{ $voucher->name }} {{ isset($voucher->discount_value) ? 's.d Rp ' . number_format($voucher->discount_value, 2, ',', '.') : ''  }}</strong>
+                                    </span>
                                     <span>Min. Blj Rp {{ $voucher->requirement }}</span>
                                     <span class="opacity-50">Berakhir dlm 23 jam <a href="">s&k</a></span>
                                 </div>
                                 <span class="pe-4">
                                     <input
                                         wire:click="useVoucher('{{ $voucher->type }}', '{{ $voucher->discount_value }}', '{{ $voucher->id }}')"
-                                        class="form-check-input me-1" type="radio" name="listGroupRadio"
-                                        value="" id="firstRadio"
-                                        {{ $isVoucherApplied != true ? 'data-bs-dismiss=modal aria-label=Close' : '' }}>
+                                        class="form-check-input me-1" type="radio" id="checkbox-voucher" name="checkbox-voucher"
+                                        value="" data-bs-dismiss="modal" aria-label="Close">
                                 </span>
                             </div>
                         </div>

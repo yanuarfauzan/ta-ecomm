@@ -3,6 +3,7 @@
 use App\Http\Controllers\AddressController;
 use Illuminate\Http\Request;
 use App\Http\Middleware\IsUser;
+use App\Events\RegisteredNotifEvent;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
@@ -100,8 +101,9 @@ Route::prefix('/user')->group(function () {
             Route::get('/detail-product/{productId}', [UserController::class, 'detailProduct'])->name('user-detail-product');
             Route::get('/order', [UserController::class, 'order'])->name('user-order');
             Route::get('/buy-now', [UserController::class, 'buyNow'])->name('user-buy-now');
+            Route::get('/send-notif-payment', [UserController::class, 'sendNotifPa'])->name('send-notif-payment');
         });
     });
-
+    
 });
 

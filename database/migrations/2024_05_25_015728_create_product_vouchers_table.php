@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('product_vouchers', function (Blueprint $table) {
+        Schema::create('product_voucher', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('product_id')->nullable();
             $table->uuid('voucher_id')->nullable();
@@ -24,8 +24,7 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down(): void
-    {
-        Schema::dropIfExists('product_vouchers');
+    public function down(): void    {
+        Schema::dropIfExists('product_voucher');
     }
 };
