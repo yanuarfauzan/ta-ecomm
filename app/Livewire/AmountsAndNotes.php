@@ -6,8 +6,7 @@ use App\Models\Product;
 use Livewire\Component;
 use Illuminate\Support\Str;
 use App\Models\VariationOption;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Http;
+
 
 class AmountsAndNotes extends Component
 {
@@ -15,14 +14,17 @@ class AmountsAndNotes extends Component
     public $user;
     public $count = 1;
     public $totalPrice;
+    public $price;
+    public $stock;
     public $choosedVarOptions = [];
     public $choosedVarOptionsForCart = [];
     protected $listeners = ['showChoosedVarOptions'];
     public function mount($product, $firstVarOption, $user, $firstVarOptionForCart)
     {
+        $this->stock = VariationOption::findOrFail(explode('_', $firstVarOptionForCart)[1])->stock;
+        $this->totalPrice = $product->price + VariationOption::findOrFail(explode('_', $firstVarOptionForCart)[1])->price;
         $this->product = $product;
         $this->cartProductId = $product->cart();
-        $this->totalPrice = $product->price;
         $this->choosedVarOptions[] = $firstVarOption;
         $this->choosedVarOptionsForCart[] = $firstVarOptionForCart;
         $this->count = 1;
@@ -60,6 +62,7 @@ class AmountsAndNotes extends Component
             ];
             $results['variation'][] = $data;
         });
+        
         $user = $this->user;
         $product = Product::findOrFail($this->product->id);
         $cartProduct = $this->isCartExist($this->product->id);
@@ -68,7 +71,7 @@ class AmountsAndNotes extends Component
             if ($cartProduct?->all() == null) {
                 $cart = $user->cart()->create([
                     'qty' => $results['qty'],
-                    'total_price' => $product->price * $results['qty']
+                    'total_price' => $this->price * $results['qty']
                 ]);
                 $cart->hasProduct()->attach($this->product->id, ['id' => $cartProductId]);
                 collect($results['variation'])->each(function ($variationItem) use ($cart, $product) {
@@ -84,7 +87,7 @@ class AmountsAndNotes extends Component
                 if ($this->isVariationDifferent($cartProduct, $results)) {
                     $cart = $user->cart()->create([
                         'qty' => $results['qty'],
-                        'total_price' => $product->price * $results['qty']
+                        'total_price' => $this->price * $results['qty']
                     ]);
                     $cart->hasProduct()->attach($this->product->id, ['id' => $cartProductId]);
                     collect($results['variation'])->each(function ($variationItem) use ($cart, $product) {
@@ -98,7 +101,7 @@ class AmountsAndNotes extends Component
                 } else {
                     $cartProduct->update([
                         'qty' => $cartProduct->qty + $results['qty'],
-                        'total_price' => $product->price * ($cartProduct->qty + $results['qty'])
+                        'total_price' => $this->price * ($cartProduct->qty + $results['qty'])
                     ]);
                     return response()->json(['message' => 'Produk sudah dimasukkan ke keranjang, jumlah ditambahkan']);
                 }
@@ -108,41 +111,44 @@ class AmountsAndNotes extends Component
         }
 
     }
-    public function showChoosedVarOptions($choosedVarOptions)
+    public function showChoosedVarOptions($choosedVarOptions, $price)
     {
-        $explodedChoosedVarOption = explode('_', $choosedVarOptions);
-        $varianFound = false;
-        $varOptionName = VariationOption::findOrFail($explodedChoosedVarOption[1])->name;
-        $explodedChoosedVarOption[1] = $varOptionName;
-        $changedChoosedVarOptions = implode('_', $explodedChoosedVarOption);
+        $countVariation = count($this->product->variation);
+        $this->price = $price;
+        $this->totalPrice = $price;
+        $exploded = explode('_', $choosedVarOptions);
+        $varOptionId = VariationOption::findOrFail($exploded[1])->id;
+        $varOptionName = VariationOption::findOrFail($exploded[1])->name;
+        $this->stock = VariationOption::findOrFail($exploded[1])->stock;
 
+        $foundIndex = null;
         for ($i = 0; $i < count($this->choosedVarOptions); $i++) {
-            $explodedVarOption = explode('_', $this->choosedVarOptions[$i]);
-            if ($explodedVarOption[0] == $explodedChoosedVarOption[0]) {
-                $this->choosedVarOptionsForCart[$i] = $choosedVarOptions;
-                $this->choosedVarOptions[$i] = $changedChoosedVarOptions;
-                $varianFound = true;
+            if ($exploded[0] === explode('_', $this->choosedVarOptions[$i])[0]) {
+                $foundIndex = $i;
+                break;
             }
         }
-        if (!$varianFound) {
-            $this->choosedVarOptionsForCart[] = $choosedVarOptions;
-            $this->choosedVarOptions[] = $changedChoosedVarOptions;
+
+        $this->choosedVarOptionsForCart[] = implode('_', [$exploded[0], $varOptionId, $exploded[2]]);
+
+        if ($foundIndex !== null) {
+            $this->choosedVarOptions[$foundIndex] = implode('_', [$exploded[0], $varOptionName, $exploded[2]]);
+        } else {
+            $this->choosedVarOptions[] = implode('_', [$exploded[0], $varOptionName, $exploded[2]]);
         }
 
-        if (count($this->choosedVarOptions) > 2) {
-            $this->choosedVarOptions = array_slice($this->choosedVarOptions, 0, 2);
-        }
+        $this->choosedVarOptions = array_slice($this->choosedVarOptions, 0, $countVariation);
     }
     public function increase()
     {
         $this->count++;
-        $this->totalPrice += $this->product->price;
+        $this->totalPrice += $this->price;
     }
     public function decrease()
     {
         if ($this->count > 1) {
             $this->count--;
-            $this->totalPrice -= $this->product->price;
+            $this->totalPrice -= $this->price;
         }
     }
     public function render()

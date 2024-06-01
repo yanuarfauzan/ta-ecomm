@@ -15,6 +15,10 @@ return new class extends Migration {
             $table->uuid('variation_id');
             $table->uuid('product_image_id')->nullable();
             $table->string('name')->nullable();
+            $table->integer('stock')->nullable();
+            $table->integer('price')->nullable()->default(0);
+            $table->decimal('weight')->nullable();
+            $table->string('dimensions')->nullable();
             $table->timestamps();
             $table->foreign('variation_id')->references('id')->on('variation')->onDelete('cascade');
             $table->foreign('product_image_id')->references('id')->on('product_image')->onDelete('cascade');

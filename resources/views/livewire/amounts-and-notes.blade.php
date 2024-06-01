@@ -1,4 +1,4 @@
-<div class="card-detail-product pt-0 my-2" style="width: 32%; height: 430px;">
+<div class="card-detail-product pt-0 my-2" style="width: 32%; height: 500px;">
     <div class="container mx-4 my-4 d-flex flex-column gap-4" style="width: auto; height: auto;">
         <strong>Atur jumlah dan catatan</strong>
         <div class="d-flex gap-2 justify-content-start align-items-center">
@@ -27,9 +27,8 @@
                         style="height: 30px; width: 30px;"><i class="bi bi-plus"></i></button>
                 </div>
             </div>
-            <span>Stock : 1000</span>
+            <span>Stock : {{ $stock }}</span>
         </div>
-
         <div class="d-flex justify-content-between">
             <span><strong>subtotal</strong></span>
             <span><strong>Rp
@@ -38,16 +37,12 @@
         <div class="d-flex flex-column gap-4">
             @if (count($product->variation) == count($choosedVarOptions))
                 <button wire:click="addToCart" class="btn bg-main-color rounded-0 text-white" style="width: 100%"
-                    id="add-to-cart">Add to
-                    Cart</button>
-                <a href="{{ route('user-buy-now') . '?productId=' . $product->id . '&' . http_build_query(['variation' => $choosedVarOptionsForCart]) . '&qty=' . $count }}" class="btn bg-main-color rounded-0 text-white" style="width: 100%" id="add-to-cart">Buy
-                    Now</a>
+                    id="add-to-cart">Masukkan keranjang</button>
+                <a href="{{ route('user-buy-now') . '?productId=' . $product->id . '&' . http_build_query(['variation' => $choosedVarOptionsForCart]) . '&qty=' . $count . '&totalPrice=' . $totalPrice }}" class="btn bg-main-color rounded-0 text-white" style="width: 100%" id="add-to-cart">Beli sekarang</a>
             @else
                 <button class="btn bg-main-color rounded-0 text-white opacity-50" style="width: 100%"
-                    id="add-to-cart">Add to
-                    Cart</button>
-                <a href="" class="btn bg-main-color rounded-0 text-white opacity-50" style="width: 100%" id="add-to-cart">Buy
-                    Now</a>
+                    id="add-to-cart">Masukkan keranjang</button>
+                <a href="" class="btn bg-main-color rounded-0 text-white opacity-50" style="width: 100%" id="add-to-cart">Beli sekarang</a>
             @endif
         </div>
         <div class="d-flex justify-content-center align-items-center gap-2">

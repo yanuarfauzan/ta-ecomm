@@ -12,9 +12,14 @@ class ProductCategoryVariation extends Model
 
     protected $table = 'product_category_variation';
     protected $fillable = [
+        'pcv__detail_id',
         'product_id',
         'category_id',
-        'vartiation_id'
+        'vartiation_id',
+        'stock',
+        'price',
+        'weight',
+        'dimensions'
     ];
 
     public function getIncrement()
@@ -41,4 +46,5 @@ class ProductCategoryVariation extends Model
     {
         return $this->hasMany(Variation::class, 'variation_id', 'id');
     }
+    
 }

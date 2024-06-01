@@ -1,7 +1,8 @@
 <div class="d-flex justify-content-end gap-2">
     <div class="d-flex gap-2 align-items-end me-3">
         <span wire:click="addCartProductToFav" class="font-main-color" style="cursor: pointer;">
-            <i class="bi bi-heart{{ $user->favouriteProduct->contains($product->id) ? '-fill' : '' }}" style="font-size: 20px"></i>
+            <i class="bi bi-heart{{ $user->favouriteProduct->contains($product->id) ? '-fill' : '' }}"
+                style="font-size: 20px"></i>
         </span>
         <span wire:click="deleteCartProduct('{{ $userCart->id }}')" class="font-main-color" style="cursor: pointer;">
             <i class="bi bi-trash" style="font-size: 20px"></i>
@@ -10,12 +11,13 @@
     <div class="d-flex flex-column">
         <div class="d-flex flex-column">
             <h5 class="font-main-color"><strong>Rp
-                {{ number_format( isset($product->discount) ? $userCart->total_price_after_discount : $userCart->total_price, 2, ',', '.') }}</strong></h5>
-            @if (isset($product->discount))                
-            <p class="text-decoration-line-through font-main-color">
-                <i>Rp
-                    {{ number_format($userCart->total_price, 2, ',', '.') }}</i>
-            </p>
+                    {{ number_format(isset($product->discount) ? $userCart->total_price_after_discount : $userCart->total_price, 2, ',', '.') }}</strong>
+            </h5>
+            @if (isset($product->discount))
+                <p class="text-decoration-line-through font-main-color">
+                    <i>Rp
+                        {{ number_format($userCart->total_price, 2, ',', '.') }}</i>
+                </p>
             @endif
         </div>
         <div class="d-flex align-items-center gap-4 shadow-sm"
@@ -29,3 +31,13 @@
         </div>
     </div>
 </div>
+@push('livewire_scripts')
+    <script>
+        document.addEventListener('livewire:init', function() {
+            Livewire.on('counterUpdated', () => {
+                console.log('listened')
+                @this.refreshMyComponentData();
+            });
+        });
+    </script>
+@endpush

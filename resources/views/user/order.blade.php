@@ -9,7 +9,8 @@
         'countBuyNow' => $countBuyNow ?? null,
         'variationBuyNow' => $variationBuyNow ?? [],
         'productVoucher' => $productVoucher,
-        'userAddresses' => $userAddresses
+        'userAddresses' => $userAddresses,
+        'subTotal' => $totalPriceBuyNow
     ])
     <script src="{{ asset('/ourjs/order.js') }}" data-navigate-track></script>
 @endsection

@@ -16,7 +16,7 @@ class Bank extends Model
     ];
 
     public function getIncrement()
-    {
+    { 
         return false;
     }
 
