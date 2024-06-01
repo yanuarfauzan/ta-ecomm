@@ -10,17 +10,19 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class PaymentSuccessEvent implements ShouldBroadcastNow
+class PaymentNotifEvent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $userId;
+    public $message;
     /**
      * Create a new event instance.
      */
-    public function __construct($userId)
+    public function __construct($userId, $message)
     {
         $this->userId = $userId;
+        $this->message = $message;
     }
 
     /**

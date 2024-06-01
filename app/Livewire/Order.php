@@ -2,9 +2,10 @@
 
 namespace App\Livewire;
 
-use App\Models\ProvinciesAndCities;
-use App\Models\VariationOption;
 use Livewire\Component;
+use App\Models\VariationOption;
+use App\Models\ProvinciesAndCities;
+use Illuminate\Support\Facades\Auth;
 
 class Order extends Component
 {
@@ -166,13 +167,25 @@ class Order extends Component
             'gross_amount' => $this->totalPrice
         ];
 
+        $params['customer_details'] = [
+            'first_name' => Auth::user()->username,
+            'email' => Auth::user()->email
+        ];
+        
         \Midtrans\Config::$serverKey = config('midtrans.serverKey');
         \Midtrans\Config::$isProduction = false;
         \Midtrans\Config::$isSanitized = true;
         \Midtrans\Config::$is3ds = true;
 
         $this->snapToken = \Midtrans\Snap::getSnapToken($params);
-        $this->dispatch('snapTokenGenerated', ['snapToken' => $this->snapToken]);
+        if ($this->order->snap_token != null){
+            $this->dispatch('snapTokenGenerated', ['snapToken' => $this->order->snap_token]);
+        } else {
+            $this->dispatch('snapTokenGenerated', ['snapToken' => $this->snapToken]);
+            $this->order->update([
+                'snap_token' => $this->snapToken
+            ]);
+        }
     }
     public function render()
     {

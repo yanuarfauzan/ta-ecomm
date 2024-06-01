@@ -21,14 +21,6 @@ use App\Http\Middleware\IsUserAuthenticated;
 |
 */
 
-Route::get('/test', function () {
-    try {
-        event(new App\Events\PaymentSuccessEvent());    
-    } catch (\Exception $e) {
-        Log::error($e->getMessage());
-    }
-});
-
 Route::get('/test-session', function () {
     Session::put(['test' => 'value test']);
 });

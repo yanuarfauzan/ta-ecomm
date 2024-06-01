@@ -20,7 +20,8 @@ class Order extends Model
         'total_price',
         'order_status',
         'note',
-        'qty'
+        'qty',
+        'snap_token'
     ];
 
     public function getIncement()
