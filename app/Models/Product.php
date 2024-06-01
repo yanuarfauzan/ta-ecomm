@@ -16,14 +16,15 @@ class Product extends Model
     protected $fillable = [
         'name',
         'SKU',
-        'stock',
         'product_image',
-        'price_after_dsicount',
         'price',
+        'stock',
+        'weight',
+        'dimensions',
+        'price_after_dsicount',
+        'price_after_additional',
         'desc',
         'discount',
-        'weight',
-        'dimensions'
     ];
 
     public function getIncrement()
@@ -43,7 +44,7 @@ class Product extends Model
 
     public function variation()
     {
-        return $this->belongsToMany(Variation::class, 'product_category_variation');
+        return $this->belongsToMany(Variation::class, 'product_category_variation')->withPivot('variation_id', 'id');
     }
 
     public function user()
@@ -82,6 +83,6 @@ class Product extends Model
     }
     public function voucher()
     {
-        return $this->belongsToMany(Voucher::class, 'product_vouchers');
+        return $this->belongsToMany(Voucher::class, 'product_voucher');
     }
 }

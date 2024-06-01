@@ -1,5 +1,5 @@
 <div>
-    <div class="d-flex flex-column align-items-start position-relative gap-0" style="width: 100px;">
+    <div class="d-flex flex-column align-items-start position-relative gap-0" style="width: 200px; height: auto;">
         <strong class="font-main-color">{{ $product->name }}</strong>
         <span>
             <a href="#collapseVariation-{{ $product->id }}" id="toggleButtonVariation" role="button" aria-expanded="false"

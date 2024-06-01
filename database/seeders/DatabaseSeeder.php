@@ -26,9 +26,9 @@ class DatabaseSeeder extends Seeder
         ]);
         
         User::factory()->count(1)->create();
-        Category::factory()->count(14)->create();
+        Category::factory()->count(5)->create();
         Variation::factory()->count(10)->create();
-        Product::factory()->count(16)->create();
+        Product::factory()->count(5)->create();
 
         $this->call([
             ProductAssessmentSeeder::class,

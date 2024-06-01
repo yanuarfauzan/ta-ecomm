@@ -30,7 +30,7 @@ class VariationFactory extends Factory
             $numberOfOptions = 6; // Ubah sesuai kebutuhan
             for ($i = 0; $i < $numberOfOptions; $i++) {
                 $variation->variationOption()->create([
-                    'name' => $this->faker->unique()->word(),
+                    'name' => fake()->unique()->word(),
                 ]);
             }
         });

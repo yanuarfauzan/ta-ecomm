@@ -11,7 +11,7 @@ class Variation extends Model
     use HasFactory, HasUuids;
     protected $table = 'variation';
     protected $fillable = [
-        'name'
+        'name',
     ];
     public function getIncrement()
     {
@@ -31,7 +31,7 @@ class Variation extends Model
     }
     public function belongsToProduct()
     {
-        return $this->belongsToMany(Product::class, 'picked_variation');
+        return $this->belongsToMany(Product::class, 'picked_variation'); 
     }
 }
 

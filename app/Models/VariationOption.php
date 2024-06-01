@@ -12,7 +12,11 @@ class VariationOption extends Model
     protected $fillable = [
         'variation_id',
         'product_image_id',
-        'name'
+        'name',
+        'stock',
+        'price',
+        'weight',
+        'dimensions'
     ];
 
     public function getIncrement()

@@ -2,12 +2,18 @@
 
 namespace App\Livewire;
 
-use App\Models\Cart as ModelCart;
+use App\Models\Product;
 use Livewire\Component;
+use Illuminate\Support\Str;
+use App\Models\Cart as ModelCart;
+use App\Traits\PreventDuplicateEvents;
 use App\Models\Product as ModelProduct;
 
 class Cart extends Component
 {
+
+    use PreventDuplicateEvents;
+
     public $user;
     public $usersCarts;
     public $checkedProducts = [];
@@ -17,14 +23,28 @@ class Cart extends Component
     public $showRelatedProducts = false;
     public $userCartId = null;
     public $categoryIds;
-    protected $listeners = ['toggleChecked', 'toggleAllChecked', 'toggleAllUnCheck', 'decreaseQtyProduct', 'increaseQtyProduct', 'showSearchedProducts', 'deleteUserCart'];
+    public $count;
+    public $stock;
+    protected $listeners = ['changeAdditionalPrice', 'toggleChecked', 'toggleAllChecked', 'toggleAllUnCheck', 'decreaseQtyProduct', 'increaseQtyProduct', 'showSearchedProducts', 'deleteUserCart'];
 
     public function mount($usersCarts, $user)
     {
         $this->totalPrice = 0;
+        $this->count = 1;
         $this->totalDiscount = 0;
         $this->usersCarts = $usersCarts;
         $this->user = $user;
+    }
+    public function changeAdditionalPrice($product, $userCart, $totalAdditionalPrice, $eventId, $stock, $count)
+    {
+        $this->stock = $stock;
+        $this->count = $userCart['qty'];
+        if ($this->isDuplicateEvent($eventId)) return;
+        $fixPrice = $product['price'] + $totalAdditionalPrice;
+        $product = Product::findOrFail($product['id'])->update([
+            'price_after_additional' => $fixPrice,
+        ]);
+        $this->dispatch('changeTotalPrice', userCart: $userCart, fixPrice: $fixPrice, eventId: Str::uuid(36));
     }
     public function showSearchedProducts($searchQuery)
     {

@@ -52,7 +52,7 @@ class Order extends Component
         'vrecipient_name.required' => 'Nama penerima tidak boleh kosong',
     ];
     public $listeners = ['addCostValueToTotalPrice', 'addVoucherToTotalPrice'];
-    public function mount($usersCarts, $productBuyNow, $user, $defaultUserAdress, $order, $countBuyNow, $variationBuyNow, $productVoucher, $userAddresses)
+    public function mount($usersCarts, $productBuyNow, $user, $defaultUserAdress, $order, $countBuyNow, $variationBuyNow, $productVoucher, $userAddresses, $subTotal)
     {
         $tempVarBuyNow = [];
         collect($variationBuyNow)->each(function ($var) use (&$tempVarBuyNow) {
@@ -80,8 +80,9 @@ class Order extends Component
         $this->provincies = collect(ProvinciesAndCities::pluck('province')->unique());
         $this->cities = collect(ProvinciesAndCities::pluck('city_name')->unique());
 
+        
         if ($productBuyNow != []) {
-            $this->subTotal = $order->total_price;
+            $this->subTotal = $subTotal;
         } else {
             $this->subTotal = $usersCarts->sum(function ($cart) {
                 return isset ($cart->total_price_after_discount) ? $cart->total_price_after_discount : $cart->total_price;
@@ -120,6 +121,7 @@ class Order extends Component
         $validatedData = $this->validate();
         $updateAddress = $this->userAddresses->where('id', $addressId)->first();
         $updateAddress->update($validatedData);
+        $this->defaultUserAdress = $this->userAddresses->where('is_default', true)->first();
         $this->reset(['address', 'recipient_name', 'province', 'city', 'postal_code', 'detail']);
     }   
     public function updatedNote($propertyName)

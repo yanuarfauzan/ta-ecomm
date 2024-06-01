@@ -58,7 +58,13 @@ class UserController extends Controller
     public function showCart(Request $request)
     {
         $user = $this->user;
-        $usersCarts = $user?->cart()->with('hasProduct', 'hasProduct.pickedVariation', 'hasProduct.pickedVariationOption', 'hasProduct.variation', 'hasProduct.variation.variationOption')->get();
+        $usersCarts = $user?->cart()->with(
+            'hasProduct',
+            'hasProduct.pickedVariation',
+            'hasProduct.pickedVariationOption',
+            'hasProduct.variation',
+            'hasProduct.variation.variationOption'
+            )->get();
         return view('user.cart', compact('usersCarts', 'user'));
     }
     public function isCartExist($productId)
@@ -286,6 +292,7 @@ class UserController extends Controller
         $user = $this->user;
         $variationBuyNow = $request->variation;
         $countBuyNow = $request->qty;
+        $totalPriceBuyNow = $request->totalPrice;
         $defaultUserAdress = $this->user->userAddresses->where('is_default', true)->first();
         $productBuyNow = Product::findOrFail($request->productId);
 
@@ -296,7 +303,7 @@ class UserController extends Controller
                 'order_number' => $this->generateOrderNumber(),
                 'order_date' => date('Ymd'),
                 'qty' => $countBuyNow,
-                'total_price' => isset($productBuyNow->discount) ? $countBuyNow * $productBuyNow->price_after_dsicount : $countBuyNow * $productBuyNow->price,
+                'total_price' => isset($productBuyNow->discount) ? $countBuyNow * $productBuyNow->price_after_dsicount : $countBuyNow * $totalPriceBuyNow,
                 'order_status' => 'unpaid'
             ]);
         } else {
@@ -304,14 +311,14 @@ class UserController extends Controller
                 $order->update([
                     'qty' => $countBuyNow,
                     'order_date' => date('Ymd'),
-                    'total_price' => isset($productBuyNow->discount) ? $countBuyNow * $productBuyNow->price_after_dsicount : $countBuyNow * $productBuyNow->price,
+                    'total_price' => isset($productBuyNow->discount) ? $countBuyNow * $productBuyNow->price_after_dsicount : $countBuyNow * $totalPriceBuyNow,
                 ]);
             }
         }
         $productVoucher = $productBuyNow->voucher()->get();
         
         $userAddresses = $order->user->userAddresses()->get();
-        return view('user.order', compact('productBuyNow', 'order', 'user', 'defaultUserAdress', 'countBuyNow', 'variationBuyNow', 'productVoucher', 'userAddresses'));
+        return view('user.order', compact('productBuyNow', 'order', 'user', 'defaultUserAdress', 'countBuyNow', 'variationBuyNow', 'productVoucher', 'userAddresses', 'totalPriceBuyNow'));
 
     }
     private function generateOrderNumber()
