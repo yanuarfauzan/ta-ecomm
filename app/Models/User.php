@@ -76,11 +76,6 @@ class User extends Authenticatable
         return $this->belongsToMany(Product::class, 'cart', 'product_id', 'id');
     }
 
-    public function bank()
-    {
-        return $this->hasMany(BankUser::class, 'user_id', 'id');
-    }
-
     public function creditCard()
     {
         return $this->hasOne(CreditCard::class, 'id', 'user_id');

@@ -83,7 +83,7 @@
         <span><strong>Selamat Datang!</strong></span>
     </a>
     <div class="dropdown-divider"></div>
-    <a href="" class="dropdown-item notify-item ">
+    <a href="{{ route('user-profile') }}" class="dropdown-item notify-item ">
         <i class="fe-user"></i>
         <span>Akun saya</span>
     </a>

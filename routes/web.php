@@ -52,6 +52,7 @@ Route::prefix('/user')->group(function () {
         Route::get('/logout', [AuthController::class, 'logout'])->name('user-logout-act');
         Route::get('/cart', [UserController::class, 'showCart'])->name('user-cart');
         Route::get('/home', [UserController::class, 'home'])->name('user-home');
+        Route::get('/profile', [UserController::class, 'profile'])->name('user-profile');
         Route::prefix('/product')->group(function () {
             Route::get('/detail-product/{productId}', [UserController::class, 'detailProduct'])->name('user-detail-product');
             Route::get('/order', [UserController::class, 'order'])->name('user-order');

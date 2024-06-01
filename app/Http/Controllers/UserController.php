@@ -381,4 +381,9 @@ class UserController extends Controller
             Log::error($e->getMessage());
         }
     }
+    public function profile()
+    {
+        $user = $this->user->with('userAddresses', 'order', 'notification')->first();
+        return view('user.profile', compact('user'));
+    }
 }
