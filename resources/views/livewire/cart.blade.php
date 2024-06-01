@@ -79,11 +79,7 @@
                         @endif
                     </div>
                     <div class="d-flex flex-column align-items-start">
-                        <div class="d-flex justify-content-start align-items-center gap-1">
-                            <span style="margin-left: 11px;"><strong>Rp {{ number_format($product->price_after_additional, 2, ',', '.') }}</strong></span>
-                            <span>x</span>
-                            <span>{{ $count }}</span>
-                        </div>
+                        <span style="margin-left: 11px;"><strong>Rp {{ number_format($totalPrice, 2, ',', '.') }}</strong></span>
                         @if ($product->discount)
                             <span><strong>- Rp {{ number_format($totalDiscount, 2, ',', '.') }}</strong></span>
                         @endif

@@ -10,7 +10,7 @@
         'variationBuyNow' => $variationBuyNow ?? [],
         'productVoucher' => $productVoucher,
         'userAddresses' => $userAddresses,
-        'subTotal' => $totalPriceBuyNow
+        'subTotal' => $totalPriceBuyNow ?? 0
     ])
     <script src="{{ asset('/ourjs/order.js') }}" data-navigate-track></script>
 @endsection

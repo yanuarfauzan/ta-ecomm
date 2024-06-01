@@ -81,7 +81,9 @@
                             <div class="d-flex justify-content-between align-items-center gap-1 ps-4"
                                 style="border: 4px solid #6777ef; width: 70%; height: 88px;">
                                 <div class="d-flex flex-column justify-content-center align-items-start">
-                                    <span><strong>{{ $voucher->name }} {{ isset($voucher->discount_value) ? 's.d Rp ' . number_format($voucher->discount_value, 2, ',', '.') : ''  }}</strong></span>
+                                    <span style="width: 250px;">
+                                        <strong>{{ $voucher->name }} {{ isset($voucher->discount_value) ? 's.d Rp ' . number_format($voucher->discount_value, 2, ',', '.') : ''  }}</strong>
+                                    </span>
                                     <span>Min. Blj Rp {{ $voucher->requirement }}</span>
                                     <span class="opacity-50">Berakhir dlm 23 jam <a href="">s&k</a></span>
                                 </div>
