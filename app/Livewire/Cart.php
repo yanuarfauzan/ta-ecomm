@@ -35,7 +35,7 @@ class Cart extends Component
         $this->usersCarts = $usersCarts;
         $this->user = $user;
     }
-    public function changeAdditionalPrice($product, $userCart, $totalAdditionalPrice, $eventId, $stock, $count)
+    public function changeAdditionalPrice($product, $userCart, $totalAdditionalPrice, $eventId, $stock)
     {
         $this->stock = $stock;
         $this->count = $userCart['qty'];

@@ -80,7 +80,7 @@ class NoteAndShippingMethod extends Component
                     $service = 'ECO';
                     break;
             }
-        }
+    }
         $this->courier = $courier;
 
         $operatorAddress = User::where('role', 'operator')->first()->userAddresses()->where('is_default', true)->first();
