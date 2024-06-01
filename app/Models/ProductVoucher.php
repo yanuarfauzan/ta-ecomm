@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ProductVoucher extends Model
 {
     use HasFactory;
-    protected $table = 'product_vouchers';
+    protected $table = 'product_voucher';
     protected $fillable = [
         'product_id',
         'voucher_id',

@@ -48,6 +48,11 @@
                 </div>
                 <div class="mb-3">
                     <label for="profile_image">Profile Image</label>
+                    @if ($user->profile_image)
+                        <div class="mb-2">
+                            <img src="{{ Storage::url($user->profile_image) }}" alt="Profile Image" style="max-width: 100px;">
+                        </div>
+                    @endif
                     <input type="file" class="form-control-file" id="profile_image" name="profile_image">
                 </div>
                 <div class="mb-3">

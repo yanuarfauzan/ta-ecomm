@@ -44,9 +44,20 @@
                     @enderror
                 </div>
                 <div class="mb-3">
+                    <label for="type" class="form-label">Tipe voucher</label>
+                    <select class="form-control @error('type') is-invalid @enderror" id="type" name="type" required>
+                        <option value="free ongkir">Pilih Tipe</option>
+                        <option value="free ongkir">Free Ongkir</option>
+                        <option value="discount">Diskon</option>
+                    </select>
+                    @error('type')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="mb-3">
                     <label for="voucher_icon" class="form-label">Voucher Icon</label>
-                    <input type="file" class="form-control @error('voucher_icon') is-invalid @enderror" id="voucher_icon"
-                        name="voucher_icon">
+                    <input type="file" class="form-control-file @error('voucher_icon') is-invalid @enderror"
+                        id="voucher_icon" name="voucher_icon">
                     @error('voucher_icon')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -76,6 +87,14 @@
                     @enderror
                 </div>
                 <div class="mb-3">
+                    <label for="min_value" class="form-label">Nilai Minimal</label>
+                    <input type="number" class="form-control @error('min_value') is-invalid @enderror"
+                        id="min_value" name="min_value" required>
+                    @error('min_value')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="mb-3">
                     <label for="expired_at" class="form-label">Tenggat Voucher</label>
                     <input type="date" class="form-control @error('expired_at') is-invalid @enderror" id="expired_at"
                         name="expired_at" required>
@@ -83,39 +102,10 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="mb-3">
-                    <label for="is_active" class="form-label">Status</label>
-                    <select class="form-control @error('is_active') is-invalid @enderror" id="is_active" name="is_active"
-                        required>
-                        <option value="1">Aktif</option>
-                        <option value="0">Expired</option>
-                    </select>
-                    @error('is_active')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
+                <!-- Hapus opsi manual untuk status -->
+                <input type="hidden" name="is_active" value="1">
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const typeSelect = document.getElementById('type');
-            const discountValueDiv = document.getElementById('discount_value_div');
-
-            typeSelect.addEventListener('change', function() {
-                if (typeSelect.value === 'discount') {
-                    discountValueDiv.style.display = 'block';
-                } else {
-                    discountValueDiv.style.display = 'none';
-                }
-            });
-
-            // Initial check
-            if (typeSelect.value !== 'discount') {
-                discountValueDiv.style.display = 'none';
-            }
-        });
-    </script>
 @endsection

@@ -120,17 +120,8 @@
                             <div class="col-md-6">
                                 {{-- <h4>{{ $produk->name }}</h4> --}}
                                 <p><strong>Kode Produk:</strong> {{ $produk->SKU }}</p>
+                                <p><strong>Discount:</strong> {{ $produk->price }}</p>
                                 <p><strong>Discount:</strong> {{ $produk->discount }}%</p>
-                                @if ($produk->discount > 0)
-                                    <p><strong>Harga:</strong> <span class="original-price">Rp
-                                            {{ number_format($produk->price, 0, ',', '.') }}</span> <span
-                                            class="discount-price">Rp
-                                            {{ number_format($produk->price_after_discount, 0, ',', '.') }}</span></p>
-                                @else
-                                    <p><strong>Harga:</strong> Rp {{ number_format($produk->price, 0, ',', '.') }}</p>
-                                @endif
-                                {{-- <p><strong>Rate:</strong> {{ $produk->rate }}</p> --}}
-                                <p><strong>Rata-rata Rating:</strong> {{ number_format($produk->rate, 1) }}</p>
                                 <p><strong>Description:</strong> {{ $produk->desc }}</p>
                                 <p><strong>Stock:</strong> {{ $produk->stock }}</p>
                                 <p><strong>Weight:</strong> {{ $produk->weight }} Kg</p>

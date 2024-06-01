@@ -59,7 +59,7 @@
                         <option value="operator">Operator</option>
                     </select>
                 </div>
-                <div id="address-section">
+                <div id="address-section" style="display: none;">
                     <h5>Address 1</h5>
                     <div class="mb-3">
                         <label for="address" class="form-label">Address</label>
@@ -96,7 +96,7 @@
             const addAddressLink = document.getElementById('add-address');
 
             function toggleAddressSection() {
-                if (roleSelect.value === 'user') {
+                if (roleSelect.value === 'user' || roleSelect.value === 'operator') {
                     addressSection.style.display = 'block';
                 } else {
                     addressSection.style.display = 'none';

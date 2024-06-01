@@ -58,7 +58,7 @@ class AdminUsersController extends Controller
         }
 
         $users->save();
-        if ($request->role == 'user') {
+        if ($request->role == 'user' || $request->role == 'operator') {
             $validatedAddressData = Validator::make($request->all(), [
                 'address.*.detail' => 'required|string',
                 'address.*.postal_code' => 'required|string',
@@ -87,6 +87,7 @@ class AdminUsersController extends Controller
 
     public function update(Request $request, $id)
     {
+        // Validasi data pengguna
         $validatedUserData = Validator::make($request->all(), [
             'username' => 'required|string|unique:user,username,' . $id,
             'email' => 'required|string|email|unique:user,email,' . $id,
@@ -95,27 +96,37 @@ class AdminUsersController extends Controller
             'gender' => 'required|integer|in:0,1',
             'birtdate' => 'required|date',
             'profile_image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:5120',
-            'role' => 'required|in:user,admin,operator'
         ]);
 
         if ($validatedUserData->fails()) {
             return response()->json(['message' => $validatedUserData->errors()]);
         }
 
+        // Temukan pengguna berdasarkan ID
         $user = User::findOrFail($id);
-        $user->username = $request->username;
-        $user->email = $request->email;
-        $user->phone_number = $request->phone_number;
 
-        if ($request->password) {
+        // Update field user jika ada perubahan
+        $user->username = $request->input('username', $user->username);
+        $user->email = $request->input('email', $user->email);
+        $user->phone_number = $request->input('phone_number', $user->phone_number);
+
+        if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
         }
 
-        $user->gender = $request->gender;
-        $user->birtdate = $request->birtdate;
-        $user->role = $request->role;
+        $user->gender = $request->input('gender', $user->gender);
+        $user->birtdate = $request->input('birtdate', $user->birtdate);
+
+        // Jika role tidak dikirim, gunakan nilai asli dari database
+        if ($request->has('role')) {
+            $user->role = $request->role;
+        } else {
+            $user->role = $user->role;
+        }
+
         $user->is_verified = 1;
 
+        // Update profile image jika ada
         if ($request->hasFile('profile_image')) {
             if ($user->profile_image) {
                 Storage::disk('public')->delete($user->profile_image);
@@ -124,9 +135,14 @@ class AdminUsersController extends Controller
             $user->profile_image = $path;
         }
 
-        $user->save();
+        // Periksa apakah ada perubahan data
+        if ($user->isDirty()) {
+            // Simpan data user jika ada perubahan
+            $user->save();
+        }
 
-        if ($request->role == 'user') {
+        // Jika role user adalah 'user', lakukan validasi dan update address
+        if ($user->role == 'user') {
             $validatedAddressData = Validator::make($request->all(), [
                 'address.*.detail' => 'required|string',
                 'address.*.postal_code' => 'required|string',
@@ -139,13 +155,16 @@ class AdminUsersController extends Controller
                 return response()->json(['message' => $validatedAddressData->errors()]);
             }
 
+            // Hapus alamat yang ada
             $user->userAddresses()->delete();
 
+            // Buat alamat baru
             foreach ($request->address as $addressData) {
                 $user->userAddresses()->create($addressData);
             }
         }
 
+        // Ambil semua data pengguna dan kembalikan ke tampilan list users
         $users = User::all();
         return view('ADMIN.users.list', compact('users'));
     }

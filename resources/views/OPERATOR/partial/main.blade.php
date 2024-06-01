@@ -121,93 +121,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="card">
-                    <div class="card-header">
-                        <div class="d-flex justify-content-between align-items-center" style="width: 100%;">
-                            <div class="d-flex justify-content-start gap-2 align-items-center">
-                                <h4>#ECM-12345678</h4>
-                                <span class="opacity-50">John wick</span>
-                            </div>
-                            <div class="card-header-action">
-                                <a data-collapse="#mycard-collapse-1" class="btn btn-icon btn-info" href="#"><i
-                                        class="fas fa-minus"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="collapse show" id="mycard-collapse-1">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-top">
-                                <div class="" style="width: 24%; height: auto">
-                                    <div class="d-flex flex-column justify-content-start align-items-start mx-2">
-                                        <span>Pemesan/kirim kepada :</span>
-                                        <h6 class="mt-2">STEVAN SUGIONO</h6>
-                                        <h6>085797227164</h6>
-                                        <h6>example@gmail.com</h6>
-                                        <span>Catatan :</span>
-                                        <span>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Expedita
-                                            officiis, corporis doloribus rem amet non aut nisi maxime libero
-                                            dolorem.</span>
-                                    </div>
-                                </div>
-                                <div class="" style="width: 24%; height: auto">
-                                    <span>Produk :</span>
-                                    <div class="d-flex flex-column justify-content-start align-items-start mx-2">
-                                        <div class="d-flex justify-content-start align-items-center">
-                                            <h6 class="mt-2">Sapu Elektrik</h6>
-                                            <span>x 1</span>
-                                        </div>
-                                        <span>kuning, M</span>
-                                    </div>
-                                    <div class="d-flex flex-column justify-content-start align-items-start mx-2">
-                                        <div class="d-flex justify-content-start align-items-center">
-                                            <h6 class="mt-2">Sapu Elektrik</h6>
-                                            <span>x 1</span>
-                                        </div>
-                                        <span>kuning, M</span>
-                                    </div>
-                                    <div class="d-flex justify-content-end">
-                                        <span>+</span>
-                                    </div>
-                                    <hr>
-                                    <div class="d-flex justify-content-between mx-2">
-                                        <span>total : </span>
-                                        <span>5 Pcs</span>
-                                    </div>
-                                </div>
-                                <div class="card" style="width: 24%; height: auto">
-                                    <div class="card-header bg-primary d-flex justify-content-between mb-0">
-                                        <span>
-                                            <h3 class="text-white">total :</h3>
-                                        </span>
-                                        <span>
-                                            <h3 class="text-white">Rp 10.000</h3>
-                                        </span>
-                                    </div>
-                                    <div class="card-body d-flex flex-column justify-content-start align-items-center">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <span>harga produk : </span>
-                                            <span>Rp 10.000</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="" style="width: 24%; height: 100px">
-                                    <div class="d-flex flex-column justify-content-start align-items-start mx-2">
-                                        <span>Pengiriman :</span>
-                                        <h6 class="mt-2">JNE/POS/TIKI</h6>
-                                        
-                                        <span>alamat :</span>
-                                        <span>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Expedita
-                                            officiis, corporis doloribus rem amet non aut nisi maxime libero
-                                            dolorem.</span>
-                                        <div class="d-flex justify-content-end mt-2" style="width: 100%">
-                                            <a href="#" class="btn btn-lg btn-primary mt-2">Review</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div class="card mt-1">
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center" style="width: 100%;">
@@ -286,9 +199,6 @@
                                         <span>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Expedita
                                             officiis, corporis doloribus rem amet non aut nisi maxime libero
                                             dolorem.</span>
-                                            <div class="d-flex justify-content-end mt-2" style="width: 100%">
-                                                <a href="#" class="btn btn-lg btn-primary">Review</a>
-                                            </div>
                                     </div>
                                 </div>
                             </div>

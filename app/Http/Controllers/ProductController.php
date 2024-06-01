@@ -7,6 +7,7 @@ use App\Models\Category;
 use Illuminate\Support\Str;
 use App\Models\ProductImage;
 use Illuminate\Http\Request;
+use App\Rules\ImageResolution;
 use App\Models\ProductAssessment;
 use Illuminate\Support\Facades\Storage;
 
@@ -45,11 +46,13 @@ class ProductController extends Controller
             'length' => 'required|numeric',
             'width' => 'required|numeric',
             'height' => 'required|numeric',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5120',
+            'images.*' => [
+                'image',
+                'mimes:jpeg,png,jpg,gif',
+                'max:5120',
+                new ImageResolution(1080, 1080)
+            ],
         ]);
-
-        // Hitung price_after_discount (diskon dalam persentase)
-        $price_after_discount = $validatedData['price'] * ((100 - $validatedData['discount']) / 100);
 
         $dimensions = $validatedData['length'] . 'x' . $validatedData['width'] . 'x' . $validatedData['height'];
 
@@ -59,18 +62,11 @@ class ProductController extends Controller
         $product->SKU = $validatedData['SKU'];
         $product->stock = $validatedData['stock'];
         $product->price = $validatedData['price'];
-        $product->price_after_discount = $price_after_discount;
         $product->desc = $validatedData['desc'];
         $product->discount = $validatedData['discount'];
         $product->weight = $validatedData['weight'];
         $product->dimensions = $dimensions;
 
-        // Simpan produk ke database
-        $product->save();
-
-        // Hitung dan simpan rating
-        $averageRating = ProductAssessment::where('product_id', $product->id)->avg('rating');
-        $product->rate = $averageRating ?? 0;
         $product->save();
 
         // Simpan gambar
@@ -124,48 +120,35 @@ class ProductController extends Controller
             'length' => 'required|numeric',
             'width' => 'required|numeric',
             'height' => 'required|numeric',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'images.*' => [
+                'image',
+                'mimes:jpeg,png,jpg,gif',
+                'max:5120',
+                new ImageResolution(1080, 1080)
+            ],
         ]);
 
-        // Hitung price_after_discount (diskon dalam persentase)
-        $price_after_discount = $validatedData['price'] * ((100 - $validatedData['discount']) / 100);
-
-        // Gabungkan dimensi menjadi satu string
         $dimensions = $validatedData['length'] . 'x' . $validatedData['width'] . 'x' . $validatedData['height'];
 
-        // Cari produk berdasarkan ID
         $product = Product::findOrFail($id);
 
-        // Perbarui data produk
         $product->name = $validatedData['name'];
         $product->SKU = $validatedData['SKU'];
         $product->stock = $validatedData['stock'];
         $product->price = $validatedData['price'];
-        $product->price_after_discount = $price_after_discount;
         $product->desc = $validatedData['desc'];
         $product->discount = $validatedData['discount'];
         $product->weight = $validatedData['weight'];
         $product->dimensions = $dimensions;
 
-        // Simpan perubahan produk ke database
         $product->save();
 
-        // Hitung dan simpan rating
-        $averageRating = ProductAssessment::where('product_id', $product->id)->avg('rating');
-        $product->rate = $averageRating ?? 0;
-        $product->save();
-
-        // Simpan gambar baru jika ada
         if ($request->hasFile('images')) {
-            // Hapus gambar lama
             ProductImage::where('product_id', $product->id)->delete();
 
-            // Simpan gambar baru
             foreach ($request->file('images') as $image) {
-                // Simpan gambar ke folder yang ditentukan
                 $imagePath = $image->store('public/product-images');
 
-                // Buat record baru untuk gambar produk
                 $productImage = new ProductImage();
                 $productImage->id = (string) Str::uuid();
                 $productImage->product_id = $product->id;
@@ -180,8 +163,20 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product)
+    public function destroy($id)
     {
+        $product = Product::findOrFail($id);
+
+        // Delete associated product images
+        $productImages = ProductImage::where('product_id', $product->id)->get();
+        foreach ($productImages as $productImage) {
+            // Delete the image file from storage
+            Storage::delete(str_replace('/storage/', 'public/', $productImage->filepath_image));
+            // Delete the image record from the database
+            $productImage->delete();
+        }
+
+        // Delete the product
         $product->delete();
         return redirect()->to('/admin/list-product')->with('delete', 'Produk Telah Dihapus');
     }
