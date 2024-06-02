@@ -1,10 +1,10 @@
-@extends('partial.main')
+@extends('ADMIN.partial.main')
 @section('content')
     <section class="section text-center">
         <div class="section-header">
-            <h1>USERS</h1>
+            <h1>VARIATION</h1>
             <div class="section-header-button">
-                <a href="/admin/create-users" class="btn btn-success">Add New</a>
+                <a href="/admin/create-variation" class="btn btn-success">Add New</a>
             </div>
         </div>
     </section>
@@ -28,7 +28,7 @@
 
     <div class="card mx-auto">
         <div class="card-header text-center">
-            <h4>List Users</h4>
+            <h4>List Variation</h4>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -36,7 +36,7 @@
                     <thead>
                         <tr>
                             <th scope="col">No.</th>
-                            <th scope="col">Nama Users</th>
+                            <th scope="col">Nama Variasi</th>
                             <th scope="col">Aksi</th>
                         </tr>
                     </thead>
@@ -44,17 +44,17 @@
                         @php
                             $no = 1;
                         @endphp
-                        @foreach ($users as $user)
+                        @foreach ($variations as $variation)
                             <tr>
                                 <td>{{ $no++ }}</td>
-                                <td>{{ $user->username }}</td>
+                                <td>{{ $variation->name }}</td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <a href="/admin/edit-users/{{ $user->id }}"
+                                        <a href="/admin/edit-variation/{{ $variation->id }}"
                                             class="btn btn-md bg-primary text-light btn-rounded mr-2">
                                             <i class="fa-solid fas fa-pen"></i>
                                         </a>
-                                        <form action="/deletekategori/{{ $user->id }}" method="POST">
+                                        <form action="/admin/delete-variation/{{ $variation->id }}" method="POST">
                                             @csrf
                                             @method('delete')
                                             <button type="submit" class="btn btn-md bg-danger text-light btn-rounded">

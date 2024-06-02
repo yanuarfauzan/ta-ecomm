@@ -21,7 +21,7 @@ class Product extends Model
         'stock',
         'weight',
         'dimensions',
-        'price_after_dsicount',
+        'price_after_discount',
         'price_after_additional',
         'desc',
         'discount',
@@ -78,6 +78,10 @@ class Product extends Model
         return $this->belongsTo(Order::class, 'id', 'product_id');
     }
     public function productAssessment()
+    {
+        return $this->hasMany(ProductAssessment::class, 'product_id', 'id');
+    }
+    public function productAssessments()
     {
         return $this->hasMany(ProductAssessment::class, 'product_id', 'id');
     }

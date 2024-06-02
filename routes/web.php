@@ -6,9 +6,16 @@ use App\Events\RegisteredNotifEvent;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\AdminController;
 use App\Http\Middleware\IsUserRegistered;
+use App\Http\Controllers\AddressController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\VoucherController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\OperatorController;
 use App\Http\Middleware\IsUserAuthenticated;
+use App\Http\Controllers\VariationController;
+use App\Http\Controllers\AdminUsersController;
+use App\Http\Controllers\BannerHomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,12 +32,55 @@ Route::get('/test-session', function () {
     Session::put(['test' => 'value test']);
 });
 
-#ROLE:ADMIN = USERS + ALAMAT
-Route::get('/admin/list-users', [AdminController::class, 'index'])->name('admin-list-user');
-Route::get('/admin/create-users', [AdminController::class, 'create']);
-Route::post('/admin/store-users', [AdminController::class, 'store']);
-Route::get('/admin/edit-users/{id}', [AdminController::class, 'edit']);
-Route::put('/admin/update-users/{id}', [AdminController::class, 'update']);
+    Route::get('/operator', [OperatorController::class, 'index']);
+    //ROLE:ADMIN 
+    # USERS + ALAMAT
+    Route::get('/admin/list-users', [AdminUsersController::class, 'index'])->name('admin.list.users');
+    Route::get('/admin/create-users', [AdminUsersController::class, 'create']);
+    Route::post('/admin/store-users', [AdminUsersController::class, 'store']);
+    Route::get('/admin/edit-users/{id}', [AdminUsersController::class, 'edit']);
+    Route::put('/admin/update-users/{id}', [AdminUsersController::class, 'update']);
+    Route::delete('/admin/delete-users/{id}', [AdminUsersController::class, 'destroy']);
+
+    #CATEGORY
+    Route::get('/admin/list-category', [CategoryController::class, 'index']);
+    Route::get('/admin/create-category', [CategoryController::class, 'create']);
+    Route::post('/admin/store-category', [CategoryController::class, 'store']);
+    Route::get('/admin/edit-category/{id}', [CategoryController::class, 'edit']);
+    Route::put('/admin/update-category/{category}', [CategoryController::class, 'update']);
+    Route::delete('/admin/delete-category/{category}', [CategoryController::class, 'destroy']);
+    
+    #VARIATION
+    Route::get('/admin/list-variation', [VariationController::class, 'index']);
+    Route::get('/admin/create-variation', [VariationController::class, 'create']);
+    Route::post('/admin/store-variation', [VariationController::class, 'store']);
+    Route::get('/admin/edit-variation/{id}', [VariationController::class, 'edit']);
+    Route::put('/admin/update-variation/{variations}', [VariationController::class, 'update']);
+    Route::delete('/admin/delete-variation/{variations}', [VariationController::class, 'destroy']);
+    
+    #PRODUCT
+    Route::get('/admin/list-product', [ProductController::class, 'index']);
+    Route::get('/admin/create-product', [ProductController::class, 'create']);
+    Route::post('/admin/store-product', [ProductController::class, 'store']);
+    Route::get('/admin/edit-product/{id}', [ProductController::class, 'edit']);
+    Route::put('/admin/update-product/{product}', [ProductController::class, 'update']);
+    Route::delete('/admin/delete-product/{product}', [ProductController::class, 'destroy']);
+    
+    #VOUCHER
+    Route::get('/admin/list-voucher', [VoucherController::class, 'index']);
+    Route::get('/admin/create-voucher', [VoucherController::class, 'create']);
+    Route::post('/admin/store-voucher', [VoucherController::class, 'store']);
+    Route::get('/admin/edit-voucher/{id}', [VoucherController::class, 'edit']);
+    Route::put('/admin/update-voucher/{voucher}', [VoucherController::class, 'update']);
+    Route::delete('/admin/delete-voucher/{voucher}', [VoucherController::class, 'destroy']);
+    
+    #BANNER HOME
+    Route::get('/admin/list-banner', [BannerHomeController::class, 'index']);
+    Route::get('/admin/create-banner', [BannerHomeController::class, 'create']);
+    Route::post('/admin/store-banner', [BannerHomeController::class, 'store']);
+    Route::get('/admin/edit-banner/{id}', [BannerHomeController::class, 'edit']);
+    Route::put('/admin/update-banner/{bannerHome}', [BannerHomeController::class, 'update']);
+    Route::delete('/admin/delete-banner/{bannerHome}', [BannerHomeController::class, 'destroy']);
 
 #ROLE:USER
 Route::prefix('/user')->group(function () {
