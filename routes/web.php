@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AddressController;
 use Illuminate\Http\Request;
 use App\Http\Middleware\IsUser;
 use App\Events\RegisteredNotifEvent;
@@ -8,9 +7,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\IsUserRegistered;
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\OperatorController;
 use App\Http\Middleware\IsUserAuthenticated;
 use App\Http\Controllers\VariationController;
 use App\Http\Controllers\AdminUsersController;
@@ -27,7 +28,11 @@ use App\Http\Controllers\BannerHomeController;
 |
 */
 
-Route::get('/operator', [AddressController::class, 'index']);
+Route::get('/test-session', function () {
+    Session::put(['test' => 'value test']);
+});
+
+    Route::get('/operator', [OperatorController::class, 'index']);
     //ROLE:ADMIN 
     # USERS + ALAMAT
     Route::get('/admin/list-users', [AdminUsersController::class, 'index'])->name('admin.list.users');
@@ -97,6 +102,7 @@ Route::prefix('/user')->group(function () {
         Route::get('/logout', [AuthController::class, 'logout'])->name('user-logout-act');
         Route::get('/cart', [UserController::class, 'showCart'])->name('user-cart');
         Route::get('/home', [UserController::class, 'home'])->name('user-home');
+        Route::get('/profile', [UserController::class, 'profile'])->name('user-profile');
         Route::prefix('/product')->group(function () {
             Route::get('/detail-product/{productId}', [UserController::class, 'detailProduct'])->name('user-detail-product');
             Route::get('/order', [UserController::class, 'order'])->name('user-order');

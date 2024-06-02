@@ -19,8 +19,9 @@ return new class extends Migration {
             $table->date('order_date')->nullable();
             $table->integer('qty')->nullable();
             $table->integer('total_price')->nullable();
-            $table->enum('order_status', ['unpaid', 'pending', 'paid', 'awaiting payment', 'awaiting fulfillment', 'awaiting shipment', 'shipped', 'delivered', 'cancelled', 'completed'])->default('unpaid')->nullable();
+            $table->enum('order_status', ['unpaid', 'pending', 'paid', 'failed', 'proceed', 'shipped', 'delivered', 'cancelled', 'completed'])->default('unpaid')->nullable();
             $table->string('note')->nullable();
+            $table->string('snap_token')->nullable();
             $table->timestamps();
             $table->foreign('shipping_id')->references('id')->on('shipping')->onDelete('cascade');
             $table->foreign('product_id')->references('id')->on('product')->onDelete('cascade');

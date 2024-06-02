@@ -136,7 +136,6 @@ class AmountsAndNotes extends Component
         } else {
             $this->choosedVarOptions[] = implode('_', [$exploded[0], $varOptionName, $exploded[2]]);
         }
-
         $this->choosedVarOptions = array_slice($this->choosedVarOptions, 0, $countVariation);
     }
     public function increase()
