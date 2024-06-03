@@ -6,6 +6,9 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
     <title> &mdash; e-comm</title>
 
+    <link href="{{ asset('/bootstrap-icons/font/bootstrap-icons.css') }}" rel="stylesheet">
+    <link href="{{ asset('/bootstrap-icons/font/bootstrap-icons.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
     <!-- General CSS Files -->
     <link rel="stylesheet" href="{{ asset('stisla/node_modules/bootstrap/dist/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('stisla/node_modules/@fortawesome/fontawesome-free/css/all.min.css') }}">
@@ -21,26 +24,13 @@
 
 <body>
     <script id="__bs_script__">
-        //<![CDATA[
         document.write("<script async src='/browser-sync/browser-sync-client.js?v=2.27.10'><\/script>".replace("HOST",
             location.hostname));
-        //]]>
     </script>
 
     <div id="app">
         <div class="main-wrapper">
             @include('OPERATOR.partial.navbar')
-            {{-- <div class="main-sidebar sidebar-style-2">
-                <aside id="sidebar-wrapper">
-                    <div class="sidebar-brand">
-                        <a href="{{ url('admin') }}">e-comm</a>
-                    </div>
-                    <div class="sidebar-brand sidebar-brand-sm">
-                        <a href="{{ url('admin') }}"></a>
-                    </div> --}}
-            {{-- <ul class="sidebar-menu">
-                        @include('OPERATOR.partial.sidebar')
-                    </ul> --}}
             </aside>
         </div>
         <!-- Main Content -->
@@ -128,7 +118,8 @@
                                 <h4>#ECM-12345678</h4>
                                 <span class="opacity-50">John wick</span>
                             </div>
-                            <div class="card-header-action">
+                            <div class="card-header-action d-flex justify-content-start align-items-center gap-2">
+                                <div class="badge badge-success d-flex justify-content-center align-items-center" style="height: 30px;">COMPLETED</div>
                                 <a data-collapse="#mycard-collapse-2" class="btn btn-icon btn-info" href="#"><i
                                         class="fas fa-minus"></i></a>
                             </div>
@@ -136,72 +127,121 @@
                     </div>
                     <div class="collapse show" id="mycard-collapse-2">
                         <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-top">
-                                <div class="" style="width: 24%; height: auto">
-                                    <div class="d-flex flex-column justify-content-start align-items-start mx-2">
-                                        <span>Pemesan/kirim kepada :</span>
-                                        <h6 class="mt-2">STEVAN SUGIONO</h6>
-                                        <h6>085797227164</h6>
-                                        <h6>example@gmail.com</h6>
-                                        <span>Catatan :</span>
-                                        <span>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Expedita
-                                            officiis, corporis doloribus rem amet non aut nisi maxime libero
-                                            dolorem.</span>
-                                    </div>
-                                </div>
-                                <div class="" style="width: 24%; height: auto">
-                                    <span>Produk :</span>
-                                    <div class="d-flex flex-column justify-content-start align-items-start mx-2">
-                                        <div class="d-flex justify-content-start align-items-center">
-                                            <h6 class="mt-2">Sapu Elektrik</h6>
-                                            <span>x 1</span>
-                                        </div>
-                                        <span>kuning, M</span>
-                                    </div>
-                                    <div class="d-flex flex-column justify-content-start align-items-start mx-2">
-                                        <div class="d-flex justify-content-start align-items-center">
-                                            <h6 class="mt-2">Sapu Elektrik</h6>
-                                            <span>x 1</span>
-                                        </div>
-                                        <span>kuning, M</span>
-                                    </div>
-                                    <div class="d-flex justify-content-end">
-                                        <span>+</span>
-                                    </div>
-                                    <hr>
-                                    <div class="d-flex justify-content-between mx-2">
-                                        <span>total : </span>
-                                        <span>5 Pcs</span>
-                                    </div>
-                                </div>
-                                <div class="card" style="width: 24%; height: auto">
-                                    <div class="card-header bg-primary d-flex justify-content-between mb-0">
-                                        <span>
-                                            <h3 class="text-white">total :</h3>
-                                        </span>
-                                        <span>
-                                            <h3 class="text-white">Rp 10.000</h3>
-                                        </span>
-                                    </div>
-                                    <div class="card-body d-flex flex-column justify-content-start align-items-center">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <span>harga produk : </span>
-                                            <span>Rp 10.000</span>
+                            <div class="d-flex flex-column justify-content-start align-items-center">
+                                <div class="d-flex justify-content-between align-items-top">
+                                    <div class="" style="width: 24%; height: auto">
+                                        <div class="d-flex flex-column justify-content-start align-items-start mx-2">
+                                            <span>Pemesan/kirim kepada :</span>
+                                            <h6 class="mt-2">STEVAN SUGIONO</h6>
+                                            <h6>085797227164</h6>
+                                            <h6>example@gmail.com</h6>
+                                            <span>Catatan :</span>
+                                            <span>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Expedita
+                                                officiis, corporis doloribus rem amet non aut nisi maxime libero
+                                                dolorem.</span>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="" style="width: 24%; height: 100px">
-                                    <div class="d-flex flex-column justify-content-start align-items-start mx-2">
-                                        <span>Pengiriman :</span>
-                                        <h6 class="mt-2">JNE/POS/TIKI</h6>
-                                        
-                                        <span>alamat :</span>
-                                        <span>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Expedita
-                                            officiis, corporis doloribus rem amet non aut nisi maxime libero
-                                            dolorem.</span>
+                                    <div class="" style="width: 24%; height: auto">
+                                        <span>Produk :</span>
+                                        <div class="d-flex flex-column justify-content-start align-items-start mx-2">
+                                            <div class="d-flex justify-content-start align-items-center">
+                                                <h6 class="mt-2">Sapu Elektrik</h6>
+                                                <span>x 1</span>
+                                            </div>
+                                            <span>kuning, M</span>
+                                        </div>
+                                        <div class="d-flex flex-column justify-content-start align-items-start mx-2">
+                                            <div class="d-flex justify-content-start align-items-center">
+                                                <h6 class="mt-2">Sapu Elektrik</h6>
+                                                <span>x 1</span>
+                                            </div>
+                                            <span>kuning, M</span>
+                                        </div>
+                                        <div class="d-flex justify-content-end">
+                                            <span>+</span>
+                                        </div>
+                                        <hr>
+                                        <div class="d-flex justify-content-between mx-2">
+                                            <span>total : </span>
+                                            <span>5 Pcs</span>
+                                        </div>
                                     </div>
+                                    <div class="card" style="width: 24%; height: auto">
+                                        <div class="card-header bg-primary d-flex justify-content-between mb-0">
+                                            <span>
+                                                <h3 class="text-white">total :</h3>
+                                            </span>
+                                            <span>
+                                                <h3 class="text-white">Rp 10.000</h3>
+                                            </span>
+                                        </div>
+                                        <div
+                                            class="card-body d-flex flex-column justify-content-start align-items-center">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span>harga produk : </span>
+                                                <span>Rp 10.000</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="" style="width: 24%; height: 100px">
+                                        <div class="d-flex flex-column justify-content-start align-items-start mx-2">
+                                            <span>Pengiriman :</span>
+                                            <h6 class="mt-2">JNE/POS/TIKI</h6>
+
+                                            <span>alamat :</span>
+                                            <span>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Expedita
+                                                officiis, corporis doloribus rem amet non aut nisi maxime libero
+                                                dolorem.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-start align-items-center gap-2 mx-2 mt-4"
+                                    style="width: 100%">
+                                    <span class="ms-2">
+                                        <strong>
+                                            Proses pesanan ini ?
+                                        </strong>
+                                    </span>
+                                    <span>
+                                        <button class="btn btn-danger">proses</button>
+                                    </span>
+                                    <span class="mt-1">
+                                        <i class="bi bi-arrow-right-short" style="font-size: 30px;"></i>
+                                    </span>
+                                    <span>
+                                        <strong>
+                                            Paket sudah dikirim ?
+                                        </strong>
+                                    </span>
+                                    <span>
+                                        <button class="btn btn-secondary" disabled>shipped</button>
+                                    </span>
+                                    <span>
+                                        <input type="text" class="form-control" placeholder="no. resi"
+                                            id="username" name="username" style="width: 300px; height: 35px;"
+                                            disabled>
+                                    </span>
+                                </div>
+                                <div class="d-flex justify-content-start align-items-center gap-2 mx-2 mt-4"
+                                    style="width: 100%">
+                                    <span class="ms-2">
+                                        <strong>
+                                            Ulasan
+                                        </strong>
+                                    </span>
+                                </div>
+                                <span class="ms-2">
+                                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Officiis quos consequatur
+                                    quia, in dolores expedita ad dolore totam deserunt nemo similique quo aspernatur
+                                    aliquam unde dolorem dolorum accusantium asperiores rem!
+                                </span>
+                                <div class="d-flex justify-content-between align-items-center gap-2 mt-2 ms-2" style="width: 100%">
+                                    <input type="text" class="form-control" id="username"
+                                    name="username" style="width: 100%; height: 35px;">
+                                    <button class="btn btn-primary">kirim</button>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>

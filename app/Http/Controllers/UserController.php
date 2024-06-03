@@ -10,7 +10,9 @@ use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use App\Models\VariationOption;
+use App\Events\PaymentNotifEvent;
 use Illuminate\Support\Facades\DB;
 use App\Events\PaymentSuccessEvent;
 use App\Models\ProvinciesAndCities;
@@ -337,15 +339,51 @@ class UserController extends Controller
         $serverKey = config('midtrans.serverKey');
         $hashed = hash('sha512', $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
         if ($hashed == $request->signature_key) {
-            if($request->transaction_status == 'settlement' || $request->transaction_status == 'capture') {
-                $order->update(['order_status' => 'paid']);
-                event(new PaymentSuccessEvent($user->id));
-            }        
+            switch ($request->transaction_status) {
+                case 'settlement':
+                case 'capture':
+                    $order->update(['order_status' => 'paid']);
+                    $message = 'Pesanan berhasil! 🎉
+                    Total Pembayaran: Rp ' . number_format($request->gross_amount, 2, ',', '.') .
+                    'Metode Pembayaran:' . $request->acquirer .
+                    'Tanggal Transaksi:' . Carbon::parse($request->transaction_time)->format('d-m-Y') . 
+                    'Terima kasih telah berbelanja dengan kami!';
+                    Log::info($message);
+                    event(new PaymentNotifEvent($user->id, $message));
+                    break;
+                case 'pending':
+                    $order->update(['order_status' => 'pending']);
+                    $message = 'Mohon segera lakukan pembayaran untuk pesanan Anda.
+                    Pesanan Anda saat ini dalam status "Pending Pembayaran".
+                    Kami akan memberitahu Anda segera setelah pembayaran Anda berhasil diproses.
+                    Terima kasih atas kerjasama Anda!
+                    ';
+                    Log::info($message);
+                    event(new PaymentNotifEvent($user->id, $message));
+                    break;
+                case 'deny':
+                case 'expire':
+                case 'cancel':
+                    $order->update(['order_status' => 'failed']);
+                    $message = 'Maaf, pembayaran Anda untuk pesanan telah kadaluarsa.
+                    Pesanan Anda saat ini dalam status "Pembayaran Kadaluarsa".
+                    Silakan membuat pesanan baru jika Anda masih tertarik dengan produk kami.
+                    Terima kasih atas perhatiannya.
+                    ';
+                    Log::info($message);
+                    event(new PaymentNotifEvent($user->id, $message));
+                    break;
+            }   
         } else {
             Log::error('masuk else');
         }
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }
+    }
+    public function profile()
+    {
+        $user = $this->user->with('userAddresses', 'order', 'notification')->first();
+        return view('user.profile', compact('user'));
     }
 }

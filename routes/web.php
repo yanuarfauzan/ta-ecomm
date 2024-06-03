@@ -11,6 +11,7 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\OperatorController;
 use App\Http\Middleware\IsUserAuthenticated;
 use App\Http\Controllers\VariationController;
 use App\Http\Controllers\AdminUsersController;
@@ -29,15 +30,19 @@ use App\Http\Controllers\VariationOptionController;
 |
 */
 
-Route::get('/operator', [AddressController::class, 'index']);
-//ROLE:ADMIN 
-# USERS + ALAMAT
-Route::get('/admin/list-users', [AdminUsersController::class, 'index'])->name('admin.list.users');
-Route::get('/admin/create-users', [AdminUsersController::class, 'create']);
-Route::post('/admin/store-users', [AdminUsersController::class, 'store']);
-Route::get('/admin/edit-users/{id}', [AdminUsersController::class, 'edit']);
-Route::put('/admin/update-users/{id}', [AdminUsersController::class, 'update']);
-Route::delete('/admin/delete-users/{id}', [AdminUsersController::class, 'destroy']);
+// Route::get('/test-session', function () {
+//     Session::put(['test' => 'value test']);
+// });
+
+    Route::get('/operator', [OperatorController::class, 'index']);
+    //ROLE:ADMIN 
+    # USERS + ALAMAT
+    Route::get('/admin/list-users', [AdminUsersController::class, 'index'])->name('admin.list.users');
+    Route::get('/admin/create-users', [AdminUsersController::class, 'create']);
+    Route::post('/admin/store-users', [AdminUsersController::class, 'store']);
+    Route::get('/admin/edit-users/{id}', [AdminUsersController::class, 'edit']);
+    Route::put('/admin/update-users/{id}', [AdminUsersController::class, 'update']);
+    Route::delete('/admin/delete-users/{id}', [AdminUsersController::class, 'destroy']);
 
 #CATEGORY
 Route::get('/admin/list-category', [CategoryController::class, 'index']);
@@ -110,6 +115,7 @@ Route::prefix('/user')->group(function () {
         Route::get('/logout', [AuthController::class, 'logout'])->name('user-logout-act');
         Route::get('/cart', [UserController::class, 'showCart'])->name('user-cart');
         Route::get('/home', [UserController::class, 'home'])->name('user-home');
+        Route::get('/profile', [UserController::class, 'profile'])->name('user-profile');
         Route::prefix('/product')->group(function () {
             Route::get('/detail-product/{productId}', [UserController::class, 'detailProduct'])->name('user-detail-product');
             Route::get('/order', [UserController::class, 'order'])->name('user-order');
