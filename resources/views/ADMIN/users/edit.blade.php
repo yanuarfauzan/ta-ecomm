@@ -19,7 +19,7 @@
                 @method('PUT')
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="username" name="username" value="{{ $user->username }}">
+                    <input type="text" class="form-control @error('address') is-invalid @enderror" id="username" name="username" value="{{ $user->username }}">
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>

@@ -50,10 +50,8 @@ class VoucherController extends Controller
             'expired_at' => 'required|date',
         ]);
 
-        // Tentukan nilai is_active berdasarkan expired_at
         $isActive = $request->input('expired_at') >= now();
 
-        // Simpan data voucher
         $voucher = new Voucher([
             'name' => $validatedData['name'],
             'type' => $validatedData['type'],
@@ -66,7 +64,6 @@ class VoucherController extends Controller
             'is_active' => $isActive,
         ]);
 
-        // Simpan gambar icon jika tersedia
         if ($request->hasFile('voucher_icon')) {
             $imagePath = $request->file('voucher_icon')->storeAs('public/voucher-icon', $request->voucher_icon->getClientOriginalName());
             $voucher->voucher_icon = $imagePath;

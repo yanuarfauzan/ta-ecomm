@@ -37,6 +37,6 @@ class VariationOption extends Model
     }
     public function productImage()
     {
-        return $this->hasOne(ProductImage::class, 'id', 'product_image_id');
+        return $this->belongsTo(ProductImage::class, 'product_image_id', 'id');
     }
 }

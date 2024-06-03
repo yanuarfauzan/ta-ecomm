@@ -33,5 +33,10 @@ class Variation extends Model
     {
         return $this->belongsToMany(Product::class, 'picked_variation'); 
     }
+
+    public function variationOptions()
+    {
+        return $this->hasMany(VariationOption::class);
+    }
 }
 

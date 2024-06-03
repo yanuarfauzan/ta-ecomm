@@ -64,10 +64,10 @@
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <a href="/admin/edit-voucher/{{ $v->id }}"
+                                        {{-- <a href="/admin/edit-voucher/{{ $v->id }}"
                                             class="btn btn-md bg-primary text-light btn-rounded mr-2">
                                             <i class="fa-solid fas fa-pen"></i>
-                                        </a>
+                                        </a> --}}
                                         <form action="/admin/delete-voucher/{{ $v->id }}" method="POST">
                                             @csrf
                                             @method('delete')
