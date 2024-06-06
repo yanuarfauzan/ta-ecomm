@@ -72,7 +72,7 @@
                 <hr>
                 <div class="modal-body" style="overflow-y: scroll; max-height: 450px;">
                     @foreach ($productVoucher as $voucher)
-                        <div class="d-flex justify-content-start align-items-center mt-2" style="cursor: pointer">
+                        <div class="d-flex justify-content-start align-items-center mt-2" style="{{ $subTotal >= $voucher->min_value ? '' : 'pointer-events: none; opacity: 0.5; background-color: #e9ecef;' }}  cursor: pointer">
                             <div class="d-flex justify-content-center align-items-center bg-main-color border-0 text-white"
                                 style="width: 150px; height: 88px">
                                 <img src="{{ Storage::url('public/icon_voucher/' . $voucher->voucher_icon) }}"

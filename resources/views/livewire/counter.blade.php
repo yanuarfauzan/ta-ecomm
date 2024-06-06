@@ -1,9 +1,5 @@
 <div class="d-flex justify-content-end gap-2">
     <div class="d-flex gap-2 align-items-end me-3">
-        <span wire:click="addCartProductToFav" class="font-main-color" style="cursor: pointer;">
-            <i class="bi bi-heart{{ $user->favouriteProduct->contains($product->id) ? '-fill' : '' }}"
-                style="font-size: 20px"></i>
-        </span>
         <span wire:click="deleteCartProduct('{{ $userCart->id }}')" class="font-main-color" style="cursor: pointer;">
             <i class="bi bi-trash" style="font-size: 20px"></i>
         </span>

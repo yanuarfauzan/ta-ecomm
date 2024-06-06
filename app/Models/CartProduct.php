@@ -14,7 +14,7 @@ class CartProduct extends Model
         'product_id',
         'order_id',
         'cart_id',
-        'is_locked'
+        'is_reviewed'
     ];
     public function getIncrement()
     {

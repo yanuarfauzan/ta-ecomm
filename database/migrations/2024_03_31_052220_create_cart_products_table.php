@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->uuid('product_id');
             $table->uuid('cart_id');
             $table->uuid('order_id')->nullable();
-            $table->boolean('is_locked')->nullable();
+            $table->boolean('is_reviewed')->nullable();
             $table->timestamps();
             $table->foreign('product_id')->references('id')->on('product')->onDelete('cascade');
             $table->foreign('cart_id')->references('id')->on('cart')->onDelete('cascade');

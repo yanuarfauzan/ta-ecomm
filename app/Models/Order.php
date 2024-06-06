@@ -53,5 +53,13 @@ class Order extends Model
     {
         return $this->hasMany(ProductAssessment::class, 'order_id', 'id');
     }
+    public function pickedVariation()
+    {
+        return $this->belongsToMany(Variation::class, 'picked_variation');
+    }
+    public function pickedVariationOption()
+    {
+        return $this->belongsToMany(VariationOption::class, 'picked_variation');
+    }
 }
 

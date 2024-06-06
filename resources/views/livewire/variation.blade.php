@@ -8,8 +8,8 @@
                 data-bs-toggle="collapse">Variasi</a>
         </span>
         <span>
-            @foreach ($product->pickedVariationOption as $variationOption)
-                {{ $variationOption->name }}{{ !$loop->last ? ',' : '' }}
+            @foreach ($userCart->pickedVariation as $variation)
+                {{ $variation->variationOption->name }}{{ !$loop->last ? ',' : '' }}
             @endforeach
         </span>
         <span>Stock {{ $product->stock }}</span>

@@ -265,7 +265,7 @@ class UserController extends Controller
                 'user_id' => $user->id,
                 'order_number' => $this->generateOrderNumber(),
                 'order_date' => date('Ymd'),
-                'order_status' => 'pending'
+                'order_status' => 'unpaid'
             ]);
             $usersCarts->each(function ($cart) use ($order) {
                 DB::table('cart_product')
@@ -298,7 +298,7 @@ class UserController extends Controller
         $defaultUserAdress = $this->user->userAddresses->where('is_default', true)->first();
         $productBuyNow = Product::findOrFail($request->productId);
 
-        $order = $user->order()->where('product_id', $request->productId)->where('order_status', 'unpaid')->first();
+        $order = $user->order()->where('product_id', $request->productId)->whereIn('order_status', ['unpaid', 'pending'])->first();
         if (!isset($order)) {
             $order = $user->order()->create([
                 'product_id' => $request->productId,
@@ -308,6 +308,12 @@ class UserController extends Controller
                 'total_price' => isset($productBuyNow->discount) ? $countBuyNow * $productBuyNow->price_after_dsicount : $countBuyNow * $totalPriceBuyNow,
                 'order_status' => 'unpaid'
             ]);
+            collect($variationBuyNow)->each(function ($variation) use ($order, $request) {
+                $variationId = explode('_', $variation)[0];
+                $variationOptionId = explode('_', $variation)[1];
+                $productId = $request->productId;
+                $order->pickedVariation()->attach($variationId, ['id' => Str::uuid(36), 'product_id' => $productId, 'variation_option_id' => $variationOptionId]);
+            });
         } else {
             if ($countBuyNow != $order->qty) {
                 $order->update([
@@ -361,9 +367,7 @@ class UserController extends Controller
                     Log::info($message);
                     event(new PaymentNotifEvent($user->id, $message));
                     break;
-                case 'deny':
                 case 'expire':
-                case 'cancel':
                     $order->update(['order_status' => 'failed']);
                     $message = 'Maaf, pembayaran Anda untuk pesanan telah kadaluarsa.
                     Pesanan Anda saat ini dalam status "Pembayaran Kadaluarsa".
@@ -383,7 +387,14 @@ class UserController extends Controller
     }
     public function profile()
     {
-        $user = $this->user->with('userAddresses', 'order', 'notification')->first();
+        $user = $this->user
+        ->with(
+            'userAddresses',
+            'order',
+            'order.product',
+            'order.product.pickedVariationOption',
+            'notification'
+        )->first();
         return view('user.profile', compact('user'));
     }
 }
