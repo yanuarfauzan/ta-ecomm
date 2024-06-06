@@ -17,7 +17,6 @@ return new class extends Migration {
             $table->string('voucher_icon')->nullable();
             $table->string('voucher_code')->nullable();
             $table->string('desc')->nullable();
-            $table->string('requirement')->nullable();
             $table->integer('min_value')->nullable();
             $table->decimal('discount_value')->nullable();
             $table->date('expired_at')->nullable();

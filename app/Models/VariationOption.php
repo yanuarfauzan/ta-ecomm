@@ -39,4 +39,8 @@ class VariationOption extends Model
     {
         return $this->hasOne(ProductImage::class, 'id', 'product_image_id');
     }
+    public function order()
+    {
+        return $this->belongsToMany(Order::class, 'picked_variation');
+    }
 }

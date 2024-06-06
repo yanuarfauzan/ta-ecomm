@@ -79,7 +79,7 @@
                             style="box-shadow: none; width: 100%; height: 50px;">
                     </div>
                 </div>
-                @livewire('NoteAndShippingMethod', ['product' => $productBuyNow, 'order' => $order, 'userCarts' => $usersCarts, 'productVoucher' => $productVoucher])
+                @livewire('NoteAndShippingMethod', ['product' => $productBuyNow, 'order' => $order, 'userCarts' => $usersCarts, 'productVoucher' => $productVoucher, 'subTotal' => $subTotal])
             </div>
         @else
             <div class="card-product card-all-check d-flex flex-column px-4 py-4 align-items-start shadow-sm gap-2"
@@ -99,9 +99,15 @@
                             </span>
                         </div>
                         <div class="d-flex justify-content-start align-items-center gap-2 variation-container">
+                            @foreach ($userCarts->pickedVariation as $variation)
+                                @if ($variation->variationOption?->productImage?->filepath_image)
+                                    <img src="{{ Storage::url('public/product_pictures/' . $variation->variationOption?->productImage->filepath_image) }}"
+                                        alt="" class="variation-image">
+                                @endif
+                            @endforeach
                             <span class="variation-options">
-                                @foreach ($product->pickedVariationOption as $variationOption)
-                                    {{ $variationOption->name }}{{ $loop->last ? '' : ',' }}
+                                @foreach ($userCarts->pickedVariation as $variation)
+                                    {{ $variation->variationOption->name }}{{ !$loop->last ? ',' : '' }}
                                 @endforeach
                             </span>
                         </div>
@@ -135,7 +141,7 @@
                             style="box-shadow: none; width: 100%; height: 50px;">
                     </div>
                 </div>
-                @livewire('NoteAndShippingMethod', ['product' => $product, 'order' => $order, 'userCarts' => $usersCarts, 'productVoucher' => $productVoucher])
+                @livewire('NoteAndShippingMethod', ['product' => $product, 'order' => $order, 'userCarts' => $usersCarts, 'productVoucher' => $productVoucher, 'subTotal' => $subTotal])
             </div>
         @endif
     </div>
