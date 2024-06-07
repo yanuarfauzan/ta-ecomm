@@ -363,8 +363,8 @@ class UserController extends Controller
                         $order->update(['order_status' => 'paid']);
                         if ($order->product_id) {
                             $varOptionIds = $order->product->pickedVariationOption;
-                            $mergeVarOption = MergeVariationOption::where('variation_option1_id', $varOptionIds[0]->id)
-                                ->where('variation_option2_id', $varOptionIds[1]->id)
+                            $mergeVarOption = MergeVariationOption::where('variation_option_1_id', $varOptionIds[0]->id)
+                                ->where('variation_option_2_id', $varOptionIds[1]->id)
                                 ->first();
                             $mergeVarOption->update([
                                 'merge_stock' => $mergeVarOption->merge_stock - $order->qty

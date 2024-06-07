@@ -53,6 +53,6 @@ class VariationOption extends Model
     }
     public function mergeVariationOption()
     {
-        return $this->belongsTo(MergeVariationOption::class, 'variation_option1_id', 'id');
+        return $this->belongsTo(MergeVariationOption::class, 'variation_option_1_id', 'id');
     }
 }

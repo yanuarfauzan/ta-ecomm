@@ -36,7 +36,7 @@
                             <div class="card border-0 position-relative shadow rounded-0" id="card-product"
                                 style="width: 18rem; height: auto; cursor: pointer;">
                                 <div style="overflow: hidden;">
-                                    <img src="{{ Storage::url('public/product-images/' . $product->hasImages->first()->filepath_image) }}"
+                                    <img src="{{ Storage::url($product->hasImages->first()->filepath_image) }}"
                                         class="card-img-top rounded-0" alt="..." id="image-product">
                                 </div>
                                 @if ($product->stock == 0)
