@@ -56,7 +56,6 @@ class ProductController extends Controller
 
         $dimensions = $validatedData['length'] . 'x' . $validatedData['width'] . 'x' . $validatedData['height'];
 
-        // Simpan produk
         $product = new Product();
         $product->name = $validatedData['name'];
         $product->SKU = $validatedData['SKU'];
@@ -72,10 +71,8 @@ class ProductController extends Controller
         // Simpan gambar
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
-                // Simpan gambar ke folder yang ditentukan
                 $imagePath = $image->store('public/product-images');
 
-                // Buat record baru untuk gambar produk
                 $productImage = new ProductImage();
                 $productImage->id = (string) Str::uuid();
                 $productImage->product_id = $product->id;
@@ -167,16 +164,12 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
 
-        // Delete associated product images
         $productImages = ProductImage::where('product_id', $product->id)->get();
         foreach ($productImages as $productImage) {
-            // Delete the image file from storage
             Storage::delete(str_replace('/storage/', 'public/', $productImage->filepath_image));
-            // Delete the image record from the database
             $productImage->delete();
         }
 
-        // Delete the product
         $product->delete();
         return redirect()->to('/admin/list-product')->with('delete', 'Produk Telah Dihapus');
     }

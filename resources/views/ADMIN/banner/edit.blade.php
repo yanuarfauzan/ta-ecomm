@@ -21,7 +21,8 @@
                     <label for="banner_home">Banner Image</label>
                     @if ($bannerHome->banner_image)
                         <div class="mb-2">
-                            <img src="{{ Storage::url($bannerHome->banner_image) }}" alt="Banner Home" style="max-width: 100px;">
+                            <img src="{{ Storage::url($bannerHome->banner_image) }}" alt="Banner Home"
+                                style="max-width: 100px;">
                         </div>
                     @endif
                     <input type="file" class="form-control-file @error('banner_image') is-invalid @enderror"
@@ -32,8 +33,11 @@
                 </div>
                 <div class="mb-3">
                     <label for="desc" class="form-label">Deskripsi</label>
-                    <input type="text" class="form-control" id="desc" name="desc"
-                        value="{{ $bannerHome->desc }}">
+                    <input type="text" class="form-control @error('desc') is-invalid @enderror" id="desc"
+                        name="desc" value="{{ $bannerHome->desc }}">
+                    @error('desc')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
                 <button type="submit" class="btn btn-primary">Update</button>
             </form>

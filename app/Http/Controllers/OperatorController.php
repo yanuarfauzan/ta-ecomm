@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Log;
+use App\Models\Order;
 use App\Models\Address;
+use App\Models\Shipping;
+use App\Models\CartProduct;
 use Illuminate\Http\Request;
+use App\Models\ProductAssessment;
 
 class OperatorController extends Controller
 {
@@ -12,12 +17,108 @@ class OperatorController extends Controller
      */
     public function index()
     {
-        return view('OPERATOR.partial.main');
+        $orders = Order::with(['user', 'product', 'cartProducts.product', 'cartProducts.cart', 'shippingMethod', 'productAssessment.product'])
+            ->whereNotIn('order_status', ['unpaid', 'pending'])
+            ->get();
+
+        foreach ($orders as $order) {
+            $order->formatted_status = $this->getStatusLabel($order->order_status);
+        }
+
+        $prosesCount = Order::where('order_status', 'proceed')->orWhere('order_status', 'shipped')->orWhere('order_status', 'completed')->count();
+        $shippedCount = Order::where('order_status', 'shipped')->orWhere('order_status', 'completed')->count();
+        $completedCount = Order::where('order_status', 'completed')->count();
+
+        return view('OPERATOR.partial.main', compact('orders', 'prosesCount', 'shippedCount', 'completedCount'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
+
+    private function getStatusLabel($status)
+    {
+        $statusLabels = [
+            'unpaid' => 'Unpaid',
+            'pending' => 'Pending',
+            'paid' => 'PAID',
+            'failed' => 'Failed',
+            'proceed' => 'PROSES',
+            'shipped' => 'SHIPPED',
+            'delivered' => 'Delivered',
+            'cancelled' => 'Cancelled',
+            'completed' => 'COMPLETED',
+        ];
+
+        return $statusLabels[$status] ?? $status;
+    }
+
+    public function updateProses(Request $request, $id)
+    {
+        $order = Order::findOrFail($id);
+        $order->order_status = $request->input('order_status');
+        $order->save();
+
+        return response()->json(['success' => 'Order status updated successfully.']);
+    }
+
+    public function updateShipping(Request $request, $id)
+    {
+        $order = Order::findOrFail($id);
+        $shipping = $order->shipping;
+
+        $shipping->resi = $request->input('resi');
+        $shipping->save();
+
+        return response()->json(['success' => 'Shipping information updated successfully.']);
+    }
+
+    public function updateCompleted(Request $request, $id)
+    {
+        $order = Order::findOrFail($id);
+        $order->order_status = 'completed';
+        $order->save();
+
+        return response()->json(['success' => true]);
+    }
+
+    public function updateResi(Request $request)
+    {
+        $orderId = $request->input('orderId');
+        $newResi = $request->input('resi');
+
+        $request->validate([
+            'orderId' => 'required|exists:order,id',
+            'resi' => 'required|string|max:255',
+        ]);
+
+        $order = Order::findOrFail($orderId);
+
+        $shipping = Shipping::findOrFail($order->shipping_id);
+
+        $shipping->resi = $newResi;
+        $shipping->save();
+
+        return response()->json(['success' => true, 'message' => 'Resi updated successfully']);
+    }
+
+    public function responseOperator(Request $request, $id)
+    {
+        \Log::info('Assessment ID: ' . $id);
+        \Log::info('Request Data: ' . json_encode($request->all()));
+
+        $assessment = ProductAssessment::find($id);
+
+        if ($assessment) {
+            $assessment->response_operator = $request->input('response_operator');
+            $assessment->save();
+
+            return response()->json(['success' => true, 'message' => 'Response saved successfully!']);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Assessment not found.'], 404);
+        }
+    }
+
     public function create()
     {
         //

@@ -44,29 +44,28 @@ class VoucherController extends Controller
             ],
             'voucher_code' => 'required|string|unique:voucher',
             'desc' => 'nullable|string',
-            'requirement' => 'nullable|string',
             'min_value' => 'nullable|integer',
             'discount_value' => 'nullable|integer',
             'expired_at' => 'required|date',
         ]);
 
-        // Tentukan nilai is_active berdasarkan expired_at
         $isActive = $request->input('expired_at') >= now();
 
-        // Simpan data voucher
         $voucher = new Voucher([
             'name' => $validatedData['name'],
             'type' => $validatedData['type'],
             'voucher_code' => $validatedData['voucher_code'],
             'desc' => $validatedData['desc'],
-            'requirement' => $validatedData['requirement'],
             'min_value' => $validatedData['min_value'],
             'discount_value' => $validatedData['discount_value'],
             'expired_at' => $validatedData['expired_at'],
             'is_active' => $isActive,
         ]);
 
-        // Simpan gambar icon jika tersedia
+        if ($voucher->expired_at <= now()) {
+            $voucher->is_active = false;
+        }
+
         if ($request->hasFile('voucher_icon')) {
             $imagePath = $request->file('voucher_icon')->storeAs('public/voucher-icon', $request->voucher_icon->getClientOriginalName());
             $voucher->voucher_icon = $imagePath;
@@ -97,57 +96,61 @@ class VoucherController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Voucher $voucher)
+    public function update(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'voucher_icon' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
-            'voucher_code' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('vouchers')->ignore($voucher),
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+            'type' => 'required|in:free ongkir,discount',
+            'voucher_icon' => [
+                'image',
+                'mimes:jpeg,png,jpg,gif',
+                'max:5120',
+                new ImageResolution(1080, 1080)
             ],
+            'voucher_code' => 'required|string|unique:voucher,voucher_code,' . $id,
             'desc' => 'nullable|string',
-            'requirement' => 'nullable|string',
-            'discount_value' => 'required|numeric|min:0',
+            'min_value' => 'nullable|integer',
+            'discount_value' => 'nullable|integer',
             'expired_at' => 'required|date',
-            'is_active' => 'required|boolean',
         ]);
 
-        $voucherIconPath = $voucher->voucher_icon;
+        $voucher = Voucher::findOrFail($id);
+
+        $voucher->name = $validatedData['name'];
+        $voucher->type = $validatedData['type'];
+        $voucher->voucher_code = $validatedData['voucher_code'];
+        $voucher->desc = $validatedData['desc'];
+        $voucher->min_value = $validatedData['min_value'];
+        $voucher->discount_value = $validatedData['discount_value'];
+        $voucher->expired_at = $validatedData['expired_at'];
 
         if ($request->hasFile('voucher_icon')) {
-            // Menghapus gambar lama jika ada
-            if ($voucher->voucher_icon) {
-                Storage::delete($voucher->voucher_icon);
-            }
-
-            // Mengunggah gambar baru
-            $voucherIconPath = $request->file('voucher_icon')->store('voucher_icons');
+            $imagePath = $request->file('voucher_icon')->storeAs('public/voucher-icon', $request->voucher_icon->getClientOriginalName());
+            $voucher->voucher_icon = $imagePath;
         }
 
-        $is_active = $request->is_active ? true : false;
+        $voucher->save();
 
-        $voucher->update([
-            'name' => $request->name,
-            'voucher_icon' => $voucherIconPath,
-            'voucher_code' => $request->voucher_code,
-            'desc' => $request->desc,
-            'requirement' => $request->requirement,
-            'discount_value' => $request->discount_value,
-            'expired_at' => $request->expired_at,
-            'is_active' => $is_active,
-        ]);
+        return redirect('/admin/list-voucher')->with('success', 'Voucher Berhasil Diperbarui');
+    }
 
-        return redirect('/admin/list-product')->with('success', 'Category updated successfully');
+    public function updateStatus($id)
+    {
+        $voucher = Voucher::findOrFail($id);
+        $voucher->is_active = false; // Set status voucher menjadi expired
+        $voucher->save();
+
+        return redirect()->back()->with('alert', 'Status Voucher Berhasil Diubah');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Voucher $voucher)
+    public function destroy($id)
     {
-        //
+        $voucher = Voucher::findOrFail($id);
+
+        $voucher->delete();
+        return redirect('/admin/list-voucher')->with('delete', 'Voucher Telah Dihapus.');
     }
 }

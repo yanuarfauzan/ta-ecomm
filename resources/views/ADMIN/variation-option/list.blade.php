@@ -2,9 +2,9 @@
 @section('content')
     <section class="section text-center">
         <div class="section-header">
-            <h1>PRODUCT</h1>
+            <h1>VARIATION OPTION</h1>
             <div class="section-header-button">
-                <a href="/admin/create-product" class="btn btn-success">Add New</a>
+                <a href="/admin/create-variation-option" class="btn btn-success">Add New</a>
             </div>
         </div>
     </section>
@@ -28,7 +28,7 @@
 
     <div class="card mx-auto">
         <div class="card-header text-center">
-            <h4>List Product</h4>
+            <h4>List Variation Option</h4>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -36,7 +36,8 @@
                     <thead>
                         <tr>
                             <th scope="col">No.</th>
-                            <th scope="col">Kode Produk</th>
+                            <th scope="col">Nama Variasi Opsi</th>
+                            <th scope="col">Nama Variasi</th>
                             <th scope="col">Nama Produk</th>
                             <th scope="col">Detail</th>
                             <th scope="col">Aksi</th>
@@ -46,30 +47,31 @@
                         @php
                             $no = 1;
                         @endphp
-                        @foreach ($product as $produk)
+                        @foreach ($variationOptions as $varOp)
                             <tr>
                                 <td>{{ $no++ }}</td>
-                                <td>{{ $produk->SKU }}</td>
-                                <td>{{ $produk->name }}</td>
+                                <td>{{ $varOp->name }}</td>
+                                <td>{{ optional($varOp->variation)->name }}</td>
+                                <td>
+                                    @if ($varOp->productImage && $varOp->productImage->product)
+                                        {{ $varOp->productImage->product->name }}
+                                    @endif
+                                </td>
                                 <td>
                                     <button type="button" class="btn btn-info btn-rounded product-detail-btn"
-                                        data-toggle="modal" data-target="#productDetailModal{{ $produk->id }}"
-                                        data-name="{{ $produk->name }}" data-SKU="{{ $produk->SKU }}"
-                                        data-stock="{{ $produk->stock }}" data-price="{{ $produk->price }}"
-                                        data-desc="{{ $produk->desc }}" data-discount="{{ $produk->discount }}"
-                                        data-weight="{{ $produk->weight }}" data-dimensions="{{ $produk->dimensions }}">
+                                        data-toggle="modal" data-target="#productDetailModal{{ $varOp->id }}">
                                         Details
                                     </button>
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <a href="/admin/edit-product/{{ $produk->id }}"
+                                        <a href="/admin/edit-variation-option/{{ $varOp->id }}"
                                             class="btn btn-md bg-primary text-light btn-rounded mr-2">
                                             <i class="fa-solid fas fa-pen"></i>
                                         </a>
-                                        <form action="/admin/delete-product/{{ $produk->id }}" method="POST">
+                                        <form action="/admin/delete-variation-option/{{ $varOp->id }}" method="POST">
                                             @csrf
-                                            @method('delete')
+                                            @method('DELETE')
                                             <button type="submit" class="btn btn-md bg-danger text-light btn-rounded">
                                                 <i class="fa-solid fas fa-trash"></i>
                                             </button>
@@ -83,13 +85,15 @@
             </div>
         </div>
     </div>
-    @foreach ($product as $produk)
-        <div class="modal fade" id="productDetailModal{{ $produk->id }}" tabindex="-1" role="dialog"
-            aria-labelledby="productDetailModalLabel{{ $produk->id }}" aria-hidden="true">
+
+    @foreach ($variationOptions as $varOp)
+        <div class="modal fade" id="productDetailModal{{ $varOp->id }}" tabindex="-1" role="dialog"
+            aria-labelledby="productDetailModalLabel{{ $varOp->id }}" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title text-primary" id="productDetailModalLabel{{ $produk->id }}">{{ $produk->name }}</h4>
+                        <h4 class="modal-title text-primary" id="productDetailModalLabel{{ $varOp->id }}">
+                            {{ $varOp->name }}</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -97,34 +101,18 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="main-image">
-                                    @if ($produk->hasImages && $produk->hasImages->isNotEmpty())
-                                        <img id="mainProductImage{{ $produk->id }}"
-                                            src="{{ asset($produk->hasImages->first()->filepath_image) }}"
-                                            alt="{{ $produk->name }}" class="img-fluid">
-                                    @else
-                                        <img id="mainProductImage{{ $produk->id }}"
-                                            src="{{ asset('default-image.jpg') }}" alt="Default Image" class="img-fluid">
-                                    @endif
-                                </div>
-                                <div class="thumbnail-images mt-3">
-                                    @if ($produk->hasImages && $produk->hasImages->isNotEmpty())
-                                        @foreach ($produk->hasImages as $image)
-                                            <img src="{{ asset($image->filepath_image) }}" alt="{{ $produk->name }}"
-                                                class="img-thumbnail img-fluid small-image"
-                                                onclick="document.getElementById('mainProductImage{{ $produk->id }}').src='{{ asset($image->filepath_image) }}'">
-                                        @endforeach
-                                    @endif
-                                </div>
+                                @if ($varOp->productImage)
+                                    <img id="modalProductImage" src="{{ asset($varOp->productImage->filepath_image) }}"
+                                        alt="{{ $varOp->name }}" class="img-fluid">
+                                @else
+                                    <p>Gambar tidak tersedia</p>
+                                @endif
                             </div>
                             <div class="col-md-6">
-                                <p><strong>Kode Produk:</strong> {{ $produk->SKU }}</p>
-                                <p><strong>Harga:</strong> Rp {{ number_format($produk->price, 0, ',', '.') }}</p>
-                                <p><strong>Diskon:</strong> {{ $produk->discount }}%</p>
-                                <p><strong>Deskripsi:</strong> {{ $produk->desc }}</p>
-                                <p><strong>Stock:</strong> {{ $produk->stock }}</p>
-                                <p><strong>Berat:</strong> {{ $produk->weight }} Kg</p>
-                                <p><strong>Dimensi:</strong> {{ $produk->dimensions }} cm</p>
+                                <p><strong>Nama Variasi Opsi:</strong> {{ $varOp->name }}</p>
+                                <p><strong>Harga:</strong> Rp {{ number_format($varOp->price, 0, ',', '.') }}</p>
+                                <p><strong>Berat:</strong> {{ $varOp->weight }}</p>
+                                <p><strong>Dimensi:</strong> {{ $varOp->dimensions }}</p>
                             </div>
                         </div>
                     </div>
@@ -136,7 +124,7 @@
         </div>
     @endforeach
 
-    <style>
+    {{-- <style>
         .main-image img {
             width: 100%;
             height: auto;
@@ -169,9 +157,5 @@
             margin-right: 3px;
             color: red;
         }
-
-        /* .discount-price {
-                color: green;
-            } */
-    </style>
+    </style>  --}}
 @endsection

@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
     <title> &mdash; e-comm</title>
 
@@ -23,7 +24,7 @@
 </head>
 
 <body>
-    <script id="__bs_script__">
+    <script id="_bs_script_">
         document.write("<script async src='/browser-sync/browser-sync-client.js?v=2.27.10'><\/script>".replace("HOST",
             location.hostname));
     </script>
@@ -47,15 +48,15 @@
                                 </div>
                                 <div class="card-stats-items">
                                     <div class="card-stats-item">
-                                        <div class="card-stats-item-count">24</div>
-                                        <div class="card-stats-item-label">Pending</div>
+                                        <div class="card-stats-item-count">{{ $prosesCount }}</div>
+                                        <div class="card-stats-item-label">Proses</div>
                                     </div>
                                     <div class="card-stats-item">
-                                        <div class="card-stats-item-count">12</div>
-                                        <div class="card-stats-item-label">Shipping</div>
+                                        <div class="card-stats-item-count">{{ $shippedCount }}</div>
+                                        <div class="card-stats-item-label">Shipped</div>
                                     </div>
                                     <div class="card-stats-item">
-                                        <div class="card-stats-item-count">23</div>
+                                        <div class="card-stats-item-count">{{ $completedCount }}</div>
                                         <div class="card-stats-item-label">Completed</div>
                                     </div>
                                 </div>
@@ -111,146 +112,191 @@
                         </div>
                     </div>
                 </div>
-                <div class="card mt-1">
-                    <div class="card-header">
-                        <div class="d-flex justify-content-between align-items-center" style="width: 100%;">
-                            <div class="d-flex justify-content-start gap-2 align-items-center">
-                                <h4>#ECM-12345678</h4>
-                                <span class="opacity-50">John wick</span>
-                            </div>
-                            <div class="card-header-action d-flex justify-content-start align-items-center gap-2">
-                                <div class="badge badge-success d-flex justify-content-center align-items-center" style="height: 30px;">COMPLETED</div>
-                                <a data-collapse="#mycard-collapse-2" class="btn btn-icon btn-info" href="#"><i
-                                        class="fas fa-minus"></i></a>
+                @foreach ($orders as $order)
+                    <div class="card mt-1">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between align-items-center" style="width: 100%;">
+                                <div class="d-flex justify-content-start gap-2 align-items-center">
+                                    <h4>#{{ $order->order_number }}</h4>
+                                    <span class="opacity-50">{{ $order->user->username }}</span>
+                                </div>
+                                <div class="card-header-action d-flex justify-content-start align-items-center gap-2">
+                                    <div class="badge d-flex justify-content-center align-items-center"
+                                        style="height: 30px; background-color: @if (in_array($order->order_status, ['paid', 'proceed', 'shipped'])) #ffc107 @else #28a745 @endif">
+                                        {{ $order->formatted_status }}
+                                    </div>
+                                    <button class="btn btn-icon btn-info" data-toggle="collapse"
+                                        data-target="#order-details-{{ $order->id }}" aria-expanded="false"
+                                        aria-controls="order-details-{{ $order->id }}">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="collapse show" id="mycard-collapse-2">
-                        <div class="card-body">
-                            <div class="d-flex flex-column justify-content-start align-items-center">
-                                <div class="d-flex justify-content-between align-items-top">
-                                    <div class="" style="width: 24%; height: auto">
-                                        <div class="d-flex flex-column justify-content-start align-items-start mx-2">
-                                            <span>Pemesan/kirim kepada :</span>
-                                            <h6 class="mt-2">STEVAN SUGIONO</h6>
-                                            <h6>085797227164</h6>
-                                            <h6>example@gmail.com</h6>
-                                            <span>Catatan :</span>
-                                            <span>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Expedita
-                                                officiis, corporis doloribus rem amet non aut nisi maxime libero
-                                                dolorem.</span>
-                                        </div>
-                                    </div>
-                                    <div class="" style="width: 24%; height: auto">
-                                        <span>Produk :</span>
-                                        <div class="d-flex flex-column justify-content-start align-items-start mx-2">
-                                            <div class="d-flex justify-content-start align-items-center">
-                                                <h6 class="mt-2">Sapu Elektrik</h6>
-                                                <span>x 1</span>
-                                            </div>
-                                            <span>kuning, M</span>
-                                        </div>
-                                        <div class="d-flex flex-column justify-content-start align-items-start mx-2">
-                                            <div class="d-flex justify-content-start align-items-center">
-                                                <h6 class="mt-2">Sapu Elektrik</h6>
-                                                <span>x 1</span>
-                                            </div>
-                                            <span>kuning, M</span>
-                                        </div>
-                                        <div class="d-flex justify-content-end">
-                                            <span>+</span>
-                                        </div>
-                                        <hr>
-                                        <div class="d-flex justify-content-between mx-2">
-                                            <span>total : </span>
-                                            <span>5 Pcs</span>
-                                        </div>
-                                    </div>
-                                    <div class="card" style="width: 24%; height: auto">
-                                        <div class="card-header bg-primary d-flex justify-content-between mb-0">
-                                            <span>
-                                                <h3 class="text-white">total :</h3>
-                                            </span>
-                                            <span>
-                                                <h3 class="text-white">Rp 10.000</h3>
-                                            </span>
-                                        </div>
-                                        <div
-                                            class="card-body d-flex flex-column justify-content-start align-items-center">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <span>harga produk : </span>
-                                                <span>Rp 10.000</span>
+                        <div class="collapse" id="order-details-{{ $order->id }}">
+                            <div class="card-body">
+                                <div class="d-flex flex-column justify-content-start align-items-center">
+                                    <div class="d-flex justify-content-between align-items-top w-100">
+                                        <!-- Customer Details -->
+                                        <div class="w-25">
+                                            <div class="d-flex flex-column mx-2">
+                                                <span>Pemesan/kirim kepada :</span>
+                                                <h6 class="mt-2">{{ $order->address->recipient_name ?? 'N/A' }}</h6>
+                                                <h6>{{ $order->user->phone_number ?? 'N/A' }}</h6>
+                                                <h6>{{ $order->user->email ?? 'N/A' }}</h6>
+                                                <span>Catatan :</span>
+                                                <span>{{ $order->note ?? 'N/A' }}</span>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="" style="width: 24%; height: 100px">
-                                        <div class="d-flex flex-column justify-content-start align-items-start mx-2">
-                                            <span>Pengiriman :</span>
-                                            <h6 class="mt-2">JNE/POS/TIKI</h6>
-
-                                            <span>alamat :</span>
-                                            <span>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Expedita
-                                                officiis, corporis doloribus rem amet non aut nisi maxime libero
-                                                dolorem.</span>
+                                        <!-- Product Details -->
+                                        <div class="w-50">
+                                            <span>Produk :</span>
+                                            <div class="d-flex flex-column mx-2">
+                                                @if ($order->product)
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <h6 class="mt-2">{{ $order->product->name }}</h6>
+                                                        <span>x {{ $order->qty }}</span>
+                                                    </div>
+                                                @else
+                                                    @foreach ($order->cartProducts as $cartProduct)
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <h6 class="mt-2">{{ $cartProduct->product->name }}</h6>
+                                                            <span>x {{ $cartProduct->cart->qty }}</span>
+                                                        </div>
+                                                    @endforeach
+                                                @endif
+                                                <div class="d-flex justify-content-between mx-2 mt-3">
+                                                    <span>Total:</span>
+                                                    <span>
+                                                        @if ($order->product)
+                                                            {{ $order->qty }}
+                                                        @else
+                                                            {{ $order->cartProducts->sum(function ($cartProduct) {
+                                                                return $cartProduct->cart->qty;
+                                                            }) }}
+                                                        @endif
+                                                        Pcs
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Total Price -->
+                                        <div class="card w-25">
+                                            <div class="card-header bg-primary d-flex justify-content-between">
+                                                <h4 class="text-white">Total:</h4>
+                                                <h4 class="text-white">Rp
+                                                    {{ number_format($order->total_price + $order->shippingMethod->cost, 0, ',', '.') }}
+                                                </h4>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between">
+                                                    <span>Harga produk:</span>
+                                                    <span>Rp
+                                                        {{ number_format($order->total_price, 0, ',', '.') }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between">
+                                                    <span>Ongkos Kirim:</span>
+                                                    <span>Rp
+                                                        {{ number_format($order->shippingMethod->cost, 0, ',', '.') }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Shipping Details -->
+                                        <div class="w-25">
+                                            <div class="d-flex flex-column mx-2">
+                                                <span>Pengiriman :</span>
+                                                <h6 class="mt-2">
+                                                    {{ $order->shippingMethod->provider_name ?? 'N/A' }}</h6>
+                                                <span>Alamat :</span>
+                                                <span>{{ $order->address->address ?? 'N/A' }}</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="d-flex justify-content-start align-items-center gap-2 mx-2 mt-4"
-                                    style="width: 100%">
-                                    <span class="ms-2">
-                                        <strong>
-                                            Proses pesanan ini ?
-                                        </strong>
-                                    </span>
-                                    <span>
-                                        <button class="btn btn-danger">proses</button>
-                                    </span>
-                                    <span class="mt-1">
+                                    <!-- Order Actions -->
+                                    <div class="d-flex justify-content-start align-items-center gap-2 mx-2 mt-4 w-100">
+                                        <span class="ms-2"><strong>Proses pesanan ini ?</strong></span>
+                                        @if ($order->order_status === 'paid')
+                                            <button class="btn btn-danger btnProses"
+                                                data-order-id="{{ $order->id }}">Proses</button>
+                                        @else
+                                            <button class="btn btn-success" disabled>Proses</button>
+                                        @endif
                                         <i class="bi bi-arrow-right-short" style="font-size: 30px;"></i>
-                                    </span>
-                                    <span>
-                                        <strong>
-                                            Paket sudah dikirim ?
-                                        </strong>
-                                    </span>
-                                    <span>
-                                        <button class="btn btn-secondary" disabled>shipped</button>
-                                    </span>
-                                    <span>
-                                        <input type="text" class="form-control" placeholder="no. resi"
-                                            id="username" name="username" style="width: 300px; height: 35px;"
-                                            disabled>
-                                    </span>
-                                </div>
-                                <div class="d-flex justify-content-start align-items-center gap-2 mx-2 mt-4"
-                                    style="width: 100%">
-                                    <span class="ms-2">
-                                        <strong>
-                                            Ulasan
-                                        </strong>
-                                    </span>
-                                </div>
-                                <span class="ms-2">
-                                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Officiis quos consequatur
-                                    quia, in dolores expedita ad dolore totam deserunt nemo similique quo aspernatur
-                                    aliquam unde dolorem dolorum accusantium asperiores rem!
-                                </span>
-                                <div class="d-flex justify-content-between align-items-center gap-2 mt-2 ms-2" style="width: 100%">
-                                    <input type="text" class="form-control" id="username"
-                                    name="username" style="width: 100%; height: 35px;">
-                                    <button class="btn btn-primary">kirim</button>
+                                        <span><strong>Paket sudah dikirim ?</strong></span>
+                                        @if ($order->order_status === 'shipped' || $order->order_status === 'completed')
+                                            <button class="btn btn-success" disabled>Shipped</button>
+                                        @else
+                                            @if ($order->order_status === 'paid')
+                                                <button class="btn btn-secondary btnShipped"
+                                                    data-order-id="{{ $order->id }}" disabled>Shipped</button>
+                                            @else
+                                                <button class="btn btn-danger btnShipped"
+                                                    data-order-id="{{ $order->id }}">Shipped</button>
+                                            @endif
+                                        @endif
+
+                                        <div class="d-flex align-items-center">
+                                            <input type="text" class="form-control inputResi"
+                                                placeholder="No. resi" data-order-id="{{ $order->id }}"
+                                                value="{{ $order->shipping->resi }}" required
+                                                @if ($order->order_status !== 'proceed') disabled @endif>
+                                            @if (in_array($order->order_status, ['shipped', 'completed']))
+                                                <button class="btn btn-outline-primary btnEditResi ms-2"
+                                                    data-order-id="{{ $order->id }}">
+                                                    <i class="bi bi-pencil"></i>
+                                                </button>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <!-- Review Section -->
+                                    <div class="d-flex justify-content-start align-items-center gap-2 mx-2 mt-4 w-100">
+                                        <span class="ms-2"><strong>Ulasan</strong></span>
+                                    </div>
+                                    @if ($order && $order->productAssessment && !$order->productAssessment->isEmpty())
+                                        @foreach ($order->productAssessment as $assessment)
+                                            <div
+                                                class="d-flex justify-content-start align-items-center gap-2 mx-2 mt-4 w-100">
+                                                <h6 class="m-2 text-primary">{{ $assessment->product->name }}</h6>
+                                            </div>
+                                            @if ($assessment->image)
+                                                <img src="{{ asset('storage/' . $assessment->image) }}"
+                                                    alt="">
+                                            @endif
+                                            <div
+                                                class="d-flex justify-content-start align-items-center gap-2 mx-2 w-100">
+                                                <span class="ms-2">{{ $assessment->content }}</span>
+                                            </div>
+                                            <div
+                                                class="d-flex justify-content-between align-items-center gap-2 mt-2 ms-2 w-100">
+                                                <input type="text" class="form-control response-input"
+                                                    data-assessment-id="{{ $assessment->id }}"
+                                                    style="width: 100%; height: 35px;"
+                                                    value="{{ $assessment->response_operator }}">
+                                                <button class="btn btn-primary btnRespond"
+                                                    data-assessment-id="{{ $assessment->id }}">Kirim</button>
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        <div
+                                            class="d-flex justify-content-between align-items-center gap-2 mt-2 ms-2 w-100">
+                                            <p class="m-1 text-alert">Belum ada ulasan masuk.</p>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
-
                         </div>
                     </div>
-                </div>
+                @endforeach
         </div>
-        <footer class="main-footer">
-            <div class="footer-left">
-                &copy; 2024 <div class="bullet"></div> Developed By <a>TIM TA</a>
-            </div>
-        </footer>
+        </section>
+    </div>
+    <footer class="main-footer">
+        <div class="footer-left">
+            &copy; 2024 <div class="bullet"></div> Developed By <a>TIM TA</a>
+        </div>
+    </footer>
     </div>
     </div>
 
@@ -281,8 +327,172 @@
     <!-- Page Specific JS File -->
     <script src="{{ asset('stisla/assets/js/page/forms-advanced-forms.js') }}"></script>
     <script src="{{ asset('stisla/assets/js/page/modules-sweetalert.js') }}"></script>
+
+    //btnProses
     <script>
-        // Mendapatkan semua tombol "Dikembalikan"
+        $(document).ready(function() {
+            $(document).on('click', '.btnProses', function() {
+                var orderId = $(this).data('order-id');
+
+                $.ajax({
+                    url: '/operator/' + orderId + '/update-proses',
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        order_status: 'proceed'
+                    },
+                    success: function(response) {
+                        location.reload();
+                    },
+                    error: function(xhr) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+
+            $(document).on('click', '.btnShipped', function() {
+                var orderId = $(this).data('order-id');
+
+                $.ajax({
+                    url: '/operator/' + orderId + '/update-proses',
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        order_status: 'shipped'
+                    },
+                    success: function(response) {
+                        location.reload();
+                    },
+                    error: function(xhr) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+
+    //btnShipped
+    <script>
+        $(document).on('click', '.btnShipped', function() {
+            var button = $(this);
+            var orderId = button.data('order-id');
+            var resiInput = button.parent().find('.inputResi');
+
+            var resi = resiInput.val();
+
+            $.ajax({
+                url: '/operator/' + orderId + '/update-shipping',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    resi: resi
+                },
+                success: function(response) {
+                    console.log(response.success);
+
+                    button.removeClass('btn-danger').addClass('btn-success').text('Shipped');
+
+                    button.prop('disabled', true);
+
+                    resiInput.prop('disabled', true).val(resi);
+                },
+                error: function(xhr) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+    </script>
+
+    //editResi
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.btnEditResi').forEach(button => {
+                button.addEventListener('click', function() {
+                    const orderId = this.getAttribute('data-order-id');
+                    const inputResi = document.querySelector(
+                        `.inputResi[data-order-id="${orderId}"]`);
+
+                    if (inputResi.disabled) {
+                        inputResi.disabled = false;
+                        inputResi.focus();
+                        this.innerHTML = '<i class="fas fa-check"></i>';
+                    } else {
+                        inputResi.disabled = true;
+                        const newResi = inputResi.value;
+
+                        this.innerHTML = '<i class="bi bi-pencil"></i>';
+
+                        fetch('{{ route('update-resi') }}', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                },
+                                body: JSON.stringify({
+                                    orderId: orderId,
+                                    resi: newResi
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    console.log(data.message);
+                                } else {
+                                    console.error('Failed to update resi');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            });
+                    }
+                });
+            });
+        });
+    </script>
+
+    //ulasan
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.btnRespond').forEach(button => {
+                button.addEventListener('click', function() {
+                    const assessmentId = this.getAttribute('data-assessment-id');
+                    const responseInput = document.querySelector(
+                        `.response-input[data-assessment-id="${assessmentId}"]`
+                    );
+                    const response = responseInput.value;
+
+                    console.log({
+                        assessmentId: assessmentId,
+                        response_operator: response
+                    });
+
+                    fetch(`/operator/response-operator/${assessmentId}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector(
+                                    'meta[name="csrf-token"]').getAttribute('content')
+                            },
+                            body: JSON.stringify({
+                                response_operator: response
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('Response data:', data);
+                            if (data.success) {
+                                alert('Response saved successfully!');
+                            } else {
+                                alert('Failed to save response.');
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                });
+            });
+        });
+    </script>
+
+    <script>
         const returnButtons = document.querySelectorAll('.return-btn');
 
         returnButtons.forEach(button => {
@@ -292,82 +502,20 @@
                 const form = this.parentElement;
                 const id = this.getAttribute('data-id');
 
-                // Menonaktifkan tombol setelah diklik
                 this.setAttribute('disabled', 'disabled');
 
-                // Mengirim permintaan Ajax ke URL update-status
                 axios.put(form.action, new FormData(form))
                     .then(response => {
-                        // Mengubah status menjadi "Dikembalikan"
-                        const statusCell = form.parentElement.querySelector('.status-cell');
+                        const statusCell = form.parentElement.querySelector('.order_status-cell');
                         statusCell.innerHTML = '<div class="badge badge-success">Dikembalikan</div>';
                     })
                     .catch(error => {
-                        // Menampilkan pesan error (jika ada)
                         console.log(error);
                     });
             });
         });
     </script>
-    {{-- <script>
-        function confirmAction(message, formId) {
-            if (confirm(message)) {
-                document.getElementById(formId).submit();
-            }
-        }
-    </script> --}}
-    {{-- <script>
-        function confirmAction(message, pinjamId) {
-            Swal.fire({
-                title: "Confirmation",
-                text: message,
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes",
-                cancelButtonText: "Cancel",
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // If confirmed, send PUT request using fetch API
-                    fetch(`/peminjaman/update-status/${pinjamId}`, {
-                        method: 'PUT',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json',
-                        },
-                        body: JSON.stringify({ status: 'Dikembalikan' }),
-                    })
-                    .then((response) => {
-                        if (response.ok) {
-                            location.reload();
-                        } else {
-                            Swal.fire("Error", "Gagal mengubah status peminjaman.", "error");
-                        }
-                    })
-                    .catch((error) => {
-                        Swal.fire("Error", "Terjadi kesalahan. Gagal mengubah status peminjaman.", "error");
-                    });
-                }
-            });
-        }
-    </script> --}}
-    {{-- <script>
-        function confirmAction(message, id) {
-            swal({
-                title: "Confirmation",
-                text: message,
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            }).then(function(confirm) {
-                if (confirm) {
-                    document.getElementById("form-update-status-" + id).submit();
-                }
-            });
-        }
-    </script> --}}
+
     <script>
         function confirmAction(message, element) {
             swal({

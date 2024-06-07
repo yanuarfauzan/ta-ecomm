@@ -48,7 +48,6 @@ class BannerHomeController extends Controller
             $bannerImage = $request->file('banner_image');
             $bannerName = time() . '.' . $bannerImage->getClientOriginalExtension();
             $bannerPath = $bannerImage->storeAs('public/banner-image', $bannerName);
-            // $bannerImage->move(public_path('banner-image'), $bannerName);
             $bannerPath = 'banner-image/' . $bannerName;
         }
 
