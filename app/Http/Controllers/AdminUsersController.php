@@ -6,6 +6,8 @@ use App\Models\User;
 use App\Models\Address;
 use Illuminate\Http\Request;
 use App\Http\Resources\users;
+use App\Rules\ImageResolution;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -16,6 +18,7 @@ class AdminUsersController extends Controller
     {
         $users = User::with('userAddresses')->orderBy('username')->get();
         $address = Address::all();
+
         return view('ADMIN.users.list', compact('users', 'address'));
     }
 
@@ -26,20 +29,33 @@ class AdminUsersController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
         $validatedUserData = Validator::make($request->all(), [
-            'username' => 'required|string|unique:user',
-            'email' => 'required|string|email|unique:user',
-            'phone_number' => 'nullable|string|unique:user',
-            'password' => 'required|string|min:6',
+            'username' => ['required', 'alpha_dash', 'min:3', 'max:20', 'unique:user,username'],
+            'email' => ['required', 'email', Rule::unique('user', 'email'), 'max:255'],
+            'phone_number' => 'required|numeric|digits_between:10,15',
+            'password' => [
+                'required',
+                'confirmed',
+                'string',
+                'min:8',
+                'confirmed',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/',
+                'different:username'
+            ],
+            'password_confirmation' => 'required_with:password|same:password',
             'gender' => 'required|integer|in:0,1',
             'birtdate' => 'required|date',
-            'profile_image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:5120',
-            'role' => 'required|in:user,admin,operator'
+            'profile_image' => [
+                'image',
+                'mimes:jpeg,png,jpg,gif',
+                'max:5120',
+                new ImageResolution(1080, 1080)
+            ],
+            'role' => 'in:user,admin,operator'
         ]);
 
         if ($validatedUserData->fails()) {
-            return response()->json(['message' => $validatedUserData->errors()]);
+            return back()->withErrors($validatedUserData->errors())->withInput();
         }
 
         $users = new User();
@@ -60,52 +76,62 @@ class AdminUsersController extends Controller
         $users->save();
         if ($request->role == 'user' || $request->role == 'operator') {
             $validatedAddressData = Validator::make($request->all(), [
+                'address.*.recipient_name' => 'required|string',
+                'address.*.address' => 'required|string',
                 'address.*.detail' => 'required|string',
                 'address.*.postal_code' => 'required|string',
-                'address.*.address' => 'required|string',
                 'address.*.city' => 'required|string',
                 'address.*.province' => 'required|string',
-            ]);
+            ])->validate();
 
-            if ($validatedAddressData->fails()) {
-                return response()->json(['message' => $validatedAddressData->errors()]);
-            }
+            
 
             foreach ($request->address as $addressData) {
                 $users->userAddresses()->create($addressData);
             }
+
         }
         $users = User::all();
-        return view('ADMIN.users.list', compact('users'));
+        return view('ADMIN.users.list', compact('users'))->with('success', "Users Berhasil Dibuat");
     }
 
     public function edit($id)
     {
         $user = User::findOrFail($id);
-        return view('ADMIN.users.edit', compact('user'))->with('success', 'Users Berhasil Dibuat');
+        return view('ADMIN.users.edit', compact('user'));
     }
 
     public function update(Request $request, $id)
     {
-        // Validasi data pengguna
         $validatedUserData = Validator::make($request->all(), [
-            'username' => 'required|string|unique:user,username,' . $id,
-            'email' => 'required|string|email|unique:user,email,' . $id,
-            'phone_number' => 'nullable|string|unique:user,phone_number,' . $id,
-            'password' => 'nullable|string|min:6',
+            'username' => ['required', 'alpha_dash', 'min:3', 'max:20', Rule::unique('user', 'username')->ignore($id)],
+            'email' => ['required', 'email', Rule::unique('user', 'email')->ignore($id), 'max:255'],
+            'phone_number' => 'required|numeric|digits_between:10,15',
+            'password' => [
+                'required',
+                'confirmed',
+                'string',
+                'min:8',
+                'confirmed',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/',
+                'different:username'
+            ],
             'gender' => 'required|integer|in:0,1',
             'birtdate' => 'required|date',
-            'profile_image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:5120',
+            'profile_image' => [
+                'image',
+                'mimes:jpeg,png,jpg,gif',
+                'max:5120',
+                new ImageResolution(1080, 1080)
+            ],
         ]);
 
         if ($validatedUserData->fails()) {
-            return response()->json(['message' => $validatedUserData->errors()]);
+            return back()->withErrors($validatedUserData->errors())->withInput();
         }
 
-        // Temukan pengguna berdasarkan ID
         $user = User::findOrFail($id);
 
-        // Update field user jika ada perubahan
         $user->username = $request->input('username', $user->username);
         $user->email = $request->input('email', $user->email);
         $user->phone_number = $request->input('phone_number', $user->phone_number);
@@ -117,7 +143,6 @@ class AdminUsersController extends Controller
         $user->gender = $request->input('gender', $user->gender);
         $user->birtdate = $request->input('birtdate', $user->birtdate);
 
-        // Jika role tidak dikirim, gunakan nilai asli dari database
         if ($request->has('role')) {
             $user->role = $request->role;
         } else {
@@ -126,7 +151,6 @@ class AdminUsersController extends Controller
 
         $user->is_verified = 1;
 
-        // Update profile image jika ada
         if ($request->hasFile('profile_image')) {
             if ($user->profile_image) {
                 Storage::disk('public')->delete($user->profile_image);
@@ -135,36 +159,27 @@ class AdminUsersController extends Controller
             $user->profile_image = $path;
         }
 
-        // Periksa apakah ada perubahan data
         if ($user->isDirty()) {
-            // Simpan data user jika ada perubahan
             $user->save();
         }
 
-        // Jika role user adalah 'user', lakukan validasi dan update address
-        if ($user->role == 'user') {
+        if ($user->role == 'user' || $user->role == 'operator') {
             $validatedAddressData = Validator::make($request->all(), [
+                'address.*.recipient_name' => 'required|string',
+                'address.*.address' => 'required|string',
                 'address.*.detail' => 'required|string',
                 'address.*.postal_code' => 'required|string',
-                'address.*.address' => 'required|string',
                 'address.*.city' => 'required|string',
                 'address.*.province' => 'required|string',
             ]);
 
-            if ($validatedAddressData->fails()) {
-                return response()->json(['message' => $validatedAddressData->errors()]);
-            }
-
-            // Hapus alamat yang ada
             $user->userAddresses()->delete();
 
-            // Buat alamat baru
             foreach ($request->address as $addressData) {
                 $user->userAddresses()->create($addressData);
             }
         }
 
-        // Ambil semua data pengguna dan kembalikan ke tampilan list users
         $users = User::all();
         return view('ADMIN.users.list', compact('users'));
     }

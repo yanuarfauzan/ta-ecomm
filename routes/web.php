@@ -18,6 +18,10 @@ use App\Http\Middleware\IsUserAuthenticated;
 use App\Http\Controllers\VariationController;
 use App\Http\Controllers\AdminUsersController;
 use App\Http\Controllers\BannerHomeController;
+use App\Http\Controllers\MergeVariationOptionController;
+use App\Http\Controllers\ProductImageController;
+use App\Http\Controllers\VariationOptionController;
+use App\Models\MergeVariationOption;
 
 /*
 |--------------------------------------------------------------------------
@@ -86,14 +90,6 @@ Route::middleware(IsAdmin::class)->prefix('/admin')->group(function () {
     Route::put('/update-product/{product}', [ProductController::class, 'update']);
     Route::delete('/delete-product/{product}', [ProductController::class, 'destroy']);
 
-    #VOUCHER
-    Route::get('/list-voucher', [VoucherController::class, 'index']);
-    Route::get('/create-voucher', [VoucherController::class, 'create']);
-    Route::post('/store-voucher', [VoucherController::class, 'store']);
-    Route::get('/edit-voucher/{id}', [VoucherController::class, 'edit']);
-    Route::put('/update-voucher/{voucher}', [VoucherController::class, 'update']);
-    Route::delete('/delete-voucher/{voucher}', [VoucherController::class, 'destroy']);
-
     #BANNER HOME
     Route::get('/list-banner', [BannerHomeController::class, 'index']);
     Route::get('/create-banner', [BannerHomeController::class, 'create']);
@@ -101,9 +97,36 @@ Route::middleware(IsAdmin::class)->prefix('/admin')->group(function () {
     Route::get('/edit-banner/{id}', [BannerHomeController::class, 'edit']);
     Route::put('/update-banner/{bannerHome}', [BannerHomeController::class, 'update']);
     Route::delete('/delete-banner/{bannerHome}', [BannerHomeController::class, 'destroy']);
+
+    #VARIATION OPTION
+    Route::get('/list-variation-option', [VariationOptionController::class, 'index']);
+    Route::get('/create-variation-option', [VariationOptionController::class, 'create']);
+    Route::post('/store-variation-option', [VariationOptionController::class, 'store']);
+    Route::get('/edit-variation-option/{id}', [VariationOptionController::class, 'edit']);
+    Route::put('/update-variation-option/{variationOption}', [VariationOptionController::class, 'update']);
+    Route::delete('/delete-variation-option/{variationOption}', [VariationOptionController::class, 'destroy']);
+
+    #MERGE VARIATION OPTION
+    Route::get('/list-merge-varOption', [MergeVariationOptionController::class, 'index']);
+    Route::get('/create-merge-varOption', [MergeVariationOptionController::class, 'create']);
+    Route::post('/store-merge-varOption', [MergeVariationOptionController::class, 'store']);
+    Route::get('/edit-merge-varOption/{id}', [MergeVariationOptionController::class, 'edit']);
+    Route::put('/update-merge-varOption/{id}', [MergeVariationOptionController::class, 'update']);
+    Route::delete('/delete-merge-varOption/{product}', [MergeVariationOptionController::class, 'destroy']);
+    Route::get('/products/{product}/images', [ProductImageController::class, 'getImagesByProduct']);
+    Route::get('/getVarOption/{productId}', [MergeVariationOptionController::class, 'getVarOption']);
+
+    #VOUCHER
+    Route::get('/list-voucher', [VoucherController::class, 'index']);
+    Route::get('/create-voucher', [VoucherController::class, 'create']);
+    Route::post('/store-voucher', [VoucherController::class, 'store']);
+    Route::get('/edit-voucher/{id}', [VoucherController::class, 'edit']);
+    Route::put('/update-voucher/{voucher}', [VoucherController::class, 'update']);
+    Route::delete('/delete-voucher/{voucher}', [VoucherController::class, 'destroy']);
+    Route::post('/update-status-voucher/{id}', [VoucherController::class, 'updateStatus']);
 });
 
-#ROLE:USER
+//ROLE:USER
 Route::prefix('/user')->group(function () {
     Route::middleware(IsUser::class)->group(function () {
         Route::get('/cart', [UserController::class, 'showCart'])->name('user-cart');
@@ -114,6 +137,4 @@ Route::prefix('/user')->group(function () {
             Route::get('/send-notif-payment', [UserController::class, 'sendNotifPa'])->name('send-notif-payment');
         });
     });
-
 });
-

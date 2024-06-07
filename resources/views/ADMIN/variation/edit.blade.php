@@ -14,12 +14,17 @@
             <h4>Edit Variation</h4>
         </div>
         <div class="card-body col">
-            <form action="{{ url('/admin/update-variation/' . $variations->id) }}" method="post" enctype="multipart/form-data">
+            <form action="{{ url('/admin/update-variation/' . $variations->id) }}" method="post"
+                enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="mb-3">
                     <label for="name" class="form-label">Nama Variasi</label>
-                    <input type="text" class="form-control" id="name" name="name" value="{{ $variations->name }}">
+                    <input type="text" class="form-control @error('address') is-invalid @enderror" id="name"
+                        name="name" value="{{ $variations->name }}">
+                    @error('name')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
                 <button type="submit" class="btn btn-primary">Update</button>
             </form>

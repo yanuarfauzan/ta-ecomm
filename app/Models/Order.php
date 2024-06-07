@@ -39,6 +39,10 @@ class Order extends Model
     {
         return $this->hasMany(CartProduct::class, 'order_id', 'id');
     }
+    public function cartProducts()
+    {
+        return $this->hasMany(CartProduct::class, 'order_id', 'id');
+    }
     public function shipping()
     {
         return $this->hasOne(Shipping::class, 'id', 'shipping_id');
@@ -55,6 +59,21 @@ class Order extends Model
     {
         return $this->hasMany(ProductAssessment::class, 'order_id', 'id');
     }
+    public function products()
+    {
+        return $this->belongsTo(Product::class);
+    }
+    public function shippingMethod()
+    {
+        return $this->belongsTo(Shipping::class, 'shipping_id', 'id');
+    }
+    public function shipped()
+    {
+        return $this->hasOne(Shipping::class, 'order_id');
+    }
+    public function address()
+    {
+        return $this->belongsTo(Address::class);
     public function pickedVariation()
     {
         return $this->belongsToMany(Variation::class, 'picked_variation');
@@ -68,4 +87,3 @@ class Order extends Model
         return $this->hasOne(Address::class, 'id', 'address_id');
     }
 }
-
