@@ -7,7 +7,7 @@
                         <div class="d-flex flex-column justify-content-between align-items-center gap-2 ms-4 my-4"
                             style="width: 50%;">
                             <div class="" style="width: 100%; height: 250px;">
-                                <img src="{{ Storage::url('public/profile_pictures/' . $user->profile_image) }}"
+                                <img src="{{ Storage::url('public/profile_images/' . $user->profile_image) }}"
                                     alt="" style="width: 100%; height: 100%">
                             </div>
                             <div class="card-product d-flex justify-content-center align-items-center"
@@ -84,20 +84,36 @@
                         @foreach ($addresses as $address)
                             <div class="card-product p-2 d-flex flex-column justify-content-start align-items-start"
                                 style="width: 95%; height: auto; margin-top: 20px;">
-                                <span><strong>{{ $address->recipient_name }}</strong>
-                                    {{ $address->phone_number }}</span>
+                                <div class="d-flex justify-content-start align-items-center w-100">
+                                    <span><strong>{{ $address->recipient_name }}</strong>
+                                        @if ($address->is_default == true)
+                                            <span><strong class="font-main-color">(utama)</strong>
+                                        @endif
+                                </div>
+                                {{ $address->phone_number }}</span>
                                 <span><i class="bi bi-geo-alt"></i>{{ $address->address }} -
                                     {{ $address->detail }}</span>
-                                <div class="d-flex justify-content-end mt-2 w-100 gap-2">
-                                    <button
-                                        class="btn rounded-0 bg-danger text-white d-flex justify-content-center align-items-center"
-                                        wire:click="deleteAddress('{{ $address->id }}')"
-                                        style="width: 30%; height: 30px;">hapus</button>
-                                    <button
-                                        class="btn rounded-0 bg-main-color text-white d-flex justify-content-center align-items-center"
-                                        wire:click="editAddress('{{ $address->id }}')" data-bs-toggle="modal"
-                                        data-bs-target="#changeAddress-{{ $address->id }}"
-                                        style="width: 30%; height: 30px;">edit alamat</button>
+                                <div class="d-flex justify-content-between mt-2 w-100 gap-2">
+                                    <div class="d-flex justify-content-start align-items-center w-50">
+                                        @if (!$address->is_default == true)
+                                            <button
+                                                class="btn rounded-0 bg-success text-white d-flex justify-content-center align-items-center"
+                                                wire:click="setToDefaultAddress('{{ $address->id }}')"
+                                                style="width: 50%; height: 30px;">jadikan utama</button>
+                                        @endif
+                                    </div>
+                                    <div class="d-flex justify-content-end align-items-center gap-2">
+                                        <button
+                                            class="btn rounded-0 bg-danger text-white d-flex justify-content-center align-items-center w-30"
+                                            wire:click="deleteAddress('{{ $address->id }}')"
+                                            style="height: 30px;">hapus</button>
+                                        <button
+                                            class="btn rounded-0 bg-main-color text-white d-flex justify-content-center align-items-center w-70"
+                                            wire:click="editAddress('{{ $address->id }}')" data-bs-toggle="modal"
+                                            data-bs-target="#changeAddress-{{ $address->id }}"
+                                            style="height: 30px;">edit alamat</button>
+                                    </div>
+
                                 </div>
                             </div>
                         @endforeach
@@ -110,33 +126,39 @@
             <div wire:ignore.self class="d-flex justify-content-start align-items-top">
                 <div class="d-flex flex-column justify-content-center align-items-center gap-2 mx-4 mb-4 w-100"
                     style="width: 100%; height: 100%">
-                    <ul class="nav nav-tabs d-flex justify-content-evenly align-items-center" style="width: 50%" id="orderTab" role="tablist">
+                    <ul class="nav nav-tabs d-flex justify-content-evenly align-items-center" style="width: 50%"
+                        id="orderTab" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link {{ $tabActive == 'pending' ? 'active text-dark' : 'text-dark' }}" id="unpaid-tab" data-bs-toggle="tab"
-                                href="#unpaid" role="tab" aria-controls="unpaid" aria-selected="false">Belum Bayar</a>
+                            <a class="nav-link {{ $tabActive == 'pending' ? 'active text-dark' : 'text-dark' }}"
+                                id="unpaid-tab" data-bs-toggle="tab" href="#unpaid" role="tab"
+                                aria-controls="unpaid" aria-selected="false">Belum Bayar</a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link {{ $tabActive == 'packed' ? 'active text-dark' : 'text-dark' }}" id="packed-tab" data-bs-toggle="tab" href="#packed"
-                                role="tab" aria-controls="packed" aria-selected="false">Dikemas</a>
+                            <a class="nav-link {{ $tabActive == 'packed' ? 'active text-dark' : 'text-dark' }}"
+                                id="packed-tab" data-bs-toggle="tab" href="#packed" role="tab"
+                                aria-controls="packed" aria-selected="false">Dikemas</a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link {{ $tabActive == 'shipped' ? 'active text-dark' : 'text-dark' }}" id="delivered-tab" data-bs-toggle="tab" href="#delivered"
-                                role="tab" aria-controls="delivered" aria-selected="false">Dikirim</a>
+                            <a class="nav-link {{ $tabActive == 'shipped' ? 'active text-dark' : 'text-dark' }}"
+                                id="delivered-tab" data-bs-toggle="tab" href="#delivered" role="tab"
+                                aria-controls="delivered" aria-selected="false">Dikirim</a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link {{ $tabActive == 'completed' ? 'show active text-dark' : 'text-dark' }}" id="completed-tab" data-bs-toggle="tab" href="#completed"
-                                role="tab" aria-controls="completed" aria-selected="false">Selesai</a>
+                            <a class="nav-link {{ $tabActive == 'completed' ? 'show active text-dark' : 'text-dark' }}"
+                                id="completed-tab" data-bs-toggle="tab" href="#completed" role="tab"
+                                aria-controls="completed" aria-selected="false">Selesai</a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link {{ $tabActive == 'cancelled' ? 'active text-dark' : 'text-dark' }}" id="cancelled-tab" data-bs-toggle="tab" href="#cancelled"
-                                role="tab" aria-controls="cancelled" aria-selected="false">Dibatalkan</a>
+                            <a class="nav-link {{ $tabActive == 'cancelled' ? 'active text-dark' : 'text-dark' }}"
+                                id="cancelled-tab" data-bs-toggle="tab" href="#cancelled" role="tab"
+                                aria-controls="cancelled" aria-selected="false">Dibatalkan</a>
                         </li>
                     </ul>
-                    
+
                     <div class="tab-content" id="orderTabContent" style="width: 100%">
                         {{-- unpaid --}}
-                        <div class="tab-pane {{ $tabActive == 'pending' ? 'show active' : '' }} fade w-100" id="unpaid" role="tabpanel"
-                            aria-labelledby="unpaid-tab">
+                        <div class="tab-pane {{ $tabActive == 'pending' ? 'show active' : '' }} fade w-100"
+                            id="unpaid" role="tabpanel" aria-labelledby="unpaid-tab">
                             <!-- Content for Belum Bayar -->
                             <div class="d-flex flex-column justify-content-start gap-2 w-100">
                                 @if (!$pendingOrders->isEmpty())
@@ -156,7 +178,7 @@
                                                         id="card-product-PRODUCT_ID">
                                                         <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                             style="width: 30%;">
-                                                            <img src="{{ Storage::url('public/product_pictures/' . $cartProduct->product->hasImages()->first()->filepath_image) }}"
+                                                            <img src="{{ Storage::url('public/product-images/' . $cartProduct->product->hasImages()->first()->filepath_image) }}"
                                                                 alt="" style="width: 80px; height: 80px;">
                                                             <div class="d-flex justify-content-between"
                                                                 style="width: auto; height: auto;">
@@ -207,7 +229,7 @@
                                                     id="card-product-PRODUCT_ID">
                                                     <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                         style="width: 30%;">
-                                                        <img src="{{ Storage::url('public/product_pictures/' . $order->product->hasImages()->first()->filepath_image) }}"
+                                                        <img src="{{ Storage::url('public/product-images/' . $order->product->hasImages()->first()->filepath_image) }}"
                                                             alt="" style="width: 80px; height: 80px;">
                                                         <div wire:ignore
                                                             class="d-flex position-relative justify-content-between"
@@ -259,8 +281,8 @@
                         </div>
                         {{-- end unpaid --}}
                         {{-- packed --}}
-                        <div class="tab-pane {{ $tabActive == 'packed' ? 'show active' : '' }} fade w-100" id="packed" role="tabpanel"
-                            aria-labelledby="packed-tab">
+                        <div class="tab-pane {{ $tabActive == 'packed' ? 'show active' : '' }} fade w-100"
+                            id="packed" role="tabpanel" aria-labelledby="packed-tab">
                             <!-- Content for Dikemas -->
                             <div class="d-flex flex-column justify-content-start gap-2 w-100">
                                 @if (!$packedOrders->isEmpty())
@@ -277,7 +299,7 @@
                                                         id="card-product-PRODUCT_ID">
                                                         <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                             style="width: 30%;">
-                                                            <img src="{{ Storage::url('public/product_pictures/' . $cartProduct->product->hasImages()->first()->filepath_image) }}"
+                                                            <img src="{{ Storage::url('public/product-images/' . $cartProduct->product->hasImages()->first()->filepath_image) }}"
                                                                 alt="" style="width: 80px; height: 80px;">
                                                             <div wire:ignore
                                                                 class="d-flex position-relative justify-content-between"
@@ -326,7 +348,7 @@
                                                     id="card-product-PRODUCT_ID">
                                                     <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                         style="width: 30%;">
-                                                        <img src="{{ Storage::url('public/product_pictures/' . $order->product->hasImages()->first()->filepath_image) }}"
+                                                        <img src="{{ Storage::url('public/product-images/' . $order->product->hasImages()->first()->filepath_image) }}"
                                                             alt="" style="width: 80px; height: 80px;">
                                                         <div wire:ignore
                                                             class="d-flex position-relative justify-content-between"
@@ -378,8 +400,8 @@
                         </div>
                         {{-- end packed --}}
                         {{-- delivered --}}
-                        <div class="tab-pane {{ $tabActive == 'delivered' ? 'show active' : '' }} fade w-100" id="delivered" role="tabpanel"
-                            aria-labelledby="delivered-tab">
+                        <div class="tab-pane {{ $tabActive == 'delivered' ? 'show active' : '' }} fade w-100"
+                            id="delivered" role="tabpanel" aria-labelledby="delivered-tab">
                             <!-- Content for Dikirim -->
                             <div class="d-flex flex-column justify-content-start gap-2 w-100">
                                 @if (!$deliveredOrders->isEmpty())
@@ -407,7 +429,7 @@
                                                         id="card-product-PRODUCT_ID">
                                                         <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                             style="width: 30%;">
-                                                            <img src="{{ Storage::url('public/product_pictures/' . $cartProduct->product->hasImages()->first()->filepath_image) }}"
+                                                            <img src="{{ Storage::url('public/product-images/' . $cartProduct->product->hasImages()->first()->filepath_image) }}"
                                                                 alt="" style="width: 80px; height: 80px;">
                                                             <div wire:ignore
                                                                 class="d-flex position-relative justify-content-between"
@@ -456,7 +478,7 @@
                                                     id="card-product-PRODUCT_ID">
                                                     <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                         style="width: 30%;">
-                                                        <img src="{{ Storage::url('public/product_pictures/' . $order->product->hasImages->first()->filepath_image) }}"
+                                                        <img src="{{ Storage::url('public/product-images/' . $order->product->hasImages->first()->filepath_image) }}"
                                                             alt="" style="width: 80px; height: 80px;">
                                                         <div wire:ignore
                                                             class="d-flex position-relative justify-content-between"
@@ -508,8 +530,8 @@
                         </div>
                         {{-- end delivered --}}
                         {{-- completed --}}
-                        <div class="tab-pane {{ $tabActive == 'completed' ? 'show active' : '' }} fade w-100" id="completed" role="tabpanel"
-                            aria-labelledby="completed-tab">
+                        <div class="tab-pane {{ $tabActive == 'completed' ? 'show active' : '' }} fade w-100"
+                            id="completed" role="tabpanel" aria-labelledby="completed-tab">
                             <!-- Content for Selesai -->
                             <div class="d-flex flex-column justify-content-start gap-2 w-100">
                                 @if (!$completedOrders->isEmpty())
@@ -526,7 +548,7 @@
                                                         id="card-product-PRODUCT_ID">
                                                         <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                             style="width: 30%;">
-                                                            <img src="{{ Storage::url('public/product_pictures/' . $cartProduct->product->hasImages()->first()->filepath_image) }}"
+                                                            <img src="{{ Storage::url('public/product-images/' . $cartProduct->product->hasImages()->first()->filepath_image) }}"
                                                                 alt="" style="width: 80px; height: 80px;">
                                                             <div wire:ignore
                                                                 class="d-flex position-relative justify-content-between"
@@ -586,7 +608,7 @@
                                                     id="card-product-PRODUCT_ID">
                                                     <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                         style="width: 30%;">
-                                                        <img src="{{ Storage::url('public/product_pictures/' . $order->product->hasImages->first()->filepath_image) }}"
+                                                        <img src="{{ Storage::url('public/product-images/' . $order->product->hasImages->first()->filepath_image) }}"
                                                             alt="" style="width: 80px; height: 80px;">
                                                         <div wire:ignore
                                                             class="d-flex position-relative justify-content-between"
@@ -649,8 +671,8 @@
                         </div>
                         {{-- end completed --}}
                         {{-- cancelled --}}
-                        <div class="tab-pane {{ $tabActive == 'cancelled' ? 'show active' : '' }} fade w-100" id="cancelled" role="tabpanel"
-                            aria-labelledby="cancelled-tab">
+                        <div class="tab-pane {{ $tabActive == 'cancelled' ? 'show active' : '' }} fade w-100"
+                            id="cancelled" role="tabpanel" aria-labelledby="cancelled-tab">
                             <!-- Content for Dibatalkan -->
                             <div class="d-flex flex-column justify-content-start gap-2 w-100">
                                 @if (!$cancelledOrders->isEmpty())
@@ -667,7 +689,7 @@
                                                         id="card-product-PRODUCT_ID">
                                                         <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                             style="width: 30%;">
-                                                            <img src="{{ Storage::url('public/product_pictures/' . $cartProduct->product->hasImages()->first()->filepath_image) }}"
+                                                            <img src="{{ Storage::url('public/product-images/' . $cartProduct->product->hasImages()->first()->filepath_image) }}"
                                                                 alt="" style="width: 80px; height: 80px;">
                                                             <div wire:ignore
                                                                 class="d-flex position-relative justify-content-between"
@@ -716,7 +738,7 @@
                                                     id="card-product-PRODUCT_ID">
                                                     <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                         style="width: 30%;">
-                                                        <img src="{{ Storage::url('public/product_pictures/' . $order->product->hasImages->first()->filepath_image) }}"
+                                                        <img src="{{ Storage::url('public/product-images/' . $order->product->hasImages->first()->filepath_image) }}"
                                                             alt="" style="width: 80px; height: 80px;">
                                                         <div wire:ignore
                                                             class="d-flex position-relative justify-content-between"
@@ -977,7 +999,7 @@
         </div>
     </div>
     {{-- modal address --}}
-    <div wire:ignore.self class="modal fade" id="addAddress" tabindex="-1" aria-labelledby="changeAddress"
+    <div wire:ignore class="modal fade" id="addAddress" tabindex="-1" aria-labelledby="changeAddress"
         aria-hidden="true" wire:key="modal">
         <div class="modal-dialog">
             <div class="modal-content rounded-0">
@@ -1050,8 +1072,8 @@
                                 @enderror
                         </div>
                         <div class="d-flex justify-content-end align-items-center gap-2 mt-4 me-4 mb-4">
-                            <button class="btn rounded-0 bg-danger text-white"
-                                style="width: 20%;"><strong>kembali</strong></button>
+                            <button class="btn rounded-0 bg-danger text-white" style="width: 20%;"
+                                data-bs-dismiss="modal"><strong>kembali</strong></button>
                             <button type="submit" id="checkout" class="btn rounded-0 bg-main-color text-white"
                                 style="width: 20%;"><strong>tambah</strong></button>
                         </div>
@@ -1074,7 +1096,7 @@
                                 <label for="recepient_name">Nama penerima</label>
                                 <input type="text" class="form-control rounded-0 mt-2" id="username"
                                     name="recepient_name" wire:model="recipient_name"
-                                    style="box-shadow: none; width: 100%; height: 50px;" required>
+                                    style="box-shadow: none; width: 100%; height: 50px;">
                                 @error('recipientName')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
@@ -1083,12 +1105,12 @@
                             <div class="">
                                 <label for="address">Alamat lengkap</label>
                                 <textarea type="text" class="form-control rounded-0 mt-2" id="address" name="address" wire:model="address"
-                                    style="box-shadow: none; width: 100%; height: 50px;" required></textarea>
+                                    style="box-shadow: none; width: 100%; height: 50px;"></textarea>
                             </div>
                             <div class="mt-2">
                                 <label for="province">Provinsi</label>
                                 <select class="form-select form-select-lg rounded-0" aria-label="Large select example"
-                                    id="province" wire:model="province" name="province" required>
+                                    id="province" wire:model="province" name="province">
                                     <option value="">pilih provinsi</option>
                                     @foreach ($provincies as $key => $value)
                                         <option value="{{ $value }}"
@@ -1104,7 +1126,7 @@
                             <div class="mt-2">
                                 <label for="province">Kota</label>
                                 <select class="form-select form-select-lg rounded-0" aria-label="Large select example"
-                                    id="city" wire:model="city" name="city" required>
+                                    id="city" wire:model="city" name="city">
                                     <option value="">pilih kota</option>
                                     @foreach ($cities as $key => $value)
                                         <option value="{{ $value }}" wire:key="city-{{ $key }}"
@@ -1120,7 +1142,7 @@
                                 <label for="detail">Detail</label>
                                 <input type="text" class="form-control rounded-0 mt-2" id="username"
                                     name="detail" wire:model="detail"
-                                    style="box-shadow: none; width: 100%; height: 50px;" required>
+                                    style="box-shadow: none; width: 100%; height: 50px;">
                                 @error('detail')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
@@ -1129,7 +1151,7 @@
                                 <label for="postal_code">Kode pos</label>
                                 <input type="text" class="form-control rounded-0 mt-2" id="username"
                                     name="postal_code" wire:model="postal_code"
-                                    style="box-shadow: none; width: 100%; height: 50px;" required>
+                                    style="box-shadow: none; width: 100%; height: 50px;">
                                 @error('postal_code')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
@@ -1151,61 +1173,12 @@
     data-navigate-track></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        let completedOrders = @json($completedOrders);
-        window.addEventListener('closeModalCreateReview', function() {
-            completedOrders.forEach(order => {
-                var modal = document.getElementById('review-modal-buyNow-' + order.id);
-                if (modal) {
-                    var modalInstance = bootstrap.Modal.getInstance(modal);
-                    if (!modalInstance) {
-                        modalInstance = new bootstrap.Modal(modal);
-                    }
-                    modalInstance.hide();
-                }
-            });
-        });
-
-        window.addEventListener('closeModalCreateReviewCp', function() {
-            completedOrders.forEach(order => {
-                console.log(order);
-                order.cart_product.forEach(cartProduct => {
-                    var modal = document.getElementById('review-modal-cart-' +
-                        cartProduct.id);
-                    if (modal) {
-                        var modalInstance = bootstrap.Modal.getInstance(modal);
-                        if (!modalInstance) {
-                            modalInstance = new bootstrap.Modal(modal);
-                        }
-                        modalInstance.hide();
-                    }
-                });
-            });
-        });
-    });
-</script>
-<script>
-    window.addEventListener('closeModalChangePassword', function() {
-
-        var modal = document.getElementById('changePassword');
-        var modalInstance = bootstrap.Modal.getInstance(modal); // Get the existing instance
-
-        if (!modalInstance) {
-            modalInstance = new bootstrap.Modal(modal); // Create a new instance if it doesn't exist
-        }
-
-        modalInstance.hide();
-    })
-
-
-    document.addEventListener('DOMContentLoaded', function() {
-
         const stars = document.querySelectorAll('.star');
         let rating = 0;
 
         stars.forEach(star => {
             star.addEventListener('click', function() {
                 rating = parseInt(this.getAttribute('data-value'));
-                updateStars(rating);
                 updateStars(rating);
             });
         });
@@ -1219,6 +1192,24 @@
                 }
             });
         }
+
+        // Function to reset the rating
+        function resetRating() {
+            rating = 0;
+            updateStars(rating);
+        }
+
+        window.addEventListener('closeModalChangePassword', function() {
+            var modal = document.getElementById('changePassword');
+            var modalInstance = bootstrap.Modal.getInstance(modal);
+
+            if (!modalInstance) {
+                modalInstance = new bootstrap.Modal(modal);
+            }
+
+            modalInstance.hide();
+        });
+
         const pendingOrders = @json($pendingOrders);
         for (let i = 0; i < pendingOrders.length; i++) {
             (function(index) {
@@ -1238,5 +1229,66 @@
                 };
             })(i);
         }
-    })
+
+        let completedOrders = @json($completedOrders);
+        window.addEventListener('closeModalCreateReview', function() {
+            completedOrders.forEach(order => {
+                var modal = document.getElementById('review-modal-buyNow-' + order.id);
+                if (modal) {
+                    var modalInstance = bootstrap.Modal.getInstance(modal);
+                    if (!modalInstance) {
+                        modalInstance = new bootstrap.Modal(modal);
+                    }
+                    modalInstance.hide();
+                }
+            });
+
+            resetRating();
+        });
+
+        window.addEventListener('closeModalCreateReviewCp', function() {
+            completedOrders.forEach(order => {
+                console.log(order);
+                order.cart_product.forEach(cartProduct => {
+                    var modal = document.getElementById('review-modal-cart-' +
+                        cartProduct.id);
+                    if (modal) {
+                        var modalInstance = bootstrap.Modal.getInstance(modal);
+                        if (!modalInstance) {
+                            modalInstance = new bootstrap.Modal(modal);
+                        }
+                        modalInstance.hide();
+                    }
+                });
+            });
+
+            resetRating();
+        });
+
+        window.addEventListener('closeModalAddAddress', function() {
+            var modal = document.getElementById('addAddress');
+            if (modal) {
+                var modalInstance = bootstrap.Modal.getInstance(modal);
+                if (!modalInstance) {
+                    modalInstance = new bootstrap.Modal(modal);
+                }
+                modalInstance.hide();
+            }
+        });
+
+        let addresses = @json($addresses)
+
+        window.addEventListener('closeModalEditAddress', function() {
+            addresses.forEach(item => {
+                var modal = document.getElementById('addAddress-' + item.id);
+                if (modal) {
+                    var modalInstance = bootstrap.Modal.getInstance(modal);
+                    if (!modalInstance) {
+                        modalInstance = new bootstrap.Modal(modal);
+                    }
+                    modalInstance.hide();
+                }
+            })
+        });
+    });
 </script>

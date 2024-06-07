@@ -27,7 +27,7 @@
                                     type="checkbox" id="flexCheckDefault"
                                     style="width: 20px; height: 20px; cursor: pointer;">
                             </span>
-                            <img src="{{ Storage::url('public/product_pictures/' . $product?->hasImages->first()->filepath_image) }}"
+                            <img src="{{ Storage::url('public/product-images/' . $product?->hasImages->first()->filepath_image) }}"
                                 alt="" style="width: 80px; height: 80px;">
                             <div wire:ignore class="d-flex position-relative justify-content-between"
                                 style="width: auto; height: auto;">
@@ -71,11 +71,11 @@
                 @endforeach
             </div>
             <div class="d-flex flex-column align-items-start gap-2" style="width: 30%; height: 100%;">
-                <div class="shadow-sm card-summary bg-light" style="width: 100%; height: 280px;">
+                <div class="shadow-sm card-summary bg-light" style="width: 100%; height: auto;">
                     <div class="container d-flex flex-column py-4 px-4 gap-2" style="width: 100%; height: 100%">
                         <span>
                             <strong class="font-main-color">
-                                <h5>Shopping Summary</h5>
+                                <h5>Detail pemesanan</h5>
                             </strong>
                         </span>
                         <div class="d-flex justify-content-between align-items-center">
@@ -138,7 +138,7 @@
                                                 id="card-product"
                                                 style="width: 100%; max-width: 150px; height: auto; cursor: pointer;">
                                                 <div style="overflow: hidden;">
-                                                    <img src="{{ Storage::url('public/product_pictures/' . $product->hasImages()->first()->filepath_image) }}"
+                                                    <img src="{{ Storage::url('public/product-images/' . $product->hasImages()->first()->filepath_image) }}"
                                                         class="card-img-top rounded-0" alt="..."
                                                         id="image-product" style="width: 100%;">
                                                 </div>

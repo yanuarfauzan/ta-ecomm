@@ -24,7 +24,7 @@
                         @endphp
                         @foreach ($productImages as $productImage)
                             <div class="swiper-slide">
-                                <img src="{{ Storage::url('public/product_pictures/' . $productImage->filepath_image) }}"
+                                <img src="{{ Storage::url('public/product-images/' . $productImage->filepath_image) }}"
                                     alt="" style="width: auto">
                             </div>
                         @endforeach
@@ -36,7 +36,7 @@
                     <div class="swiper-wrapper">
                         @foreach ($productImages as $productImage)
                             <div class="swiper-slide">
-                                <img src="{{ Storage::url('public/product_pictures/' . $productImage->filepath_image) }}"
+                                <img src="{{ Storage::url('public/product-images/' . $productImage->filepath_image) }}"
                                     alt="" style="width: 95px">
                             </div>
                         @endforeach
@@ -82,22 +82,24 @@
                         </div>
                     </div>
                 </div>
-                <div class="d-flex flex-column gap-4 mt-2">
-                    <div class="d-flex flex-column gap-2">
-                        <span><strong>pengiriman : </strong></span>
-                        <div class="d-flex flex-column gap-2 justify-content-start">
-                            <span><i class="bi bi-geo-alt"></i> Pengiriman ke
-                                <strong>{{ $defaultUserAddress->city }}</strong></span>
-                            <span><i class="bi bi-truck"></i> Ongkir {{ $defaultCost['service'] }}
-                                ({{ $defaultCost['description'] }}) <strong>Rp
-                                    {{ number_format($defaultCost['cost'][0]['value'], 2, ',', '.') }}</strong></span>
-                            <span>{{ $costResults['name'] }}</span>
-                            <span>Estimasi {{ $defaultCost['cost'][0]['etd'] }} hari</span>
-                            <span class="d-flex justify-content-end"><a href="" class="font-main-color"
-                                    data-bs-toggle="modal" data-bs-target="#exampleModal">lihat pilihan kurir</a></span>
+                @if ($defaultUserAddress != [])
+                    <div class="d-flex flex-column gap-4 mt-2">
+                        <div class="d-flex flex-column gap-2">
+                            <span><strong>pengiriman : </strong></span>
+                            <div class="d-flex flex-column gap-2 justify-content-start">
+                                <span><i class="bi bi-geo-alt"></i> Pengiriman ke
+                                    <strong>{{ $defaultUserAddress->city }}</strong></span>
+                                <span><i class="bi bi-truck"></i> Ongkir {{ $defaultCost['service'] }}
+                                    ({{ $defaultCost['description'] }}) <strong>Rp
+                                        {{ number_format($defaultCost['cost'][0]['value'], 2, ',', '.') }}</strong></span>
+                                <span>{{ $costResults['name'] }}</span>
+                                <span>Estimasi {{ $defaultCost['cost'][0]['etd'] }} hari</span>
+                                <span class="d-flex justify-content-end"><a href="" class="font-main-color"
+                                        data-bs-toggle="modal" data-bs-target="#exampleModal">lihat pilihan kurir</a></span>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endif
             </div>
             @livewire('AmountsAndNotes', ['product' => $product, 'firstVarOption' => $firstVarOption, 'firstVarOptionForCart' => $firstVarOptionForCart, 'user' => $user])
         </div>
@@ -115,12 +117,12 @@
             'percentFourStars' => $percentFourStars,
             'percentThreeStars' => $percentThreeStars,
             'threeStarsCount' => $threeStarsCount,
-            'percentTwoStars' => $percentTwoStars,  
+            'percentTwoStars' => $percentTwoStars,
             'twoStarsCount' => $twoStarsCount,
             'percentOneStars' => $percentOneStars,
-            'oneStarsCount' => $oneStarsCount
-        ]
-        ])
+            'oneStarsCount' => $oneStarsCount,
+        ],
+    ])
     <div class="container d-flex flex-column justify-content-center gap-4 card-detail-product mt-4 bg-white">
         <div class="container mb-4 mt-2">
             <div class="d-flex justify-content-between ms-2 mt-3">
@@ -139,7 +141,7 @@
                             <div class="card border-0 position-relative shadow rounded-0" id="card-product"
                                 style="width: 18rem; height: auto; cursor: pointer;">
                                 <div style="overflow: hidden;">
-                                    <img src="{{ Storage::url('public/product_pictures/' . $product->hasImages->first()->filepath_image) }}"
+                                    <img src="{{ Storage::url('public/product-images/' . $product->hasImages->first()->filepath_image) }}"
                                         class="card-img-top rounded-0" alt="..." id="image-product">
                                 </div>
                                 @if ($product->stock == 0)
@@ -205,29 +207,32 @@
         </div>
 
     </div>
-    <div class="modal fade" style="top: 10%" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content rounded-0">
-                <div class="modal-body">
-                    <span><strong>Pilihan Kurir Pengiriman</strong></span>
-                    <hr>
-                    @foreach ($costResults['costs'] as $cost)
-                        <div class="d-flex flex-column gap-2 justify-content-start mt-4 mx-4">
-                            <span><i class="bi bi-geo-alt"></i> Pengiriman ke
-                                <strong>{{ $defaultUserAddress->city }}</strong></span>
-                            <span><i class="bi bi-truck"></i> Ongkir {{ $cost['service'] }}
-                                ({{ $cost['description'] }})
-                                <strong>Rp
-                                    {{ number_format($cost['cost'][0]['value'], 2, ',', '.') }}</strong></span>
-                            <span>{{ $costResults['name'] }}</span>
-                            <span>Estimasi {{ $cost['cost'][0]['etd'] }} hari</span>
-                        </div>
+    @if ($defaultUserAddress != [])
+        <div class="modal fade" style="top: 10%" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content rounded-0">
+                    <div class="modal-body">
+                        <span><strong>Pilihan Kurir Pengiriman</strong></span>
                         <hr>
-                    @endforeach
+                        @foreach ($costResults['costs'] as $cost)
+                            <div class="d-flex flex-column gap-2 justify-content-start mt-4 mx-4">
+                                <span><i class="bi bi-geo-alt"></i> Pengiriman ke
+                                    <strong>{{ $defaultUserAddress->city }}</strong></span>
+                                <span><i class="bi bi-truck"></i> Ongkir {{ $cost['service'] }}
+                                    ({{ $cost['description'] }})
+                                    <strong>Rp
+                                        {{ number_format($cost['cost'][0]['value'], 2, ',', '.') }}</strong></span>
+                                <span>{{ $costResults['name'] }}</span>
+                                <span>Estimasi {{ $cost['cost'][0]['etd'] }} hari</span>
+                            </div>
+                            <hr>
+                        @endforeach
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    @endif
+
 @endsection
 <script src="{{ asset('/ourjs/detail-product.js') }}" data-navigate-track></script>

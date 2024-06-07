@@ -43,7 +43,7 @@ class ProductFactory extends Factory
             for ($i = 0; $i < 5; $i++) {
                 $product->hasImages()->create([
                     'id' => Str::uuid(36),
-                    'filepath_image' => fake()->image('storage/app/public/product_pictures', 400, 400, 'product', false),
+                    'filepath_image' => fake()->image('storage/app/public/product-images', 400, 400, 'product', false),
                 ]);
             }
             $voucher = Voucher::all();
@@ -60,11 +60,13 @@ class ProductFactory extends Factory
             $category = Category::inRandomOrder()->first();
             $variations = Variation::inRandomOrder()->limit(2)->get();
             foreach ($variations as $variation) {
-                $product->variation()->attach($variation->id, 
-                [
-                    'id' => Str::uuid(36), 
-                    'category_id' => $category->id,
-                ]);
+                $product->variation()->attach(
+                    $variation->id,
+                    [
+                        'id' => Str::uuid(36),
+                        'category_id' => $category->id,
+                    ]
+                );
                 $productImages = $product->hasImages()->get();
                 $variationOptions = $variation->variationOption;
 

@@ -129,6 +129,16 @@
         border: 1px solid #6777ef;
         background-color: #6777ef;
     }
+
+    .dropdown-menu-notif {
+        position: absolute !important;
+        top: 40px; /* Adjust as needed */
+        left: 50%; /* Adjust as needed */
+        transform: translateX(-50%);
+        min-width: 200px; /* Adjust as needed */
+        border-radius : 0;
+        width: 400px;
+    }
     
 
     

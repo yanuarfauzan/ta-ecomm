@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\MergeVariationOption;
 use App\Models\ProductCategoryVariationDetail;
 use App\Models\VariationOption;
 use Livewire\Component;
@@ -18,6 +19,7 @@ class DetailProductVariation extends Component
     public $additionalPrice;
     public $stock = 0;
     public $choosedVarOptions;
+    public $choosedVarOptionStock;
     public function mount($product, $firstVarOption, $firstVarOptionInit)
     {
         $this->product = $product;
@@ -37,18 +39,15 @@ class DetailProductVariation extends Component
             ->get()
             ->where('id', explode('_', $choosedVarOptions)[1]
             )->first();
-
+        
         $additionalPrice = $additionalData->price ?? 0;
-        $additionalStock = $additionalData->stock ?? 0;
         if ($index == 0) {
             if ($this->variationHasChoosen[$index] ?? null == $exploded[0]) {
                 $this->price -= $this->additionalPriceHasAdded[$index];
-                $this->stock -= $this->additionalStockHasAdded[$index];
             }
             $this->price += $additionalPrice;
             $this->variationHasChoosen[$index] = $exploded[0];
             $this->additionalPriceHasAdded[$index] = $additionalPrice;
-            $this->additionalStockHasAdded[$index] = $additionalStock;
             $this->lastIndex = $index;
             $this->product->update([
                 'price_after_additional' => $this->price
@@ -57,12 +56,10 @@ class DetailProductVariation extends Component
         } else {
             if ($this->variationHasChoosen[$index] ?? null == $exploded[0]) {
                 $this->price -= $this->additionalPriceHasAdded[$index];
-                $this->stock -= $this->additionalStockHasAdded[$index];
             }
             $this->price += $additionalPrice;
             $this->variationHasChoosen[$index] = $exploded[0];
             $this->additionalPriceHasAdded[$index] = $additionalPrice;
-            $this->additionalStockHasAdded[$index] = $additionalStock;
             $this->lastIndex = $index;
             $this->product->update([
                 'price_after_additional' => $this->price

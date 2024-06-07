@@ -13,6 +13,8 @@ class Order extends Model
     protected $fillable = [
         'user_id',
         'product_id',
+        'address_id',
+        'order_id',
         'cart_id',
         'shipping_id',
         'order_number',
@@ -60,6 +62,10 @@ class Order extends Model
     public function pickedVariationOption()
     {
         return $this->belongsToMany(VariationOption::class, 'picked_variation');
+    }
+    public function address()
+    {
+        return $this->hasOne(Address::class, 'id', 'address_id');
     }
 }
 

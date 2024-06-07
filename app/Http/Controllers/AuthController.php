@@ -38,7 +38,7 @@ class AuthController extends Controller
     public function resetPasswordPage($token)
     {
         return view('user.auth.reset_password', compact('token'));
-    }   
+    }
     public function preRegister(RegisterRequest $request)
     {
         $user = $request->all();
@@ -105,7 +105,14 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
-        return redirect()->route('user-home');
+        switch ($user->role) {
+            case 'user':
+                return redirect()->route('user-home');
+            case 'operator':
+                return redirect()->route('operator-index');
+            case 'admin':
+                return redirect()->route('admin.list.users');
+        }
     }
     public function logout(Request $request)
     {
