@@ -17,7 +17,6 @@ class Voucher extends Model
         'voucher_icon',
         'voucher_code',
         'desc',
-        'requirement',
         'min_value',
         'discount_value',
         'is_active',

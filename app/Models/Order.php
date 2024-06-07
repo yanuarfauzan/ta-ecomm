@@ -72,5 +72,12 @@ class Order extends Model
     public function address()
     {
         return $this->belongsTo(Address::class);
+    public function pickedVariation()
+    {
+        return $this->belongsToMany(Variation::class, 'picked_variation');
+    }
+    public function pickedVariationOption()
+    {
+        return $this->belongsToMany(VariationOption::class, 'picked_variation');
     }
 }

@@ -54,7 +54,7 @@ class Product extends Model
 
     public function cart()
     {
-        return $this->belongsToMany(Cart::class, 'cart_product')->withPivot('id', 'is_locked');
+        return $this->belongsToMany(Cart::class, 'cart_product')->withPivot('id', 'is_reviewed');
     }
     public function pickedVariation()
     {
