@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('notification', function (Blueprint $table) {
             $table->id();
-            $table->string('content')->nullable();
+            $table->string('content', 1000)->nullable();
             $table->timestamps();
         });
     }
