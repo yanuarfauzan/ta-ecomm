@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Address;
 use Livewire\Component;
 use Illuminate\Support\Str;
 use Livewire\Attributes\On;
@@ -134,25 +135,48 @@ class Profile extends Component
             $this->addError('oldPassword', 'Password lama salah');
         }
     }
+    public function setToDefaultAddress($addressId)
+    {
+        Address::where('is_default', true)->first()->update(['is_default' => false]);
+        Address::findOrFail($addressId)->update(['is_default' => true]);
+        $this->addresses = $this->user->userAddresses()->get();
+    }
     public function updatedProfileImage()
     {
         $uuid = Str::uuid();
         $extension = $this->profileImage->extension();
         $filename = $uuid . '.' . $extension;
-        $this->profileImage->storeAs('public/profile_pictures', $filename);
+        $this->profileImage->storeAs('public/profile_images', $filename);
         $this->user->update(['profile_image' => $filename]);
     }
     public function updateAddress($addressId)
     {
+        $validatedData = $this->validate([
+            'recipient_name' => 'required',
+            'address' => 'required',
+            'province' => 'required',
+            'city' => 'required',
+            'postal_code' => 'required',
+            'detail' => 'required',
+        ], [
+            'recipient_name.required' => 'Nama penerima tidak boleh kosong',
+            'address.required' => 'Alamat lengkap tidak boleh kosong',
+            'province.required' => 'Provinsi tidak boleh kosong',
+            'city.required' => 'Kota tidak boleh kosong',
+            'postal_code.required' => 'Kode pos tidak boleh kosong',
+            'detail.required' => 'detail tidak boleh kosong',
+        ]);
         $updateAddress = $this->user->userAddresses()->where('id', $addressId)->first();
         $updateAddress->update([
-            'recipient_name' => $this->recipient_name,
-            'address' => $this->address,
-            'province' => $this->province,
-            'city' => $this->city,
-            'postal_code' => $this->postal_code,
-            'detail' => $this->detail,
+            'recipient_name' => $validatedData['recipient_name'],
+            'address' => $validatedData['address'],
+            'province' => $validatedData['province'],
+            'city' => $validatedData['city'],
+            'postal_code' => $validatedData['postal_code'],
+            'detail' => $validatedData['detail'],
         ]);
+        $this->dispatch('closeModalEditAddress');
+        $this->reset(['recipient_name', 'address', 'province', 'city', 'postal_code', 'detail']);
         $this->addresses = $this->user->userAddresses()->get();
     }
     public function deleteAddress($addressId)
@@ -181,6 +205,13 @@ class Profile extends Component
             'add_city' => 'required',
             'add_postal_code' => 'required',
             'add_detail' => 'required',
+        ], [
+            'add_recipient_name.required' => 'Nama penerima tidak boleh kosong',
+            'add_address.required' => 'Alamat lengkap tidak boleh kosong',
+            'add_province.required' => 'Provinsi tidak boleh kosong',
+            'add_city.required' => 'Kota tidak boleh kosong',
+            'add_postal_code.required' => 'Kode pos tidak boleh kosong',
+            'add_detail.required' => 'detail tidak boleh kosong',
         ]);
         $this->user->userAddresses()->create([
             'recipient_name' => $validatedData['add_recipient_name'],
@@ -190,6 +221,8 @@ class Profile extends Component
             'postal_code' => $validatedData['add_postal_code'],
             'detail' => $validatedData['add_detail'],
         ]);
+        $this->dispatch('closeModalAddAddress');
+        $this->reset(['add_recipient_name', 'add_address', 'add_province', 'add_city', 'add_postal_code', 'add_detail']);
         $this->addresses = $this->user->userAddresses()->get();
     }
     public function createReview($id, $pickedVariationOption)
@@ -213,11 +246,11 @@ class Profile extends Component
         switch ($id[0]) {
             case 'by':
                 $order = $this->user->order()
-                ->where('order.id', $id[1])
-                ->whereHas('pickedVariationOption', function ($query) use ($pickedVariationOption) {
-                    $query->whereIn('variation_option.id', $pickedVariationOption);
-                })
-                ->firstOrFail();
+                    ->where('order.id', $id[1])
+                    ->whereHas('pickedVariationOption', function ($query) use ($pickedVariationOption) {
+                        $query->whereIn('variation_option.id', $pickedVariationOption);
+                    })
+                    ->firstOrFail();
                 $productAssessment = $order->productAssessment()
                     ->create([
                         'user_id' => $this->user->id,
@@ -233,6 +266,7 @@ class Profile extends Component
                     'filepath_image' => $filename
                 ]);
                 $this->dispatch('closeModalCreateReview');
+                $this->reset(['rating', 'content', 'attachment']);
                 break;
             case 'cp':
                 $cartProduct = $this->user->order()->with([
@@ -259,6 +293,7 @@ class Profile extends Component
                     'filepath_image' => $filename
                 ]);
                 $this->dispatch('closeModalCreateReviewCp');
+                $this->reset(['rating', 'content', 'attachment']);
                 break;
         }
         $this->tabActive = 'completed';

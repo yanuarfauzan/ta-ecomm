@@ -67,7 +67,7 @@
                 <div id="selected_product_image_container" class="form-group">
                     <label for="selected_product_image">Preview Gambar Produk</label><br>
                     <img id="selected_product_image"
-                        src="{{ $variationOption->productImage ? asset($variationOption->productImage->filepath_image) : '' }}"
+                        src="{{ $variationOption->productImage ? Storage::url('public/profile_images/' . $variationOption->productImage->filepath_image) : '' }}"
                         alt="Gambar Produk" style="max-width: 200px;">
                 </div>
                 <div class="form-group">
@@ -139,7 +139,7 @@
             $productImageSelect.empty().append(
                 '<option value="" selected disabled>Loading...</option>');
 
-            $.getJSON(`/products/${productId}/images`)
+            $.getJSON(`/admin/products/${productId}/images`)
                 .done(function(images) {
                     $productImageSelect.empty().append(
                         '<option value="" selected disabled>Pilih Gambar Produk</option>');

@@ -33,7 +33,11 @@ class PaymentNotifEvent implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('payment-success-' . $this->userId),
+            new Channel('payment-success-' . $this->userId),
         ];
+    }
+    public function broadcastAs()
+    {
+        return 'payment-success';
     }
 }

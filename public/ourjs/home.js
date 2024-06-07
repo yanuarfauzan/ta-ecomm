@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <div class="card border-0 position-relative shadow" id="card-product"
                             style="width: 18rem; height: auto; cursor: pointer;">
                             <div style="overflow: hidden;">
-                            <img src="/storage/product_pictures/${product.product_image}"
+                            <img src="/storage/product-images/${product.product_image}"
                                 class="card-img-top" alt="..." id="image-product">
                             </div>
                             ${product.stock == 0 ? `<div class="rounded-circle bg-secondary text-white position-absolute d-flex align-items-center justify-content-center opacity-25"

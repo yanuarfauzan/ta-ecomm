@@ -1,10 +1,10 @@
-<div class="card-detail-product pt-0 my-2" style="width: 32%; height: 500px;">
+<div class="card-detail-product pt-0 my-2" style="width: 32%; height: 400px;">
     <div class="container mx-4 my-4 d-flex flex-column gap-4" style="width: auto; height: auto;">
         <strong>Atur jumlah dan catatan</strong>
         <div class="d-flex gap-2 justify-content-start align-items-center">
             @foreach ($choosedVarOptions as $varOption)
                 @if (!explode('_', $varOption)[2] == null)
-                    <img src="{{ Storage::url('public/product_pictures/' . explode('_', $varOption)[2]) }}" alt=""
+                    <img src="{{ Storage::url('public/product-images/' . explode('_', $varOption)[2]) }}" alt=""
                         style="width: 60px">
                 @endif
             @endforeach
@@ -30,7 +30,7 @@
             <span>Stock : {{ $stock }}</span>
         </div>
         <div class="d-flex justify-content-between">
-            <span><strong>subtotal</strong></span>
+            <span>sub total :</span>
             <span><strong>Rp
                     {{ number_format($totalPrice - $totalPrice * ($product->discount / 100), 2, ',', '.') }}</strong></span>
         </div>
@@ -38,17 +38,15 @@
             @if (count($product->variation) == count($choosedVarOptions))
                 <button wire:click="addToCart" class="btn bg-main-color rounded-0 text-white" style="width: 100%"
                     id="add-to-cart">Masukkan keranjang</button>
-                <a href="{{ route('user-buy-now') . '?productId=' . $product->id . '&' . http_build_query(['variation' => $choosedVarOptionsForCart]) . '&qty=' . $count . '&totalPrice=' . $totalPrice }}" class="btn bg-main-color rounded-0 text-white" style="width: 100%" id="add-to-cart">Beli sekarang</a>
+                <a href="{{ route('user-buy-now') . '?productId=' . $product->id . '&' . http_build_query(['variation' => $choosedVarOptionsForCart]) . '&qty=' . $count . '&totalPrice=' . $totalPrice }}"
+                    class="btn bg-main-color rounded-0 text-white" style="width: 100%" id="add-to-cart">Beli
+                    sekarang</a>
             @else
                 <button class="btn bg-main-color rounded-0 text-white opacity-50" style="width: 100%"
                     id="add-to-cart">Masukkan keranjang</button>
-                <a href="" class="btn bg-main-color rounded-0 text-white opacity-50" style="width: 100%" id="add-to-cart">Beli sekarang</a>
+                <a href="" class="btn bg-main-color rounded-0 text-white opacity-50" style="width: 100%"
+                    id="add-to-cart">Beli sekarang</a>
             @endif
-        </div>
-        <div class="d-flex justify-content-center align-items-center gap-2">
-            <span><i class="bi bi-heart"></i> wishlist</span>
-            <div class="low-divider-black"></div>
-            <span><i class="bi bi-share"></i> share</span>
         </div>
     </div>
 </div>

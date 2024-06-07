@@ -11,7 +11,7 @@
                     <div class="d-flex justify-content-start align-items-center">
                         <div class="d-flex justify-content-center align-items-center bg-main-color border-0 text-white"
                             style="width: 125px; height: 40px">
-                            <img src="{{ Storage::url('public/icon_voucher/' . $voucherApplied?->voucher_icon) }}"
+                            <img src="{{ Storage::url('public/voucher-icon/' . $voucherApplied?->voucher_icon) }}"
                                 alt=""
                                 style="width: {{ $voucherApplied?->voucher_icon == 'discount.svg' ? '30px;' : '50px;' }}">
                         </div>
@@ -42,47 +42,49 @@
     </div>
     <h5 class="mt-4"><strong>Pilih Opsi pengiriman</strong></h5>
     <ul class="list-group rounded-0" style="width: 100%">
-            @foreach ($costs['costs'] as $cost)
-                <li class="list-group-item d-flex justify-content-start align-items-center gap-4">
-                    <span>
-                        <input wire:click="addCostValueToTotalPrice('{{ $cost['service'] }}')"
-                            class="form-check-input me-1" type="radio" name="listGroupRadio" value=""
-                            id="firstRadio" {{ isset($cost['is_picked']) ? 'checked' : '' }}>
-                    </span>
-                    <div for="firstRadio" class="d-flex flex-column align-items start">
-                        <span><strong>{{ $costs['name'] }}</strong></span>
-                        <div class="d-flex justify-content-start align-items-center gap-2">
-                            <span><strong>{{ $cost['service'] }}</strong></span>
-                            <span class="font-main-color">Rp
-                                {{ number_format($cost['cost'][0]['value'], 2, ',', '.') }}</span>
-                        </div>
-                        <div class="d-flex justify-content-start align-items-center gap-2">
-                            <span>Estimasi sampai</span>
-                            <span>{{ $cost['cost'][0]['etd'] }}</span>
-                        </div>
+        @foreach ($costs['costs'] as $cost)
+            <li class="list-group-item d-flex justify-content-start align-items-center gap-4">
+                <span>
+                    <input wire:click="addCostValueToTotalPrice('{{ $cost['service'] }}')" class="form-check-input me-1"
+                        type="radio" name="listGroupRadio" value="" id="firstRadio"
+                        {{ isset($cost['is_picked']) ? 'checked' : '' }}>
+                </span>
+                <div for="firstRadio" class="d-flex flex-column align-items start">
+                    <span><strong>{{ $costs['name'] }}</strong></span>
+                    <div class="d-flex justify-content-start align-items-center gap-2">
+                        <span><strong>{{ $cost['service'] }}</strong></span>
+                        <span class="font-main-color">Rp
+                            {{ number_format($cost['cost'][0]['value'], 2, ',', '.') }}</span>
                     </div>
-                </li>
-            @endforeach
+                    <div class="d-flex justify-content-start align-items-center gap-2">
+                        <span>Estimasi sampai</span>
+                        <span>{{ $cost['cost'][0]['etd'] }}</span>
+                    </div>
+                </div>
+            </li>
+        @endforeach
     </ul>
-    <div class="modal fade" style="top: 10%" id="modalVoucher" tabindex="-1"
-        aria-labelledby="modalVoucherLabel" aria-hidden="true">
+    <div class="modal fade" style="top: 10%" id="modalVoucher" tabindex="-1" aria-labelledby="modalVoucherLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content rounded-0">
-                <span class="mt-4 mx-4" ><strong>Pilihan Voucher</strong></span>
+                <span class="mt-4 mx-4"><strong>Pilihan Voucher</strong></span>
                 <hr>
                 <div class="modal-body" style="overflow-y: scroll; max-height: 450px;">
                     @foreach ($productVoucher as $voucher)
-                        <div class="d-flex justify-content-start align-items-center mt-2" style="{{ $subTotal >= $voucher->min_value ? '' : 'pointer-events: none; opacity: 0.5; background-color: #e9ecef;' }}  cursor: pointer">
+                        <div class="d-flex justify-content-start align-items-center mt-2"
+                            style="{{ $subTotal >= $voucher->min_value ? '' : 'pointer-events: none; opacity: 0.5; background-color: #e9ecef;' }}  cursor: pointer">
                             <div class="d-flex justify-content-center align-items-center bg-main-color border-0 text-white"
                                 style="width: 150px; height: 88px">
-                                <img src="{{ Storage::url('public/icon_voucher/' . $voucher->voucher_icon) }}"
+                                <img src="{{ Storage::url('public/voucher-icon/' . $voucher->voucher_icon) }}"
                                     alt="" style="width: 50px">
                             </div>
                             <div class="d-flex justify-content-between align-items-center gap-1 ps-4"
                                 style="border: 4px solid #6777ef; width: 70%; height: 88px;">
                                 <div class="d-flex flex-column justify-content-center align-items-start">
                                     <span style="width: 250px;">
-                                        <strong>{{ $voucher->name }} {{ isset($voucher->discount_value) ? 's.d Rp ' . number_format($voucher->discount_value, 2, ',', '.') : ''  }}</strong>
+                                        <strong>{{ $voucher->name }}
+                                            {{ isset($voucher->discount_value) ? 's.d Rp ' . number_format($voucher->discount_value, 2, ',', '.') : '' }}</strong>
                                     </span>
                                     <span>Min. Blj Rp {{ $voucher->requirement }}</span>
                                     <span class="opacity-50">Berakhir dlm 23 jam <a href="">s&k</a></span>
@@ -90,8 +92,9 @@
                                 <span class="pe-4">
                                     <input
                                         wire:click="useVoucher('{{ $voucher->type }}', '{{ $voucher->discount_value }}', '{{ $voucher->id }}')"
-                                        class="form-check-input me-1" type="radio" id="checkbox-voucher" name="checkbox-voucher"
-                                        value="" data-bs-dismiss="modal" aria-label="Close">
+                                        class="form-check-input me-1" type="radio" id="checkbox-voucher"
+                                        name="checkbox-voucher" value="" data-bs-dismiss="modal"
+                                        aria-label="Close">
                                 </span>
                             </div>
                         </div>

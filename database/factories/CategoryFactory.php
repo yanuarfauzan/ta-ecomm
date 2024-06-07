@@ -20,9 +20,9 @@ class CategoryFactory extends Factory
      */
     public function definition(): array
     {
-        return [    
+        return [
             'name' => fake()->unique()->word(),
-            'icon' => fake()->image('storage/app/public/icon_category', 400, 400, 'icon', false),
+            'icon' => fake()->image('storage/app/public/icon-category', 400, 400, 'icon', false),
         ];
     }
 }

@@ -26,6 +26,10 @@ class MergeVariationOption extends Model
     {
         return 'string';
     }
+    public function variationOption()
+    {
+        return $this->hasMany(VariationOption::class, 'variation_option_1_id', 'id');
+    }
     public function variationOptions()
     {
         return $this->belongsToMany(VariationOption::class, 'merge_variation_option_variation_option', 'merge_variation_option_id', 'variation_option_id');

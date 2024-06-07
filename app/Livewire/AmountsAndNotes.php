@@ -6,6 +6,8 @@ use App\Models\Product;
 use Livewire\Component;
 use Illuminate\Support\Str;
 use App\Models\VariationOption;
+use Illuminate\Support\Facades\Log;
+use App\Models\MergeVariationOption;
 
 
 class AmountsAndNotes extends Component
@@ -21,7 +23,7 @@ class AmountsAndNotes extends Component
     protected $listeners = ['showChoosedVarOptions'];
     public function mount($product, $firstVarOption, $user, $firstVarOptionForCart)
     {
-        $this->stock = VariationOption::findOrFail(explode('_', $firstVarOptionForCart)[1])->stock;
+        $this->stock = MergeVariationOption::where('variation_option_1_id', explode('_', $firstVarOptionForCart)[1])->first()->merge_stock;
         $this->totalPrice = $product->price + VariationOption::findOrFail(explode('_', $firstVarOptionForCart)[1])->price;
         $this->product = $product;
         $this->cartProductId = $product->cart();
@@ -39,12 +41,12 @@ class AmountsAndNotes extends Component
     public function isVariationDifferent($cartProduct, $request)
     {
         $existingVariations = $cartProduct->pickedVariation()->get(['variation_id', 'variation_option_id'])->toArray();
-    
+
         // Jika jumlah variasi berbeda, maka sudah pasti variasinya berbeda
         if (count($existingVariations) != count($request['variation'])) {
             return true;
         }
-    
+
         // Ubah variasi yang diminta ke dalam bentuk array asosiatif untuk memudahkan perbandingan
         $requestedVariations = collect($request['variation'])->map(function ($variation) {
             return [
@@ -52,27 +54,29 @@ class AmountsAndNotes extends Component
                 'variation_option_id' => $variation['variation_option_id']
             ];
         })->toArray();
-    
+
         // Bandingkan setiap variasi yang ada di keranjang dengan yang diminta
         foreach ($requestedVariations as $requestedVariation) {
             $found = false;
-    
+
             foreach ($existingVariations as $existingVariation) {
-                if ($existingVariation['variation_id'] == $requestedVariation['variation_id'] &&
-                    $existingVariation['variation_option_id'] == $requestedVariation['variation_option_id']) {
+                if (
+                    $existingVariation['variation_id'] == $requestedVariation['variation_id'] &&
+                    $existingVariation['variation_option_id'] == $requestedVariation['variation_option_id']
+                ) {
                     $found = true;
                     break;
                 }
             }
-    
+
             if (!$found) {
                 return true; // Jika ada variasi yang tidak ditemukan, berarti berbeda
             }
         }
-    
+
         return false; // Semua variasi cocok, berarti tidak berbeda
     }
-    
+
     public function addToCart()
     {
         $results = ['variation' => []];
@@ -85,11 +89,10 @@ class AmountsAndNotes extends Component
             ];
             $results['variation'][] = $data;
         });
-        
         $user = $this->user;
-        $product = Product::findOrFail($this->product->id);
-        $cartProduct = $this->isCartExist($this->product->id);
         if ($user) {
+            $product = Product::findOrFail($this->product->id);
+            $cartProduct = $this->isCartExist($this->product->id);
             $cartProductId = Str::uuid(36);
             if ($cartProduct?->all() == null) {
                 $cart = $user->cart()->create([
@@ -130,7 +133,7 @@ class AmountsAndNotes extends Component
                 }
             }
         } else {
-            return response()->json(['message' => 'Anda harus login terlebih dahulu']);
+            return redirect()->route('user-login');
         }
 
     }
@@ -143,7 +146,6 @@ class AmountsAndNotes extends Component
         $varOptionName = VariationOption::findOrFail($explodedChoosedVarOption[1])->name;
         $explodedChoosedVarOption[1] = $varOptionName;
         $changedChoosedVarOptions = implode('_', $explodedChoosedVarOption);
-
         for ($i = 0; $i < count($this->choosedVarOptions); $i++) {
             $explodedVarOption = explode('_', $this->choosedVarOptions[$i]);
             if ($explodedVarOption[0] == $explodedChoosedVarOption[0]) {
@@ -160,6 +162,12 @@ class AmountsAndNotes extends Component
         if (count($this->choosedVarOptions) > 2) {
             $this->choosedVarOptions = array_slice($this->choosedVarOptions, 0, 2);
         }
+        if (count($this->choosedVarOptionsForCart) == 1) {
+            $this->stock = MergeVariationOption::where('variation_option_1_id', explode('_', $this->choosedVarOptionsForCart[0])[1])->get()->sum('merge_stock');
+        } else if (count($this->choosedVarOptionsForCart) == 2) {
+            $this->stock = MergeVariationOption::where('variation_option_1_id', explode('_', $this->choosedVarOptionsForCart[0])[1])->where('variation_option_2_id', explode('_', $this->choosedVarOptionsForCart[1])[1])->get()->sum('merge_stock');
+        }
+        Log::info($this->choosedVarOptionsForCart);
     }
     public function increase()
     {

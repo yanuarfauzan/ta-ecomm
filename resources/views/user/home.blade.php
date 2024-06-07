@@ -30,13 +30,14 @@
         <div class="container">
             <div class="row row-cols-4 ms-0">
                 @foreach ($products as $index => $product)
-                    <a href="{{ route('user-detail-product', ['productId' => $product->id]) }}" style="text-decoration: none">
+                    <a href="{{ route('user-detail-product', ['productId' => $product->id]) }}"
+                        style="text-decoration: none">
                         <div class="col mt-4">
                             <div class="card border-0 position-relative shadow rounded-0" id="card-product"
                                 style="width: 18rem; height: auto; cursor: pointer;">
                                 <div style="overflow: hidden;">
-                                    <img src="{{ Storage::url('public/product_pictures/' . $product->hasImages->first()->filepath_image) }}"
-                                    class="card-img-top rounded-0" alt="..." id="image-product">
+                                    <img src="{{ Storage::url($product->hasImages->first()->filepath_image) }}"
+                                        class="card-img-top rounded-0" alt="..." id="image-product">
                                 </div>
                                 @if ($product->stock == 0)
                                     <div class="rounded-circle bg-secondary text-white position-absolute d-flex align-items-center justify-content-center opacity-25"
@@ -109,25 +110,25 @@
                 <div class="col mt-4">
                     <div class="card border-0 position-relative shadow"
                         style="width: 18rem; height: auto; cursor: pointer;">
-                        <img src="https://dummyimage.com/600x550/E0E0E0/E0E0E0.png"
-                            class="card-img-top" alt="...">
+                        <img src="https://dummyimage.com/600x550/E0E0E0/E0E0E0.png" class="card-img-top" alt="...">
                         <div class="card-body pb-2">
                             <div class="d-flex justify-content-between">
                                 <div class="rounded" style="width: 150px; background-color: #E0E0E0; height: 20px"></div>
                                 <div class="rounded" style="width: 50px; background-color: #E0E0E0; height: 20px"></div>
                             </div>
                             <div class="d-flex gap-2 mt-2">
-                                <div class="me-2 rounded" style="width: 120px; background-color: #E0E0E0; height: 30px"></div>
+                                <div class="me-2 rounded" style="width: 120px; background-color: #E0E0E0; height: 30px">
+                                </div>
                                 <div class="rounded" style="width: 50px; background-color: #E0E0E0; height: 30px"></div>
-    
+
                             </div>
                             <div class="d-flex align-items-center gap-2 mt-2">
                                 <div class="rounded" style="width: 50px; background-color: #E0E0E0; height: 20px"></div>
-    
+
                                 <div class="rounded" style="width: 70px; background-color: #E0E0E0; height: 20px"></div>
-    
+
                                 <div class="rounded" style="width: 100px; background-color: #E0E0E0; height: 20px"></div>
-    
+
                             </div>
                         </div>
                     </div>
@@ -135,25 +136,25 @@
                 <div class="col mt-4">
                     <div class="card border-0 position-relative shadow"
                         style="width: 18rem; height: auto; cursor: pointer;">
-                        <img src="https://dummyimage.com/600x550/E0E0E0/E0E0E0.png"
-                            class="card-img-top" alt="...">
+                        <img src="https://dummyimage.com/600x550/E0E0E0/E0E0E0.png" class="card-img-top" alt="...">
                         <div class="card-body pb-2">
                             <div class="d-flex justify-content-between">
                                 <div class="rounded" style="width: 150px; background-color: #E0E0E0; height: 20px"></div>
                                 <div class="rounded" style="width: 50px; background-color: #E0E0E0; height: 20px"></div>
                             </div>
                             <div class="d-flex gap-2 mt-2">
-                                <div class="me-2 rounded" style="width: 120px; background-color: #E0E0E0; height: 30px"></div>
+                                <div class="me-2 rounded" style="width: 120px; background-color: #E0E0E0; height: 30px">
+                                </div>
                                 <div class="rounded" style="width: 50px; background-color: #E0E0E0; height: 30px"></div>
-    
+
                             </div>
                             <div class="d-flex align-items-center gap-2 mt-2">
                                 <div class="rounded" style="width: 50px; background-color: #E0E0E0; height: 20px"></div>
-    
+
                                 <div class="rounded" style="width: 70px; background-color: #E0E0E0; height: 20px"></div>
-    
+
                                 <div class="rounded" style="width: 100px; background-color: #E0E0E0; height: 20px"></div>
-    
+
                             </div>
                         </div>
                     </div>
@@ -161,25 +162,25 @@
                 <div class="col mt-4">
                     <div class="card border-0 position-relative shadow"
                         style="width: 18rem; height: auto; cursor: pointer;">
-                        <img src="https://dummyimage.com/600x550/E0E0E0/E0E0E0.png"
-                            class="card-img-top" alt="...">
+                        <img src="https://dummyimage.com/600x550/E0E0E0/E0E0E0.png" class="card-img-top" alt="...">
                         <div class="card-body pb-2">
                             <div class="d-flex justify-content-between">
                                 <div class="rounded" style="width: 150px; background-color: #E0E0E0; height: 20px"></div>
                                 <div class="rounded" style="width: 50px; background-color: #E0E0E0; height: 20px"></div>
                             </div>
                             <div class="d-flex gap-2 mt-2">
-                                <div class="me-2 rounded" style="width: 120px; background-color: #E0E0E0; height: 30px"></div>
+                                <div class="me-2 rounded" style="width: 120px; background-color: #E0E0E0; height: 30px">
+                                </div>
                                 <div class="rounded" style="width: 50px; background-color: #E0E0E0; height: 30px"></div>
-    
+
                             </div>
                             <div class="d-flex align-items-center gap-2 mt-2">
                                 <div class="rounded" style="width: 50px; background-color: #E0E0E0; height: 20px"></div>
-    
+
                                 <div class="rounded" style="width: 70px; background-color: #E0E0E0; height: 20px"></div>
-    
+
                                 <div class="rounded" style="width: 100px; background-color: #E0E0E0; height: 20px"></div>
-    
+
                             </div>
                         </div>
                     </div>
@@ -187,25 +188,25 @@
                 <div class="col mt-4">
                     <div class="card border-0 position-relative shadow"
                         style="width: 18rem; height: auto; cursor: pointer;">
-                        <img src="https://dummyimage.com/600x550/E0E0E0/E0E0E0.png"
-                            class="card-img-top" alt="...">
+                        <img src="https://dummyimage.com/600x550/E0E0E0/E0E0E0.png" class="card-img-top" alt="...">
                         <div class="card-body pb-2">
                             <div class="d-flex justify-content-between">
                                 <div class="rounded" style="width: 150px; background-color: #E0E0E0; height: 20px"></div>
                                 <div class="rounded" style="width: 50px; background-color: #E0E0E0; height: 20px"></div>
                             </div>
                             <div class="d-flex gap-2 mt-2">
-                                <div class="me-2 rounded" style="width: 120px; background-color: #E0E0E0; height: 30px"></div>
+                                <div class="me-2 rounded" style="width: 120px; background-color: #E0E0E0; height: 30px">
+                                </div>
                                 <div class="rounded" style="width: 50px; background-color: #E0E0E0; height: 30px"></div>
-    
+
                             </div>
                             <div class="d-flex align-items-center gap-2 mt-2">
                                 <div class="rounded" style="width: 50px; background-color: #E0E0E0; height: 20px"></div>
-    
+
                                 <div class="rounded" style="width: 70px; background-color: #E0E0E0; height: 20px"></div>
-    
+
                                 <div class="rounded" style="width: 100px; background-color: #E0E0E0; height: 20px"></div>
-    
+
                             </div>
                         </div>
                     </div>
@@ -213,25 +214,25 @@
                 <div class="col mt-4">
                     <div class="card border-0 position-relative shadow"
                         style="width: 18rem; height: auto; cursor: pointer;">
-                        <img src="https://dummyimage.com/600x550/E0E0E0/E0E0E0.png"
-                            class="card-img-top" alt="...">
+                        <img src="https://dummyimage.com/600x550/E0E0E0/E0E0E0.png" class="card-img-top" alt="...">
                         <div class="card-body pb-2">
                             <div class="d-flex justify-content-between">
                                 <div class="rounded" style="width: 150px; background-color: #E0E0E0; height: 20px"></div>
                                 <div class="rounded" style="width: 50px; background-color: #E0E0E0; height: 20px"></div>
                             </div>
                             <div class="d-flex gap-2 mt-2">
-                                <div class="me-2 rounded" style="width: 120px; background-color: #E0E0E0; height: 30px"></div>
+                                <div class="me-2 rounded" style="width: 120px; background-color: #E0E0E0; height: 30px">
+                                </div>
                                 <div class="rounded" style="width: 50px; background-color: #E0E0E0; height: 30px"></div>
-    
+
                             </div>
                             <div class="d-flex align-items-center gap-2 mt-2">
                                 <div class="rounded" style="width: 50px; background-color: #E0E0E0; height: 20px"></div>
-    
+
                                 <div class="rounded" style="width: 70px; background-color: #E0E0E0; height: 20px"></div>
-    
+
                                 <div class="rounded" style="width: 100px; background-color: #E0E0E0; height: 20px"></div>
-    
+
                             </div>
                         </div>
                     </div>
@@ -239,25 +240,25 @@
                 <div class="col mt-4">
                     <div class="card border-0 position-relative shadow"
                         style="width: 18rem; height: auto; cursor: pointer;">
-                        <img src="https://dummyimage.com/600x550/E0E0E0/E0E0E0.png"
-                            class="card-img-top" alt="...">
+                        <img src="https://dummyimage.com/600x550/E0E0E0/E0E0E0.png" class="card-img-top" alt="...">
                         <div class="card-body pb-2">
                             <div class="d-flex justify-content-between">
                                 <div class="rounded" style="width: 150px; background-color: #E0E0E0; height: 20px"></div>
                                 <div class="rounded" style="width: 50px; background-color: #E0E0E0; height: 20px"></div>
                             </div>
                             <div class="d-flex gap-2 mt-2">
-                                <div class="me-2 rounded" style="width: 120px; background-color: #E0E0E0; height: 30px"></div>
+                                <div class="me-2 rounded" style="width: 120px; background-color: #E0E0E0; height: 30px">
+                                </div>
                                 <div class="rounded" style="width: 50px; background-color: #E0E0E0; height: 30px"></div>
-    
+
                             </div>
                             <div class="d-flex align-items-center gap-2 mt-2">
                                 <div class="rounded" style="width: 50px; background-color: #E0E0E0; height: 20px"></div>
-    
+
                                 <div class="rounded" style="width: 70px; background-color: #E0E0E0; height: 20px"></div>
-    
+
                                 <div class="rounded" style="width: 100px; background-color: #E0E0E0; height: 20px"></div>
-    
+
                             </div>
                         </div>
                     </div>
@@ -265,25 +266,25 @@
                 <div class="col mt-4">
                     <div class="card border-0 position-relative shadow"
                         style="width: 18rem; height: auto; cursor: pointer;">
-                        <img src="https://dummyimage.com/600x550/E0E0E0/E0E0E0.png"
-                            class="card-img-top" alt="...">
+                        <img src="https://dummyimage.com/600x550/E0E0E0/E0E0E0.png" class="card-img-top" alt="...">
                         <div class="card-body pb-2">
                             <div class="d-flex justify-content-between">
                                 <div class="rounded" style="width: 150px; background-color: #E0E0E0; height: 20px"></div>
                                 <div class="rounded" style="width: 50px; background-color: #E0E0E0; height: 20px"></div>
                             </div>
                             <div class="d-flex gap-2 mt-2">
-                                <div class="me-2 rounded" style="width: 120px; background-color: #E0E0E0; height: 30px"></div>
+                                <div class="me-2 rounded" style="width: 120px; background-color: #E0E0E0; height: 30px">
+                                </div>
                                 <div class="rounded" style="width: 50px; background-color: #E0E0E0; height: 30px"></div>
-    
+
                             </div>
                             <div class="d-flex align-items-center gap-2 mt-2">
                                 <div class="rounded" style="width: 50px; background-color: #E0E0E0; height: 20px"></div>
-    
+
                                 <div class="rounded" style="width: 70px; background-color: #E0E0E0; height: 20px"></div>
-    
+
                                 <div class="rounded" style="width: 100px; background-color: #E0E0E0; height: 20px"></div>
-    
+
                             </div>
                         </div>
                     </div>
@@ -291,25 +292,25 @@
                 <div class="col mt-4">
                     <div class="card border-0 position-relative shadow"
                         style="width: 18rem; height: auto; cursor: pointer;">
-                        <img src="https://dummyimage.com/600x550/E0E0E0/E0E0E0.png"
-                            class="card-img-top" alt="...">
+                        <img src="https://dummyimage.com/600x550/E0E0E0/E0E0E0.png" class="card-img-top" alt="...">
                         <div class="card-body pb-2">
                             <div class="d-flex justify-content-between">
                                 <div class="rounded" style="width: 150px; background-color: #E0E0E0; height: 20px"></div>
                                 <div class="rounded" style="width: 50px; background-color: #E0E0E0; height: 20px"></div>
                             </div>
                             <div class="d-flex gap-2 mt-2">
-                                <div class="me-2 rounded" style="width: 120px; background-color: #E0E0E0; height: 30px"></div>
+                                <div class="me-2 rounded" style="width: 120px; background-color: #E0E0E0; height: 30px">
+                                </div>
                                 <div class="rounded" style="width: 50px; background-color: #E0E0E0; height: 30px"></div>
-    
+
                             </div>
                             <div class="d-flex align-items-center gap-2 mt-2">
                                 <div class="rounded" style="width: 50px; background-color: #E0E0E0; height: 20px"></div>
-    
+
                                 <div class="rounded" style="width: 70px; background-color: #E0E0E0; height: 20px"></div>
-    
+
                                 <div class="rounded" style="width: 100px; background-color: #E0E0E0; height: 20px"></div>
-    
+
                             </div>
                         </div>
                     </div>
@@ -318,11 +319,12 @@
         </div>
         @if (count($products) >= 16)
             <div>
-                <button id="load-more" data-next-page-url="{{ route('user-home') }}" data-start-index="{{ $startIndex }}"
-                    class="btn rounded-0 mt-3 text-white" style="width: 300px; background: #6777ef">Muat Lebih
+                <button id="load-more" data-next-page-url="{{ route('user-home') }}"
+                    data-start-index="{{ $startIndex }}" class="btn rounded-0 mt-3 text-white"
+                    style="width: 300px; background: #6777ef">Muat Lebih
                     Banyak</button>
             </div>
         @endif
     </div>
-<script src="{{ asset('/ourjs/home.js') }}" data-navigate-track></script>
+    <script src="{{ asset('/ourjs/home.js') }}" data-navigate-track></script>
 @endsection

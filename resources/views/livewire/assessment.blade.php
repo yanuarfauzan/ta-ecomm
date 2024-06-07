@@ -113,7 +113,7 @@
                         <span class="ms-2"><strong>rating</strong></span>
                     </div>
                     <hr class="m-0">
-                    <div class="d-flex flex-column justify-content-start align-items-start gap-2 my-2 ms-2">
+                    <div class="d-flex justify-content-start align-items-start gap-2 my-2 ms-2">
                         <span>
                             <input wire:model.lazy="fiveStar" class="form-check-input btn-check-outlined"
                                 type="checkbox" id="flexCheckDefault"
