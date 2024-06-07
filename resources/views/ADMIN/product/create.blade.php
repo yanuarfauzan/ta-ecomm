@@ -27,14 +27,14 @@
         <div class="card-body col">
             <form action="{{ url('/admin/store-product') }}" method="post" enctype="multipart/form-data">
                 @csrf
-                <div class="mb-3">
+                {{-- <div class="mb-3">
                     <label for="SKU" class="form-label">Kode Produk</label>
                     <input type="text" class="form-control @error('SKU') is-invalid @enderror" id="SKU"
                         name="SKU" required>
                     @error('SKU')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
-                </div>
+                </div> --}}
                 <div class="mb-3">
                     <label for="name" class="form-label">Nama Produk</label>
                     <input type="text" class="form-control @error('name') is-invalid @enderror" id="name"

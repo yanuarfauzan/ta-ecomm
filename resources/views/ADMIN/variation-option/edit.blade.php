@@ -145,7 +145,7 @@
             $productImageSelect.empty().append(
                 '<option value="" selected disabled>Loading...</option>');
 
-            $.getJSON(`/products/${productId}/images`)
+            $.getJSON(`/admin/products/${productId}/images`)
                 .done(function(images) {
                     $productImageSelect.empty().append(
                         '<option value="" selected disabled>Pilih Gambar Produk</option>');
@@ -167,7 +167,7 @@
         }
 
         function getImageFilename(filepath) {
-            return filepath.split('/').pop(); // Ambil bagian terakhir dari path sebagai nama file
+            return filepath.split('/').pop(); 
         }
     </script>
     <style>

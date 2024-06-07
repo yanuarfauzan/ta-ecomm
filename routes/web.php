@@ -73,13 +73,13 @@ Route::delete('/admin/delete-variation/{variations}', [VariationController::clas
 #VARIATION OPTION
 Route::get('/admin/list-variation-option', [VariationOptionController::class, 'index']);
 Route::get('/admin/create-variation-option', [VariationOptionController::class, 'create']);
-Route::get('/products/{product}/images', [VariationOptionController::class, 'getProductImages'])->name('variation_options.product_images');
+// Route::get('/products/{product}/images', [VariationOptionController::class, 'getProductImages'])->name('variation_options.product_images');
 Route::post('/admin/store-variation-option', [VariationOptionController::class, 'store']);
 Route::get('/admin/edit-variation-option/{id}', [VariationOptionController::class, 'edit']);
 Route::put('/admin/update-variation-option/{variationOption}', [VariationOptionController::class, 'update']);
 Route::delete('/admin/delete-variation-option/{variationOption}', [VariationOptionController::class, 'destroy']);
 
-Route::get('/products/{product}/images', [ProductImageController::class, 'getImagesByProduct']);
+Route::get('/admin/products/{product}/images', [VariationOptionController::class, 'getImagesByProduct']);
 
 #MERGE VARIATION OPTION
 Route::get('/admin/list-merge-varOption', [MergeVariationOptionController::class, 'index']);

@@ -112,7 +112,7 @@
                                         @foreach ($produk->hasImages as $image)
                                             <img src="{{ asset($image->filepath_image) }}" alt="{{ $produk->name }}"
                                                 class="img-thumbnail img-fluid small-image"
-                                                onclick="document.getElementById('mainProductImage{{ $produk->id }}').src='{{ asset($image->filepath_image) }}'">
+                                                onclick="document.getElementById('mainProductImage{{ $produk->id }}').src='{{ Storage::url($image->filepath_image) }}'">
                                         @endforeach
                                     @endif
                                 </div>

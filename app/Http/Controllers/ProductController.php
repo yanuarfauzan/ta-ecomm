@@ -37,10 +37,9 @@ class ProductController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'SKU' => 'required|string|max:255|unique:product,SKU',
-            'stock' => 'required|integer',
+            'stock' => 'nullable|integer',
             'price' => 'required|integer',
-            'discount' => 'required|numeric|min:0|max:100',
+            'discount' => 'nullable|numeric|min:0|max:100',
             'desc' => 'nullable|string',
             'weight' => 'required|numeric',
             'length' => 'required|numeric',
@@ -54,11 +53,14 @@ class ProductController extends Controller
             ],
         ]);
 
+        $prefix = 'EPRD';
+        $uniqueNumber = $this->generateUniqueSKU();
+        $sku = $prefix . $uniqueNumber;
         $dimensions = $validatedData['length'] . 'x' . $validatedData['width'] . 'x' . $validatedData['height'];
 
         $product = new Product();
         $product->name = $validatedData['name'];
-        $product->SKU = $validatedData['SKU'];
+        $product->SKU = $sku;
         $product->stock = $validatedData['stock'];
         $product->price = $validatedData['price'];
         $product->desc = $validatedData['desc'];
@@ -71,7 +73,9 @@ class ProductController extends Controller
         // Simpan gambar
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
-                $imagePath = $image->store('public/product-images');
+                $originalName = $image->getClientOriginalName();
+                $imagePath = $image->storeAs('public/product-images', $originalName);
+                $imagePath = 'product-image/' . $originalName;
 
                 $productImage = new ProductImage();
                 $productImage->id = (string) Str::uuid();
@@ -109,9 +113,9 @@ class ProductController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'SKU' => 'required|string|max:255|unique:product,SKU,' . $id,
-            'stock' => 'required|integer',
+            'stock' => 'nullable|integer',
             'price' => 'required|integer',
-            'discount' => 'required|numeric|min:0|max:100',
+            'discount' => 'nullable|numeric|min:0|max:100',
             'desc' => 'nullable|string',
             'weight' => 'required|numeric',
             'length' => 'required|numeric',
@@ -172,5 +176,12 @@ class ProductController extends Controller
 
         $product->delete();
         return redirect()->to('/admin/list-product')->with('delete', 'Produk Telah Dihapus');
+    }
+
+    private function generateUniqueSKU()
+    {
+        $latestProduct = Product::latest()->first();
+        $lastNumber = $latestProduct ? intval(substr($latestProduct->SKU, 4)) : 0;
+        return str_pad($lastNumber + 1, 6, '0', STR_PAD_LEFT);
     }
 }
