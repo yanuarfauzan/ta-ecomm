@@ -107,18 +107,16 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header text-center mx-auto justify-content-between">
-                        <h5 class="modal-title" id="addressModal{{ $user->id }}Label">Address</h5>
-                        {{-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button> --}}
+                        <h5 class="modal-title" id="addressModal{{ $user->id }}Label">Detail Alamat</h5>
                     </div>
                     <div class="modal-body">
                         @if (isset($user->userAddresses) && $user->userAddresses->isNotEmpty())
                             @foreach ($user->userAddresses as $address)
-                                <h6>Address {{ $loop->iteration }}</h6>
+                                <h6>Alamat {{ $loop->iteration }}</h6>
+                                <p><strong>Nama Penerima:</strong> {{ $address->recipient_name }}</p>
+                                <p><strong>Address:</strong> {{ $address->address }}</p>
                                 <p><strong>Detail:</strong> {{ $address->detail }}</p>
                                 <p><strong>Postal Code:</strong> {{ $address->postal_code }}</p>
-                                <p><strong>Address:</strong> {{ $address->address }}</p>
                                 <p><strong>City:</strong> {{ $address->city }}</p>
                                 <p><strong>Province:</strong> {{ $address->province }}</p>
                                 <hr>

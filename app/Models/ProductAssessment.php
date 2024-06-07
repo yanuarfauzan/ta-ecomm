@@ -17,6 +17,7 @@ class ProductAssessment extends Model
         'product_id',
         'rating',
         'content',
+        'response_operator',
         'attachment',
     ];
 

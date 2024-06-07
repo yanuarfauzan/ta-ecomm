@@ -71,15 +71,7 @@
                     @enderror
                 </div>
                 <div class="mb-3">
-                    <label for="requirement" class="form-label">Requirement</label>
-                    <input type="text" class="form-control @error('requirement') is-invalid @enderror" id="requirement"
-                        name="requirement">
-                    @error('requirement')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="mb-3">
-                    <label for="discount_value" class="form-label">Jumlah Diskon (%)</label>
+                    <label for="discount_value" class="form-label">Jumlah Diskon</label>
                     <input type="number" class="form-control @error('discount_value') is-invalid @enderror"
                         id="discount_value" name="discount_value" required>
                     @error('discount_value')
@@ -102,7 +94,6 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-                <!-- Hapus opsi manual untuk status -->
                 <input type="hidden" name="is_active" value="1">
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>

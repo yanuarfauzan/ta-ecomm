@@ -19,40 +19,73 @@
                 @method('PUT')
                 <div class="form-group">
                     <label for="voucher_code">Kode Voucher</label>
-                    <input type="text" class="form-control" id="voucher_code" name="voucher_code" value="{{ $voucher->voucher_code }}" required>
+                    <input type="text" class="form-control @error('voucher_code') is-invalid @enderror" id="voucher_code"
+                        name="voucher_code" value="{{ $voucher->voucher_code }}" required>
+                    @error('voucher_code')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="mb-3">
                     <label for="name" class="form-label">Nama Voucher</label>
-                    <input type="text" class="form-control" id="name" name="name" value="{{ $voucher->name }}">
+                    <input type="text" class="form-control @error('name') is-invalid @enderror" id="name"
+                        name="name" value="{{ $voucher->name }}">
+                    @error('name')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="form-group">
+                    <label for="type">Tipe Voucher</label>
+                    <select class="form-control" id="type" name="type" required>
+                        <option value="free ongkir" {{ $voucher->type === 'free ongkir' ? 'selected' : '' }}>Free Ongkir
+                        </option>
+                        <option value="discount" {{ $voucher->type === 'discount' ? 'selected' : '' }}>Diskon</option>
+                    </select>
                 </div>
                 <div class="mb-3">
                     <label for="voucher_icon">Icon Voucher</label>
                     @if ($voucher->voucher_icon)
                         <div class="mb-2">
-                            <img src="{{ asset($voucher->voucher_icon) }}" alt="Voucher Icon" style="max-width: 100px;">
+                            <img src="{{ Storage::url($voucher->voucher_icon) }}" alt="Voucher Icon"
+                                style="max-width: 100px;">
                         </div>
                     @endif
-                    <input type="file" class="form-control-file" id="voucher_icon" name="voucher_icon">
+                    <input type="file" class="form-control-file @error('voucher_icon') is-invalid @enderror""
+                        id="voucher_icon" name="voucher_icon">
+                    @error('voucher_icon')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="form-group">
                     <label for="desc">Deskripsi</label>
-                    <input type="text" class="form-control" id="desc" name="desc" value="{{ $voucher->desc }}" required>
-                </div>
-                <div class="form-group">
-                    <label for="requirement">Requirement</label>
-                    <input type="text" class="form-control" id="requirement" name="requirement" value="{{ $voucher->requirement }}" required>
+                    <input type="text" class="form-control @error('desc') is-invalid @enderror" id="desc"
+                        name="desc" value="{{ $voucher->desc }}" required>
+                    @error('desc')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="form-group">
                     <label for="discount_value">Jumlah Diskon (%)</label>
-                    <input type="number" step="0.01" class="form-control" id="discount_value" name="discount_value" value="{{ $voucher->discount_value }}" required>
+                    <input type="number" class="form-control @error('discount_value') is-invalid @enderror"
+                        id="discount_value" name="discount_value" value="{{ $voucher->discount_value }}" required>
+                    @error('discount_value')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="form-group">
                     <label for="expired_at">Tenggat Voucher</label>
-                    <input type="date" class="form-control" id="expired_at" name="expired_at" value="{{ $voucher->expired_at }}" required>
+                    <input type="date" class="form-control" id="expired_at @error('expired_at') is-invalid @enderror"
+                        name="expired_at" value="{{ $voucher->expired_at }}" required>
+                    @error('expired_at')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="form-group">
-                    <label for="is_active">Status</label>
-                    <input type="date" class="form-control" id="is_active" name="is_active" value="{{ $voucher->is_active }}" required>
+                    <label for="min_value">Nilai Minimal</label>
+                    <input type="text" class="form-control" id="min_value @error('min_value') is-invalid @enderror"
+                        name="min_value" value="{{ $voucher->min_value }}" required>
+                    @error('min_value')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
                 <button type="submit" class="btn btn-primary">Update</button>
             </form>

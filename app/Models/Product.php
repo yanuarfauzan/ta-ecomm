@@ -93,4 +93,8 @@ class Product extends Model
     {
         return $this->belongsToMany(Voucher::class, 'product_voucher');
     }
+    public function variationOptions()
+    {
+        return $this->hasMany(VariationOption::class);
+    }
 }

@@ -39,4 +39,12 @@ class VariationOption extends Model
     {
         return $this->belongsTo(ProductImage::class, 'product_image_id', 'id');
     }
+    public function mergeVariationOptions()
+    {
+        return $this->belongsToMany(MergeVariationOption::class);
+    }
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }

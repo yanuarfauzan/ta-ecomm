@@ -31,6 +31,10 @@ class ProductImage extends Model
     {
         return $this->hasMany(VariationOption::class, 'product_image_id', 'id');
     }
+    public function variationOptions()
+    {
+        return $this->hasMany(VariationOption::class, 'product_image_id', 'id');
+    }
 
     public function product()
     {

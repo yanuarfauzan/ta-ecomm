@@ -27,7 +27,8 @@ class VariationOptionController extends Controller
     {
         $variations = Variation::all();
         $products = Product::all();
-        return view('ADMIN.variation-option.create', compact('variations', 'products'));
+        $variationOption = new VariationOption(); // Create a new empty VariationOption object
+        return view('ADMIN.variation-option.create', compact('variations', 'products', 'variationOption'));
     }
 
     public function getProductImages($productId)
@@ -50,7 +51,6 @@ class VariationOptionController extends Controller
             'weight' => 'required|numeric',
         ]);
 
-        // $dimensions = $validatedData['length'] . 'x' . $validatedData['width'] . 'x' . $validatedData['height'];
         $dimensions = $request->input('length') . 'x' . $request->input('width') . 'x' . $request->input('height');
 
         $variationOption = new VariationOption();
@@ -69,7 +69,7 @@ class VariationOptionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(BankUser $bankUser)
+    public function show()
     {
         //
     }
@@ -77,24 +77,53 @@ class VariationOptionController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(BankUser $bankUser)
+    public function edit($id)
     {
-        //
+        $variationOption = VariationOption::findOrFail($id);
+        $variations = Variation::all();
+        $products = Product::all();
+
+        return view('ADMIN.variation-option.edit', compact('variationOption', 'variations', 'products'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, BankUser $bankUser)
+    public function update(Request $request, $id)
     {
-        //
+        $validatedData = $request->validate([
+            'variation_id' => 'required|exists:variation,id',
+            'product_image_id' => 'required|exists:product_image,id',
+            'name' => 'required|string|max:255',
+            'stock' => 'required|integer',
+            'price' => 'required|numeric',
+            'weight' => 'required|numeric',
+        ]);
+
+        $dimensions = $request->input('length') . 'x' . $request->input('width') . 'x' . $request->input('height');
+
+        $variationOption = VariationOption::findOrFail($id);
+        $variationOption->variation_id = $request->variation_id;
+        $variationOption->product_image_id = $request->product_image_id;
+        $variationOption->name = $request->name;
+        $variationOption->stock = $request->stock;
+        $variationOption->price = $request->price;
+        $variationOption->weight = $request->weight;
+        $variationOption->dimensions = $dimensions;
+        $variationOption->save();
+
+        return redirect('/admin/list-variation-option')->with('success', 'Variasi Opsi Berhasil Diperbarui');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(BankUser $bankUser)
+    public function destroy($id)
     {
-        //
+        $variationOption = VariationOption::findOrFail($id);
+
+        $variationOption->delete();
+
+        return redirect('/admin/list-variation-option')->with('delete', 'Variasi Opsi Berhasil Dihapus');
     }
 }

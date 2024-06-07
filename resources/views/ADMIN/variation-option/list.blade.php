@@ -38,6 +38,7 @@
                             <th scope="col">No.</th>
                             <th scope="col">Nama Variasi Opsi</th>
                             <th scope="col">Nama Variasi</th>
+                            <th scope="col">Nama Produk</th>
                             <th scope="col">Detail</th>
                             <th scope="col">Aksi</th>
                         </tr>
@@ -50,7 +51,12 @@
                             <tr>
                                 <td>{{ $no++ }}</td>
                                 <td>{{ $varOp->name }}</td>
-                                <td>{{ optional($varOp->variation)->name ?? 'N/A' }}</td>
+                                <td>{{ optional($varOp->variation)->name }}</td>
+                                <td>
+                                    @if ($varOp->productImage && $varOp->productImage->product)
+                                        {{ $varOp->productImage->product->name }}
+                                    @endif
+                                </td>
                                 <td>
                                     <button type="button" class="btn btn-info btn-rounded product-detail-btn"
                                         data-toggle="modal" data-target="#productDetailModal{{ $varOp->id }}">
@@ -63,7 +69,7 @@
                                             class="btn btn-md bg-primary text-light btn-rounded mr-2">
                                             <i class="fa-solid fas fa-pen"></i>
                                         </a>
-                                        <form action="/admin/delete-variation/{{ $varOp->id }}" method="POST">
+                                        <form action="/admin/delete-variation-option/{{ $varOp->id }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-md bg-danger text-light btn-rounded">

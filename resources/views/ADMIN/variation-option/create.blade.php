@@ -29,7 +29,11 @@
                 @csrf
                 <div class="form-group">
                     <label for="name">Nama Variasi Opsi</label>
-                    <input type="text" name="name" class="form-control" id="name" required>
+                    <input type="text" name="name" class="form-control  @error('name') is-invalid @enderror"
+                        id="name" required>
+                    @error('name')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="form-group">
                     <label for="variation_id">Nama Variasi</label>
@@ -45,7 +49,10 @@
                     <select name="product_id" class="form-control" id="product_id" required>
                         <option value="" selected disabled>Pilih Produk</option>
                         @foreach ($products as $product)
-                            <option value="{{ $product->id }}">{{ $product->name }}</option>
+                            <option value="{{ $product->id }}"
+                                {{ $variationOption->productImage && $variationOption->productImage->product_id == $product->id ? 'selected' : '' }}>
+                                {{ $product->name }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
@@ -59,19 +66,33 @@
 
                 <div id="selected_product_image_container" class="form-group">
                     <label for="selected_product_image">Preview Gambar Produk</label><br>
-                    <img id="selected_product_image" src="" alt="Gambar Produk" style="max-width: 200px;">
+                    <img id="selected_product_image"
+                        src="{{ $variationOption->productImage ? asset($variationOption->productImage->filepath_image) : '' }}"
+                        alt="Gambar Produk" style="max-width: 200px;">
                 </div>
                 <div class="form-group">
                     <label for="price">Harga</label>
-                    <input type="number" name="price" class="form-control" id="price" required>
+                    <input type="number" name="price" class="form-control  @error('price') is-invalid @enderror"
+                        id="price" required>
+                    @error('price')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="form-group">
                     <label for="stock">Stock</label>
-                    <input type="number" name="stock" class="form-control" id="stock" required>
+                    <input type="number" name="stock" class="form-control  @error('stock') is-invalid @enderror"
+                        id="stock" required>
+                    @error('stock')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="form-group">
                     <label for="weight">Weight</label>
-                    <input type="number" name="weight" class="form-control" id="weight" required>
+                    <input type="number" name="weight" class="form-control  @error('weight') is-invalid @enderror"
+                        id="weight" required>
+                    @error('weight')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="mb-3">
                     <label for="dimensions" class="form-label">Dimensi Produk (cm)</label>
@@ -90,34 +111,19 @@
             </form>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
+            const initialProductId = "{{ $variationOption->productImage ? $variationOption->productImage->product_id : '' }}";
+            const initialProductImageId = "{{ $variationOption->product_image_id }}";
+
+            if (initialProductId) {
+                loadProductImages(initialProductId, initialProductImageId);
+            }
+
             $('#product_id').change(function() {
                 const productId = $(this).val();
-                const $productImageSelect = $('#product_image_id');
-                const $selectedProductImage = $('#selected_product_image');
-
-                // Kosongkan pilihan gambar produk
-                $productImageSelect.empty().append(
-                    '<option value="" selected disabled>Loading...</option>');
-
-                // Load gambar produk
-                $.getJSON(`/products/${productId}/images`)
-                    .done(function(images) {
-                        $productImageSelect.empty().append(
-                            '<option value="" selected disabled>Pilih Gambar Produk</option>');
-                        images.forEach(function(image) {
-                            const filename = getImageFilename(image.filepath_image);
-                            $productImageSelect.append(
-                                `<option value="${image.id}" data-image-url="${image.filepath_image}">${filename}</option>`
-                            );
-                        });
-                    })
-                    .fail(function() {
-                        $productImageSelect.empty().append(
-                            '<option value="" selected disabled>Error loading images</option>');
-                    });
+                loadProductImages(productId);
             });
 
             $('#product_image_id').change(function() {
@@ -125,6 +131,34 @@
                 $('#selected_product_image').attr('src', imageUrl);
             });
         });
+
+        function loadProductImages(productId, selectedImageId = null) {
+            const $productImageSelect = $('#product_image_id');
+            const $selectedProductImage = $('#selected_product_image');
+
+            $productImageSelect.empty().append(
+                '<option value="" selected disabled>Loading...</option>');
+
+            $.getJSON(`/products/${productId}/images`)
+                .done(function(images) {
+                    $productImageSelect.empty().append(
+                        '<option value="" selected disabled>Pilih Gambar Produk</option>');
+                    images.forEach(function(image) {
+                        const filename = getImageFilename(image.filepath_image);
+                        $productImageSelect.append(
+                            `<option value="${image.id}" data-image-url="${image.filepath_image}" ${selectedImageId == image.id ? 'selected' : ''}>${filename}</option>`
+                        );
+                    });
+                    if (selectedImageId) {
+                        const selectedImageUrl = $productImageSelect.find(':selected').data('image-url');
+                        $selectedProductImage.attr('src', selectedImageUrl);
+                    }
+                })
+                .fail(function() {
+                    $productImageSelect.empty().append(
+                        '<option value="" selected disabled>Error loading images</option>');
+                });
+        }
 
         function getImageFilename(filepath) {
             return filepath.split('/').pop(); // Ambil bagian terakhir dari path sebagai nama file
