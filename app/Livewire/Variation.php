@@ -15,13 +15,15 @@ class Variation extends Component
     public $index;
     public $product;
     public $usersCarts;
+    public $userCart;
     protected $listeners = ['updateVariationAndVarOptionId'];
     public $selectedVariations = [];
-    public function mount($index, $product, $usersCarts)
+    public function mount($index, $product, $usersCarts, $userCart)
     {
         $this->index = $index;
         $this->product = $product;
         $this->usersCarts = $usersCarts;
+        $this->userCart = $userCart;
     }
     public function updateVariationAndVarOptionId($selectedVariations)
     {

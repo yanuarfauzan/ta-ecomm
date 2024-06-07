@@ -38,18 +38,41 @@ class AmountsAndNotes extends Component
     }
     public function isVariationDifferent($cartProduct, $request)
     {
-        $allDifferent = true; // Start assuming all are different
-
-        collect($request['variation'])->each(function ($variationItem, $index) use (&$allDifferent, $cartProduct) {
-            $variation = $cartProduct->pickedVariation()->where('variation_id', $variationItem['variation_id'])
-                ->where('variation_option_id', $variationItem['variation_option_id'])->first();
-
-            if ($variation) {
-                $allDifferent = false; // If any variation matches, set to false
+        $existingVariations = $cartProduct->pickedVariation()->get(['variation_id', 'variation_option_id'])->toArray();
+    
+        // Jika jumlah variasi berbeda, maka sudah pasti variasinya berbeda
+        if (count($existingVariations) != count($request['variation'])) {
+            return true;
+        }
+    
+        // Ubah variasi yang diminta ke dalam bentuk array asosiatif untuk memudahkan perbandingan
+        $requestedVariations = collect($request['variation'])->map(function ($variation) {
+            return [
+                'variation_id' => $variation['variation_id'],
+                'variation_option_id' => $variation['variation_option_id']
+            ];
+        })->toArray();
+    
+        // Bandingkan setiap variasi yang ada di keranjang dengan yang diminta
+        foreach ($requestedVariations as $requestedVariation) {
+            $found = false;
+    
+            foreach ($existingVariations as $existingVariation) {
+                if ($existingVariation['variation_id'] == $requestedVariation['variation_id'] &&
+                    $existingVariation['variation_option_id'] == $requestedVariation['variation_option_id']) {
+                    $found = true;
+                    break;
+                }
             }
-        });
-        return $allDifferent;
+    
+            if (!$found) {
+                return true; // Jika ada variasi yang tidak ditemukan, berarti berbeda
+            }
+        }
+    
+        return false; // Semua variasi cocok, berarti tidak berbeda
     }
+    
     public function addToCart()
     {
         $results = ['variation' => []];
@@ -113,30 +136,30 @@ class AmountsAndNotes extends Component
     }
     public function showChoosedVarOptions($choosedVarOptions, $price)
     {
-        $countVariation = count($this->product->variation);
         $this->price = $price;
         $this->totalPrice = $price;
-        $exploded = explode('_', $choosedVarOptions);
-        $varOptionId = VariationOption::findOrFail($exploded[1])->id;
-        $varOptionName = VariationOption::findOrFail($exploded[1])->name;
-        $this->stock = VariationOption::findOrFail($exploded[1])->stock;
+        $explodedChoosedVarOption = explode('_', $choosedVarOptions);
+        $varianFound = false;
+        $varOptionName = VariationOption::findOrFail($explodedChoosedVarOption[1])->name;
+        $explodedChoosedVarOption[1] = $varOptionName;
+        $changedChoosedVarOptions = implode('_', $explodedChoosedVarOption);
 
-        $foundIndex = null;
         for ($i = 0; $i < count($this->choosedVarOptions); $i++) {
-            if ($exploded[0] === explode('_', $this->choosedVarOptions[$i])[0]) {
-                $foundIndex = $i;
-                break;
+            $explodedVarOption = explode('_', $this->choosedVarOptions[$i]);
+            if ($explodedVarOption[0] == $explodedChoosedVarOption[0]) {
+                $this->choosedVarOptionsForCart[$i] = $choosedVarOptions;
+                $this->choosedVarOptions[$i] = $changedChoosedVarOptions;
+                $varianFound = true;
             }
         }
-
-        $this->choosedVarOptionsForCart[] = implode('_', [$exploded[0], $varOptionId, $exploded[2]]);
-
-        if ($foundIndex !== null) {
-            $this->choosedVarOptions[$foundIndex] = implode('_', [$exploded[0], $varOptionName, $exploded[2]]);
-        } else {
-            $this->choosedVarOptions[] = implode('_', [$exploded[0], $varOptionName, $exploded[2]]);
+        if (!$varianFound) {
+            $this->choosedVarOptionsForCart[] = $choosedVarOptions;
+            $this->choosedVarOptions[] = $changedChoosedVarOptions;
         }
-        $this->choosedVarOptions = array_slice($this->choosedVarOptions, 0, $countVariation);
+
+        if (count($this->choosedVarOptions) > 2) {
+            $this->choosedVarOptions = array_slice($this->choosedVarOptions, 0, 2);
+        }
     }
     public function increase()
     {

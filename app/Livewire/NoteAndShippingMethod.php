@@ -26,8 +26,9 @@ class NoteAndShippingMethod extends Component
     public $pickedUserAddress;
     public $service;
     public $isVoucherApplied = false;
+    public $subTotal;
     public $listeners = ['changeAddressForCost'];
-    public function mount($product, $order, $userCarts, $productVoucher)
+    public function mount($product, $order, $userCarts, $productVoucher, $subTotal)
     {
         $totalWeight = 0;
         if ($userCarts != []) {
@@ -38,6 +39,7 @@ class NoteAndShippingMethod extends Component
         } else {
             $this->totalWeight = $product->weight;
         }
+        $this->subTotal = $subTotal;
         $this->note = $order->note;
         $this->order = $order;
         $this->product = $product;

@@ -47,4 +47,8 @@ class VariationOption extends Model
     {
         return $this->belongsTo(Product::class);
     }
+    public function order()
+    {
+        return $this->belongsToMany(Order::class, 'picked_variation');
+    }
 }

@@ -16,6 +16,7 @@
     <link href="{{ asset('/ourcss/cart.css') }}" rel="stylesheet">
     <link href="{{ asset('/ourcss/login.css') }}" rel="stylesheet">
     <link href="{{ asset('/ourcss/order.css') }}" rel="stylesheet">
+    <link href="{{ asset('/ourcss/profile.css') }}" rel="stylesheet">
     @livewireStyles
 </head>
 
