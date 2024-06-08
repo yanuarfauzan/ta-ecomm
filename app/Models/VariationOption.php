@@ -51,4 +51,8 @@ class VariationOption extends Model
     {
         return $this->belongsToMany(Order::class, 'picked_variation');
     }
+    public function mergeVariationOption()
+    {
+        return $this->belongsTo(MergeVariationOption::class, 'variation_option_1_id', 'id');
+    }
 }

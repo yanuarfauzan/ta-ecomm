@@ -36,6 +36,7 @@ class Variation extends Model
     public function variationOptions()
     {
         return $this->hasMany(VariationOption::class);
+    }
     public function order()
     {
         return $this->belongsToMany(Order::class, 'picked_variation');

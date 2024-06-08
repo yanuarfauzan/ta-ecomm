@@ -67,7 +67,7 @@
                 <div id="selected_product_image_container" class="form-group">
                     <label for="selected_product_image">Preview Gambar Produk</label><br>
                     <img id="selected_product_image"
-                        src="{{ $variationOption->productImage ? asset($variationOption->productImage->filepath_image) : '' }}"
+                        src="{{ $variationOption->productImage ? Storage::url('public/profile_images/' . $variationOption->productImage->filepath_image) : '' }}"
                         alt="Gambar Produk" style="max-width: 200px;">
                 </div>
                 <div class="form-group">

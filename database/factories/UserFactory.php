@@ -33,7 +33,7 @@ class UserFactory extends Factory
             'password' => static::$password ??= Hash::make('password'),
             'gender' => fake()->boolean(),
             'birtdate' => fake()->date(),
-            'profile_image' => fake()->image('storage/app/public/profile_pictures', 400, 400, 'image from', false),
+            'profile_image' => fake()->image('storage/app/public/profile_images', 400, 400, 'image from', false),
             'role' => fake()->randomElement(['user', 'operator', 'admin']),
             'remember_token' => Str::random(10),
         ];

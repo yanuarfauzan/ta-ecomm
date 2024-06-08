@@ -83,7 +83,7 @@ class User extends Authenticatable
 
     public function notification()
     {
-        return $this->belongsToMany(Notification::class, 'notif_user', 'notification_id', 'id');
+        return $this->belongsToMany(Notification::class, 'notif_user', 'notification_id', 'id')->withPivot('is_read');
     }
     public function cart()
     {

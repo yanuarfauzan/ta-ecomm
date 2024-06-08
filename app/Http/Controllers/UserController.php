@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Str;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Models\VariationOption;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use App\Events\PaymentSuccessEvent;
 use App\Models\ProvinciesAndCities;
 use Illuminate\Support\Facades\Log;
+use App\Models\MergeVariationOption;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use App\Http\Requests\AddAddressessRequest;
@@ -66,7 +68,7 @@ class UserController extends Controller
             'hasProduct.pickedVariationOption',
             'hasProduct.variation',
             'hasProduct.variation.variationOption'
-            )->get();
+        )->get();
         return view('user.cart', compact('usersCarts', 'user'));
     }
     public function isCartExist($productId)
@@ -82,7 +84,7 @@ class UserController extends Controller
         collect($request['variation'])->each(function ($variationItem, $index) use (&$isDifferent, $cartProduct) {
             $variation = $cartProduct->pickedVariation()->wherePivot('variation_id', $variationItem['variation_id'])->first();
             $variationOption = $cartProduct->pickedVariationOption()->wherePivot('variation_option_id', $variationItem['variation_option_id'])->first();
-            if (!isset ($variation) || !isset ($variationOption)) {
+            if (!isset($variation) || !isset($variationOption)) {
                 $isDifferent = true;
             } else {
                 $isDifferent = false;
@@ -108,7 +110,11 @@ class UserController extends Controller
     public function detailProduct(Request $request, $productId)
     {
         $user = $this->user;
-        $defaultUserAddress = $user->userAddresses->where('is_default', true)->first();
+        if ($user) {
+            $defaultUserAddress = $user->userAddresses->where('is_default', true)->first();
+        } else {
+            $defaultUserAddress = [];
+        }
 
         $product = Product::where('id', $productId)->with(
             'variation',
@@ -180,9 +186,15 @@ class UserController extends Controller
             $totalRating = $product->productAssessment()->sum('rating');
         }
 
-        $costs = $this->getCostValueShipping($product, $defaultUserAddress);
-        $costResults = $costs->json()['rajaongkir']['results'][0];
-        $defaultCost = $costs->json()['rajaongkir']['results'][0]['costs'][0];
+        if ($user) {
+            $costs = $this->getCostValueShipping($product, $defaultUserAddress);
+            $costResults = $costs->json()['rajaongkir']['results'][0];
+            $defaultCost = $costs->json()['rajaongkir']['results'][0]['costs'][0];
+        } else {
+            $costs = [];
+            $costResults = [];
+            $defaultCost = [];
+        }
 
         return view(
             'user.detail-product',
@@ -324,7 +336,7 @@ class UserController extends Controller
             }
         }
         $productVoucher = $productBuyNow->voucher()->get();
-        
+
         $userAddresses = $order->user->userAddresses()->get();
         return view('user.order', compact('productBuyNow', 'order', 'user', 'defaultUserAdress', 'countBuyNow', 'variationBuyNow', 'productVoucher', 'userAddresses', 'totalPriceBuyNow'));
 
@@ -340,47 +352,60 @@ class UserController extends Controller
     public function callbackPayment(Request $request)
     {
         try {
-        $order = Order::where('order_number', $request->order_id)->first();
-        $user = $order->user()->first();
-        $serverKey = config('midtrans.serverKey');
-        $hashed = hash('sha512', $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
-        if ($hashed == $request->signature_key) {
-            switch ($request->transaction_status) {
-                case 'settlement':
-                case 'capture':
-                    $order->update(['order_status' => 'paid']);
-                    $message = 'Pesanan berhasil! 🎉
-                    Total Pembayaran: Rp ' . number_format($request->gross_amount, 2, ',', '.') .
-                    'Metode Pembayaran:' . $request->acquirer .
-                    'Tanggal Transaksi:' . Carbon::parse($request->transaction_time)->format('d-m-Y') . 
-                    'Terima kasih telah berbelanja dengan kami!';
-                    Log::info($message);
-                    event(new PaymentNotifEvent($user->id, $message));
-                    break;
-                case 'pending':
-                    $order->update(['order_status' => 'pending']);
-                    $message = 'Mohon segera lakukan pembayaran untuk pesanan Anda.
-                    Pesanan Anda saat ini dalam status "Pending Pembayaran".
-                    Kami akan memberitahu Anda segera setelah pembayaran Anda berhasil diproses.
-                    Terima kasih atas kerjasama Anda!
-                    ';
-                    Log::info($message);
-                    event(new PaymentNotifEvent($user->id, $message));
-                    break;
-                case 'expire':
-                    $order->update(['order_status' => 'failed']);
-                    $message = 'Maaf, pembayaran Anda untuk pesanan telah kadaluarsa.
-                    Pesanan Anda saat ini dalam status "Pembayaran Kadaluarsa".
-                    Silakan membuat pesanan baru jika Anda masih tertarik dengan produk kami.
-                    Terima kasih atas perhatiannya.
-                    ';
-                    Log::info($message);
-                    event(new PaymentNotifEvent($user->id, $message));
-                    break;
-            }   
-        } else {
-            Log::error('masuk else');
-        }
+            $order = Order::where('order_number', $request->order_id)->first();
+            $user = $order->user()->first();
+            $serverKey = config('midtrans.serverKey');
+            $hashed = hash('sha512', $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
+            if ($hashed == $request->signature_key) {
+                switch ($request->transaction_status) {
+                    case 'settlement':
+                    case 'capture':
+                        $order->update(['order_status' => 'paid']);
+                        if ($order->product_id) {
+                            $varOptionIds = $order->product->pickedVariationOption;
+                            $mergeVarOption = MergeVariationOption::where('variation_option_1_id', $varOptionIds[0]->id)
+                                ->where('variation_option_2_id', $varOptionIds[1]->id)
+                                ->first();
+                            $mergeVarOption->update([
+                                'merge_stock' => $mergeVarOption->merge_stock - $order->qty
+                            ]);
+                        }
+                        $message = '<strong class="ms-4"><h6>Pembayaran berhasil!🎉 </h6></strong>' .
+                            'Total Pembayaran : <strong>Rp ' . number_format($request->gross_amount, 2, ',', '.') . '</strong><br>' .
+                            'Metode Pembayaran : <strong>' . $request->acquirer . '</strong><br>' .
+                            'Tanggal Transaksi : <strong>' . Carbon::parse($request->transaction_time)->format('d-m-Y') . '</strong><br>' .
+                            '<strong>Terima kasih telah berbelanja dengan kami!</strong>
+                        <hr>';
+                        $message = htmlspecialchars_decode($message);
+                        $notif = Notification::create([
+                            'content' => $message
+                        ]);
+                        $user->notification()->attach($notif->id, ['id' => Str::uuid(36), 'is_read' => false, 'notification_id' => $notif->id, 'user_id' => $user->id]);
+                        Log::info($message);
+                        event(new PaymentNotifEvent($user->id, $message));
+                        break;
+                    case 'pending':
+                        $order->update(['order_status' => 'pending']);
+                        $message = 'Mohon segera lakukan pembayaran untuk pesanan Anda.
+                        Pesanan Anda saat ini dalam status "Pending Pembayaran".
+                        Kami akan memberitahu Anda segera setelah pembayaran Anda berhasil diproses.
+                        Terima kasih atas kerjasama Anda!';
+                        Log::info($message);
+                        event(new PaymentNotifEvent($user->id, $message));
+                        break;
+                    case 'expire':
+                        $order->update(['order_status' => 'failed']);
+                        $message = 'Maaf, pembayaran Anda untuk pesanan telah kadaluarsa.
+                        Pesanan Anda saat ini dalam status "Pembayaran Kadaluarsa".
+                        Silakan membuat pesanan baru jika Anda masih tertarik dengan produk kami.
+                        Terima kasih atas perhatiannya.';
+                        Log::info($message);
+                        event(new PaymentNotifEvent($user->id, $message));
+                        break;
+                }
+            } else {
+                Log::error('masuk else');
+            }
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }
@@ -388,13 +413,13 @@ class UserController extends Controller
     public function profile()
     {
         $user = $this->user
-        ->with(
-            'userAddresses',
-            'order',
-            'order.product',
-            'order.product.pickedVariationOption',
-            'notification'
-        )->first();
+            ->with(
+                'userAddresses',
+                'order',
+                'order.product',
+                'order.product.pickedVariationOption',
+                'notification'
+            )->first();
         return view('user.profile', compact('user'));
     }
 }

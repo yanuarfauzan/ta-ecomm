@@ -44,4 +44,8 @@ class Address extends Model
     {
         return $this->hasMany(Address::class);
     }
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'id', 'address_id');
+    }
 }

@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->uuid('shipping_id')->nullable();
             $table->uuid('user_id')->nullable();
             $table->uuid('product_id')->nullable();
+            $table->uuid('address_id')->nullable();
             $table->string('order_number')->nullable();
             $table->date('order_date')->nullable();
             $table->integer('qty')->nullable();
@@ -24,6 +25,7 @@ return new class extends Migration {
             $table->string('snap_token')->nullable();
             $table->timestamps();
             $table->foreign('shipping_id')->references('id')->on('shipping')->onDelete('cascade');
+            $table->foreign('address_id')->references('id')->on('address')->onDelete('cascade');
             $table->foreign('product_id')->references('id')->on('product')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
         });

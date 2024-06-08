@@ -92,14 +92,8 @@ class Order extends Component
     }
     public function changeAddress($addressId)
     {
-        $pickedAddress = $this->userAddresses->where('is_picked', true)->first();
-        if ($pickedAddress) {
-            $pickedAddress->update([
-                'is_picked' => false
-            ]);
-        }
-        $this->userAddresses->where('id', $addressId)->first()->update([
-            'is_picked' => true
+        $this->order->update([
+            'address_id' => $addressId
         ]);
         $pickedUserAddress = $this->userAddresses->where('id', $addressId)->first();
         $this->isAddressChanged = true;

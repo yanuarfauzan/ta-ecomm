@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class IsUserAuthenticated
+class IsOperator
 {
     /**
      * Handle an incoming request.
@@ -16,9 +16,10 @@ class IsUserAuthenticated
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check()) {
+        if (Auth::user() && Auth::user()->role == 'operator') {
             return $next($request);
         }
-        return redirect()->back();
+
+        return redirect()->route('user-login');
     }
 }
