@@ -100,7 +100,7 @@
                                 <div class="main-image">
                                     @if ($produk->hasImages && $produk->hasImages->isNotEmpty())
                                         <img id="mainProductImage{{ $produk->id }}"
-                                            src="{{ asset($produk->hasImages->first()->filepath_image) }}"
+                                            src="{{ Storage::url($produk->hasImages->first()->filepath_image) }}"
                                             alt="{{ $produk->name }}" class="img-fluid">
                                     @else
                                         <img id="mainProductImage{{ $produk->id }}"
@@ -110,9 +110,9 @@
                                 <div class="thumbnail-images mt-3">
                                     @if ($produk->hasImages && $produk->hasImages->isNotEmpty())
                                         @foreach ($produk->hasImages as $image)
-                                            <img src="{{asset('storage/'.$image->filepath_image) }}" alt="{{ $produk->name }}"
+                                            <img src="{{ Storage::url($image->filepath_image) }}" alt="{{ $produk->name }}"
                                                 class="img-thumbnail img-fluid small-image"
-                                                onclick="document.getElementById('mainProductImage{{ $produk->id }}').src='{{ asset(Storage::url($image->filepath_image)) }}'">
+                                                onclick="document.getElementById('mainProductImage{{ $produk->id }}').src='{{ Storage::url($image->filepath_image) }}'">
                                         @endforeach
                                     @endif
                                 </div>

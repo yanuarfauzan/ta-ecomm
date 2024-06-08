@@ -18,17 +18,9 @@
                 @csrf
                 @method('PUT')
                 <div class="mb-3">
-                    <label for="SKU" class="form-label">Kode Produk</label>
-                    <input type="text" class="form-control @error('SKU') is-invalid @enderror" id="SKU"
-                        name="SKU" value="{{ $product->SKU }}" required>
-                    @error('SKU')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="mb-3">
                     <label for="name" class="form-label">Nama Produk</label>
                     <input type="text" class="form-control @error('name') is-invalid @enderror" id="name"
-                        name="name" value="{{ $product->name }}" required>
+                        name="name" value="{{ old('nam', $product->name) }}" >
                     @error('name')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -36,7 +28,7 @@
                 <div class="mb-3">
                     <label for="stock" class="form-label">Stock</label>
                     <input type="number" class="form-control @error('stock') is-invalid @enderror" id="stock"
-                        name="stock" value="{{ $product->stock }}" required>
+                        name="stock" value="{{ old('stock', $product->stock) }}" >
                     @error('stock')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -44,7 +36,7 @@
                 <div class="mb-3">
                     <label for="images">Gambar Produk</label>
                     <input type="file" class="form-control-file @error('images.*') is-invalid @enderror" id="images"
-                        name="images[]" multiple>
+                        name="images[]" multiple value="{{ old('images.*') }}">
                     @error('images.*')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -52,7 +44,7 @@
                 <div class="mb-3">
                     <label for="price" class="form-label">Harga Produk</label>
                     <input type="number" class="form-control @error('price') is-invalid @enderror" id="price"
-                        name="price" value="{{ $product->price }}" required>
+                        name="price" value="{{ old('price', $product->price) }}" >
                     @error('price')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -60,7 +52,7 @@
                 <div class="mb-3">
                     <label for="desc" class="form-label">Deskripsi</label>
                     <input type="text" class="form-control @error('desc') is-invalid @enderror" id="desc"
-                        name="desc" value="{{ $product->desc }}" required>
+                        name="desc" value="{{ old('desc', $product->desc) }}" >
                     @error('desc')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -68,7 +60,7 @@
                 <div class="mb-3">
                     <label for="discount" class="form-label">Diskon (%)</label>
                     <input type="number" step="0.01" class="form-control @error('discount') is-invalid @enderror"
-                        id="discount" name="discount" value="{{ $product->discount }}" required>
+                        id="discount" name="discount" value="{{ old('discount', $product->discount) }}" >
                     @error('discount')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -76,29 +68,35 @@
                 <div class="mb-3">
                     <label for="weight" class="form-label">Berat Produk (Kg)</label>
                     <input type="number" step="0.01" class="form-control @error('weight') is-invalid @enderror"
-                        id="weight" name="weight" value="{{ $product->weight }}" required>
+                        id="weight" name="weight" value="{{ old('weight', $product->weight) }}" >
                     @error('weight')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="mb-3">
                     <label for="dimensions" class="form-label">Dimensi Produk (cm)</label>
-                    <div class="input-group">
+                    <div class="input-group ">
                         @php
                             $dimensionsArray = explode('x', $product->dimensions);
                             $length = $dimensionsArray[0] ?? '';
                             $width = $dimensionsArray[1] ?? '';
                             $height = $dimensionsArray[2] ?? '';
                         @endphp
-                        <input type="text" class="form-control @error('dimensions') is-invalid @enderror" id="length"
-                            name="length" value="{{ $length }}" required>
+                        <input type="number" class="form-control @error('length') is-invalid @enderror" id="length"
+                            name="length" value="{{ old('length', $length) }}" required>
+                            @error('length')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         <span class="input-group-text">x</span>
-                        <input type="text" class="form-control" id="width" name="width"
-                            value="{{ $width }}" required>
+                        <input type="number" class="form-control @error('width') is-invalid @enderror" id="width" name="width"
+                            value="{{ old('width', $width) }}" required>
+                            @error('width')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         <span class="input-group-text">x</span>
-                        <input type="text" class="form-control" id="height" name="height"
-                            value="{{ $height }}" required>
-                        @error('dimensions')
+                        <input type="number" class="form-control @error('height') is-invalid @enderror" id="height" name="height"
+                            value="{{ old('height', $height) }}" required>
+                        @error('height')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>

@@ -37,17 +37,18 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        $validatedData = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'stock' => 'nullable|integer',
             'price' => 'required|integer',
             'discount' => 'nullable|numeric|min:0|max:100',
             'desc' => 'nullable|string',
-            'weight' => 'required|numeric',
+            'weight' => 'nullable|numeric',
             'length' => 'required|numeric',
             'width' => 'required|numeric',
             'height' => 'required|numeric',
             'images.*' => [
+                'required',
                 'image',
                 'mimes:jpeg,png,jpg,gif',
                 'max:5120',
@@ -55,24 +56,27 @@ class ProductController extends Controller
             ],
         ]);
 
-        $prefix = 'EPRD';
-        $uniqueNumber = $this->generateUniqueSKU();
-        $sku = $prefix . $uniqueNumber;
-        $dimensions = $validatedData['length'] . 'x' . $validatedData['width'] . 'x' . $validatedData['height'];
+        if ($validatedData->fails()) {
+            return back()->withErrors($validatedData->errors())->withInput();
+        }
+
+        // $prefix = 'EPRD';
+        // $uniqueNumber = $this->generateUniqueSKU();
+        // $sku = $prefix . $uniqueNumber;
+        $dimensions = $validatedData->validated()['length'] . 'x' . $validatedData->validated()['width'] . 'x' . $validatedData->validated()['height'];
 
         $product = new Product();
-        $product->name = $validatedData['name'];
-        $product->SKU = $sku;
-        $product->stock = $validatedData['stock'];
-        $product->price = $validatedData['price'];
-        $product->desc = $validatedData['desc'];
-        $product->discount = $validatedData['discount'];
-        $product->weight = $validatedData['weight'];
+        $product->name = $validatedData->validated()['name'];
+        $product->SKU = $this->generateUniqueSKU();
+        $product->stock = $validatedData->validated()['stock'];
+        $product->price = $validatedData->validated()['price'];
+        $product->desc = $validatedData->validated()['desc'];
+        $product->discount = $validatedData->validated()['discount'];
+        $product->weight = $validatedData->validated()['weight'];
         $product->dimensions = $dimensions;
 
         $product->save();
 
-        // Simpan gambar
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $originalName = $image->getClientOriginalName();
@@ -107,19 +111,19 @@ class ProductController extends Controller
         return view('ADMIN.product.edit', compact('product'));
     }
 
-    /**
+    /** 
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
     {
+        // dd($request->all());
         $validatedData = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'SKU' => 'required|string|max:255|unique:product,SKU,' . $id,
             'stock' => 'nullable|integer',
             'price' => 'required|integer',
             'discount' => 'nullable|numeric|min:0|max:100',
             'desc' => 'nullable|string',
-            'weight' => 'required|numeric',
+            'weight' => 'nullable|numeric',
             'length' => 'required|numeric',
             'width' => 'required|numeric',
             'height' => 'required|numeric',
@@ -131,24 +135,15 @@ class ProductController extends Controller
             ],
         ]);
 
-        if($validatedData->fails()) {
+        if ($validatedData->fails()) {
             return back()->withErrors($validatedData->errors())->withInput();
         }
 
         $product = Product::findOrFail($id);
-        
-        $prefix = 'EPRD';
-        $uniqueNumber = $this->generateUniqueSKU();
-        $sku = $prefix . $uniqueNumber;
-
-        if($product->SKU != $validatedData->validated()['SKU']) {
-            $validatedData['SKU'] = $sku;
-        }
 
         $dimensions = $validatedData->validated()['length'] . 'x' . $validatedData->validated()['width'] . 'x' . $validatedData->validated()['height'];
 
         $product->name = $validatedData->validated()['name'];
-        $product->SKU = $validatedData->validated()['SKU'];
         $product->stock = $validatedData->validated()['stock'];
         $product->price = $validatedData->validated()['price'];
         $product->desc = $validatedData->validated()['desc'];
@@ -196,8 +191,13 @@ class ProductController extends Controller
 
     private function generateUniqueSKU()
     {
-        $latestProduct = Product::latest()->first();
-        $lastNumber = $latestProduct ? intval(substr($latestProduct->SKU, 4)) : 0;
-        return str_pad($lastNumber + 1, 6, '0', STR_PAD_LEFT);
+        $prefix = 'EPRD-';
+        $uniqueCode = $prefix . strtoupper(Str::random(8));
+
+        while (Product::where('SKU', $uniqueCode)->exists()) {
+            $uniqueCode = $prefix . strtoupper(Str::random(8));
+        }
+
+        return $uniqueCode;
     }
 }

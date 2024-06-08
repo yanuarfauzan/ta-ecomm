@@ -50,7 +50,7 @@
                 <div class="form-group">
                     <label for="merge_stock">Merge Stock</label>
                     <input type="number" name="merge_stock" class="form-control @error('merge_stock') is-invalid @enderror"
-                        value="{{ $mergeVariationOption->merge_stock }}" required>
+                        value="{{ old('merge_stock', $mergeVariationOption->merge_stock) }}" required>
                     @error('merge_stock')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror

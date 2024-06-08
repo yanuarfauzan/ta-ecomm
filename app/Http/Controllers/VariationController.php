@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Variation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class VariationController extends Controller
 {
@@ -29,9 +30,13 @@ class VariationController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedVariation = Validator::make($request->all(), [
             'name' => 'required|string|max:255'
         ]);
+
+        if($validatedVariation->fails()) {
+            return back()->withErrors($validatedVariation->errors())->withInput();
+        }
 
         Variation::create([
             'name' => $request->name,
@@ -62,9 +67,13 @@ class VariationController extends Controller
      */
     public function update(Request $request, Variation $variations)
     {
-        $request->validate([
+        $validatedVariation = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
         ]);
+
+        if($validatedVariation->fails()) {
+            return back()->withErrors($validatedVariation->errors())->withInput();
+        }
 
         $variations->update([
             'name' => $request->name,

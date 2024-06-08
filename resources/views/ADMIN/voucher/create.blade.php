@@ -28,17 +28,9 @@
             <form action="{{ url('/admin/store-voucher') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-3">
-                    <label for="voucher_code" class="form-label">Kode voucher</label>
-                    <input type="text" class="form-control @error('voucher_code') is-invalid @enderror" id="voucher_code"
-                        name="voucher_code" required>
-                    @error('voucher_code')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="mb-3">
                     <label for="name" class="form-label">Nama voucher</label>
                     <input type="text" class="form-control @error('name') is-invalid @enderror" id="name"
-                        name="name" required>
+                        name="name" value="{{ old('name') }}">
                     @error('name')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -46,9 +38,9 @@
                 <div class="mb-3">
                     <label for="type" class="form-label">Tipe voucher</label>
                     <select class="form-control @error('type') is-invalid @enderror" id="type" name="type" required>
-                        <option value="free ongkir">Pilih Tipe</option>
-                        <option value="free ongkir">Free Ongkir</option>
-                        <option value="discount">Diskon</option>
+                        <option>Pilih Tipe</option>
+                        <option value="free ongkir" {{ old('type') == 'free ongkir' ? 'selected' : '' }}>Free Ongkir</option>
+                        <option value="discount" {{ old('type') == 'discount' ? 'selected' : '' }}>Diskon</option>
                     </select>
                     @error('type')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -65,7 +57,7 @@
                 <div class="mb-3">
                     <label for="desc" class="form-label">Deskripsi</label>
                     <input type="text" class="form-control @error('desc') is-invalid @enderror" id="desc"
-                        name="desc">
+                        name="desc" value="{{ old('desc') }}">
                     @error('desc')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -73,7 +65,7 @@
                 <div class="mb-3">
                     <label for="discount_value" class="form-label">Jumlah Diskon</label>
                     <input type="number" class="form-control @error('discount_value') is-invalid @enderror"
-                        id="discount_value" name="discount_value" required>
+                        id="discount_value" name="discount_value" value="{{ old('discount_value') }}">
                     @error('discount_value')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -81,7 +73,7 @@
                 <div class="mb-3">
                     <label for="min_value" class="form-label">Nilai Minimal</label>
                     <input type="number" class="form-control @error('min_value') is-invalid @enderror"
-                        id="min_value" name="min_value" required>
+                        id="min_value" name="min_value" value="{{ old('min_value') }}">
                     @error('min_value')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -89,7 +81,7 @@
                 <div class="mb-3">
                     <label for="expired_at" class="form-label">Tenggat Voucher</label>
                     <input type="date" class="form-control @error('expired_at') is-invalid @enderror" id="expired_at"
-                        name="expired_at" required>
+                        name="expired_at" value="{{ old('expired_at') }}">
                     @error('expired_at')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
