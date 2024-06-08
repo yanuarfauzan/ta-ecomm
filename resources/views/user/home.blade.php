@@ -33,7 +33,7 @@
                     <a href="{{ route('user-detail-product', ['productId' => $product->id]) }}"
                         style="text-decoration: none">
                         <div class="col mt-4">
-                            <div class="card border-0 position-relative shadow rounded-0" id="card-product"
+                            <div class="card border-0 position-relative shadow-sm rounded-0" id="card-product"
                                 style="width: 18rem; height: auto; cursor: pointer;">
                                 <div style="overflow: hidden;">
                                     <img src="{{ Storage::url($product->hasImages->first()->filepath_image) }}"

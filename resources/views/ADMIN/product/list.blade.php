@@ -100,7 +100,7 @@
                                 <div class="main-image">
                                     @if ($produk->hasImages && $produk->hasImages->isNotEmpty())
                                         <img id="mainProductImage{{ $produk->id }}"
-                                            src="{{ asset($produk->hasImages->first()->filepath_image) }}"
+                                            src="{{ Storage::url($produk->hasImages->first()->filepath_image) }}"
                                             alt="{{ $produk->name }}" class="img-fluid">
                                     @else
                                         <img id="mainProductImage{{ $produk->id }}"

@@ -12,12 +12,14 @@ return new class extends Migration {
     {
         Schema::create('merge_variation_option', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->uuid('product_id');
             $table->unsignedBigInteger('variation_option_1_id')->nullable();
             $table->unsignedBigInteger('variation_option_2_id')->nullable();
             $table->integer('merge_stock')->nullable();
             $table->timestamps();
             $table->foreign('variation_option_1_id')->references('id')->on('variation_option_id')->onDelete('cascade');
             $table->foreign('variation_option_2_id')->references('id')->on('variation_option_id')->onDelete('cascade');
+            $table->foreign('product_id')->references('id')->on('product')->onDelete('cascade');
         });
     }
 

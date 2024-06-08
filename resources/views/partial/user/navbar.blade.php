@@ -105,9 +105,9 @@
                             @foreach ($chunkedCategories as $category)
                                 <a href="{{ $category->id }}" style="text-decoration: none" class="col mt-3">
                                     <div>
-                                        <div class="card rounded-0 border-0 shadow"
+                                        <div class="card rounded-0 border-0 shadow-sm"
                                             style="width: 145px; cursor: pointer; height: auto">
-                                            <img src="{{ Storage::url('public/icon-category/' . $category->icon) }}"
+                                            <img src="{{ Storage::url($category->icon) }}"
                                                 class="card-img-top rounded-0" alt="..." style="width: 100%">
                                             <div class="card-body">
                                                 <p class="card-text text-center"><strong>{{ $category->name }}</strong>

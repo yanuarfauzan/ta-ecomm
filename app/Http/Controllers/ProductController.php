@@ -8,8 +8,7 @@ use Illuminate\Support\Str;
 use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use App\Rules\ImageResolution;
-use App\Models\ProductAssessment;
-use Illuminate\Auth\Events\Validated;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -29,7 +28,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('ADMIN.product.create');
+        $categories = Category::all();
+        return view('ADMIN.product.create', compact('categories'));
     }
 
     /**
@@ -37,7 +37,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        $validatedData = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'stock' => 'nullable|integer',
             'price' => 'required|integer',
@@ -54,25 +54,25 @@ class ProductController extends Controller
                 new ImageResolution(1080, 1080)
             ],
         ]);
-
+        if ($validatedData->fails()) {
+            return back()->withErrors($validatedData->errors())->withInput();
+        }
+        $validatedData = $validatedData->validated();
         $prefix = 'EPRD';
         $uniqueNumber = $this->generateUniqueSKU();
         $sku = $prefix . $uniqueNumber;
         $dimensions = $validatedData['length'] . 'x' . $validatedData['width'] . 'x' . $validatedData['height'];
 
-        $product = new Product();
-        $product->name = $validatedData['name'];
-        $product->SKU = $sku;
-        $product->stock = $validatedData['stock'];
-        $product->price = $validatedData['price'];
-        $product->desc = $validatedData['desc'];
-        $product->discount = $validatedData['discount'];
-        $product->weight = $validatedData['weight'];
-        $product->dimensions = $dimensions;
-
-        $product->save();
-
-        // Simpan gambar
+        $product = Product::create([
+            'name' => $validatedData['name'],
+            'SKU' => $sku,
+            'stock' => $validatedData['stock'],
+            'price' => $validatedData['price'],
+            'desc' => $validatedData['desc'],
+            'discount' => $validatedData['discount'],
+            'weight' => $validatedData['weight'],
+            'dimensions' => $dimensions
+        ]);
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $originalName = $image->getClientOriginalName();
@@ -86,7 +86,6 @@ class ProductController extends Controller
                 $productImage->save();
             }
         }
-
         return redirect('/admin/list-product')->with('success', 'Produk Berhasil Dibuat');
     }
 
@@ -103,8 +102,9 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        $product = Product::findOrFail($id);
-        return view('ADMIN.product.edit', compact('product'));
+        $product = Product::with('hasCategory')->findOrFail($id);
+        $categories = Category::all();
+        return view('ADMIN.product.edit', compact('product', 'categories'));
     }
 
     /**
@@ -114,11 +114,10 @@ class ProductController extends Controller
     {
         $validatedData = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'SKU' => 'required|string|max:255|unique:product,SKU,' . $id,
             'stock' => 'nullable|integer',
             'price' => 'required|integer',
             'discount' => 'nullable|numeric|min:0|max:100',
-            'desc' => 'nullable|string',
+            'desc' => 'required|nullable|string',
             'weight' => 'required|numeric',
             'length' => 'required|numeric',
             'width' => 'required|numeric',
@@ -130,34 +129,23 @@ class ProductController extends Controller
                 new ImageResolution(1080, 1080)
             ],
         ]);
-
-        if($validatedData->fails()) {
+        if ($validatedData->fails()) {
             return back()->withErrors($validatedData->errors())->withInput();
         }
-
+        $validatedData = $validatedData->validated();
         $product = Product::findOrFail($id);
-        
-        $prefix = 'EPRD';
-        $uniqueNumber = $this->generateUniqueSKU();
-        $sku = $prefix . $uniqueNumber;
 
-        if($product->SKU != $validatedData->validated()['SKU']) {
-            $validatedData['SKU'] = $sku;
-        }
+        $dimensions = $validatedData['length'] . 'x' . $validatedData['width'] . 'x' . $validatedData['height'];
 
-        $dimensions = $validatedData->validated()['length'] . 'x' . $validatedData->validated()['width'] . 'x' . $validatedData->validated()['height'];
-
-        $product->name = $validatedData->validated()['name'];
-        $product->SKU = $validatedData->validated()['SKU'];
-        $product->stock = $validatedData->validated()['stock'];
-        $product->price = $validatedData->validated()['price'];
-        $product->desc = $validatedData->validated()['desc'];
-        $product->discount = $validatedData->validated()['discount'];
-        $product->weight = $validatedData->validated()['weight'];
-        $product->dimensions = $dimensions;
-
-        $product->save();
-
+        $product->update([
+            'name' => $validatedData['name'],
+            'stock' => $validatedData['stock'],
+            'price' => $validatedData['price'],
+            'desc' => $validatedData['desc'],
+            'discount' => $validatedData['discount'],
+            'weight' => $validatedData['weight'],
+            'dimensions' => $dimensions
+        ]);
         if ($request->hasFile('images')) {
             ProductImage::where('product_id', $product->id)->delete();
 
