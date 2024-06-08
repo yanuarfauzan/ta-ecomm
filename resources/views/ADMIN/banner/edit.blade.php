@@ -34,7 +34,7 @@
                 <div class="mb-3">
                     <label for="desc" class="form-label">Deskripsi</label>
                     <input type="text" class="form-control @error('desc') is-invalid @enderror" id="desc"
-                        name="desc" value="{{ $bannerHome->desc }}">
+                        name="desc" value="{{ old('desc', $bannerHome->desc) }}">
                     @error('desc')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror

@@ -9,7 +9,9 @@ use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use App\Rules\ImageResolution;
 use App\Models\ProductAssessment;
+use Illuminate\Auth\Events\Validated;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -37,10 +39,9 @@ class ProductController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'SKU' => 'required|string|max:255|unique:product,SKU',
-            'stock' => 'required|integer',
+            'stock' => 'nullable|integer',
             'price' => 'required|integer',
-            'discount' => 'required|numeric|min:0|max:100',
+            'discount' => 'nullable|numeric|min:0|max:100',
             'desc' => 'nullable|string',
             'weight' => 'required|numeric',
             'length' => 'required|numeric',
@@ -54,11 +55,14 @@ class ProductController extends Controller
             ],
         ]);
 
+        $prefix = 'EPRD';
+        $uniqueNumber = $this->generateUniqueSKU();
+        $sku = $prefix . $uniqueNumber;
         $dimensions = $validatedData['length'] . 'x' . $validatedData['width'] . 'x' . $validatedData['height'];
 
         $product = new Product();
         $product->name = $validatedData['name'];
-        $product->SKU = $validatedData['SKU'];
+        $product->SKU = $sku;
         $product->stock = $validatedData['stock'];
         $product->price = $validatedData['price'];
         $product->desc = $validatedData['desc'];
@@ -71,12 +75,14 @@ class ProductController extends Controller
         // Simpan gambar
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
-                $imagePath = $image->store('public/product-images');
+                $originalName = $image->getClientOriginalName();
+                $imagePath = $image->storeAs('public/product-images', $originalName);
+                $imagePath = 'product-images/' . $originalName;
 
                 $productImage = new ProductImage();
                 $productImage->id = (string) Str::uuid();
                 $productImage->product_id = $product->id;
-                $productImage->filepath_image = Storage::url($imagePath);
+                $productImage->filepath_image = $imagePath;
                 $productImage->save();
             }
         }
@@ -106,12 +112,12 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validatedData = $request->validate([
+        $validatedData = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'SKU' => 'required|string|max:255|unique:product,SKU,' . $id,
-            'stock' => 'required|integer',
+            'stock' => 'nullable|integer',
             'price' => 'required|integer',
-            'discount' => 'required|numeric|min:0|max:100',
+            'discount' => 'nullable|numeric|min:0|max:100',
             'desc' => 'nullable|string',
             'weight' => 'required|numeric',
             'length' => 'required|numeric',
@@ -125,17 +131,29 @@ class ProductController extends Controller
             ],
         ]);
 
-        $dimensions = $validatedData['length'] . 'x' . $validatedData['width'] . 'x' . $validatedData['height'];
+        if($validatedData->fails()) {
+            return back()->withErrors($validatedData->errors())->withInput();
+        }
 
         $product = Product::findOrFail($id);
+        
+        $prefix = 'EPRD';
+        $uniqueNumber = $this->generateUniqueSKU();
+        $sku = $prefix . $uniqueNumber;
 
-        $product->name = $validatedData['name'];
-        $product->SKU = $validatedData['SKU'];
-        $product->stock = $validatedData['stock'];
-        $product->price = $validatedData['price'];
-        $product->desc = $validatedData['desc'];
-        $product->discount = $validatedData['discount'];
-        $product->weight = $validatedData['weight'];
+        if($product->SKU != $validatedData->validated()['SKU']) {
+            $validatedData['SKU'] = $sku;
+        }
+
+        $dimensions = $validatedData->validated()['length'] . 'x' . $validatedData->validated()['width'] . 'x' . $validatedData->validated()['height'];
+
+        $product->name = $validatedData->validated()['name'];
+        $product->SKU = $validatedData->validated()['SKU'];
+        $product->stock = $validatedData->validated()['stock'];
+        $product->price = $validatedData->validated()['price'];
+        $product->desc = $validatedData->validated()['desc'];
+        $product->discount = $validatedData->validated()['discount'];
+        $product->weight = $validatedData->validated()['weight'];
         $product->dimensions = $dimensions;
 
         $product->save();
@@ -144,12 +162,14 @@ class ProductController extends Controller
             ProductImage::where('product_id', $product->id)->delete();
 
             foreach ($request->file('images') as $image) {
-                $imagePath = $image->store('public/product-images');
+                $originalName = $image->getClientOriginalName();
+                $imagePath = $image->storeAs('public/product-images', $originalName);
+                $imagePath = 'product-images/' . $originalName;
 
                 $productImage = new ProductImage();
                 $productImage->id = (string) Str::uuid();
                 $productImage->product_id = $product->id;
-                $productImage->filepath_image = Storage::url($imagePath);
+                $productImage->filepath_image = $imagePath;
                 $productImage->save();
             }
         }
@@ -172,5 +192,12 @@ class ProductController extends Controller
 
         $product->delete();
         return redirect()->to('/admin/list-product')->with('delete', 'Produk Telah Dihapus');
+    }
+
+    private function generateUniqueSKU()
+    {
+        $latestProduct = Product::latest()->first();
+        $lastNumber = $latestProduct ? intval(substr($latestProduct->SKU, 4)) : 0;
+        return str_pad($lastNumber + 1, 6, '0', STR_PAD_LEFT);
     }
 }

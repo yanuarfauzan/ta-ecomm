@@ -167,7 +167,7 @@
         }
 
         function getImageFilename(filepath) {
-            return filepath.split('/').pop(); // Ambil bagian terakhir dari path sebagai nama file
+            return filepath.split('/').pop(); 
         }
     </script>
     <style>
