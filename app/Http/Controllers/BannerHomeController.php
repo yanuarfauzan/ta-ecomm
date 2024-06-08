@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Rules\ImageResolution;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class BannerHomeController extends Controller
 {
@@ -32,7 +33,7 @@ class BannerHomeController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedBannerHome = Validator::make($request->all(), [
             'banner_image' => [
                 'image',
                 'mimes:jpeg,png,jpg,gif',
@@ -41,6 +42,10 @@ class BannerHomeController extends Controller
             ],
             'desc' => 'required|string|max:255',
         ]);    
+
+        if($validatedBannerHome->fails()) {
+            return back()->withErrors($validatedBannerHome->errors())->withInput();
+        }
 
         $bannerPath = null;
 
@@ -81,7 +86,7 @@ class BannerHomeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validatedBannerHome = Validator::make($request->all(), [
             'banner_image' => [
                 'image',
                 'mimes:jpeg,png,jpg,gif',
@@ -90,6 +95,10 @@ class BannerHomeController extends Controller
             ],
             'desc' => 'required|string|max:255',
         ]);
+
+        if($validatedBannerHome->fails()) {
+            return back()->withErrors($validatedBannerHome->errors())->withInput();
+        }
     
         $banner = BannerHome::findOrFail($id);
         $bannerPath = $banner->banner_image;
