@@ -13,8 +13,8 @@ return new class extends Migration {
         Schema::create('product_category_variation', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('product_id');
-            $table->uuid('category_id');
-            $table->uuid('variation_id');
+            $table->uuid('category_id')->nullable();
+            $table->uuid('variation_id')->nullable();
             $table->timestamps();
             $table->foreign('product_id')->references('id')->on('product')->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('category')->onDelete('cascade');

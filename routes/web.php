@@ -36,7 +36,6 @@ use App\Models\MergeVariationOption;
 
 Route::get('/', [UserController::class, 'home'])->name('user-home');
 Route::get('/product/detail-product/{productId}', [UserController::class, 'detailProduct'])->name('user-detail-product');
-
 // ROLE:OPERATOR
 Route::get('/operator', [OperatorController::class, 'index'])->name('operator-index')->middleware(IsOperator::class);
 //ROLE:ADMIN 

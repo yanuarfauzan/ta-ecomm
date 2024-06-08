@@ -15,6 +15,7 @@ class MergeVariationOption extends Model
         'product_id',
         'variation_option_1_id',
         'variation_option_2_id',
+        'product_id',
         'merge_stock',
     ];
 

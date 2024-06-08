@@ -19,26 +19,6 @@
                 @csrf
                 @method('PUT')
                 <div class="form-group">
-                    <label for="name">Nama Variasi Opsi</label>
-                    <input type="text" name="name" class="form-control  @error('name') is-invalid @enderror"
-                        id="name" value="{{ old('name', $variationOption->name) }}" required>
-                    @error('name')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="form-group">
-                    <label for="variation_id">Nama Variasi</label>
-                    <select name="variation_id" class="form-control" id="variation_id" required>
-                        <option value="" selected disabled>Pilih Variasi</option>
-                        @foreach ($variations as $variation)
-                            <option value="{{ $variation->id }}"
-                                {{ $variationOption->variation_id == $variation->id ? 'selected' : '' }}>
-                                {{ $variation->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="form-group">
                     <label for="product_id">Pilih Produk</label>
                     <select name="product_id" class="form-control" id="product_id" required>
                         <option value="" selected disabled>Pilih Produk</option>
@@ -49,8 +29,46 @@
                             </option>
                         @endforeach
                     </select>
+                    @error('product_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
-
+                <div class="form-group">
+                    <label for="variation_id">Kategori Produk</label>
+                    <select name="category_id" class="form-control" id="category_id">
+                        <option value="" selected disabled>Pilih Kategori</option>
+                        @foreach ($categories as $category)
+                            @php
+                                $isSelected = $products->contains(function ($product) use ($category) {
+                                    return $product->hasCategory->contains('id', $category->id);
+                                });
+                            @endphp
+                            <option value="{{ $category->id }}" {{ $isSelected ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="variation_id">Nama Variasi</label>
+                    <select name="variation_id" class="form-control" id="variation_id" required>
+                        <option value="" selected disabled>Pilih Variasi</option>
+                        @foreach ($variations as $variation)
+                            <option value="{{ $variationOption->variation_id . '_' . $variation->id }}"
+                                {{ $variationOption->variation_id == $variation->id ? 'selected' : '' }}>
+                                {{ $variation->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="name">Nama Variasi Opsi</label>
+                    <input type="text" name="name" class="form-control  @error('name') is-invalid @enderror"
+                        id="name" value="{{ old('name', $variationOption->name) }}" required>
+                    @error('name')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
                 <div class="form-group" id="product_image_container">
                     <label for="product_image_id">Gambar Produk</label>
                     <select name="product_image_id" class="form-control" id="product_image_id" required>
@@ -65,15 +83,16 @@
                         @endif
                     </select>
                 </div>
-
-                <div id="selected_product_image_container" class="form-group">
-                    <label for="selected_product_image">Preview Gambar Produk</label><br>
-                    <img id="selected_product_image"
-                        src="{{ $variationOption->productImage ? asset($variationOption->productImage->filepath_image) : '' }}"
-                        alt="Gambar Produk" style="max-width: 200px;">
-                </div>
+                @if ($variationOption->productImage)
+                    <div id="selected_product_image_container" class="form-group">
+                        <label for="selected_product_image">Preview Gambar Produk</label><br>
+                        <img id="selected_product_image"
+                            src="{{ Storage::url($variationOption->productImage->filepath_image) }}" alt="Gambar Produk"
+                            style="max-width: 200px;">
+                    </div>
+                @endif
                 <div class="form-group">
-                    <label for="price">Harga</label>
+                    <label for="price">Tambahan Harga</label>
                     <input type="number" name="price" class="form-control  @error('price') is-invalid @enderror"
                         id="price" value="{{ old('price', $variationOption->price) }}" required>
                     @error('price')
@@ -150,9 +169,10 @@
                     $productImageSelect.empty().append(
                         '<option value="" selected disabled>Pilih Gambar Produk</option>');
                     images.forEach(function(image) {
+                        const imageUrl = `/storage/${image.filepath_image}`;
                         const filename = getImageFilename(image.filepath_image);
                         $productImageSelect.append(
-                            `<option value="${image.id}" data-image-url="${image.filepath_image}" ${selectedImageId == image.id ? 'selected' : ''}>${filename}</option>`
+                            `<option value="${image.id}" data-image-url="${imageUrl}" ${selectedImageId == image.id ? 'selected' : ''}>${filename}</option>`
                         );
                     });
                     if (selectedImageId) {
@@ -167,7 +187,7 @@
         }
 
         function getImageFilename(filepath) {
-            return filepath.split('/').pop(); 
+            return filepath.split('/').pop();
         }
     </script>
     <style>
