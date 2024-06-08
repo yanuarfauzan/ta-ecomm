@@ -153,8 +153,8 @@
                     $productImageSelect.empty().append(
                         '<option value="" selected disabled>Pilih Gambar Produk</option>');
                     images.forEach(function(image) {
+                        const filename = getImageFilename(image.filepath_image);    
                         const imageUrl = `/storage/${image.filepath_image}`;
-                        const filename = getImageFilename(image.filepath_image);
                         $productImageSelect.append(
                             `<option value="${image.id}" data-image-url="${imageUrl}" ${selectedImageId == image.id ? 'selected' : ''}>${filename}</option>`
                         );

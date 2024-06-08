@@ -29,14 +29,14 @@
                 @csrf
                 <div class="mb-3">
                     <label for="name" class="form-label">Nama Kategori</label>
-                    <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" required>
+                    <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{old('name')}}">
                     @error('name')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
                 </div>
                 <div class="mb-3">
                     <label for="icon">Icon</label>
-                    <input type="file" class="form-control-file @error('icon') is-invalid @enderror" id="icon" name="icon">
+                    <input type="file" class="form-control-file @error('icon') is-invalid @enderror" id="icon" name="icon" value="{{old('icon')}}">
                     @error('icon')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror

@@ -20,8 +20,8 @@
                 @method('PUT')
                 <div class="mb-3">
                     <label for="name" class="form-label">Nama Variasi</label>
-                    <input type="text" class="form-control @error('address') is-invalid @enderror" id="name"
-                        name="name" value="{{ $variations->name }}">
+                    <input type="text" class="form-control @error('name') is-invalid @enderror" id="name"
+                        name="name" value="{{ old('name', $variations->name) }}">
                     @error('name')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror

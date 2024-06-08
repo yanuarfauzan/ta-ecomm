@@ -46,7 +46,7 @@
                 <div class="mb-3">
                     <label for="password_confirmation" class="form-label">Confirm Password</label>
                     <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror"
-                        id="password_confirmation" name="password_confirmation" value="{{ old('password_confirmation') }}">
+                        id="password_confirmation" name="password_confirmation">
                     @error('password_confirmation')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -95,10 +95,9 @@
                     <h5>Alamat 1</h5>
                     <div class="mb-3">
                         <label for="recipient_name" class="form-label">Nama Penerima</label>
-                        <input type="text" class="form-control @error('address.0.recipient_name') is-invalid @enderror"
-                            id="recipient_name" name="address[0][recipient_name]"
-                            value="{{ old('address.0.recipient_name') }}">
-                        @error('address.0.recipient_name')
+                        <input type="text" class="form-control @error('recipient_name') is-invalid @enderror"
+                            id="recipient_name" name="address[0][recipient_name]" value="{{ old('recipient_name') }}">
+                        @error('recipient_name')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
@@ -170,33 +169,40 @@
             let addressCount = 1;
             addAddressLink.addEventListener('click', function(event) {
                 event.preventDefault();
-                addressCount++;
+                if (addressCount === 1) {
+                    addressCount++;
+                }
+                const newAddressCount = addressCount++;
                 const addressFields = `
-                    <h5>Address ${addressCount}</h5>
+                    <h5>Alamat ${newAddressCount}</h5>
                     <div class="address-item mb-3">
-                        <label for="address_${addressCount}" class="form-label">Address</label>
-                        <input type="text" class="form-control" id="address_${addressCount}" name="address[${addressCount}][address]">
+                        <label for="address_${newAddressCount}" class="form-label">Nama Penerima</label>
+                        <input type="text" class="form-control" id="address_${newAddressCount}" name="address[${newAddressCount}][recipient_name]">
                     </div>
                     <div class="address-item mb-3">
-                        <label for="detail_${addressCount}" class="form-label">Detail</label>
-                        <input type="text" class="form-control" id="detail_${addressCount}" name="address[${addressCount}][detail]">
+                        <label for="address_${newAddressCount}" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="address_${newAddressCount}" name="address[${newAddressCount}][address]">
                     </div>
                     <div class="address-item mb-3">
-                        <label for="postal_code_${addressCount}" class="form-label">Postal Code</label>
-                        <input type="text" class="form-control" id="postal_code_${addressCount}" name="address[${addressCount}][postal_code]">
+                        <label for="detail_${newAddressCount}" class="form-label">Detail</label>
+                        <input type="text" class="form-control" id="detail_${newAddressCount}" name="address[${newAddressCount}][detail]">
                     </div>
                     <div class="address-item mb-3">
-                        <label for="city_${addressCount}" class="form-label">City</label>
-                        <input type="text" class="form-control" id="city_${addressCount}" name="address[${addressCount}][city]">
+                        <label for="postal_code_${newAddressCount}" class="form-label">Postal Code</label>
+                        <input type="text" class="form-control" id="postal_code_${newAddressCount}" name="address[${newAddressCount}][postal_code]">
                     </div>
                     <div class="address-item mb-3">
-                        <label for="province_${addressCount}" class="form-label">Province</label>
-                        <input type="text" class="form-control" id="province_${addressCount}" name="address[${addressCount}][province]">
+                        <label for="city_${newAddressCount}" class="form-label">City</label>
+                        <input type="text" class="form-control" id="city_${newAddressCount}" name="address[${newAddressCount}][city]">
+                    </div>
+                    <div class="address-item mb-3">
+                        <label for="province_${newAddressCount}" class="form-label">Province</label>
+                        <input type="text" class="form-control" id="province_${newAddressCount}" name="address[${newAddressCount}][province]">
                     </div>
                 `;
                 addressSection.insertAdjacentHTML('beforeend', addressFields);
                 addressSection.appendChild(addAddressLink);
-                addressCount++;
+                // addressCount++;
             });
         });
     </script>

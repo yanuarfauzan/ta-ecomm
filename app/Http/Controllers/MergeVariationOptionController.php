@@ -6,6 +6,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\VariationOption;
 use App\Models\MergeVariationOption;
+use Illuminate\Support\Facades\Validator;
 
 class MergeVariationOptionController extends Controller
 {
@@ -24,12 +25,16 @@ class MergeVariationOptionController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedMerge = Validator::make($request->all(), [
             'product_id' => 'required|exists:product,id',
             'variation_option_1_id' => 'required|exists:variation_option,id',
             'variation_option_2_id' => 'required|exists:variation_option,id',
             'merge_stock' => 'required|integer|min:0',
         ]);
+
+        if($validatedMerge->fails()) {
+            return back()->withErrors($validatedMerge->errors())->withInput();
+        }
 
         $mergeVariationOption = new MergeVariationOption();
         $mergeVariationOption->product_id = $request->product_id;
@@ -75,12 +80,16 @@ class MergeVariationOptionController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validatedMerge = Validator::make($request->all(), [
             'product_id' => 'required|exists:product,id',
             'variation_option_1_id' => 'required|exists:variation_option,id',
             'variation_option_2_id' => 'required|exists:variation_option,id',
             'merge_stock' => 'required|integer|min:0',
         ]);
+
+        if($validatedMerge->fails()) {
+            return back()->withErrors($validatedMerge->errors())->withInput();
+        }
 
         $mergeVariationOption = MergeVariationOption::findOrFail($id);
         $mergeVariationOption->product_id = $request->product_id;

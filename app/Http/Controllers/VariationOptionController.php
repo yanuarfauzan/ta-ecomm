@@ -35,7 +35,6 @@ class VariationOptionController extends Controller
         return view('ADMIN.variation-option.create', compact('variations', 'products', 'variationOption', 'categories'));
     }
 
-
     public function getImagesByProduct($productId)
     {
         // dd('sini2');

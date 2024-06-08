@@ -36,23 +36,19 @@
                         @endforeach
                     </select>
                 </div>
-
                 <div class="form-group">
                     <label for="variation_option_1_id">Variation Option 1</label>
                     <select name="variation_option_1_id" id="variation_option_1_id" class="form-control" required>
-                        <!-- Options akan diisi menggunakan AJAX setelah pemilihan produk -->
                     </select>
                 </div>
-
                 <div class="form-group">
                     <label for="variation_option_2_id">Variation Option 2</label>
                     <select name="variation_option_2_id" id="variation_option_2_id" class="form-control" required>
-                        <!-- Options akan diisi menggunakan AJAX setelah pemilihan produk -->
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="merge_stock">Merge Stock</label>
-                    <input type="number" name="merge_stock" class="form-control @error('merge_stock') is-invalid @enderror" required>
+                    <input type="number" name="merge_stock" class="form-control @error('merge_stock') is-invalid @enderror" value="{{ old('merge_stock') }}">
                     @error('merge_stock')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
