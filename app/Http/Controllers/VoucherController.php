@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use Ramsey\Uuid\Uuid;
 use App\Models\Voucher;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Rules\ImageResolution;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class VoucherController extends Controller
 {
@@ -33,32 +35,36 @@ class VoucherController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        $validatedData = Validator::make($request->all(), [
             'name' => 'required|string',
             'type' => 'required|in:free ongkir,discount',
             'voucher_icon' => [
+                'required',
                 'image',
                 'mimes:jpeg,png,jpg,gif',
                 'max:5120',
                 new ImageResolution(1080, 1080)
             ],
-            'voucher_code' => 'required|string|unique:voucher',
-            'desc' => 'nullable|string',
-            'min_value' => 'nullable|integer',
-            'discount_value' => 'nullable|integer',
+            'desc' => 'required|string',
+            'min_value' => 'required|integer',
+            'discount_value' => 'required|integer',
             'expired_at' => 'required|date',
         ]);
+
+        if ($validatedData->fails()) {
+            return back()->withErrors($validatedData->errors())->withInput();
+        }
 
         $isActive = $request->input('expired_at') >= now();
 
         $voucher = new Voucher([
-            'name' => $validatedData['name'],
-            'type' => $validatedData['type'],
-            'voucher_code' => $validatedData['voucher_code'],
-            'desc' => $validatedData['desc'],
-            'min_value' => $validatedData['min_value'],
-            'discount_value' => $validatedData['discount_value'],
-            'expired_at' => $validatedData['expired_at'],
+            'name' => $validatedData->validate()['name'],
+            'type' => $validatedData->validate()['type'],
+            'voucher_code' => $this->generateUniqueVoucherCode(),
+            'desc' => $validatedData->validate()['desc'],
+            'min_value' => $validatedData->validate()['min_value'],
+            'discount_value' => $validatedData->validate()['discount_value'],
+            'expired_at' => $validatedData->validate()['expired_at'],
             'is_active' => $isActive,
         ]);
 
@@ -98,21 +104,26 @@ class VoucherController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validatedData = $request->validate([
+        $validatedData = Validator::make($request->all(), [
             'name' => 'required|string',
             'type' => 'required|in:free ongkir,discount',
             'voucher_icon' => [
+                'required',
                 'image',
                 'mimes:jpeg,png,jpg,gif',
                 'max:5120',
                 new ImageResolution(1080, 1080)
             ],
             'voucher_code' => 'required|string|unique:voucher,voucher_code,' . $id,
-            'desc' => 'nullable|string',
-            'min_value' => 'nullable|integer',
-            'discount_value' => 'nullable|integer',
+            'desc' => 'required|string',
+            'min_value' => 'required|integer',
+            'discount_value' => 'required|integer',
             'expired_at' => 'required|date',
         ]);
+
+        if ($validatedData->fails()) {
+            return back()->withErrors($validatedData->errors())->withInput();
+        }
 
         $voucher = Voucher::findOrFail($id);
 
@@ -137,7 +148,7 @@ class VoucherController extends Controller
     public function updateStatus($id)
     {
         $voucher = Voucher::findOrFail($id);
-        $voucher->is_active = false; // Set status voucher menjadi expired
+        $voucher->is_active = false;
         $voucher->save();
 
         return redirect()->back()->with('alert', 'Status Voucher Berhasil Diubah');
@@ -152,5 +163,17 @@ class VoucherController extends Controller
 
         $voucher->delete();
         return redirect('/admin/list-voucher')->with('delete', 'Voucher Telah Dihapus.');
+    }
+
+    private function generateUniqueVoucherCode()
+    {
+        $prefix = '#EVC-';
+        $uniqueCode = $prefix . strtoupper(Str::random(8));
+
+        while (Voucher::where('voucher_code', $uniqueCode)->exists()) {
+            $uniqueCode = $prefix . strtoupper(Str::random(8));
+        }
+
+        return $uniqueCode;
     }
 }

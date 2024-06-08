@@ -67,7 +67,7 @@
                 <div id="selected_product_image_container" class="form-group">
                     <label for="selected_product_image">Preview Gambar Produk</label><br>
                     <img id="selected_product_image"
-                        src="{{ $variationOption->productImage ? Storage::url('public/profile_images/' . $variationOption->productImage->filepath_image) : '' }}"
+                        src="{{ $variationOption->productImage ? Storage::url($variationOption->productImage->filepath_image) : '' }}"
                         alt="Gambar Produk" style="max-width: 200px;">
                 </div>
                 <div class="form-group">
@@ -144,9 +144,10 @@
                     $productImageSelect.empty().append(
                         '<option value="" selected disabled>Pilih Gambar Produk</option>');
                     images.forEach(function(image) {
-                        const filename = getImageFilename(image.filepath_image);
+                        const filename = getImageFilename(image.filepath_image);    
+                        const imageUrl = `/storage/${image.filepath_image}`;
                         $productImageSelect.append(
-                            `<option value="${image.id}" data-image-url="${image.filepath_image}" ${selectedImageId == image.id ? 'selected' : ''}>${filename}</option>`
+                            `<option value="${image.id}" data-image-url="${imageUrl}" ${selectedImageId == image.id ? 'selected' : ''}>${filename}</option>`
                         );
                     });
                     if (selectedImageId) {

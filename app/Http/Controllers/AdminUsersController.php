@@ -82,12 +82,15 @@ class AdminUsersController extends Controller
                 'address.*.postal_code' => 'required|string',
                 'address.*.city' => 'required|string',
                 'address.*.province' => 'required|string',
-            ])->validate();
+            ]);
+
+            if ($validatedAddressData->fails()) {
+                return back()->withErrors($validatedAddressData->errors())->withInput();
+            }
 
             foreach ($request->address as $addressData) {
                 $users->userAddresses()->create($addressData);
             }
-            
         }
         $users = User::all();
         return view('ADMIN.users.list', compact('users'))->with('success', "Users Berhasil Dibuat");

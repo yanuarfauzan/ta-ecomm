@@ -7,6 +7,7 @@ use App\Rules\ImageResolution;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
@@ -32,7 +33,7 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedCategory = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'icon' => [
                 'image',
@@ -41,6 +42,10 @@ class CategoryController extends Controller
                 new ImageResolution(1080, 1080)
             ]
         ]);
+
+        if($validatedCategory->fails()) {
+            return back()->withErrors($validatedCategory->errors())->withInput();
+        }
 
         $iconPath = null;
 
@@ -81,7 +86,7 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        $request->validate([
+        $validatedCategory = Validator::make($request->all(), [
             'name' => 'required',
             'icon' => [
                 'image',
@@ -90,6 +95,10 @@ class CategoryController extends Controller
                 new ImageResolution(1080, 1080)
             ]
         ]);
+
+        if($validatedCategory->fails()) {
+            return back()->withErrors($validatedCategory->errors())->withInput();
+        }
 
         if ($request->hasFile('icon')) {
             if ($category->icon && Storage::exists($category->icon)) {

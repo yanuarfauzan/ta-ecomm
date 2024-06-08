@@ -59,7 +59,7 @@
                 <div class="mb-3">
                     <label for="birtdate" class="form-label">Birtdate</label>
                     <input type="date" class="form-control @error('birtdate') is-invalid @enderror" id="birtdate"
-                        name="birtdate" value="{{ $user->birtdate }}">
+                        name="birtdate" value="{{ old('birtdate', $user->birtdate) }}">
                     @error('birtdate')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -73,7 +73,7 @@
                         </div>
                     @endif
                     <input type="file" class="form-control-file @error('profile_image') is-invalid @enderror"
-                        id="profile_image" name="profile_image">
+                        id="profile_image" name="profile_image" value="{{old('profile_image', $user->profile_image)}}">
                     @error('profile_image')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -92,7 +92,7 @@
                         <label for="recipient_name{{ $index }}" class="form-label">Nama Penerima</label>
                         <input type="text" class="form-control @error('recipient_name') is-invalid @enderror"
                             id="recipient_name{{ $index }}" name="address[{{ $index }}][recipient_name]"
-                            value="{{ $address->recipient_name }}">
+                            value="{{ old('address.' . $index . '.recipient_name', $address->recipient_name) }}">
                         @error('recipient_name')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -102,7 +102,7 @@
                         <label for="address{{ $index }}" class="form-label">Address</label>
                         <input type="text" class="form-control @error('address') is-invalid @enderror"
                             id="address{{ $index }}" name="address[{{ $index }}][address]"
-                            value="{{ $address->address }}">
+                            value="{{ old('address.' . $index . '.address', $address->address) }}">
                         @error('address')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -111,7 +111,7 @@
                         <label for="detail{{ $index }}" class="form-label">Detail</label>
                         <input type="text" class="form-control @error('detail') is-invalid @enderror"
                             id="detail{{ $index }}" name="address[{{ $index }}][detail]"
-                            value="{{ $address->detail }}">
+                            value="{{ old('address.' . $index . '.detail', $address->detail) }}">
                         @error('detail')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -120,7 +120,7 @@
                         <label for="postal_code{{ $index }}" class="form-label">Postal Code</label>
                         <input type="text" class="form-control @error('postal_code') is-invalid @enderror"
                             id="postal_code{{ $index }}" name="address[{{ $index }}][postal_code]"
-                            value="{{ $address->postal_code }}">
+                            value="{{ old('address.' . $index . '.postal_code', $address->postal_code) }}">
                         @error('postal_code')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -129,7 +129,7 @@
                         <label for="city{{ $index }}" class="form-label">City</label>
                         <input type="text" class="form-control @error('city') is-invalid @enderror"
                             id="city{{ $index }}" name="address[{{ $index }}][city]"
-                            value="{{ $address->city }}">
+                            value="{{ old('address.' . $index . '.city', $address->city) }}">
                         @error('city')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -138,7 +138,7 @@
                         <label for="province{{ $index }}" class="form-label">Province</label>
                         <input type="text" class="form-control @error('province') is-invalid @enderror"
                             id="province{{ $index }}" name="address[{{ $index }}][province]"
-                            value="{{ $address->province }}">
+                            value="{{ old('address.' . $index . '.province', $address->province) }}">
                         @error('province')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror

@@ -31,13 +31,6 @@ class VariationOptionController extends Controller
         return view('ADMIN.variation-option.create', compact('variations', 'products', 'variationOption'));
     }
 
-    // public function getProductImages($productId)
-    // {
-    //     // dd('sini1');
-    //     $productImages = ProductImage::where('product_id', $productId)->get();
-    //     return response()->json($productImages);
-    // }
-
     public function getImagesByProduct($productId)
     {
         // dd('sini2');
