@@ -10,7 +10,6 @@ use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use App\Models\VariationOption;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Contracts\Support\ValidatedData;
 
 class VariationOptionController extends Controller
 {
