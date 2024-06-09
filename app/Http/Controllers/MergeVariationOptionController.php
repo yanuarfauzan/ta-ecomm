@@ -12,7 +12,7 @@ class MergeVariationOptionController extends Controller
 {
     public function index()
     {
-        $mergeVariationOptions = MergeVariationOption::all();
+        $mergeVariationOptions = MergeVariationOption::paginate(10);
         return view('ADMIN.merge_varOption.list', compact('mergeVariationOptions'));
     }
 

@@ -76,6 +76,39 @@
                     </tbody>
                 </table>
             </div>
+            <div class="card-footer text-right">
+                <nav class="d-inline-block">
+                    <ul class="pagination mb-0">
+                        @if ($category->onFirstPage())
+                            <li class="page-item disabled">
+                                <span class="page-link"><i class="fas fa-chevron-left"></i></span>
+                            </li>
+                        @else
+                            <li class="page-item">
+                                <a class="page-link" href="{{ $category->previousPageUrl() }}"><i
+                                        class="fas fa-chevron-left"></i></a>
+                            </li>
+                        @endif
+
+                        @for ($i = 1; $i <= $category->lastPage(); $i++)
+                            <li class="page-item {{ $i == $category->currentPage() ? 'active' : '' }}">
+                                <a class="page-link" href="{{ $category->url($i) }}">{{ $i }}</a>
+                            </li>
+                        @endfor
+
+                        @if ($category->hasMorePages())
+                            <li class="page-item">
+                                <a class="page-link" href="{{ $category->nextPageUrl() }}"><i
+                                        class="fas fa-chevron-right"></i></a>
+                            </li>
+                        @else
+                            <li class="page-item disabled">
+                                <span class="page-link"><i class="fas fa-chevron-right"></i></span>
+                            </li>
+                        @endif
+                    </ul>
+                </nav>
+            </div>
         </div>
     </div>
 @endsection

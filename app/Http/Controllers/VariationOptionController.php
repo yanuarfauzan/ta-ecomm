@@ -16,7 +16,7 @@ class VariationOptionController extends Controller
      */
     public function index()
     {
-        $variationOptions = VariationOption::with('variation', 'productImage')->get();
+        $variationOptions = VariationOption::with('variation', 'productImage')->paginate(10);
         return view('ADMIN.variation-option.list', compact('variationOptions'));
     }
 

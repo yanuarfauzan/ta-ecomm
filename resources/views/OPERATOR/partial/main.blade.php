@@ -290,6 +290,39 @@
                     </div>
                 @endforeach
         </div>
+        <div class="card-footer text-right">
+            <nav class="d-inline-block">
+                <ul class="pagination mb-0">
+                    @if ($orders->onFirstPage())
+                        <li class="page-item disabled">
+                            <span class="page-link"><i class="fas fa-chevron-left"></i></span>
+                        </li>
+                    @else
+                        <li class="page-item">
+                            <a class="page-link" href="{{ $orders->previousPageUrl() }}"><i
+                                    class="fas fa-chevron-left"></i></a>
+                        </li>
+                    @endif
+
+                    @for ($i = 1; $i <= $orders->lastPage(); $i++)
+                        <li class="page-item {{ $i == $orders->currentPage() ? 'active' : '' }}">
+                            <a class="page-link" href="{{ $orders->url($i) }}">{{ $i }}</a>
+                        </li>
+                    @endfor
+
+                    @if ($orders->hasMorePages())
+                        <li class="page-item">
+                            <a class="page-link" href="{{ $orders->nextPageUrl() }}"><i
+                                    class="fas fa-chevron-right"></i></a>
+                        </li>
+                    @else
+                        <li class="page-item disabled">
+                            <span class="page-link"><i class="fas fa-chevron-right"></i></span>
+                        </li>
+                    @endif
+                </ul>
+            </nav>
+        </div>
         </section>
     </div>
     <footer class="main-footer">

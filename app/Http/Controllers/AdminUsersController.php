@@ -21,7 +21,7 @@ class AdminUsersController extends Controller
 
     public function index()
     {
-        $users = User::with('userAddresses')->orderBy('username')->get();
+        $users = User::with('userAddresses')->orderBy('username')->paginate(10);
         $address = Address::all();
 
         return view('ADMIN.users.list', compact('users', 'address'));
@@ -97,7 +97,7 @@ class AdminUsersController extends Controller
                 $users->userAddresses()->create($addressData);
             }
         }
-        $users = User::all();
+        $users = User::with('userAddresses')->orderBy('username')->paginate(10);
         return view('ADMIN.users.list', compact('users'));
     }
 
@@ -190,7 +190,7 @@ class AdminUsersController extends Controller
             }
         }
 
-        $users = User::all();
+        $users = User::with('userAddresses')->orderBy('username')->paginate(10);
         return view('ADMIN.users.list', compact('users'));
     }
 
