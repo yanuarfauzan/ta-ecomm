@@ -422,6 +422,7 @@
 
                         this.innerHTML = '<i class="bi bi-pencil"></i>';
 
+                        // Send AJAX request to update the resi value
                         fetch('{{ route('update-resi') }}', {
                                 method: 'POST',
                                 headers: {

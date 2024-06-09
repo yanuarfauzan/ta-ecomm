@@ -48,7 +48,7 @@ class VariationOptionController extends Controller
             'product_image_id' => 'required|exists:product_image,id',
             'name' => 'required|string|max:255',
             'stock' => 'required|integer',
-            'price' => 'required|numeric',
+            'price' => 'nullable|numeric',
             'weight' => 'required|numeric',
         ]);
 

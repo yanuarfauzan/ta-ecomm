@@ -71,9 +71,10 @@ class Order extends Model
     {
         return $this->hasOne(Shipping::class, 'order_id');
     }
-    public function address()
-    {
-        return $this->belongsTo(Address::class);
+    // public function address()
+    // {
+    //     return $this->belongsTo(Address::class);
+    // }
     public function pickedVariation()
     {
         return $this->belongsToMany(Variation::class, 'picked_variation');

@@ -40,6 +40,7 @@
                     @error('images.*')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
+                    <span>Nama file harus sesuai dengan gambar produk.</span>
                 </div>
                 <div class="mb-3">
                     <label for="price" class="form-label">Harga Produk</label>
