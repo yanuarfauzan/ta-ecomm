@@ -19,7 +19,7 @@ class OperatorController extends Controller
     {
         $orders = Order::with(['user', 'product', 'cartProducts.product', 'cartProducts.cart', 'shippingMethod', 'productAssessment.product'])
             ->whereNotIn('order_status', ['unpaid', 'pending'])
-            ->get();
+            ->paginate(20);
 
         foreach ($orders as $order) {
             $order->formatted_status = $this->getStatusLabel($order->order_status);

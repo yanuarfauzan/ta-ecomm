@@ -81,6 +81,39 @@
                     </tbody>
                 </table>
             </div>
+            <div class="card-footer text-right">
+                <nav class="d-inline-block">
+                    <ul class="pagination mb-0">
+                        @if ($product->onFirstPage())
+                            <li class="page-item disabled">
+                                <span class="page-link"><i class="fas fa-chevron-left"></i></span>
+                            </li>
+                        @else
+                            <li class="page-item">
+                                <a class="page-link" href="{{ $product->previousPageUrl() }}"><i
+                                        class="fas fa-chevron-left"></i></a>
+                            </li>
+                        @endif
+
+                        @for ($i = 1; $i <= $product->lastPage(); $i++)
+                            <li class="page-item {{ $i == $product->currentPage() ? 'active' : '' }}">
+                                <a class="page-link" href="{{ $product->url($i) }}">{{ $i }}</a>
+                            </li>
+                        @endfor
+
+                        @if ($product->hasMorePages())
+                            <li class="page-item">
+                                <a class="page-link" href="{{ $product->nextPageUrl() }}"><i
+                                        class="fas fa-chevron-right"></i></a>
+                            </li>
+                        @else
+                            <li class="page-item disabled">
+                                <span class="page-link"><i class="fas fa-chevron-right"></i></span>
+                            </li>
+                        @endif
+                    </ul>
+                </nav>
+            </div>
         </div>
     </div>
     @foreach ($product as $produk)
@@ -89,7 +122,8 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title text-primary" id="productDetailModalLabel{{ $produk->id }}">{{ $produk->name }}</h4>
+                        <h4 class="modal-title text-primary" id="productDetailModalLabel{{ $produk->id }}">
+                            {{ $produk->name }}</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -110,8 +144,8 @@
                                 <div class="thumbnail-images mt-3">
                                     @if ($produk->hasImages && $produk->hasImages->isNotEmpty())
                                         @foreach ($produk->hasImages as $image)
-                                            <img src="{{ Storage::url($image->filepath_image) }}" alt="{{ $produk->name }}"
-                                                class="img-thumbnail img-fluid small-image"
+                                            <img src="{{ Storage::url($image->filepath_image) }}"
+                                                alt="{{ $produk->name }}" class="img-thumbnail img-fluid small-image"
                                                 onclick="document.getElementById('mainProductImage{{ $produk->id }}').src='{{ Storage::url($image->filepath_image) }}'">
                                         @endforeach
                                     @endif
@@ -171,7 +205,7 @@
         }
 
         /* .discount-price {
-                color: green;
-            } */
+                    color: green;
+                } */
     </style>
 @endsection

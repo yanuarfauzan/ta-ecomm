@@ -19,7 +19,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $product = Product::all();
+        $product = Product::orderBy('name')->paginate(10);
         return view('ADMIN.product.list', compact('product'));
     }
 
@@ -186,7 +186,7 @@ class ProductController extends Controller
 
     private function generateUniqueSKU()
     {
-        $prefix = 'EPRD-';
+        $prefix = '#EPRD-';
         $uniqueCode = $prefix . strtoupper(Str::random(8));
 
         while (Product::where('SKU', $uniqueCode)->exists()) {

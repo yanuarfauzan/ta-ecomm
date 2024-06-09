@@ -50,7 +50,8 @@
                             <tr>
                                 <td>{{ $no++ }}</td>
                                 <td>{{ $mergeVariationOption->product->name }}</td>
-                                <td>{{ $mergeVariationOption->variationOption1->name }} & {{ $mergeVariationOption->variationOption2->name }}</td>
+                                <td>{{ $mergeVariationOption->variationOption1->name }} &
+                                    {{ $mergeVariationOption->variationOption2->name }}</td>
                                 <td>{{ $mergeVariationOption->merge_stock }}</td>
                                 <td>
                                     <div class="d-flex justify-content-center">
@@ -72,6 +73,39 @@
                         @endforeach
                     </tbody>
                 </table>
+            </div>
+            <div class="card-footer text-right">
+                <nav class="d-inline-block">
+                    <ul class="pagination mb-0">
+                        @if ($mergeVariationOptions->onFirstPage())
+                            <li class="page-item disabled">
+                                <span class="page-link"><i class="fas fa-chevron-left"></i></span>
+                            </li>
+                        @else
+                            <li class="page-item">
+                                <a class="page-link" href="{{ $mergeVariationOptions->previousPageUrl() }}"><i
+                                        class="fas fa-chevron-left"></i></a>
+                            </li>
+                        @endif
+
+                        @for ($i = 1; $i <= $mergeVariationOptions->lastPage(); $i++)
+                            <li class="page-item {{ $i == $mergeVariationOptions->currentPage() ? 'active' : '' }}">
+                                <a class="page-link" href="{{ $mergeVariationOptions->url($i) }}">{{ $i }}</a>
+                            </li>
+                        @endfor
+
+                        @if ($mergeVariationOptions->hasMorePages())
+                            <li class="page-item">
+                                <a class="page-link" href="{{ $mergeVariationOptions->nextPageUrl() }}"><i
+                                        class="fas fa-chevron-right"></i></a>
+                            </li>
+                        @else
+                            <li class="page-item disabled">
+                                <span class="page-link"><i class="fas fa-chevron-right"></i></span>
+                            </li>
+                        @endif
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>
