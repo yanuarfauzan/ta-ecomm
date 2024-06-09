@@ -28,25 +28,8 @@
             <form action="{{ url('/admin/store-variation-option') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group">
-                    <label for="name">Nama Variasi Opsi</label>
-                    <input type="text" name="name" class="form-control  @error('name') is-invalid @enderror"
-                        id="name" required>
-                    @error('name')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="form-group">
-                    <label for="variation_id">Nama Variasi</label>
-                    <select name="variation_id" class="form-control" id="variation_id" required>
-                        <option value="" selected disabled>Pilih Variasi</option>
-                        @foreach ($variations as $variation)
-                            <option value="{{ $variation->id }}">{{ $variation->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="form-group">
                     <label for="product_id">Pilih Produk</label>
-                    <select name="product_id" class="form-control" id="product_id" required>
+                    <select name="product_id" class="form-control" id="product_id">
                         <option value="" selected disabled>Pilih Produk</option>
                         @foreach ($products as $product)
                             <option value="{{ $product->id }}"
@@ -56,14 +39,42 @@
                         @endforeach
                     </select>
                 </div>
+                <div class="form-group">
+                    <label for="variation_id">Pilih Kategori</label>
+                    <select name="category_id" class="form-control" id="category_id">
+                        <option value="" selected disabled>Pilih Kategori</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('category_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="form-group">
+                    <label for="variation_id">Pilih Variasi</label>
+                    <select name="variation_id" class="form-control" id="variation_id">
+                        <option value="" selected disabled>Pilih Variasi</option>
+                        @foreach ($variations as $variation)
+                            <option value="{{ $variation->id }}">{{ $variation->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="name">Nama Variasi Opsi</label>
+                    <input type="text" name="name" class="form-control  @error('name') is-invalid @enderror"
+                        id="name">
+                    @error('name')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
 
                 <div class="form-group" id="product_image_container">
                     <label for="product_image_id">Gambar Produk</label>
-                    <select name="product_image_id" class="form-control" id="product_image_id" required>
+                    <select name="product_image_id" class="form-control" id="product_image_id">
                         <option value="" selected disabled>Pilih Gambar Produk</option>
                     </select>
                 </div>
-
                 <div id="selected_product_image_container" class="form-group">
                     <label for="selected_product_image">Preview Gambar Produk</label><br>
                     <img id="selected_product_image"
@@ -71,9 +82,9 @@
                         alt="Gambar Produk" style="max-width: 200px;">
                 </div>
                 <div class="form-group">
-                    <label for="price">Harga</label>
+                    <label for="price">Tambahan Harga</label>
                     <input type="number" name="price" class="form-control  @error('price') is-invalid @enderror"
-                        id="price" required>
+                        id="price">
                     @error('price')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -81,7 +92,7 @@
                 <div class="form-group">
                     <label for="stock">Stock</label>
                     <input type="number" name="stock" class="form-control  @error('stock') is-invalid @enderror"
-                        id="stock" required>
+                        id="stock">
                     @error('stock')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -89,7 +100,7 @@
                 <div class="form-group">
                     <label for="weight">Weight</label>
                     <input type="number" name="weight" class="form-control  @error('weight') is-invalid @enderror"
-                        id="weight" required>
+                        id="weight">
                     @error('weight')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -97,24 +108,22 @@
                 <div class="mb-3">
                     <label for="dimensions" class="form-label">Dimensi Produk (cm)</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" id="length" name="length" placeholder="Panjang"
-                            required>
+                        <input type="text" class="form-control" id="length" name="length" placeholder="Panjang">
                         <span class="input-group-text">x</span>
-                        <input type="text" class="form-control" id="width" name="width" placeholder="Lebar"
-                            required>
+                        <input type="text" class="form-control" id="width" name="width" placeholder="Lebar">
                         <span class="input-group-text">x</span>
-                        <input type="text" class="form-control" id="height" name="height" placeholder="Tinggi"
-                            required>
+                        <input type="text" class="form-control" id="height" name="height" placeholder="Tinggi">
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>
     </div>
-       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
-            const initialProductId = "{{ $variationOption->productImage ? $variationOption->productImage->product_id : '' }}";
+            const initialProductId =
+                "{{ $variationOption->productImage ? $variationOption->productImage->product_id : '' }}";
             const initialProductImageId = "{{ $variationOption->product_image_id }}";
 
             if (initialProductId) {
@@ -155,7 +164,8 @@
                         $selectedProductImage.attr('src', selectedImageUrl);
                     }
                 })
-                .fail(function() {
+                .fail(function(xhr, status, error) {
+                    console.log(xhr.responseJSON);
                     $productImageSelect.empty().append(
                         '<option value="" selected disabled>Error loading images</option>');
                 });

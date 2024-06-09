@@ -37,7 +37,6 @@ use App\Http\Controllers\MergeVariationOptionController;
 
 Route::get('/', [UserController::class, 'home'])->name('user-home');
 Route::get('/product/detail-product/{productId}', [UserController::class, 'detailProduct'])->name('user-detail-product');
-
 // ROLE:OPERATOR
 Route::get('/operator', [OperatorController::class, 'index'])->name('operator-index')->middleware(IsOperator::class);
 Route::post('/operator/{id}/update-proses', [OperatorController::class, 'updateProses'])->middleware(IsOperator::class);
