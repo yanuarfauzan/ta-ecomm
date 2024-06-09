@@ -25,7 +25,7 @@
                 <div class="card-product px-2 py-2 d-flex justify-content-between align-items-center"
                     style="width: 100%;">
                     <div class="d-flex justify-content-start align-items-center gap-4 position-relative">
-                        <img src="{{ Storage::url('public/product-images/' . $productBuyNow->hasImages->first()->filepath_image) }}"
+                        <img src="{{ Storage::url($productBuyNow->hasImages->first()->filepath_image) }}"
                             alt="" style="width: 80px; height: 80px;">
                         <span style="width: 150px">
                             <h4>{{ $productBuyNow->name }}</h4>
@@ -34,7 +34,7 @@
                     <div class="d-flex justify-content-start align-items-center gap-2 variation-container">
                         @foreach ($variationBuyNow as $variationOption)
                             @if (isset($variationOption->productImage->filepath_image))
-                                <img src="{{ Storage::url('public/product-images/' . $variationOption->productImage->filepath_image) }}"
+                                <img src="{{ Storage::url($variationOption->productImage->filepath_image) }}"
                                     alt="" class="variation-image">
                             @endif
                         @endforeach
@@ -92,7 +92,7 @@
                     <div class="card-product px-2 py-2 d-flex justify-content-between align-items-center"
                         style="width: 100%;">
                         <div class="d-flex justify-content-start align-items-center gap-4 position-relative">
-                            <img src="{{ Storage::url('public/product-images/' . $product->hasImages->first()->filepath_image) }}"
+                            <img src="{{ Storage::url( $product->hasImages->first()->filepath_image) }}"
                                 alt="" style="width: 80px; height: 80px;">
                             <span style="width: 150px">
                                 <h4>{{ $product->name }}</h4>
@@ -101,7 +101,7 @@
                         <div class="d-flex justify-content-start align-items-center gap-2 variation-container">
                             @foreach ($userCarts->pickedVariation as $variation)
                                 @if ($variation->variationOption?->productImage?->filepath_image)
-                                    <img src="{{ Storage::url('public/product-images/' . $variation->variationOption?->productImage->filepath_image) }}"
+                                    <img src="{{ Storage::url( $variation->variationOption?->productImage->filepath_image) }}"
                                         alt="" class="variation-image">
                                 @endif
                             @endforeach
@@ -176,7 +176,7 @@
                     <span><strong>Rp {{ number_format($totalPrice, 2, ',', '.') }}</strong></span>
                 </div>
                 <button id="checkout-payment" class="btn rounded-0 mt-3 bg-main-color text-white"
-                    style="width: 100%;"><strong>Pay</strong></button>
+                    style="width: 100%;"><strong>Bayar</strong></button>
             </div>
         </div>
     </div>

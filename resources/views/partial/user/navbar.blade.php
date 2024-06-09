@@ -2,17 +2,18 @@
     style="height: 125px;">
     <div class="container-fluid mx-4 d-flex align-items-center" style="width: 84%">
         <div class="d-flex align-items-center justify-content-evenly" style="width: 17%;">
-            <a class="navbar-brand text-white" href="#">E-COMM</a>
+            <a class="navbar-brand text-white" href="{{ route('user-home') }}"><strong>E-COMM</strong></a>
             <a href="#categoryCollapse" class="text-white" style="text-decoration: none;" data-bs-toggle="collapse"
                 role="button" aria-expanded="false" aria-controls="categoryCollapse"
                 id="categoryCollapseToggle">Category</a>
         </div>
-        <form class="d-flex" role="search">
+        <form action="{{ route('user-home') }}" class="d-flex" role="search" method="GET">
+            @csrf
             <div class="input-group">
-                <input type="text" class="form-control rounded-0" id="search-home" placeholder="Search..."
+                <input type="text" class="form-control rounded-0" id="search-home" placeholder="Search..." name="keyword"
                     style="box-shadow: none; width: 720px;">
                 <div class="input-group-append" style="height : 80%;">
-                    <button class="btn-search btn-light input-group-text rounded-0 border-2 text-white bg-main-color"
+                    <button type="submit" class="btn-search btn-light input-group-text rounded-0 border-2 text-white bg-main-color"
                         style="width: 60x">
                         <i class="bi bi-search" style="font-size: 25px; color: "></i>
                     </button>
@@ -29,14 +30,14 @@
                 <a href="#" class="text-white position-relative" id="notificationButton"
                     style="text-decoration: none;">
                     <i class="bi bi-bell" style="font-size: 25px;"></i>
-                    <span
+                    {{-- <span
                         class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-0 rounded-circle"
-                        style="width: 20px; height: 20px;">
+                        style="width: 15px; height: 15px;">
                         <span class="position-absolute top-50 start-50 translate-middle"
                             style="color: white; font-size: 12px;">
-                            5
+                            
                         </span>
-                    </span>
+                    </span> --}}
                 </a>
                 <ul class="dropdown-menu-notif dropdown-menu dropdown-menu-end" aria-labelledby="notificationButton">
                     <li class="ms-4 me-4">
@@ -52,7 +53,7 @@
                         <a href="" class="" style="text-decoration: none" data-bs-toggle="dropdown"
                             role="button" aria-haspopup="false" aria-expanded="false">
                             <span role="button" class="position-relative">
-                                <img src="{{ Storage::url('public/profile_images/' . auth()->user()->profile_image) }}"
+                                <img src="{{ Storage::url(auth()->user()->profile_image) }}"
                                     class="rounded-circle" style="width : 27px;" alt="">
                                 {{-- BADGE NOTIFIKASI --}}
                             </span>
@@ -103,7 +104,7 @@
                     <div class="swiper-slide">
                         <div class="row row-cols-8 ms-0">
                             @foreach ($chunkedCategories as $category)
-                                <a href="{{ $category->id }}" style="text-decoration: none" class="col mt-3">
+                                <a href="{{ route('user-home') . '?category=' . $category->id }}" style="text-decoration: none" class="col mt-3">
                                     <div>
                                         <div class="card rounded-0 border-0 shadow-sm"
                                             style="width: 145px; cursor: pointer; height: auto">

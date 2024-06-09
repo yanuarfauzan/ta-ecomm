@@ -23,7 +23,7 @@ class AmountsAndNotes extends Component
     protected $listeners = ['showChoosedVarOptions'];
     public function mount($product, $firstVarOption, $user, $firstVarOptionForCart)
     {
-        $this->stock = MergeVariationOption::where('variation_option_1_id', explode('_', $firstVarOptionForCart)[1])->first()->merge_stock;
+        $this->stock = MergeVariationOption::where('variation_option_1_id', explode('_', $firstVarOptionForCart)[1])->first()?->merge_stock;
         $this->totalPrice = $product->price + VariationOption::findOrFail(explode('_', $firstVarOptionForCart)[1])->price;
         $this->product = $product;
         $this->cartProductId = $product->cart();
@@ -107,7 +107,7 @@ class AmountsAndNotes extends Component
                         'variation_option_id' => $variationItem['variation_option_id'],
                     ]);
                 });
-                return response()->json(['message' => 'Berhasil menambahkan produk ke keranjang']);
+                $this->dispatch('openModalSuccessAddToCart', ['message' => 'Berhasil menambahkan produk ke keranjang']);
             } else {
                 $cartProductId = Str::uuid(36);
                 if ($this->isVariationDifferent($cartProduct, $results)) {
@@ -123,13 +123,13 @@ class AmountsAndNotes extends Component
                             'variation_option_id' => $variationItem['variation_option_id'],
                         ]);
                     });
-                    return response()->json(['message' => 'Berhasil menambahkan produk dengan variasi berbeda ke keranjang']);
+                    $this->dispatch('openModalSuccessAddToCart', ['message' => 'Berhasil menambahkan produk dengan variasi berbeda ke keranjang']);
                 } else {
                     $cartProduct->update([
                         'qty' => $cartProduct->qty + $results['qty'],
                         'total_price' => $this->price * ($cartProduct->qty + $results['qty'])
                     ]);
-                    return response()->json(['message' => 'Produk sudah dimasukkan ke keranjang, jumlah ditambahkan']);
+                    $this->dispatch('openModalSuccessAddToCart', ['message' => 'Produk sudah dimasukkan ke keranjang, jumlah ditambahkan']);
                 }
             }
         } else {

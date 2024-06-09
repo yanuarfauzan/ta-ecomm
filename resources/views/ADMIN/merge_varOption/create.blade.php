@@ -68,11 +68,14 @@
 
                 if (productId) {
                     $.getJSON(`/admin/getVarOption/${productId}`, function(data) {
-                        $.each(data, function(key, option) {
-                            $('#variation_option_1_id').append('<option value="' + key +
-                                '">' + option + '</option>');
-                            $('#variation_option_2_id').append('<option value="' + key +
-                                '">' + option + '</option>');
+                        console.log(data);
+                        $.each(data[0].variation_option, function(key, option) {
+                            $('#variation_option_1_id').append('<option value="' + option.id +
+                                '">' + option.name + '</option>');
+                        });
+                        $.each(data[1].variation_option, function(key, option) {
+                            $('#variation_option_2_id').append('<option value="' + option.id +
+                                '">' + option.name + '</option>');
                         });
                     }).fail(function(jqXHR, textStatus, errorThrown) {
                         console.error('AJAX call failed:', textStatus, errorThrown);

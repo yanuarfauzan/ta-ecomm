@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BannerHome;
 use Exception;
 use App\Models\Cart;
 use App\Models\User;
@@ -36,11 +37,25 @@ class UserController extends Controller
         $categories = Category::all();
         $take = $request->loadMoreProduct == true ? 16 : 16;
         $startIndex = $request->input('startIndex', 0);
-        $products = Product::with('hasImages')->skip($startIndex)->take($take)->get();
+        $categoryId = $request->category;
+        $keyword = $request->keyword;
+        $products = Product::with('hasImages', 'hasCategory')
+            ->skip($startIndex)
+            ->take($take)
+            ->when($categoryId, function ($query) use ($categoryId) {
+                $query->whereHas('hasCategory', function ($query1) use ($categoryId) {
+                    $query1->where('category.id', $categoryId); // Menambahkan tabel 'categories' sebelum 'id'
+                });
+            })
+            ->when($keyword, function ($query) use ($keyword) {
+                $query->where('name', 'like', '%' . $keyword . '%');
+            })
+            ->get();
+        $banners = BannerHome::all();
         if ($request->loadMoreProduct == true) {
             return response()->json(['message' => 'load more products success', 'data' => $products, 'startIndex' => $startIndex + $take], 200);
         }
-        return view('user.home', compact('products', 'categories', 'startIndex'));
+        return view('user.home', compact('products', 'categories', 'startIndex', 'banners'));
     }
     public function addAddresses(AddAddressessRequest $request)
     {
@@ -128,12 +143,12 @@ class UserController extends Controller
         $dataForAmounts = [
             $product->variation()->first()->id,
             $product->variation()->first()->variationOption()->first()->name,
-            $product->variation()->first()->variationOption()->first()->productImage()->first()->filepath_image
+            $product->variation()->first()->variationOption()->first()?->productImage()->first()?->filepath_image
         ];
         $dataForCart = [
             $product->variation()->first()->id,
             $product->variation()->first()->variationOption()->first()->id,
-            $product->variation()->first()->variationOption()->first()->productImage()->first()->filepath_image
+            $product->variation()->first()->variationOption()->first()?->productImage()->first()?->filepath_image
         ];
 
         $take = $request->loadMoreProduct == true ? 16 : 16;
@@ -362,7 +377,7 @@ class UserController extends Controller
                     case 'capture':
                         $order->update(['order_status' => 'paid']);
                         if ($order->product_id) {
-                            $varOptionIds = $order->product->pickedVariationOption;
+                            $varOptionIds = $order->pickedVariationOption;
                             $mergeVarOption = MergeVariationOption::where('variation_option_1_id', $varOptionIds[0]->id)
                                 ->where('variation_option_2_id', $varOptionIds[1]->id)
                                 ->first();

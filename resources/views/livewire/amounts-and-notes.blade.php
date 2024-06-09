@@ -4,15 +4,15 @@
         <div class="d-flex gap-2 justify-content-start align-items-center">
             @foreach ($choosedVarOptions as $varOption)
                 @if (!explode('_', $varOption)[2] == null)
-                    <img src="{{ Storage::url('public/product-images/' . explode('_', $varOption)[2]) }}" alt=""
+                    <img src="{{ Storage::url(explode('_', $varOption)[2]) }}" alt=""
                         style="width: 60px">
                 @endif
             @endforeach
-            <h4>
+            <h6>
                 @foreach ($choosedVarOptions as $varOption)
                     {{ explode('_', $varOption)[1] }} {{ $loop->last ? '' : ',' }}
                 @endforeach
-            </h4>
+            </h6>
         </div>
         <div class="d-flex gap-2 align-items-center">
             <div class="d-flex flex-column gap-2">

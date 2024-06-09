@@ -1,20 +1,14 @@
 @extends('partial.user.main')
 @section('container')
     <div class="d-flex flex-column gap-3 align-items-center">
-        <div id="carouselExampleIndicators" class="carousel slide shadow" style="width: 84%">
+        <div id="carouselExampleIndicators" class="carousel slide shadow-sm" style="width: 84%">
             <div class="carousel-inner">
+                @foreach ($banners as $banner)
                 <div class="carousel-item active">
-                    <img src="https://plus.unsplash.com/premium_photo-1676998931123-75789162f170?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    <img src="{{ Storage::url($banner->banner_image) }}"
                         class="d-block w-100" style="height: 300px; object-fit: cover;" alt="...">
                 </div>
-                <div class="carousel-item">
-                    <img src="https://images.unsplash.com/photo-1455849318743-b2233052fcff?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                        class="d-block w-100" style="height: 300px; object-fit: cover;" alt="...">
-                </div>
-                <div class="carousel-item">
-                    <img src="https://images.unsplash.com/photo-1513106021000-168e5f56609d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                        class="d-block w-100" style="height: 300px; object-fit: cover;" alt="...">
-                </div>
+                @endforeach
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
                 data-bs-slide="prev">

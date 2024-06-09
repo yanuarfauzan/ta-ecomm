@@ -253,13 +253,13 @@
                     </div>
                     <div class="d-flex justify-content-start align-items-center ms-4">
                         <span>
-                            @foreach ($productAssessment->user?->cart->first()?->hasProduct->first()?->pickedVariationOption ?? [] as $variationOption)
+                            @foreach ($productAssessment->user?->cart->first()?->hasProduct->first()?->pickedVariationOption ?? $productAssessment->order->pickedVariationOption  as $variationOption)
                                 {{ $variationOption->name }}{{ !$loop->last ? ',' : '' }}
                             @endforeach
                         </span>
                     </div>
                     <div class="d-flex justify-content-start align-items-center ms-4">
-                        <span><strong>{{ $productAssessment->content }}</strong></span>
+                        <span>{{ $productAssessment->content }}</span>
                     </div>
                     <div class="ms-4">
                         <div class="d-flex justify-content-start align-items-center gap-2">

@@ -27,8 +27,8 @@ class VariationOptionController extends Controller
      */
     public function create()
     {
-        $variations = Variation::all();
         $products = Product::all();
+        $variations = Variation::all();
         $categories = Category::all();
         $variationOption = new VariationOption(); // Create a new empty VariationOption object
         return view('ADMIN.variation-option.create', compact('variations', 'products', 'variationOption', 'categories'));
@@ -49,11 +49,10 @@ class VariationOptionController extends Controller
         $validatedData = Validator::make($request->all(), [
             'variation_id' => 'required|exists:variation,id',
             'product_id' => 'required|exists:product,id',
-            'category_id' => 'required|exists:category,id',
-            'product_image_id' => 'required|exists:product_image,id',
+            'product_image_id' => 'nullable|exists:product_image,id',
             'name' => 'required|string|max:255',
             'stock' => 'required|integer',
-            'price' => 'required|numeric',
+            'price' => 'nullable|numeric',
             'weight' => 'required|numeric',
             'length' => 'required',
             'width' => 'required',
@@ -67,19 +66,15 @@ class VariationOptionController extends Controller
 
         $dimensions = $validatedData['length'] . 'x' . $validatedData['width'] . 'x' . $validatedData['height'];
 
-        $variationOption = VariationOption::create([
-            'variation_id' => $validatedData['variation_id'],
-            'product_image_id' => $validatedData['product_image_id'],
+        Product::findOrFail($validatedData['product_id'])->variation
+        ->where('id', $validatedData['variation_id'])->first()
+        ->variationOption()->create([
+            'product_image_id' => $validatedData['product_image_id'] ?? null,
             'name' => $validatedData['name'],
             'stock' => $validatedData['stock'],
             'price' => $validatedData['price'],
             'weight' => $validatedData['weight'],
             'dimensions' => $dimensions
-        ]);
-
-        $product = Product::findOrFail($request->product_id);
-        $product->hasCategory()->syncWithoutDetaching([
-            $validatedData['category_id'] => ['variation_id' => $validatedData['variation_id'], 'id' => Str::uuid(36)]
         ]);
         return redirect('/admin/list-variation-option')->with('success', 'Variasi Opsi Berhasil Dibuat');
     }
@@ -112,11 +107,10 @@ class VariationOptionController extends Controller
         $validatedData = Validator::make($request->all(), [
             'variation_id' => 'required',
             'product_id' => 'required|exists:product,id',
-            'category_id' => 'required|exists:category,id',
-            'product_image_id' => 'required|exists:product_image,id',
+            'product_image_id' => 'nullable|exists:product_image,id',
             'name' => 'required|string|max:255',
             'stock' => 'required|integer',
-            'price' => 'required|numeric',
+            'price' => 'nullable|numeric',
             'weight' => 'required|numeric',
             'length' => 'required',
             'width' => 'required',
@@ -131,21 +125,13 @@ class VariationOptionController extends Controller
         $dimensions = $request->input('length') . 'x' . $request->input('width') . 'x' . $request->input('height');
         $variationOption = VariationOption::findOrFail($id);
         $variationOption->update([
-            'variation_id' => explode('_', $validatedData['variation_id'])[1],
-            'product_image_id' => $validatedData['product_image_id'],
+            'variation_id' => $validatedData['variation_id'],
+            'product_image_id' => $validatedData['product_image_id'] ?? null,
             'name' => $validatedData['name'],
             'stock' => $validatedData['stock'],
             'price' => $validatedData['price'],
             'weight' => $validatedData['weight'],
             'dimensions' => $dimensions,
-        ]);
-        $product = Product::findOrFail($validatedData['product_id']);
-        $product->hasCategory()
-            ->wherePivot('variation_id', explode('_',$validatedData['variation_id'])[0])
-            ->detach();
-
-        $product->hasCategory()->attach([
-            $validatedData['category_id'] => ['variation_id' => explode('_', $validatedData['variation_id'])[1], 'id' => Str::uuid(36)]
         ]);
 
         return redirect('/admin/list-variation-option')->with('success', 'Variasi Opsi Berhasil Diperbarui');

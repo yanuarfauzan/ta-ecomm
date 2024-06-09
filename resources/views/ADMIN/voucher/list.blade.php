@@ -60,9 +60,9 @@
                         @foreach ($voucher as $v)
                             <tr>
                                 <td>{{ $no++ }}</td>
-                                <td>
+                                <td class="bg-secondary">
                                     @if ($v->voucher_icon)
-                                        <img src="{{ Storage::url($v->voucher_icon) }}" alt="{{ $v->name }}"
+                                        <img src="{{ Storage::url('public/voucher-icon/' . $v->voucher_icon) }}" alt="{{ $v->name }}"
                                             style="max-height: 100px;">
                                     @else
                                         No Image

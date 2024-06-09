@@ -7,7 +7,7 @@
                         <div class="d-flex flex-column justify-content-between align-items-center gap-2 ms-4 my-4"
                             style="width: 50%;">
                             <div class="" style="width: 100%; height: 250px;">
-                                <img src="{{ Storage::url('public/profile_images/' . $user->profile_image) }}"
+                                <img src="{{ Storage::url( $user->profile_image) }}"
                                     alt="" style="width: 100%; height: 100%">
                             </div>
                             <div class="card-product d-flex justify-content-center align-items-center"
@@ -178,7 +178,7 @@
                                                         id="card-product-PRODUCT_ID">
                                                         <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                             style="width: 30%;">
-                                                            <img src="{{ Storage::url('public/product-images/' . $cartProduct->product->hasImages()->first()->filepath_image) }}"
+                                                            <img src="{{ Storage::url( $cartProduct->product->hasImages()->first()->filepath_image) }}"
                                                                 alt="" style="width: 80px; height: 80px;">
                                                             <div class="d-flex justify-content-between"
                                                                 style="width: auto; height: auto;">
@@ -229,7 +229,7 @@
                                                     id="card-product-PRODUCT_ID">
                                                     <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                         style="width: 30%;">
-                                                        <img src="{{ Storage::url('public/product-images/' . $order->product->hasImages()->first()->filepath_image) }}"
+                                                        <img src="{{ Storage::url( $order->product->hasImages()->first()->filepath_image) }}"
                                                             alt="" style="width: 80px; height: 80px;">
                                                         <div wire:ignore
                                                             class="d-flex position-relative justify-content-between"
@@ -299,7 +299,7 @@
                                                         id="card-product-PRODUCT_ID">
                                                         <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                             style="width: 30%;">
-                                                            <img src="{{ Storage::url('public/product-images/' . $cartProduct->product->hasImages()->first()->filepath_image) }}"
+                                                            <img src="{{ Storage::url( $cartProduct->product->hasImages()->first()->filepath_image) }}"
                                                                 alt="" style="width: 80px; height: 80px;">
                                                             <div wire:ignore
                                                                 class="d-flex position-relative justify-content-between"
@@ -348,7 +348,7 @@
                                                     id="card-product-PRODUCT_ID">
                                                     <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                         style="width: 30%;">
-                                                        <img src="{{ Storage::url('public/product-images/' . $order->product->hasImages()->first()->filepath_image) }}"
+                                                        <img src="{{ Storage::url( $order->product->hasImages()->first()->filepath_image) }}"
                                                             alt="" style="width: 80px; height: 80px;">
                                                         <div wire:ignore
                                                             class="d-flex position-relative justify-content-between"
@@ -429,7 +429,7 @@
                                                         id="card-product-PRODUCT_ID">
                                                         <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                             style="width: 30%;">
-                                                            <img src="{{ Storage::url('public/product-images/' . $cartProduct->product->hasImages()->first()->filepath_image) }}"
+                                                            <img src="{{ Storage::url( $cartProduct->product->hasImages()->first()->filepath_image) }}"
                                                                 alt="" style="width: 80px; height: 80px;">
                                                             <div wire:ignore
                                                                 class="d-flex position-relative justify-content-between"
@@ -478,7 +478,7 @@
                                                     id="card-product-PRODUCT_ID">
                                                     <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                         style="width: 30%;">
-                                                        <img src="{{ Storage::url('public/product-images/' . $order->product->hasImages->first()->filepath_image) }}"
+                                                        <img src="{{ Storage::url( $order->product->hasImages->first()->filepath_image) }}"
                                                             alt="" style="width: 80px; height: 80px;">
                                                         <div wire:ignore
                                                             class="d-flex position-relative justify-content-between"
@@ -548,7 +548,7 @@
                                                         id="card-product-PRODUCT_ID">
                                                         <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                             style="width: 30%;">
-                                                            <img src="{{ Storage::url('public/product-images/' . $cartProduct->product->hasImages()->first()->filepath_image) }}"
+                                                            <img src="{{ Storage::url( $cartProduct->product->hasImages()->first()->filepath_image) }}"
                                                                 alt="" style="width: 80px; height: 80px;">
                                                             <div wire:ignore
                                                                 class="d-flex position-relative justify-content-between"
@@ -608,7 +608,7 @@
                                                     id="card-product-PRODUCT_ID">
                                                     <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                         style="width: 30%;">
-                                                        <img src="{{ Storage::url('public/product-images/' . $order->product->hasImages->first()->filepath_image) }}"
+                                                        <img src="{{ Storage::url( $order->product->hasImages->first()->filepath_image) }}"
                                                             alt="" style="width: 80px; height: 80px;">
                                                         <div wire:ignore
                                                             class="d-flex position-relative justify-content-between"
@@ -689,7 +689,7 @@
                                                         id="card-product-PRODUCT_ID">
                                                         <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                             style="width: 30%;">
-                                                            <img src="{{ Storage::url('public/product-images/' . $cartProduct->product->hasImages()->first()->filepath_image) }}"
+                                                            <img src="{{ Storage::url( $cartProduct->product->hasImages()->first()->filepath_image) }}"
                                                                 alt="" style="width: 80px; height: 80px;">
                                                             <div wire:ignore
                                                                 class="d-flex position-relative justify-content-between"
@@ -738,7 +738,7 @@
                                                     id="card-product-PRODUCT_ID">
                                                     <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                         style="width: 30%;">
-                                                        <img src="{{ Storage::url('public/product-images/' . $order->product->hasImages->first()->filepath_image) }}"
+                                                        <img src="{{ Storage::url( $order->product->hasImages->first()->filepath_image) }}"
                                                             alt="" style="width: 80px; height: 80px;">
                                                         <div wire:ignore
                                                             class="d-flex position-relative justify-content-between"

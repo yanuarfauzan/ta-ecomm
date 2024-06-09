@@ -15,8 +15,8 @@
                 </div>
                 @foreach ($usersCarts ?? [] as $index => $userCart)
                     @php
-                        $product = $userCart?->hasProduct->first();
-                        $variation = $product?->variation->first();
+                        $product = $userCart->hasProduct->first();
+                        $variation = $product->variation->first();
                     @endphp
                     <div class="card-product card-all-check d-flex justify-content-between px-4 align-items-center shadow-sm gap-4"
                         style="width: 100%; height: 140px; background-color: white"
@@ -27,7 +27,7 @@
                                     type="checkbox" id="flexCheckDefault"
                                     style="width: 20px; height: 20px; cursor: pointer;">
                             </span>
-                            <img src="{{ Storage::url('public/product-images/' . $product?->hasImages->first()->filepath_image) }}"
+                            <img src="{{ Storage::url($product?->hasImages->first()->filepath_image) }}"
                                 alt="" style="width: 80px; height: 80px;">
                             <div wire:ignore class="d-flex position-relative justify-content-between"
                                 style="width: auto; height: auto;">
@@ -117,7 +117,7 @@
                         <div class="d-flex flex-column position-relative">
                             <span class="d-flex justify-content-between mt-4 mx-3">
                                 <strong class="font-main-color">
-                                    <h5>Related Product</h5>
+                                    <h5>Produk serupa</h5>
                                 </strong>
                                 <form action="/test" method="GET">
                                     @csrf
@@ -138,7 +138,7 @@
                                                 id="card-product"
                                                 style="width: 100%; max-width: 150px; height: auto; cursor: pointer;">
                                                 <div style="overflow: hidden;">
-                                                    <img src="{{ Storage::url('public/product-images/' . $product->hasImages()->first()->filepath_image) }}"
+                                                    <img src="{{ Storage::url($product->hasImages()->first()->filepath_image) }}"
                                                         class="card-img-top rounded-0" alt="..."
                                                         id="image-product" style="width: 100%;">
                                                 </div>

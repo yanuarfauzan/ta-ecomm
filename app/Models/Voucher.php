@@ -34,6 +34,6 @@ class Voucher extends Model
     
     public function product()
     {
-        return $this->belongsToMany(Product::class, 'product_vouchers');
+        return $this->belongsToMany(Product::class, 'product_vouchers')->withPivot('id');
     }
 }
