@@ -111,7 +111,7 @@ class AuthController extends Controller
             case 'operator':
                 return redirect()->route('operator-index');
             case 'admin':
-                return redirect()->route('admin.list.users');
+                return redirect()->route('admin.home');
         }
     }
     public function logout(Request $request)

@@ -33,10 +33,10 @@
             <div class="main-sidebar sidebar-style-2">
                 <aside id="sidebar-wrapper">
                     <div class="sidebar-brand">
-                        <a href="{{ url('admin') }}">e-comm</a>
+                        <a href="{{ url('/admin') }}">e-comm</a>
                     </div>
                     <div class="sidebar-brand sidebar-brand-sm">
-                        <a href="{{ url('admin') }}"></a>
+                        <a href="{{ url('/admin') }}"></a>
                     </div>
                     <ul class="sidebar-menu">
                         @include('ADMIN.partial.sidebar')

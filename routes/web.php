@@ -5,12 +5,14 @@ use App\Http\Middleware\IsUser;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Middleware\IsOperator;
 use App\Events\RegisteredNotifEvent;
+use App\Models\MergeVariationOption;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\IsUserRegistered;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\OperatorController;
@@ -18,10 +20,9 @@ use App\Http\Middleware\IsUserAuthenticated;
 use App\Http\Controllers\VariationController;
 use App\Http\Controllers\AdminUsersController;
 use App\Http\Controllers\BannerHomeController;
-use App\Http\Controllers\MergeVariationOptionController;
 use App\Http\Controllers\ProductImageController;
 use App\Http\Controllers\VariationOptionController;
-use App\Models\MergeVariationOption;
+use App\Http\Controllers\MergeVariationOptionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,7 +39,12 @@ Route::get('/', [UserController::class, 'home'])->name('user-home');
 Route::get('/product/detail-product/{productId}', [UserController::class, 'detailProduct'])->name('user-detail-product');
 // ROLE:OPERATOR
 Route::get('/operator', [OperatorController::class, 'index'])->name('operator-index')->middleware(IsOperator::class);
-//ROLE:ADMIN 
+Route::post('/operator/{id}/update-proses', [OperatorController::class, 'updateProses'])->middleware(IsOperator::class);
+Route::post('/operator/{id}/update-shipping', [OperatorController::class, 'updateShipping'])->middleware(IsOperator::class);
+Route::post('/operator/{order}/update-completed', [OperatorController::class, 'updateCompleted'])->middleware(IsOperator::class);
+Route::post('/operator/update-resi', [OperatorController::class, 'updateResi'])->name('update-resi')->middleware(IsOperator::class);
+Route::post('/operator/response-operator/{id}', [OperatorController::class, 'responseOperator'])->middleware(IsOperator::class);
+Route::get('/operator/profile', [ProfileController::class, 'indexOperator'])->name('profile.operator')->middleware(IsOperator::class);
 
 // AUTH
 Route::get('/register', [AuthController::class, 'registerPage'])->name('user-register');
@@ -57,9 +63,15 @@ Route::middleware(IsUserRegistered::class)->group(function () {
     Route::get('/verify', [AuthController::class, 'verifyPage'])->name('user-verify');
 });
 
+//ROLE:ADMIN 
 Route::middleware(IsAdmin::class)->prefix('/admin')->group(function () {
+    #HOME ADMIN
+    Route::get('/', [AdminUsersController::class, 'home'])->name('admin.home');
+    Route::get('/profile', [ProfileController::class, 'indexAdmin'])->name('profile.admin');
+    Route::put('/update-profile/{id}', [ProfileController::class, 'update']);
+
     # USERS + ALAMAT
-    Route::get('/list-users', [AdminUsersController::class, 'index'])->name('admin.list.users');
+    Route::get('/list-users', [AdminUsersController::class, 'index']);
     Route::get('/create-users', [AdminUsersController::class, 'create']);
     Route::post('/store-users', [AdminUsersController::class, 'store']);
     Route::get('/edit-users/{id}', [AdminUsersController::class, 'edit']);
