@@ -28,25 +28,18 @@
                         @endforeach
                     </select>
                 </div>
+
                 <div class="form-group">
-                    <label for="variation_option_1_id">Variation Option 1</label>
-                    <select name="variation_option_1_id" id="variation_option_1_id" class="form-control" required>
-                        @foreach ($variationOptions1 as $option)
-                            <option value="{{ $option->id }}" @if ($mergeVariationOption->variation_option_1_id == $option->id) selected @endif>
-                                {{ $option->name }}</option>
-                        @endforeach
+                    <label for="variation_option_1_id" id="label_varOp_1">Variasi Opsi 1</label>
+                    <select name="variation_option_1_id" id="variation_option_1_id" class="form-control" >
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="variation_option_2_id" id="label_varOp_2">Variasi Opsi 2</label>
+                    <select name="variation_option_2_id" id="variation_option_2_id" class="form-control" >
                     </select>
                 </div>
 
-                <div class="form-group">
-                    <label for="variation_option_2_id">Variation Option 2</label>
-                    <select name="variation_option_2_id" id="variation_option_2_id" class="form-control" required>
-                        @foreach ($variationOptions2 as $option)
-                            <option value="{{ $option->id }}" @if ($mergeVariationOption->variation_option_2_id == $option->id) selected @endif>
-                                {{ $option->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
                 <div class="form-group">
                     <label for="merge_stock">Merge Stock</label>
                     <input type="number" name="merge_stock" class="form-control @error('merge_stock') is-invalid @enderror"
@@ -64,33 +57,37 @@
         $(document).ready(function() {
             $('#product_id').change(function() {
                 const productId = $(this).val();
-                getVariationOptions(productId);
-            });
 
-            const initialProductId = "{{ $mergeVariationOption->product_id }}";
-            if (initialProductId) {
-                getVariationOptions(initialProductId);
-            }
-
-            function getVariationOptions(productId) {
                 $('#variation_option_1_id').empty();
                 $('#variation_option_2_id').empty();
 
                 if (productId) {
                     $.getJSON(`/admin/getVarOption/${productId}`, function(data) {
-                        $.each(data, function(key, option) {
-                            $('#variation_option_1_id').append('<option value="' + key + '">' +
-                                option + '</option>');
-                            $('#variation_option_2_id').append('<option value="' + key + '">' +
-                                option + '</option>');
-                        });
+                        console.log(data);
+                        if (data[0]) {
+                            $('#label_varOp_1').html(data[0].name);
+                            $.each(data[0].variation_option, function(key, option) {
+                                const isSelected = '{{ $mergeVariationOption->variation_option_1_id }}' == option.id ? 'selected' : '';
+                                $('#variation_option_1_id').append('<option value="' + option.id + '" ' + isSelected + '>' + option.name + '</option>');
+                            });
+                        }
 
-                        const variationOption1 = "{{ $mergeVariationOption->variation_option_1_id }}";
-                        const variationOption2 = "{{ $mergeVariationOption->variation_option_2_id }}";
-                        $('#variation_option_1_id').val(variationOption1);
-                        $('#variation_option_2_id').val(variationOption2);
+                        if (data[1]) {
+                            $('#label_varOp_2').html(data[1].name);
+                            $.each(data[1].variation_option, function(key, option) {
+                                const isSelected = '{{ $mergeVariationOption->variation_option_2_id }}' == option.id ? 'selected' : '';
+                                $('#variation_option_2_id').append('<option value="' + option.id + '" ' + isSelected + '>' + option.name + '</option>');
+                            });
+                        }
+                    }).fail(function(jqXHR, textStatus, errorThrown) {
+                        console.error('AJAX call failed:', textStatus, errorThrown);
                     });
                 }
+            });
+
+            // Trigger change event if there is a selected option
+            if ($('#product_id').val()) {
+                $('#product_id').trigger('change');
             }
         });
     </script>

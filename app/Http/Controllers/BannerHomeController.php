@@ -37,8 +37,7 @@ class BannerHomeController extends Controller
             'banner_image' => [
                 'image',
                 'mimes:jpeg,png,jpg,gif',
-                'max:5120',
-                new ImageResolution(1024, 300) 
+                'max:5120', 
             ],
             'desc' => 'required|string|max:255',
         ]);    
@@ -91,7 +90,6 @@ class BannerHomeController extends Controller
                 'image',
                 'mimes:jpeg,png,jpg,gif',
                 'max:5120',
-                new ImageResolution(1024, 300)
             ],
             'desc' => 'required|string|max:255',
         ]);

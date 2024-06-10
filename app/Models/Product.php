@@ -21,7 +21,7 @@ class Product extends Model
         'stock',
         'weight',
         'dimensions',
-        'price_after_discount',
+        'price_after_dsicount',
         'price_after_additional',
         'desc',
         'discount',
@@ -39,12 +39,12 @@ class Product extends Model
 
     public function hasCategory()
     {
-        return $this->belongsToMany(Category::class, 'product_category_variation')->withPivot('variation_id', 'id');
+        return $this->belongsToMany(Category::class, 'product_category_variation')->withPivot('variation_id', 'id', 'category_id');
     }
 
     public function variation()
     {
-        return $this->belongsToMany(Variation::class, 'product_category_variation')->withPivot('variation_id', 'id');
+        return $this->belongsToMany(Variation::class, 'product_category_variation')->withPivot('variation_id', 'id', 'category_id');
     }
 
     public function user()
@@ -91,7 +91,7 @@ class Product extends Model
     }
     public function voucher()
     {
-        return $this->belongsToMany(Voucher::class, 'product_voucher');
+        return $this->belongsToMany(Voucher::class, 'product_voucher')->withPivot('id');
     }
     public function variationOptions()
     {

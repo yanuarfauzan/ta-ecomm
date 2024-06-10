@@ -83,8 +83,8 @@ class Order extends Model
     {
         return $this->belongsToMany(VariationOption::class, 'picked_variation');
     }
-    public function address()
-    {
-        return $this->hasOne(Address::class, 'id', 'address_id');
-    }
+    // public function address()
+    // {
+    //     return $this->hasOne(Address::class, 'id', 'address_id');
+    // }
 }

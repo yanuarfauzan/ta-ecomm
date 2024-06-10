@@ -23,7 +23,7 @@ class DetailProductVariation extends Component
     public function mount($product, $firstVarOption, $firstVarOptionInit)
     {
         $this->product = $product;
-        $this->price = $product->price;
+        $this->price = $product->price_after_additional;
         $this->firstVarOption = explode('_', $firstVarOption)[0];
         $varOptionInitId = explode('_', $firstVarOptionInit)[1];
         $this->stock = VariationOption::findOrFail($varOptionInitId)->stock;

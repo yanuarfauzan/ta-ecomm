@@ -40,24 +40,9 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="variation_id">Pilih Kategori</label>
-                    <select name="category_id" class="form-control" id="category_id">
-                        <option value="" selected disabled>Pilih Kategori</option>
-                        @foreach ($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                        @endforeach
-                    </select>
-                    @error('category_id')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="form-group">
                     <label for="variation_id">Pilih Variasi</label>
                     <select name="variation_id" class="form-control" id="variation_id">
                         <option value="" selected disabled>Pilih Variasi</option>
-                        @foreach ($variations as $variation)
-                            <option value="{{ $variation->id }}">{{ $variation->name }}</option>
-                        @endforeach
                     </select>
                 </div>
                 <div class="form-group">
@@ -121,6 +106,30 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+
+$(document).ready(function() {
+            $('#product_id').change(function() {
+                var productId = $(this).val();
+                if (productId) {
+                    $.ajax({
+                        url: '/admin/product/' + productId + '/variations',
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(data) {
+                            $('#variation_id').empty();
+                            $('#variation_id').append('<option value="" selected disabled>Pilih Variasi</option>');
+                            $.each(data, function(key, variation) {
+                                $('#variation_id').append('<option value="' + variation.id + '">' + variation.name + '</option>');
+                            });
+                        }
+                    });
+                } else {
+                    $('#variation_id').empty();
+                    $('#variation_id').append('<option value="" selected disabled>Pilih Variasi</option>');
+                }
+            });
+        });
+
         $(document).ready(function() {
             const initialProductId =
                 "{{ $variationOption->productImage ? $variationOption->productImage->product_id : '' }}";

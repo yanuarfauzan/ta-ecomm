@@ -66,9 +66,8 @@
                                 </td>
                                 <td>{{ $user->birtdate }}</td>
                                 <td>
-                                    @if ($user->profile_image)
-                                        <img src="{{ asset('storage/' . $user->profile_image) }}" alt="Profile Image"
-                                            width="50" height="50">
+                                    @if($user->profile_image)
+                                        <img src="{{ Storage::url($user->profile_image) }}" alt="Profile Image" width="50" height="50">
                                     @else
                                         No Image
                                     @endif

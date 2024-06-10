@@ -7,7 +7,7 @@
                         <div class="d-flex flex-column justify-content-between align-items-center gap-2 ms-4 my-4"
                             style="width: 50%;">
                             <div class="" style="width: 100%; height: 250px;">
-                                <img src="{{ Storage::url('public/profile_images/' . $user->profile_image) }}"
+                                <img src="{{  $user->profile_image ? Storage::url($user->profile_image) : asset('oursvg/default_image.svg') }}"
                                     alt="" style="width: 100%; height: 100%">
                             </div>
                             <div class="card-product d-flex justify-content-center align-items-center"
@@ -34,7 +34,7 @@
                                     id="username" name="username" style="box-shadow: none; width: 100%; height: 40px;">
                             </div>
                             <div class="input-group" style="height: 55px">
-                                <input wire:model.lazy="birtdate" type="text" class="form-control rounded-0"
+                                <input wire:model.lazy="birtdate" type="date" class="form-control rounded-0" placeholder="tanggal lahir"
                                     id="email" name="birth_of_date"
                                     style="box-shadow: none; width: 100%; height: 40px;">
                             </div>
@@ -79,6 +79,7 @@
                             data-bs-toggle="modal" data-bs-target="#addAddress" style="width: 28%; height: 30px;">tambah
                             alamat</button>
                     </div>
+                    @if (!$addresses->isEmpty())                        
                     <div class="d-flex flex-column justify-content-start align-items-center pb-4"
                         style="overflow-y: scroll; height: 350px;">
                         @foreach ($addresses as $address)
@@ -118,6 +119,13 @@
                             </div>
                         @endforeach
                     </div>
+                    @else
+                    <div class="d-flex flex-column justify-content-start align-items-center pb-4 gap-2"
+                    style=" height: 350px;">
+                        <img src="{{ asset('oursvg/address.svg') }}" style="width: 300px;" alt="">
+                        <span><h5 class="font-main-color">Belum ada alamat</h5></span>
+                    </div>
+                    @endif
 
                 </div>
             </div>
@@ -178,7 +186,7 @@
                                                         id="card-product-PRODUCT_ID">
                                                         <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                             style="width: 30%;">
-                                                            <img src="{{ Storage::url('public/product-images/' . $cartProduct->product->hasImages()->first()->filepath_image) }}"
+                                                            <img src="{{ Storage::url($product->pickedVariationOption->whereNotNull('product_image_id')->productImage->filepath_image) }}"
                                                                 alt="" style="width: 80px; height: 80px;">
                                                             <div class="d-flex justify-content-between"
                                                                 style="width: auto; height: auto;">
@@ -229,7 +237,7 @@
                                                     id="card-product-PRODUCT_ID">
                                                     <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                         style="width: 30%;">
-                                                        <img src="{{ Storage::url('public/product-images/' . $order->product->hasImages()->first()->filepath_image) }}"
+                                                        <img src="{{ Storage::url( $order->product->hasImages()->first()->filepath_image) }}"
                                                             alt="" style="width: 80px; height: 80px;">
                                                         <div wire:ignore
                                                             class="d-flex position-relative justify-content-between"
@@ -253,7 +261,7 @@
                                                     <div class="d-flex flex-column justify-content-center align-items-center me-2"
                                                         style="width: 30%;">
                                                         <span><strong>Rp
-                                                                {{ number_format($order->product->price_after_additional, 2, ',', '.') }}
+                                                                {{ number_format($order->product->discount ? $order->product->price_after_additional - $order->product->price_after_additional * ($order->product->discount / 100) : $order->product->price_after_additional, 2, ',', '.') }}
                                                                 x {{ $order->qty }}</strong></span>
                                                     </div>
                                                     <div class="d-flex flex-column justify-content-end align-items-end gap-2 px-2"
@@ -299,7 +307,7 @@
                                                         id="card-product-PRODUCT_ID">
                                                         <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                             style="width: 30%;">
-                                                            <img src="{{ Storage::url('public/product-images/' . $cartProduct->product->hasImages()->first()->filepath_image) }}"
+                                                            <img src="{{ Storage::url($product->pickedVariationOption->whereNotNull('product_image_id')->productImage->filepath_image) }}"
                                                                 alt="" style="width: 80px; height: 80px;">
                                                             <div wire:ignore
                                                                 class="d-flex position-relative justify-content-between"
@@ -348,7 +356,7 @@
                                                     id="card-product-PRODUCT_ID">
                                                     <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                         style="width: 30%;">
-                                                        <img src="{{ Storage::url('public/product-images/' . $order->product->hasImages()->first()->filepath_image) }}"
+                                                        <img src="{{ Storage::url( $order->product->hasImages()->first()->filepath_image) }}"
                                                             alt="" style="width: 80px; height: 80px;">
                                                         <div wire:ignore
                                                             class="d-flex position-relative justify-content-between"
@@ -372,7 +380,7 @@
                                                     <div class="d-flex flex-column justify-content-center align-items-center me-2"
                                                         style="width: 30%;">
                                                         <span><strong>Rp
-                                                                {{ number_format($order->product->price_after_additional, 2, ',', '.') }}
+                                                                {{ number_format($order->product->discount ? $order->product->price_after_additional - $order->product->price_after_additional * ($order->product->discount / 100) : $order->product->price_after_additional , 2, ',', '.') }}
                                                                 x {{ $order->qty }}</strong></span>
                                                     </div>
                                                     <div class="d-flex flex-column justify-content-end align-items-end gap-2 px-2"
@@ -429,7 +437,7 @@
                                                         id="card-product-PRODUCT_ID">
                                                         <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                             style="width: 30%;">
-                                                            <img src="{{ Storage::url('public/product-images/' . $cartProduct->product->hasImages()->first()->filepath_image) }}"
+                                                            <img src="{{ Storage::url($product->pickedVariationOption->whereNotNull('product_image_id')->productImage->filepath_image) }}"
                                                                 alt="" style="width: 80px; height: 80px;">
                                                             <div wire:ignore
                                                                 class="d-flex position-relative justify-content-between"
@@ -478,7 +486,7 @@
                                                     id="card-product-PRODUCT_ID">
                                                     <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                         style="width: 30%;">
-                                                        <img src="{{ Storage::url('public/product-images/' . $order->product->hasImages->first()->filepath_image) }}"
+                                                        <img src="{{ Storage::url( $order->product->hasImages->first()->filepath_image) }}"
                                                             alt="" style="width: 80px; height: 80px;">
                                                         <div wire:ignore
                                                             class="d-flex position-relative justify-content-between"
@@ -502,7 +510,7 @@
                                                     <div class="d-flex flex-column justify-content-center align-items-center me-2"
                                                         style="width: 30%;">
                                                         <span><strong>Rp
-                                                                {{ number_format($order->product->price_after_additional, 2, ',', '.') }}
+                                                                {{ number_format($order->product->discount ? $order->product->price_after_additional - $order->product->price_after_additional * ($order->product->discount / 100) : $order->product->price_after_additional , 2, ',', '.') }}
                                                                 x {{ $order->qty }}</strong></span>
                                                     </div>
                                                     <div class="d-flex flex-column justify-content-end align-items-end gap-2 px-2"
@@ -548,7 +556,7 @@
                                                         id="card-product-PRODUCT_ID">
                                                         <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                             style="width: 30%;">
-                                                            <img src="{{ Storage::url('public/product-images/' . $cartProduct->product->hasImages()->first()->filepath_image) }}"
+                                                            <img src="{{ Storage::url($product->pickedVariationOption->whereNotNull('product_image_id')->productImage->filepath_image) }}"
                                                                 alt="" style="width: 80px; height: 80px;">
                                                             <div wire:ignore
                                                                 class="d-flex position-relative justify-content-between"
@@ -608,7 +616,7 @@
                                                     id="card-product-PRODUCT_ID">
                                                     <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                         style="width: 30%;">
-                                                        <img src="{{ Storage::url('public/product-images/' . $order->product->hasImages->first()->filepath_image) }}"
+                                                        <img src="{{ Storage::url( $order->product->hasImages->first()->filepath_image) }}"
                                                             alt="" style="width: 80px; height: 80px;">
                                                         <div wire:ignore
                                                             class="d-flex position-relative justify-content-between"
@@ -632,7 +640,7 @@
                                                     <div class="d-flex flex-column justify-content-center align-items-center me-2"
                                                         style="width: 30%;">
                                                         <span><strong>Rp
-                                                                {{ number_format($order->product->price_after_additional, 2, ',', '.') }}
+                                                                {{ number_format($order->product->discount ? $order->product->price_after_additional - $order->product->price_after_additional * ($order->product->discount / 100) : $order->product->price_after_additional , 2, ',', '.') }}
                                                                 x {{ $order->qty }}</strong></span>
                                                     </div>
                                                     <div class="d-flex flex-column justify-content-end align-items-end gap-2 px-2"
@@ -689,7 +697,7 @@
                                                         id="card-product-PRODUCT_ID">
                                                         <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                             style="width: 30%;">
-                                                            <img src="{{ Storage::url('public/product-images/' . $cartProduct->product->hasImages()->first()->filepath_image) }}"
+                                                            <img src="{{ Storage::url($product->pickedVariationOption->whereNotNull('product_image_id')->productImage->filepath_image) }}"
                                                                 alt="" style="width: 80px; height: 80px;">
                                                             <div wire:ignore
                                                                 class="d-flex position-relative justify-content-between"
@@ -738,7 +746,7 @@
                                                     id="card-product-PRODUCT_ID">
                                                     <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                         style="width: 30%;">
-                                                        <img src="{{ Storage::url('public/product-images/' . $order->product->hasImages->first()->filepath_image) }}"
+                                                        <img src="{{ Storage::url( $order->product->hasImages->first()->filepath_image) }}"
                                                             alt="" style="width: 80px; height: 80px;">
                                                         <div wire:ignore
                                                             class="d-flex position-relative justify-content-between"
@@ -762,7 +770,7 @@
                                                     <div class="d-flex flex-column justify-content-center align-items-center me-2"
                                                         style="width: 30%;">
                                                         <span><strong>Rp
-                                                                {{ number_format($order->product->price_after_additional, 2, ',', '.') }}
+                                                                {{ number_format($order->product->discount ? $order->product->price_after_additional - $order->product->price_after_additional * ($order->product->discount / 100) : $order->product->price_after_additional , 2, ',', '.') }}
                                                                 x {{ $order->qty }}</strong></span>
                                                     </div>
                                                     <div class="d-flex flex-column justify-content-end align-items-end gap-2 px-2"
@@ -803,11 +811,11 @@
                 aria-labelledby="changeAddress" aria-hidden="true" wire:key="modal">
                 <div class="modal-dialog">
                     <div class="modal-content rounded-0">
-                        <span class="mt-2 mx-4"><strong>Rating dan ulasan</strong></span>
+                        <span class="mx-4"><strong>Rating dan ulasan</strong></span>
                         <hr>
                         <div class="modal-body">
                             <div class="container">
-                                <span class="text-center">
+                                <span class="w-100 text-center">
                                     <h5>Berikan rating dan ulasan anda</h5>
                                 </span>
                                 <div id="rating"
@@ -1006,7 +1014,7 @@
                 <span class="mt-4 mx-4"><strong>Tambah Alamat</strong></span>
                 <hr>
                 <div class="modal-body">
-                    <form wire:submit.prevent="addAddress('{{ $address->id }}')">
+                    <form wire:submit.prevent="addAddress()">
                         <div class="mt-2">
                             <label for="recepient_name">Nama penerima</label>
                             <input type="text" class="form-control rounded-0 mt-2" id="username"
@@ -1083,6 +1091,7 @@
         </div>
     </div>
 
+    @if (!$addresses->isEmpty())
     @foreach ($addresses as $address)
         <div wire:ignore.self class="modal fade" id="changeAddress-{{ $address->id }}" tabindex="-1"
             aria-labelledby="changeAddress" aria-hidden="true" wire:key="modal-{{ $address->id }}">
@@ -1168,6 +1177,7 @@
             </div>
         </div>
     @endforeach
+    @endif
 </div>
 <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}"
     data-navigate-track></script>
@@ -1276,7 +1286,7 @@
             }
         });
 
-        let addresses = @json($addresses)
+        let addresses = @json($addresses ?? [])
 
         window.addEventListener('closeModalEditAddress', function() {
             addresses.forEach(item => {

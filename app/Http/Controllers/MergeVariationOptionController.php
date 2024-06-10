@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\VariationOption;
+use Illuminate\Support\Facades\Log;
 use App\Models\MergeVariationOption;
 use Illuminate\Support\Facades\Validator;
 
@@ -48,19 +49,9 @@ class MergeVariationOptionController extends Controller
 
     public function getVarOption(Request $request, $productId)
     {
-        $product = Product::with('productImages.variationOptions')->find($productId);
+        $product = Product::with('variation.variationOption')->findOrFail($productId)->variation;
+        return response()->json($product);
 
-        if ($product) {
-            $variationOptions = [];
-            foreach ($product->productImages as $productImage) {
-                foreach ($productImage->variationOptions as $option) {
-                    $variationOptions[$option->id] = $option->name;
-                }
-            }
-            return response()->json($variationOptions);
-        } else {
-            return response()->json(['error' => 'Product not found'], 404);
-        }
     }
 
     public function edit($id)
@@ -77,7 +68,6 @@ class MergeVariationOptionController extends Controller
 
         return view('ADMIN.merge_varOption.edit', compact('mergeVariationOption', 'products', 'variationOptions1', 'variationOptions2'));
     }
-
     public function update(Request $request, $id)
     {
         $validatedMerge = Validator::make($request->all(), [

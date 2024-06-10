@@ -4,9 +4,9 @@
         <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('user-home') }}">Home</a></li>
-                @foreach ($product->hasCategory()->get() as $category)
-                    <li class="breadcrumb-item"><a href="{{ $category->name }}">{{ $category->name }}</a></li>
-                @endforeach
+                <li class="breadcrumb-item"><a
+                        href="{{ route('user-home') . '?category=' . $product->hasCategory->first()->id }}">{{ $product->hasCategory->first()->name }}</a>
+                </li>
                 <li class="breadcrumb-item active" aria-current="page"><a
                         href="{{ route('user-detail-product', ['productId' => $product->id]) }}"
                         style="text-decoration: none; color: black;">{{ $product->name }}</a></li>
@@ -24,8 +24,8 @@
                         @endphp
                         @foreach ($productImages as $productImage)
                             <div class="swiper-slide">
-                                <img src="{{ Storage::url('public/product-images/' . $productImage->filepath_image) }}"
-                                    alt="" style="width: auto">
+                                <img src="{{ Storage::url($productImage->filepath_image) }}" alt=""
+                                    style="width: 400px; height: 400px;">
                             </div>
                         @endforeach
                     </div>
@@ -36,8 +36,8 @@
                     <div class="swiper-wrapper">
                         @foreach ($productImages as $productImage)
                             <div class="swiper-slide">
-                                <img src="{{ Storage::url('public/product-images/' . $productImage->filepath_image) }}"
-                                    alt="" style="width: 95px">
+                                <img src="{{ Storage::url($productImage->filepath_image) }}" alt=""
+                                    style="width: 95px">
                             </div>
                         @endforeach
                     </div>
@@ -138,10 +138,10 @@
                     <a href="{{ route('user-detail-product', ['productId' => $product->id]) }}"
                         style="text-decoration: none">
                         <div class="col mt-4">
-                            <div class="card border-0 position-relative shadow rounded-0" id="card-product"
+                            <div class="card border-0 position-relative shadow-sm rounded-0" id="card-product"
                                 style="width: 18rem; height: auto; cursor: pointer;">
                                 <div style="overflow: hidden;">
-                                    <img src="{{ Storage::url('public/product-images/' . $product->hasImages->first()->filepath_image) }}"
+                                    <img src="{{ Storage::url($product->hasImages->first()->filepath_image) }}"
                                         class="card-img-top rounded-0" alt="..." id="image-product">
                                 </div>
                                 @if ($product->stock == 0)
@@ -206,6 +206,23 @@
             </div>
         </div>
 
+        <div class="modal" tabindex="-1" id="modalSuccessAddToCart">
+            <div class="modal-dialog">
+                <div class="modal-content rounded-0">
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn-close me-2 mt-2" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body d-flex flex-column justify-content-center align-items-center gap-4">
+                        <span class="text-success fs-1">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </span>
+                        <h5 id="modalMessage"></h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     </div>
     @if ($defaultUserAddress != [])
         <div class="modal fade" style="top: 10%" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -236,3 +253,14 @@
 
 @endsection
 <script src="{{ asset('/ourjs/detail-product.js') }}" data-navigate-track></script>
+<script>
+    document.addEventListener('livewire:init', function() {
+        Livewire.on('openModalSuccessAddToCart', message => {
+            var modal = new bootstrap.Modal(document.getElementById('modalSuccessAddToCart'));
+            var modalMessage = document.getElementById('modalMessage');
+            console.log(message[0].message);
+            modalMessage.innerHTML = message[0].message; // Menambahkan pesan ke dalam tabel-body modal
+            modal.show();
+        })
+    })
+</script>

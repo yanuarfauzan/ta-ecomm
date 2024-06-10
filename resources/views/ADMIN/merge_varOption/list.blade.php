@@ -47,7 +47,7 @@
                             $no = 1;
                         @endphp
                         @foreach ($mergeVariationOptions as $mergeVariationOption)
-                            <tr>
+                        <tr>
                                 <td>{{ $no++ }}</td>
                                 <td>{{ $mergeVariationOption->product->name }}</td>
                                 <td>{{ $mergeVariationOption->variationOption1->name }} &

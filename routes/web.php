@@ -111,6 +111,7 @@ Route::middleware(IsAdmin::class)->prefix('/admin')->group(function () {
     Route::get('/edit-product/{id}', [ProductController::class, 'edit']);
     Route::put('/update-product/{product}', [ProductController::class, 'update']);
     Route::delete('/delete-product/{product}', [ProductController::class, 'destroy']);
+    Route::get('/product/{id}/variations', [ProductController::class, 'getVariations']);
 
     #BANNER HOME
     Route::get('/list-banner', [BannerHomeController::class, 'index']);
@@ -127,7 +128,6 @@ Route::middleware(IsAdmin::class)->prefix('/admin')->group(function () {
     Route::get('/edit-merge-varOption/{id}', [MergeVariationOptionController::class, 'edit']);
     Route::put('/update-merge-varOption/{id}', [MergeVariationOptionController::class, 'update']);
     Route::delete('/delete-merge-varOption/{product}', [MergeVariationOptionController::class, 'destroy']);
-    Route::get('/products/{product}/images', [ProductImageController::class, 'getImagesByProduct']);
     Route::get('/getVarOption/{productId}', [MergeVariationOptionController::class, 'getVarOption']);
 
     #VOUCHER

@@ -20,7 +20,7 @@
                 @method('PUT')
                 <div class="form-group">
                     <label for="product_id">Pilih Produk</label>
-                    <select name="product_id" class="form-control" id="product_id" required>
+                    <select name="product_id" class="form-control" id="product_id">
                         <option value="" selected disabled>Pilih Produk</option>
                         @foreach ($products as $product)
                             <option value="{{ $product->id }}"
@@ -34,27 +34,11 @@
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label for="variation_id">Kategori Produk</label>
-                    <select name="category_id" class="form-control" id="category_id">
-                        <option value="" selected disabled>Pilih Kategori</option>
-                        @foreach ($categories as $category)
-                            @php
-                                $isSelected = $products->contains(function ($product) use ($category) {
-                                    return $product->hasCategory->contains('id', $category->id);
-                                });
-                            @endphp
-                            <option value="{{ $category->id }}" {{ $isSelected ? 'selected' : '' }}>
-                                {{ $category->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="form-group">
                     <label for="variation_id">Nama Variasi</label>
-                    <select name="variation_id" class="form-control" id="variation_id" required>
+                    <select name="variation_id" class="form-control" id="variation_id">
                         <option value="" selected disabled>Pilih Variasi</option>
                         @foreach ($variations as $variation)
-                            <option value="{{ $variationOption->variation_id . '_' . $variation->id }}"
+                            <option value="{{ $variation->id }}"
                                 {{ $variationOption->variation_id == $variation->id ? 'selected' : '' }}>
                                 {{ $variation->name }}
                             </option>
@@ -64,14 +48,14 @@
                 <div class="form-group">
                     <label for="name">Nama Variasi Opsi</label>
                     <input type="text" name="name" class="form-control  @error('name') is-invalid @enderror"
-                        id="name" value="{{ old('name', $variationOption->name) }}" required>
+                        id="name" value="{{ old('name', $variationOption->name) }}">
                     @error('name')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-group" id="product_image_container">
                     <label for="product_image_id">Gambar Produk</label>
-                    <select name="product_image_id" class="form-control" id="product_image_id" required>
+                    <select name="product_image_id" class="form-control" id="product_image_id">
                         <option value="" selected disabled>Pilih Gambar Produk</option>
                         @if ($variationOption->productImage && $variationOption->productImage->product)
                             @foreach ($variationOption->productImage->product->productImages as $image)
@@ -94,7 +78,7 @@
                 <div class="form-group">
                     <label for="price">Tambahan Harga</label>
                     <input type="number" name="price" class="form-control  @error('price') is-invalid @enderror"
-                        id="price" value="{{ old('price', $variationOption->price) }}" required>
+                        id="price" value="{{ old('price', $variationOption->price) }}">
                     @error('price')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -102,7 +86,7 @@
                 <div class="form-group">
                     <label for="stock">Stock</label>
                     <input type="number" name="stock" class="form-control  @error('stock') is-invalid @enderror"
-                        id="stock" value="{{ old('stock', $variationOption->stock) }}" required>
+                        id="stock" value="{{ old('stock', $variationOption->stock) }}">
                     @error('stock')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -110,7 +94,7 @@
                 <div class="form-group">
                     <label for="weight">Weight</label>
                     <input type="number" name="weight" class="form-control  @error('weight') is-invalid @enderror"
-                        id="weight" value="{{ old('weight', $variationOption->weight) }}" required>
+                        id="weight" value="{{ old('weight', $variationOption->weight) }}">
                     @error('weight')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -122,13 +106,13 @@
                             $dimensions = explode('x', $variationOption->dimensions);
                         @endphp
                         <input type="text" class="form-control" id="length" name="length" placeholder="Panjang"
-                            value="{{ old('length', $dimensions[0] ?? '') }}" required>
+                            value="{{ old('length', $dimensions[0] ?? '') }}">
                         <span class="input-group-text">x</span>
                         <input type="text" class="form-control" id="width" name="width" placeholder="Lebar"
-                            value="{{ old('width', $dimensions[1] ?? '') }}" required>
+                            value="{{ old('width', $dimensions[1] ?? '') }}">
                         <span class="input-group-text">x</span>
                         <input type="text" class="form-control" id="height" name="height" placeholder="Tinggi"
-                            value="{{ old('height', $dimensions[2] ?? '') }}" required>
+                            value="{{ old('height', $dimensions[2] ?? '') }}">
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Update</button>

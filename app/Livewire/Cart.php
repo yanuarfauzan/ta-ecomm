@@ -39,8 +39,9 @@ class Cart extends Component
     {
         $this->stock = $stock;
         $this->count = $userCart['qty'];
+        $priceAfterAdditional = $product['price'] + $totalAdditionalPrice;
         if ($this->isDuplicateEvent($eventId)) return;
-        $fixPrice = $product['price'] + $totalAdditionalPrice;
+        $fixPrice = $product['discount'] ? $priceAfterAdditional - $priceAfterAdditional * ($product['discount']/ 100)  : $priceAfterAdditional;
         $product = Product::findOrFail($product['id'])->update([
             'price_after_additional' => $fixPrice,
         ]);

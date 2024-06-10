@@ -135,7 +135,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 @if ($varOp->productImage)
-                                    <img id="modalProductImage" src="{{ asset($varOp->productImage->filepath_image) }}"
+                                    <img id="modalProductImage" src="{{ Storage::url($varOp->productImage->filepath_image) }}"
                                         alt="{{ $varOp->name }}" class="img-fluid">
                                 @else
                                     <p>Gambar tidak tersedia</p>

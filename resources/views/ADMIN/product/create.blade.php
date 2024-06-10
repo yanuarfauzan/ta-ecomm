@@ -35,6 +35,36 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
+                <div class="form-group">
+                    <label for="variation_id">Pilih Kategori</label>
+                    <select name="category_id" class="form-control" id="category_id">
+                        <option value="" selected disabled>Pilih Kategori</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('category_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="d-flex justify-content-center align-items-center w-100">
+                    <div class="form-group w-25 me-4" style="margin-right: 20px;">
+                        <label for="variation_id">Pilih Variasi Pertama</label>
+                        <input type="text" class="form-control @error('name') is-invalid @enderror" id="name"
+                            name="variation1" value="{{ old('variation1') }}">
+                        @error('variation1')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group w-25 me-4" style="margin-left: 20px;">
+                        <label for="variation_id">Pilih Variasi Kedua</label>
+                        <input type="text" class="form-control @error('name') is-invalid @enderror" id="name"
+                            name="variation2" value="{{ old('variation2') }}">
+                        @error('variation2')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
                 <div class="mb-3">
                     <label for="stock" class="form-label">Stock</label>
                     <input type="number" class="form-control @error('stocl') is-invalid @enderror" id="stock"
@@ -75,6 +105,32 @@
                     @error('discount')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
+                </div>
+                <div class="d-flex justify-content-center align-items-center w-100">
+                    <div class="form-group" class="w-25" style="margin-right: 20px;">
+                        <label for="voucher_id_1">Pilih Voucher Pertama</label>
+                        <select name="voucher_id_1" class="form-control" id="voucher_id_1">
+                            <option value="" selected disabled>Pilih Voucher</option>
+                            @foreach ($vouchers as $voucher)
+                                <option value="{{ $voucher->id }}">{{ $voucher->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('category_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group" class="w-25" style="margin-right: 20px;">
+                        <label for="voucher_id_2">Pilih Voucher Kedua</label>
+                        <select name="voucher_id_2" class="form-control" id="voucher_id_2">
+                            <option value="" selected disabled>Pilih Voucher</option>
+                            @foreach ($vouchers as $voucher)
+                                <option value="{{ $voucher->id }}">{{ $voucher->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('category_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label for="weight" class="form-label">Berat Produk (Kg)</label>
