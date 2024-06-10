@@ -39,9 +39,9 @@ class VariationOption extends Model
     {
         return $this->belongsTo(ProductImage::class, 'product_image_id', 'id');
     }
-    public function mergeVariationOptions()
+    public function mergeVariationOption1()
     {
-        return $this->belongsToMany(MergeVariationOption::class);
+        return $this->hasOne(MergeVariationOption::class, 'variation_option_1_id', 'id');
     }
     public function product()
     {
@@ -51,8 +51,8 @@ class VariationOption extends Model
     {
         return $this->belongsToMany(Order::class, 'picked_variation');
     }
-    public function mergeVariationOption()
+    public function mergeVariationOption2()
     {
-        return $this->belongsTo(MergeVariationOption::class, 'variation_option_1_id', 'id');
+        return $this->hasOne(MergeVariationOption::class, 'variation_option_2_id', 'id');
     }
 }

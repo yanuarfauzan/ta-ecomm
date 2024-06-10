@@ -194,7 +194,7 @@
     </div>
     <div class="d-flex flex-column gap-2 card-detail-product mt-4 bg-white" style="width: 70%">
         <div class="container my-4 d-flex flex-column gap-2" style="100%;">
-            <h4 class="ms-4"><strong>foto & video pembeli</strong></h4>
+            <h4 class="ms-4"><strong>foto produk</strong></h4>
             <div class="d-flex align-items-center justify-content-start gap-2 ms-4">
                 @foreach ($attachments as $attachment)
                     <span>
@@ -247,7 +247,7 @@
                         <span>{{ floor($productAssessment->created_at->diffInDays()) }} hari yang lalu</span>
                     </div>
                     <div class="d-flex justify-content-start align-items-center gap-2 ms-4">
-                        <span><img src="https://placehold.co/400x400/png" alt="" class="rounded-circle"
+                        <span><img src="{{ Storage::url($productAssessment->user->profile_image) }}" alt="" class="rounded-circle"
                                 style="width: 40px;"></span>
                         <span><strong>{{ $productAssessment->user->username }}</strong></span>
                     </div>

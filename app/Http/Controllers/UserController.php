@@ -427,14 +427,13 @@ class UserController extends Controller
     }
     public function profile()
     {
-        $user = $this->user
-            ->with(
+        $user = User::with(
                 'userAddresses',
                 'order',
                 'order.product',
                 'order.product.pickedVariationOption',
                 'notification'
-            )->first();
+            )->findOrFail($this->user->id);
         return view('user.profile', compact('user'));
     }
 }

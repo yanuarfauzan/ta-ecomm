@@ -28,7 +28,7 @@ class Profile extends Component
     public $provincies;
     public $cities;
     public $recipient_name;
-    public $address;
+    public $address = [];
     public $province;
     public $city;
     public $postal_code;
@@ -143,10 +143,7 @@ class Profile extends Component
     }
     public function updatedProfileImage()
     {
-        $uuid = Str::uuid();
-        $extension = $this->profileImage->extension();
-        $filename = $uuid . '.' . $extension;
-        $this->profileImage->storeAs('public/profile_images', $filename);
+        $filename = $this->profileImage->store('profile_images', 'public');
         $this->user->update(['profile_image' => $filename]);
     }
     public function updateAddress($addressId)
@@ -213,14 +210,27 @@ class Profile extends Component
             'add_postal_code.required' => 'Kode pos tidak boleh kosong',
             'add_detail.required' => 'detail tidak boleh kosong',
         ]);
-        $this->user->userAddresses()->create([
-            'recipient_name' => $validatedData['add_recipient_name'],
-            'address' => $validatedData['add_address'],
-            'province' => $validatedData['add_province'],
-            'city' => $validatedData['add_city'],
-            'postal_code' => $validatedData['add_postal_code'],
-            'detail' => $validatedData['add_detail'],
-        ]);
+        if ($this->user->userAddresses->isEmpty()) {
+            $this->user->userAddresses()->create([
+                'recipient_name' => $validatedData['add_recipient_name'],
+                'address' => $validatedData['add_address'],
+                'province' => $validatedData['add_province'],
+                'city' => $validatedData['add_city'],
+                'postal_code' => $validatedData['add_postal_code'],
+                'detail' => $validatedData['add_detail'],
+                'is_default' => true
+            ]);
+        } else {
+            $this->user->userAddresses()->create([
+                'recipient_name' => $validatedData['add_recipient_name'],
+                'address' => $validatedData['add_address'],
+                'province' => $validatedData['add_province'],
+                'city' => $validatedData['add_city'],
+                'postal_code' => $validatedData['add_postal_code'],
+                'detail' => $validatedData['add_detail'],
+            ]);
+        }
+
         $this->dispatch('closeModalAddAddress');
         $this->reset(['add_recipient_name', 'add_address', 'add_province', 'add_city', 'add_postal_code', 'add_detail']);
         $this->addresses = $this->user->userAddresses()->get();

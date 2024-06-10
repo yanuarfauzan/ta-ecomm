@@ -25,19 +25,13 @@
                 <div class="card-product px-2 py-2 d-flex justify-content-between align-items-center"
                     style="width: 100%;">
                     <div class="d-flex justify-content-start align-items-center gap-4 position-relative">
-                        <img src="{{ Storage::url($productBuyNow->hasImages->first()->filepath_image) }}"
+                        <img src="{{ Storage::url($variationBuyNow->whereNotNull('product_image_id')->first()->productImage->filepath_image) }}"
                             alt="" style="width: 80px; height: 80px;">
                         <span style="width: 150px">
                             <h4>{{ $productBuyNow->name }}</h4>
                         </span>
                     </div>
                     <div class="d-flex justify-content-start align-items-center gap-2 variation-container">
-                        @foreach ($variationBuyNow as $variationOption)
-                            @if (isset($variationOption->productImage->filepath_image))
-                                <img src="{{ Storage::url($variationOption->productImage->filepath_image) }}"
-                                    alt="" class="variation-image">
-                            @endif
-                        @endforeach
                         <h4 class="variation-options">
                             @foreach ($variationBuyNow as $variationOption)
                                 {{ $variationOption->name }}{{ $loop->last ? '' : ',' }}
@@ -92,19 +86,13 @@
                     <div class="card-product px-2 py-2 d-flex justify-content-between align-items-center"
                         style="width: 100%;">
                         <div class="d-flex justify-content-start align-items-center gap-4 position-relative">
-                            <img src="{{ Storage::url( $product->hasImages->first()->filepath_image) }}"
+                            <img src="{{ Storage::url( $product->pickedVariationOption->whereNotNull('product_image_id')->productImage->filepath_image) }}"
                                 alt="" style="width: 80px; height: 80px;">
                             <span style="width: 150px">
                                 <h4>{{ $product->name }}</h4>
                             </span>
                         </div>
                         <div class="d-flex justify-content-start align-items-center gap-2 variation-container">
-                            @foreach ($userCarts->pickedVariation as $variation)
-                                @if ($variation->variationOption?->productImage?->filepath_image)
-                                    <img src="{{ Storage::url( $variation->variationOption?->productImage->filepath_image) }}"
-                                        alt="" class="variation-image">
-                                @endif
-                            @endforeach
                             <span class="variation-options">
                                 @foreach ($userCarts->pickedVariation as $variation)
                                     {{ $variation->variationOption->name }}{{ !$loop->last ? ',' : '' }}
