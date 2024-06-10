@@ -43,7 +43,7 @@ class Order extends Component
         'detail' => 'required',
         'recipient_name' => 'required',
     ];
-    
+
     protected $messages = [
         'address.required' => 'Alamat tidak boleh kosong',
         'postal_code.required' => 'Kode pos tidak boleh kosong',
@@ -77,17 +77,25 @@ class Order extends Component
         $this->productBuyNow = $productBuyNow;
         $this->productVoucher = $productVoucher;
         $this->userAddresses = $userAddresses;
+        $this->note = $this->order->note;
 
         $this->provincies = collect(ProvinciesAndCities::pluck('province')->unique());
         $this->cities = collect(ProvinciesAndCities::pluck('city_name')->unique());
 
-        
+
         if ($productBuyNow != []) {
             $this->subTotal = $subTotal;
         } else {
             $this->subTotal = $usersCarts->sum(function ($cart) {
-                return isset ($cart->total_price_after_discount) ? $cart->total_price_after_discount : $cart->total_price;
+                return isset($cart->total_price_after_discount) ? $cart->total_price_after_discount : $cart->total_price;
             });
+        }
+
+        $this->totalPrice = $this->subTotal + $this->costValue;
+        if ($this->order->snap_token == null) {
+            $this->generateSnapTokenForPayment();
+        } else {
+            $this->snapToken = $this->order->snap_token;
         }
     }
     public function changeAddress($addressId)
@@ -109,7 +117,7 @@ class Order extends Component
         $this->city = $editAddress->city;
         $this->postal_code = $editAddress->postal_code;
         $this->detail = $editAddress->detail;
-        
+
     }
     public function updateAddress($addressId)
     {
@@ -118,11 +126,11 @@ class Order extends Component
         $updateAddress->update($validatedData);
         $this->defaultUserAdress = $this->userAddresses->where('is_default', true)->first();
         $this->reset(['address', 'recipient_name', 'province', 'city', 'postal_code', 'detail']);
-    }   
-    public function updatedNote($propertyName)
+    }
+    public function updatedNote()
     {
         $this->order->update([
-            $propertyName => $this->note
+            'note' => $this->note
         ]);
     }
     public function addVoucherToTotalPrice($type, $discountValue)
@@ -134,7 +142,6 @@ class Order extends Component
             }
             $this->totalPrice = $this->totalPrice - $this->voucherValue;
             $this->prevVoucherValue = $this->costValue;
-            $this->generateSnapTokenForPayment();
         } else {
             $this->voucherValue = $discountValue;
             if (isset($this->prevVoucherValue)) {
@@ -142,8 +149,8 @@ class Order extends Component
             }
             $this->totalPrice = $this->totalPrice - $this->voucherValue;
             $this->prevVoucherValue = $discountValue;
-            $this->generateSnapTokenForPayment();
         }
+        $this->generateSnapTokenForPayment();
 
     }
     public function addCostValueToTotalPrice($costValue)
@@ -165,21 +172,18 @@ class Order extends Component
             'first_name' => Auth::user()->username,
             'email' => Auth::user()->email
         ];
-        
+
         \Midtrans\Config::$serverKey = config('midtrans.serverKey');
         \Midtrans\Config::$isProduction = false;
         \Midtrans\Config::$isSanitized = true;
         \Midtrans\Config::$is3ds = true;
 
         $this->snapToken = \Midtrans\Snap::getSnapToken($params);
-        if ($this->order->snap_token != null){
-            $this->dispatch('snapTokenGenerated', ['snapToken' => $this->order->snap_token]);
-        } else {
-            $this->dispatch('snapTokenGenerated', ['snapToken' => $this->snapToken]);
-            $this->order->update([
-                'snap_token' => $this->snapToken
-            ]);
-        }
+        $this->order->update([
+            'snap_token' => $this->snapToken
+        ]);
+    
+        $this->dispatch('snapTokenGenerated', ['snapToken' => $this->snapToken]);
     }
     public function render()
     {

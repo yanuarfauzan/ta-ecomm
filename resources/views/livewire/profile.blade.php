@@ -14,7 +14,7 @@
                                 style="cursor: pointer; width: 100%; height: 50px;">
                                 <span style="cursor: pointer;"
                                     onclick="document.getElementById('profileImage').click()">
-                                    <h5 class="">Change photo</h5>
+                                    <h5 class="">Ubah foto</h5>
                                 </span>
                                 <input type="file" wire:model.lazy="profileImage" id="profileImage" name="file"
                                     style="display: none;">
@@ -23,7 +23,7 @@
                                 <span style="cursor: pointer;">
                                     <button role="button" class="btn rounded-0 bg-main-color text-white"
                                         data-bs-toggle="modal" data-bs-target="#changePassword"
-                                        style="width: 100%; height: 50px;"><strong>Change Password</strong></button>
+                                        style="width: 100%; height: 50px;"><strong>Ubah password</strong></button>
                                 </span>
                             </div>
                         </div>
@@ -186,7 +186,7 @@
                                                         id="card-product-PRODUCT_ID">
                                                         <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                             style="width: 30%;">
-                                                            <img src="{{ Storage::url($product->pickedVariationOption->whereNotNull('product_image_id')->productImage->filepath_image) }}"
+                                                            <img src="{{ Storage::url($cartProduct->product->pickedVariationOption->whereNotNull('product_image_id')->first()->productImage->filepath_image) }}"
                                                                 alt="" style="width: 80px; height: 80px;">
                                                             <div class="d-flex justify-content-between"
                                                                 style="width: auto; height: auto;">
@@ -307,7 +307,7 @@
                                                         id="card-product-PRODUCT_ID">
                                                         <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                             style="width: 30%;">
-                                                            <img src="{{ Storage::url($product->pickedVariationOption->whereNotNull('product_image_id')->productImage->filepath_image) }}"
+                                                            <img src="{{ Storage::url($cartProduct->product->pickedVariationOption->whereNotNull('product_image_id')->first()->productImage->filepath_image) }}"
                                                                 alt="" style="width: 80px; height: 80px;">
                                                             <div wire:ignore
                                                                 class="d-flex position-relative justify-content-between"
@@ -437,7 +437,7 @@
                                                         id="card-product-PRODUCT_ID">
                                                         <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                             style="width: 30%;">
-                                                            <img src="{{ Storage::url($product->pickedVariationOption->whereNotNull('product_image_id')->productImage->filepath_image) }}"
+                                                            <img src="{{ Storage::url($cartProduct->product->pickedVariationOption->whereNotNull('product_image_id')->first()->productImage->filepath_image) }}"
                                                                 alt="" style="width: 80px; height: 80px;">
                                                             <div wire:ignore
                                                                 class="d-flex position-relative justify-content-between"
@@ -556,7 +556,7 @@
                                                         id="card-product-PRODUCT_ID">
                                                         <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                             style="width: 30%;">
-                                                            <img src="{{ Storage::url($product->pickedVariationOption->whereNotNull('product_image_id')->productImage->filepath_image) }}"
+                                                            <img src="{{ Storage::url($cartProduct->product->pickedVariationOption->whereNotNull('product_image_id')->first()->productImage->filepath_image) }}"
                                                                 alt="" style="width: 80px; height: 80px;">
                                                             <div wire:ignore
                                                                 class="d-flex position-relative justify-content-between"
@@ -697,7 +697,7 @@
                                                         id="card-product-PRODUCT_ID">
                                                         <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                             style="width: 30%;">
-                                                            <img src="{{ Storage::url($product->pickedVariationOption->whereNotNull('product_image_id')->productImage->filepath_image) }}"
+                                                            <img src="{{ Storage::url($cartProduct->product->pickedVariationOption->whereNotNull('product_image_id')->first()->productImage->filepath_image) }}"
                                                                 alt="" style="width: 80px; height: 80px;">
                                                             <div wire:ignore
                                                                 class="d-flex position-relative justify-content-between"

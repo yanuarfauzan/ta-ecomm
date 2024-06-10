@@ -42,12 +42,10 @@ class AmountsAndNotes extends Component
     {
         $existingVariations = $cartProduct->pickedVariation()->get(['variation_id', 'variation_option_id'])->toArray();
 
-        // Jika jumlah variasi berbeda, maka sudah pasti variasinya berbeda
         if (count($existingVariations) != count($request['variation'])) {
             return true;
         }
 
-        // Ubah variasi yang diminta ke dalam bentuk array asosiatif untuk memudahkan perbandingan
         $requestedVariations = collect($request['variation'])->map(function ($variation) {
             return [
                 'variation_id' => $variation['variation_id'],
@@ -55,7 +53,6 @@ class AmountsAndNotes extends Component
             ];
         })->toArray();
 
-        // Bandingkan setiap variasi yang ada di keranjang dengan yang diminta
         foreach ($requestedVariations as $requestedVariation) {
             $found = false;
 
@@ -70,11 +67,11 @@ class AmountsAndNotes extends Component
             }
 
             if (!$found) {
-                return true; // Jika ada variasi yang tidak ditemukan, berarti berbeda
+                return true;
             }
         }
 
-        return false; // Semua variasi cocok, berarti tidak berbeda
+        return false;
     }
 
     public function addToCart()
@@ -89,8 +86,6 @@ class AmountsAndNotes extends Component
             ];
             $results['variation'][] = $data;
         });
-        $user = $this->user;
-        if ($user) {
             $product = Product::findOrFail($this->product->id);
             $cartProduct = $this->isCartExist($this->product->id);
             $cartProductId = Str::uuid(36);
@@ -132,10 +127,6 @@ class AmountsAndNotes extends Component
                     $this->dispatch('openModalSuccessAddToCart', ['message' => 'Produk sudah dimasukkan ke keranjang, jumlah ditambahkan']);
                 }
             }
-        } else {
-            return redirect()->route('user-login');
-        }
-
     }
     public function showChoosedVarOptions($choosedVarOptions, $price)
     {

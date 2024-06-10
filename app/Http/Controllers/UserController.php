@@ -34,7 +34,6 @@ class UserController extends Controller
     }
     public function home(Request $request)
     {
-        $categories = Category::all();
         $take = $request->loadMoreProduct == true ? 16 : 16;
         $startIndex = $request->input('startIndex', 0);
         $categoryId = $request->category;
@@ -44,17 +43,21 @@ class UserController extends Controller
             ->take($take)
             ->when($categoryId, function ($query) use ($categoryId) {
                 $query->whereHas('hasCategory', function ($query1) use ($categoryId) {
-                    $query1->where('category.id', $categoryId); // Menambahkan tabel 'categories' sebelum 'id'
+                    $query1->where('category.id', $categoryId);
                 });
             })
             ->when($keyword, function ($query) use ($keyword) {
                 $query->where('name', 'like', '%' . $keyword . '%');
             })
             ->get();
-        $banners = BannerHome::all();
         if ($request->loadMoreProduct == true) {
-            return response()->json(['message' => 'load more products success', 'data' => $products, 'startIndex' => $startIndex + $take], 200);
+            return response()->json(
+                ['message' => 'load more products success',
+                'data' => $products,
+                'startIndex' => $startIndex + $take], 200);
         }
+        $banners = BannerHome::all();
+        $categories = Category::all();
         return view('user.home', compact('products', 'categories', 'startIndex', 'banners'));
     }
     public function addAddresses(AddAddressessRequest $request)
@@ -143,12 +146,14 @@ class UserController extends Controller
         $dataForAmounts = [
             $product->variation()->first()->id,
             $product->variation()->first()->variationOption()->first()->name,
-            $product->variation()->first()->variationOption()->first()?->productImage()->first()?->filepath_image
+            $product->variation()->first()->variationOption()->first()?->productImage()
+            ->first()?->filepath_image
         ];
         $dataForCart = [
             $product->variation()->first()->id,
             $product->variation()->first()->variationOption()->first()->id,
-            $product->variation()->first()->variationOption()->first()?->productImage()->first()?->filepath_image
+            $product->variation()->first()->variationOption()->first()?->productImage()
+            ->first()?->filepath_image
         ];
 
         $take = $request->loadMoreProduct == true ? 16 : 16;
@@ -434,6 +439,7 @@ class UserController extends Controller
                 'order.product.pickedVariationOption',
                 'notification'
             )->findOrFail($this->user->id);
-        return view('user.profile', compact('user'));
+
+            return view('user.profile', compact('user'));
     }
 }

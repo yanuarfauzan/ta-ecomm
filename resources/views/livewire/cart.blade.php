@@ -27,7 +27,7 @@
                                     type="checkbox" id="flexCheckDefault"
                                     style="width: 20px; height: 20px; cursor: pointer;">
                             </span>
-                            <img src="{{ Storage::url($product?->hasImages->first()->filepath_image) }}"
+                            <img src="{{ Storage::url($product->pickedVariationOption->whereNotNull('product_image_id')->first()->productImage->filepath_image) }}"
                                 alt="" style="width: 80px; height: 80px;">
                             <div wire:ignore class="d-flex position-relative justify-content-between"
                                 style="width: auto; height: auto;">
@@ -138,7 +138,7 @@
                                                 id="card-product"
                                                 style="width: 100%; max-width: 150px; height: auto; cursor: pointer;">
                                                 <div style="overflow: hidden;">
-                                                    <img src="{{ Storage::url($product->pickedVariationOption->whereNotNull('product_image_id')->productImage->filepath_image) }}"
+                                                    <img src="{{ Storage::url($product?->hasImages->first()->filepath_image) }}"
                                                         class="card-img-top rounded-0" alt="..."
                                                         id="image-product" style="width: 100%;">
                                                 </div>
