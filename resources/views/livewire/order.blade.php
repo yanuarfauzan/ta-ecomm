@@ -3,7 +3,7 @@
         <div id="head-cart"
             class="bg-main-color d-flex justify-content-start px-4 align-items-center shadow-sm gap-4 text-white"
             style="width: 100%; height: 50px;">
-            <span class="d-inline-block" style="width: 33%;"><strong>Order list</strong></span>
+            <span class="d-inline-block" style="width: 33%;"><strong>Daftar pesanan</strong></span>
         </div>
         <div class="card-product card-all-check d-flex justify-content-between px-4 py-4 align-items-center shadow-sm gap-4"
             style="width: 100%; background-color: white" id="card-product">
@@ -23,12 +23,12 @@
             <div class="card-product card-all-check d-flex flex-column px-4 py-4 align-items-start shadow-sm gap-2"
                 style="width: 100%; background-color: white">
                 <div class="card-product px-2 py-2 d-flex justify-content-between align-items-center"
-                    style="width: 100%;">
+                    style="width: 100%; height: 120px;">
                     <div class="d-flex justify-content-start align-items-center gap-4 position-relative">
                         <img src="{{ Storage::url($variationBuyNow->whereNotNull('product_image_id')->first()->productImage->filepath_image) }}"
                             alt="" style="width: 80px; height: 80px;">
                         <span style="width: 150px">
-                            <h4>{{ $productBuyNow->name }}</h4>
+                            <h5>{{ $productBuyNow->name }}</h5>
                         </span>
                     </div>
                     <div class="d-flex justify-content-start align-items-center gap-2 variation-container">
@@ -77,19 +77,19 @@
             </div>
         @else
             <div class="card-product card-all-check d-flex flex-column px-4 py-4 align-items-start shadow-sm gap-2"
-                style="width: 100%; background-color: white">
+                style="width: 100%;  background-color: white">
                 @foreach ($usersCarts as $index => $userCarts)
                     @php
                         $product = $userCarts?->hasProduct->first();
                         $variation = $product?->variation->first();
                     @endphp
                     <div class="card-product px-2 py-2 d-flex justify-content-between align-items-center"
-                        style="width: 100%;">
+                        style="width: 100%; height: 120px;">
                         <div class="d-flex justify-content-start align-items-center gap-4 position-relative">
-                            <img src="{{ Storage::url( $product->pickedVariationOption->whereNotNull('product_image_id')->productImage->filepath_image) }}"
+                            <img src="{{ Storage::url( $product->pickedVariationOption->whereNotNull('product_image_id')->first()->productImage->filepath_image) }}"
                                 alt="" style="width: 80px; height: 80px;">
                             <span style="width: 150px">
-                                <h4>{{ $product->name }}</h4>
+                                <h5>{{ $product->name }}</h5>
                             </span>
                         </div>
                         <div class="d-flex justify-content-start align-items-center gap-2 variation-container">
@@ -138,15 +138,15 @@
             <div class="container d-flex flex-column py-4 px-4 gap-2" style="width: 100%; height: auto">
                 <span>
                     <strong class="font-main-color">
-                        <h5>Shopping Summary</h5>
+                        <h5>Detail pemesanan</h5>
                     </strong>
                 </span>
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="d-flex flex-column align-items-start">
-                        <span><strong>Subtotal</strong></span>
-                        <span><strong>Ongkos kirim</strong></span>
+                        <span>Subtotal</span>
+                        <span>Ongkos kirim</span>
                         @if (isset($voucherValue))
-                            <span><strong>Voucher</strong></span>
+                            <span>Voucher</span>
                         @endif
                     </div>
                     <div class="d-flex flex-column align-items-start">
@@ -160,7 +160,7 @@
                 </div>
                 <hr class="border border-secondary bg-main-color opacity-50">
                 <div class="d-flex justify-content-between align-items-center">
-                    <span><strong>Total :</strong></span>
+                    <span>Total :</span>
                     <span><strong>Rp {{ number_format($totalPrice, 2, ',', '.') }}</strong></span>
                 </div>
                 <button id="checkout-payment" class="btn rounded-0 mt-3 bg-main-color text-white"
