@@ -14,9 +14,14 @@ use Illuminate\Support\Facades\Validator;
 
 class AdminUsersController extends Controller
 {
+    public function home()
+    {
+        return view('ADMIN.partial.home');
+    }
+
     public function index()
     {
-        $users = User::with('userAddresses')->orderBy('username')->get();
+        $users = User::with('userAddresses')->orderBy('username')->paginate(10);
         $address = Address::all();
 
         return view('ADMIN.users.list', compact('users', 'address'));
@@ -92,8 +97,8 @@ class AdminUsersController extends Controller
                 $users->userAddresses()->create($addressData);
             }
         }
-        $users = User::all();
-        return view('ADMIN.users.list', compact('users'))->with('success', "Users Berhasil Dibuat");
+        $users = User::with('userAddresses')->orderBy('username')->paginate(10);
+        return view('ADMIN.users.list', compact('users'));
     }
 
     public function edit($id)
@@ -109,14 +114,14 @@ class AdminUsersController extends Controller
             'email' => ['required', 'email', Rule::unique('user', 'email')->ignore($id), 'max:255'],
             'phone_number' => 'required|numeric|digits_between:10,15',
             'password' => [
-                'required',
+                'nullable',
                 'confirmed',
                 'string',
                 'min:8',
-                'confirmed',
                 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/',
                 'different:username'
             ],
+            'password_confirmation' => 'nullable|required_with:password|same:password',
             'gender' => 'required|integer|in:0,1',
             'birtdate' => 'required|date',
             'profile_image' => [
@@ -174,6 +179,10 @@ class AdminUsersController extends Controller
                 'address.*.province' => 'required|string',
             ]);
 
+            if ($validatedAddressData->fails()) {
+                return back()->withErrors($validatedAddressData->errors())->withInput();
+            }
+
             $user->userAddresses()->delete();
 
             foreach ($request->address as $addressData) {
@@ -181,9 +190,10 @@ class AdminUsersController extends Controller
             }
         }
 
-        $users = User::all();
+        $users = User::with('userAddresses')->orderBy('username')->paginate(10);
         return view('ADMIN.users.list', compact('users'));
     }
+
 
     public function destroy($id)
     {

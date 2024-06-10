@@ -16,7 +16,7 @@ class BannerHomeController extends Controller
      */
     public function index()
     {
-        $bannerHome = BannerHome::all();
+        $bannerHome = BannerHome::paginate(10);
         return view('ADMIN.banner.list', compact('bannerHome'));
     }
 

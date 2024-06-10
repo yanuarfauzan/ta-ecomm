@@ -98,6 +98,40 @@
                         @endforeach
                     </tbody>
                 </table>
+                {{-- {{ $users->links() }} --}}
+            </div>
+            <div class="card-footer text-right">
+                <nav class="d-inline-block">
+                    <ul class="pagination mb-0">
+                        @if ($users->onFirstPage())
+                            <li class="page-item disabled">
+                                <span class="page-link"><i class="fas fa-chevron-left"></i></span>
+                            </li>
+                        @else
+                            <li class="page-item">
+                                <a class="page-link" href="{{ $users->previousPageUrl() }}"><i
+                                        class="fas fa-chevron-left"></i></a>
+                            </li>
+                        @endif
+
+                        @for ($i = 1; $i <= $users->lastPage(); $i++)
+                            <li class="page-item {{ $i == $users->currentPage() ? 'active' : '' }}">
+                                <a class="page-link" href="{{ $users->url($i) }}">{{ $i }}</a>
+                            </li>
+                        @endfor
+
+                        @if ($users->hasMorePages())
+                            <li class="page-item">
+                                <a class="page-link" href="{{ $users->nextPageUrl() }}"><i
+                                        class="fas fa-chevron-right"></i></a>
+                            </li>
+                        @else
+                            <li class="page-item disabled">
+                                <span class="page-link"><i class="fas fa-chevron-right"></i></span>
+                            </li>
+                        @endif
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>
