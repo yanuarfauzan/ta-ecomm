@@ -106,7 +106,7 @@
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4 col-sm-12">
-                        <a href="/operator/profile" style="text-decoration: none">
+                        <a href="https://dashboard.sandbox.midtrans.com/" style="text-decoration: none">
                             <div class="card special-card card-statistic-2" style="height: 175px">
                                 <div class="card-stats special-card-content">
                                     <div class="card-stats-title">
@@ -124,7 +124,7 @@
                         </a>
                     </div>
                     <div class="col-lg-4 col-md-4 col-sm-12">
-                        <a href="/operator/profile" style="text-decoration: none">
+                        <a href="https://dashboard.tawk.to/" style="text-decoration: none">
                             <div class="card special-card card-statistic-2" style="height: 175px">
                                 <div class="card-stats special-card-content">
                                     <div class="card-stats-title">
