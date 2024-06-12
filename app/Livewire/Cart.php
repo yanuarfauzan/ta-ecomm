@@ -25,6 +25,7 @@ class Cart extends Component
     public $categoryIds;
     public $count;
     public $stock;
+    public $discountExist = false;
     protected $listeners = ['changeAdditionalPrice', 'toggleChecked', 'toggleAllChecked', 'toggleAllUnCheck', 'decreaseQtyProduct', 'increaseQtyProduct', 'showSearchedProducts', 'deleteUserCart'];
 
     public function mount($usersCarts, $user)
@@ -33,6 +34,9 @@ class Cart extends Component
         $this->count = 1;
         $this->totalDiscount = 0;
         $this->usersCarts = $usersCarts;
+        $this->discountExist = $this->usersCarts->contains(function ($cart) {
+            return $cart->hasProduct()->whereNotNull('discount')->exists();
+        });
         $this->user = $user;
     }
     public function changeAdditionalPrice($product, $userCart, $totalAdditionalPrice, $eventId, $stock)
@@ -40,8 +44,9 @@ class Cart extends Component
         $this->stock = $stock;
         $this->count = $userCart['qty'];
         $priceAfterAdditional = $product['price'] + $totalAdditionalPrice;
-        if ($this->isDuplicateEvent($eventId)) return;
-        $fixPrice = $product['discount'] ? $priceAfterAdditional - $priceAfterAdditional * ($product['discount']/ 100)  : $priceAfterAdditional;
+        if ($this->isDuplicateEvent($eventId))
+            return;
+        $fixPrice = $priceAfterAdditional;
         $product = Product::findOrFail($product['id'])->update([
             'price_after_additional' => $fixPrice,
         ]);
@@ -121,7 +126,6 @@ class Cart extends Component
                 }
             }
         }
-
     }
     public function toggleRelatedProducts($userCartId)
     {

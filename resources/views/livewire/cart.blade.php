@@ -9,8 +9,8 @@
                         <input id="all-check" class="form-check-input head-check-input" type="checkbox" value=""
                             style="width: 20px; height: 20px; cursor: pointer;">
                     </span>
-                    <span class="d-inline-block" style="width: 33%;">Produk</span>
-                    <span class="d-inline-block" style="width: 37%;">Harga satuan</span>
+                    <span class="d-inline-block" style="width: 34%;">Produk</span>
+                    <span class="d-inline-block" style="width: 35%;">Harga satuan</span>
                     <span>Total harga</span>
                 </div>
                 @foreach ($usersCarts ?? [] as $index => $userCart)
@@ -27,7 +27,7 @@
                                     type="checkbox" id="flexCheckDefault"
                                     style="width: 20px; height: 20px; cursor: pointer;">
                             </span>
-                            <img src="{{ Storage::url($product->pickedVariationOption->whereNotNull('product_image_id')->first()->productImage->filepath_image) }}"
+                            <img src="{{ Storage::url($userCart->pickedVariation->whereNotNull('variationOption.product_image_id')->first()->variationOption->productImage->filepath_image) }}"
                                 alt="" style="width: 80px; height: 80px;">
                             <div wire:ignore class="d-flex position-relative justify-content-between"
                                 style="width: auto; height: auto;">
@@ -37,8 +37,8 @@
                         <div class="d-flex flex-column justify-content-center align-items-center "
                             style="width: 150px;">
                             <div class="width: 100%">
-                                <h5 class="font-main-color"><strong>Rp
-                                        {{ number_format($product->price_after_additional ?? $product->price, 2, ',', '.') }}</strong>
+                                <h5><strong>Rp
+                                        {{ number_format($product->price_after_additional, 2, ',', '.') }}</strong>
                                 </h5>
                             </div>
                             @if (isset($product?->discount))
@@ -81,14 +81,14 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex flex-column align-items-start">
                                 <span><strong>Subtotal</strong></span>
-                                @if ($product->discount)
+                                @if ($discountExist)
                                     <span><strong>Discount</strong></span>
                                 @endif
                             </div>
                             <div class="d-flex flex-column align-items-start">
                                 <span style="margin-left: 11px;"><strong>Rp
                                         {{ number_format($totalPrice, 2, ',', '.') }}</strong></span>
-                                @if ($product->discount)
+                                @if ($discountExist)
                                     <span><strong>- Rp {{ number_format($totalDiscount, 2, ',', '.') }}</strong></span>
                                 @endif
                             </div>
@@ -112,8 +112,8 @@
                     </div>
                 </div>
                 <div class="shadow-sm card-related-products card-summary bg-light {{ count($relatedProducts ?? []) > 0 ? 'show' : 'hide' }}"
-                    style="width: 100%; height: 590px;">
-                    <div class="container" style="width: 100%; height: 400px">
+                    style="width: 100%; height: auto;">
+                    <div class="container mb-4" style="width: 100%; height: auto">
                         <div class="d-flex flex-column position-relative">
                             <span class="d-flex justify-content-between mt-4 mx-3">
                                 <strong class="font-main-color">

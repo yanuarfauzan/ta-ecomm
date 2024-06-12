@@ -90,7 +90,7 @@ class AmountsAndNotes extends Component
             $cartProduct = $this->isCartExist($this->product->id);
             $cartProductId = Str::uuid(36);
             if ($cartProduct?->all() == null) {
-                $cart = $user->cart()->create([
+                $cart = $this->user->cart()->create([
                     'qty' => $results['qty'],
                     'total_price' => $this->price * $results['qty']
                 ]);
@@ -106,7 +106,7 @@ class AmountsAndNotes extends Component
             } else {
                 $cartProductId = Str::uuid(36);
                 if ($this->isVariationDifferent($cartProduct, $results)) {
-                    $cart = $user->cart()->create([
+                    $cart = $this->user->cart()->create([
                         'qty' => $results['qty'],
                         'total_price' => $this->price * $results['qty']
                     ]);

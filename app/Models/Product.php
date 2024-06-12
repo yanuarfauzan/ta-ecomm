@@ -25,6 +25,7 @@ class Product extends Model
         'price_after_additional',
         'desc',
         'discount',
+        'rate'
     ];
 
     public function getIncrement()

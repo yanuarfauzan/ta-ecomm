@@ -320,5 +320,32 @@
             </div>
         @endif
     </div>
+    <div class="modal" tabindex="-1" id="modalCustHaveFillAddress">
+        <div class="modal-dialog">
+            <div class="modal-content rounded-0">
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn-close me-2 mt-2" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex flex-column justify-content-center align-items-center gap-4 text-center">
+                    <span class="text-danger fs-1">
+                        <i class="bi bi-x-circle-fill"></i>
+                    </span>
+                    <h5>Anda belum mengisi data diri dan alamat anda, silahkan isi dulu di halaman profil!</h5>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="{{ asset('/ourjs/home.js') }}" data-navigate-track></script>
 @endsection
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Periksa apakah session flash data `showModal` ada
+        var showModal = @json(session('showModal', false));
+
+        if (showModal) {
+            // Tampilkan modal menggunakan vanilla JavaScript
+            var myModal = new bootstrap.Modal(document.getElementById('modalCustHaveFillAddress'));
+            myModal.show();
+        }
+    });
+</script>

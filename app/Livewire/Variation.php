@@ -36,7 +36,7 @@ class Variation extends Component
         $stock = VariationOption::whereIn('id', $varOptionIds)->get()->sum('stock');
         $this->dispatch('changeAdditionalPrice', product: $this->product, userCart: $this->product->cart()->first(), totalAdditionalPrice: $totalAdditionalPrice, eventId: Str::uuid(36), stock: $stock);
         collect($this->selectedVariations)->each(function ($item) {
-            $this->product->pickedVariation()->wherePivot('variation_id', $item['variationId'])->updateExistingPivot($item['variationId'], [
+            $this->userCart->pickedVariation->where('variation_id', $item['variationId'])->first()->update([
                 'variation_option_id' => $item['varOptionId']
             ]);
         });

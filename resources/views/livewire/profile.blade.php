@@ -480,8 +480,7 @@
                                                                 {{ number_format($order->total_price, 2, ',', '.') }}</strong></span>
                                                     </div>
                                                 </div>
-                                            @else
-                                                <div class="card-all-check d-flex justify-content-between align-items-center gap-4 mb-4"
+                                                                                            <div class="card-all-check d-flex justify-content-between align-items-center gap-4 mb-4"
                                                     style="width: 100%; height: auto; background-color: white"
                                                     id="card-product-PRODUCT_ID">
                                                     <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
@@ -740,8 +739,7 @@
                                                                 {{ number_format($order->total_price, 2, ',', '.') }}</strong></span>
                                                     </div>
                                                 </div>
-                                            @else
-                                                <div class="card-all-check d-flex justify-content-between align-items-center gap-4 mb-4"
+                                                                                            <div class="card-all-check d-flex justify-content-between align-items-center gap-4 mb-4"
                                                     style="width: 100%; height: auto; background-color: white"
                                                     id="card-product-PRODUCT_ID">
                                                     <div class="d-flex justify-content-start align-items-center gap-2 pe-2"

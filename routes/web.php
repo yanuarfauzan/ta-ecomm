@@ -37,7 +37,6 @@ use App\Http\Controllers\MergeVariationOptionController;
 
 Route::get('/', [UserController::class, 'home'])->name('user-home');
 Route::get('/product/detail-product/{productId}', [UserController::class, 'detailProduct'])->name('user-detail-product');
-Route::get('/products/{product}/images', [VariationOptionController::class, 'getImagesByProduct']);
 
 // ROLE:OPERATOR
 Route::get('/operator', [OperatorController::class, 'index'])->name('operator-index')->middleware(IsOperator::class);
@@ -112,6 +111,8 @@ Route::middleware(IsAdmin::class)->prefix('/admin')->group(function () {
     Route::put('/update-product/{product}', [ProductController::class, 'update']);
     Route::delete('/delete-product/{product}', [ProductController::class, 'destroy']);
     Route::get('/product/{id}/variations', [ProductController::class, 'getVariations']);
+    Route::get('/products/{product}/images', [VariationOptionController::class, 'getImagesByProduct']);
+
 
     #BANNER HOME
     Route::get('/list-banner', [BannerHomeController::class, 'index']);

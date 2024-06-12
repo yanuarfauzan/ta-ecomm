@@ -50,11 +50,11 @@
                     </span>
                     <div class="d-flex gap-2">
                         <span>
-                            1000+ sold out
+                            {{ $totalOrders }} terjual
                         </span>
                         <div class="divider-black"></div>
                         <span>
-                            1000+ review
+                            {{ $totalReviews }} review
                         </span>
                         <div class="divider-black"></div>
                         <div class="d-flex justify-content-start gap-1 align-items-center">

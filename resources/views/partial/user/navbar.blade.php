@@ -7,7 +7,7 @@
                 role="button" aria-expanded="false" aria-controls="categoryCollapse"
                 id="categoryCollapseToggle">Category</a>
         </div>
-        <form action="{{ route('user-home') }}" class="d-flex" role="search" method="GET">
+        <form action="{{ route('user-home') }}" class="d-flex align-items-center mt-3" role="search" method="GET">
             @csrf
             <div class="input-group">
                 <input type="text" class="form-control rounded-0" id="search-home" placeholder="Search..."
@@ -15,7 +15,7 @@
                 <div class="input-group-append" style="height : 80%;">
                     <button type="submit"
                         class="btn-search btn-light input-group-text rounded-0 border-2 text-white bg-main-color"
-                        style="width: 60x">
+                        style="width: 60x; height: 50px;">
                         <i class="bi bi-search" style="font-size: 25px; color: "></i>
                     </button>
                 </div>

@@ -2,7 +2,7 @@
     <div class="d-flex flex-column align-items-start position-relative gap-0" style="width: 200px; height: auto;">
         <strong class="font-main-color">{{ $product->name }}</strong>
         <span>
-            <a href="#collapseVariation-{{ $product->id }}" id="toggleButtonVariation" role="button" aria-expanded="false"
+            <a href="#collapseVariation-{{ $index }}" id="toggleButtonVariation" role="button" aria-expanded="false"
                 aria-controls="categoryCollapse-{{ $product->id }}"
                 class="dropdown-toggle btn bg-transparent border-0 px-0 py-0 toggle-button-variation-{{ $index }}"
                 data-bs-toggle="collapse">Variasi</a>
@@ -15,7 +15,7 @@
         <span>Stock {{ $product->stock }}</span>
     </div>
     <div class="collapse collapse-variation-{{ $index }} position-absolute border-0"
-        style="top: 80%; width: 250px; height: auto; z-index: 1000" id="collapseVariation-{{ $product->id }}"
+        style="top: 80%; width: 250px; height: auto; z-index: 1000" id="collapseVariation-{{ $index }}"
         wire:ignore>
         <div class="card card-body rounded-0 shadow" id="card-variation-{{ $product->id }}">
             <div class="d-flex flex-column gap-2">
@@ -25,10 +25,10 @@
                         <div class="row row-cols-4 gap-2 mt-2 ms-3 border-0">
                             @foreach ($variation->variationOption as $varOption)
                                 @php
-                                    $pivotExists = $product->pickedVariation->contains(function ($item) use (
+                                    $pivotExists = $userCart->pickedVariation->contains(function ($item) use (
                                         $varOption,
                                     ) {
-                                        return $item->pivot->variation_option_id == $varOption->id;
+                                        return $item->variationOption->id == $varOption->id;
                                     });
                                 @endphp
                                 <button type="button" data-variation-id="{{ $variation->id }}"
