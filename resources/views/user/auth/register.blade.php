@@ -77,7 +77,7 @@
                         </div>
                     </form>
                     <div class="d-flex justify-content-start align-items-center" style="width: 100%">
-                        <span>punya akun? <a href="#" class="font-main-color">login</a></span>
+                        <span>punya akun? <a href="/login" class="font-main-color">login</a></span>
                     </div>
                 </div>
             </div>

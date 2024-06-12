@@ -21,6 +21,42 @@
     <!-- Template CSS -->
     <link rel="stylesheet" href="{{ asset('stisla/assets/css/style-copy.css') }}">
     <link rel="stylesheet" href="{{ asset('stisla/assets/css/components.css') }}">
+    <style>
+        .special-card {
+            position: relative;
+            overflow: hidden;
+            height: 175px;
+        }
+
+        .special-card-content {
+            transition: transform 0.3s;
+        }
+
+        .special-card:hover .special-card-content {
+            transform: scale(1.05);
+        }
+
+        .card-icon {
+            font-size: 3rem !important;
+            color: #6777ef;
+            margin-right: 30px !important;
+            vertical-align: middle;
+        }
+
+        .card-stats-item {
+            cursor: pointer;
+        }
+
+        .card-stats-item.active {
+            color: #6777ef;
+        }
+
+        .card-title {
+            margin: 0;
+            display: inline-block;
+            vertical-align: middle;
+        }
+    </style>
 </head>
 
 <body>
@@ -48,15 +84,21 @@
                                 </div>
                                 <div class="card-stats-items">
                                     <div class="card-stats-item">
-                                        <div class="card-stats-item-count">{{ $prosesCount }}</div>
+                                        <button class="btn btn-primary filter-btn" data-category="proceed">
+                                            <div class="card-stats-item-count">{{ $prosesCount }}</div>
+                                        </button>
                                         <div class="card-stats-item-label">Proses</div>
                                     </div>
                                     <div class="card-stats-item">
-                                        <div class="card-stats-item-count">{{ $shippedCount }}</div>
+                                        <button class="btn btn-primary filter-btn" data-category="shipped">
+                                            <div class="card-stats-item-count">{{ $shippedCount }}</div>
+                                        </button>
                                         <div class="card-stats-item-label">Shipped</div>
                                     </div>
                                     <div class="card-stats-item">
-                                        <div class="card-stats-item-count">{{ $completedCount }}</div>
+                                        <button class="btn btn-primary filter-btn" data-category="completed">
+                                            <div class="card-stats-item-count">{{ $completedCount }}</div>
+                                        </button>
                                         <div class="card-stats-item-label">Completed</div>
                                     </div>
                                 </div>
@@ -64,54 +106,43 @@
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4 col-sm-12">
-                        <div class="card card-statistic-2" style="height: 175px">
-                            <div class="card-stats">
-                                <div class="card-stats-title">
-                                    <div class="dropdown d-inline">
+                        <a href="https://dashboard.sandbox.midtrans.com/" style="text-decoration: none">
+                            <div class="card special-card card-statistic-2" style="height: 175px">
+                                <div class="card-stats special-card-content">
+                                    <div class="card-stats-title">
+                                        <div class="dropdown d-inline">
+                                        </div>
+                                        <h2 class="m-4">
+                                            <i class="fas fa-landmark card-icon m-2"></i>
+                                            Manajemen Keuangan
+                                        </h2>
                                     </div>
-                                </div>
-                                <div class="card-stats-items">
-                                    <div class="card-stats-item">
-                                        <div class="card-stats-item-count">24</div>
-                                        <div class="card-stats-item-label">Pending</div>
-                                    </div>
-                                    <div class="card-stats-item">
-                                        <div class="card-stats-item-count">12</div>
-                                        <div class="card-stats-item-label">Shipping</div>
-                                    </div>
-                                    <div class="card-stats-item">
-                                        <div class="card-stats-item-count">23</div>
-                                        <div class="card-stats-item-label">Completed</div>
+                                    <div class="card-stats-items">
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                     <div class="col-lg-4 col-md-4 col-sm-12">
-                        <div class="card card-statistic-2" style="height: 175px">
-                            <div class="card-stats">
-                                <div class="card-stats-title">
-                                    <div class="dropdown d-inline">
+                        <a href="https://dashboard.tawk.to/" style="text-decoration: none">
+                            <div class="card special-card card-statistic-2" style="height: 175px">
+                                <div class="card-stats special-card-content">
+                                    <div class="card-stats-title">
+                                        <div class="dropdown d-inline">
+                                        </div>
+                                        <h2 class="m-4">
+                                            <i class="fas fa-comments card-icon m-2"></i>
+                                            Live Chat<br>Customer
+                                        </h2>
                                     </div>
-                                </div>
-                                <div class="card-stats-items">
-                                    <div class="card-stats-item">
-                                        <div class="card-stats-item-count">24</div>
-                                        <div class="card-stats-item-label">Pending</div>
-                                    </div>
-                                    <div class="card-stats-item">
-                                        <div class="card-stats-item-count">12</div>
-                                        <div class="card-stats-item-label">Shipping</div>
-                                    </div>
-                                    <div class="card-stats-item">
-                                        <div class="card-stats-item-count">23</div>
-                                        <div class="card-stats-item-label">Completed</div>
+                                    <div class="card-stats-items">
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
+                <div id="order-list"></div>
                 @foreach ($orders as $order)
                     <div class="card mt-1">
                         <div class="card-header">
@@ -361,8 +392,37 @@
     <script src="{{ asset('stisla/assets/js/page/forms-advanced-forms.js') }}"></script>
     <script src="{{ asset('stisla/assets/js/page/modules-sweetalert.js') }}"></script>
 
-    //btnProses
     <script>
+        //filter
+        $(document).ready(function() {
+            $('.filter-btn').click(function() {
+                var category = $(this).data('category');
+
+                $.ajax({
+                    url: '/operator/filter/' + category,
+                    method: 'GET',
+                    success: function(response) {
+                        var html = '';
+
+                        response.forEach(function(order) {
+                            html += '<div class="card mt-1">' +
+                                '<div class="card-header">' +
+                                '</div>' +
+                                '</div>';
+                        });
+
+                        $('#order-list').html(html);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        //btnproses
         $(document).ready(function() {
             $(document).on('click', '.btnProses', function() {
                 var orderId = $(this).data('order-id');
@@ -404,8 +464,8 @@
         });
     </script>
 
-    //btnShipped
     <script>
+        //btnshipped
         $(document).on('click', '.btnShipped', function() {
             var button = $(this);
             var orderId = button.data('order-id');
@@ -436,8 +496,8 @@
         });
     </script>
 
-    //editResi
     <script>
+        //editresi
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.btnEditResi').forEach(button => {
                 button.addEventListener('click', function() {
@@ -484,8 +544,8 @@
         });
     </script>
 
-    //ulasan
     <script>
+        //ulasan
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.btnRespond').forEach(button => {
                 button.addEventListener('click', function() {
