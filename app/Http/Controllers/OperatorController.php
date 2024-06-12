@@ -53,6 +53,15 @@ class OperatorController extends Controller
         return $statusLabels[$status] ?? $status;
     }
 
+    public function filterOrders($category)
+    {
+        // Ambil hanya pesanan yang sesuai dengan kategori yang dipilih
+        $filteredOrders = Order::where('order_status', $category)->get();
+
+        return response()->json($filteredOrders);
+    }
+
+
     public function updateProses(Request $request, $id)
     {
         $order = Order::findOrFail($id);

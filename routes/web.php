@@ -46,6 +46,7 @@ Route::post('/operator/{order}/update-completed', [OperatorController::class, 'u
 Route::post('/operator/update-resi', [OperatorController::class, 'updateResi'])->name('update-resi')->middleware(IsOperator::class);
 Route::post('/operator/response-operator/{id}', [OperatorController::class, 'responseOperator'])->middleware(IsOperator::class);
 Route::get('/operator/profile', [ProfileController::class, 'indexOperator'])->name('profile.operator')->middleware(IsOperator::class);
+Route::get('/operator/filter/{category}', [OperatorController::class, 'filterOrders']);
 
 // AUTH
 Route::get('/register', [AuthController::class, 'registerPage'])->name('user-register');
