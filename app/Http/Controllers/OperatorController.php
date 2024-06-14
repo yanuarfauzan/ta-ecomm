@@ -17,7 +17,14 @@ class OperatorController extends Controller
      */
     public function index(Request $request)
     {
-        $orders = Order::with(['user', 'product', 'cartProducts.product', 'cartProducts.cart', 'shippingMethod', 'productAssessment.product'])
+        $orders = Order::with([
+            'user', 
+            'product', 
+            'cartProducts.product', 
+            'cartProducts.cart', 
+            'shippingMethod', 
+            'productAssessment.product'
+            ])
             ->whereNotIn('order_status', ['unpaid', 'pending'])
             ->when($request->order_status , function ($query) use ($request) {
                 $query->where('order_status', $request->order_status);
@@ -27,11 +34,15 @@ class OperatorController extends Controller
             $order->formatted_status = $this->getStatusLabel($order->order_status);
         }
 
-        $prosesCount = Order::where('order_status', 'proceed')->orWhere('order_status', 'shipped')->orWhere('order_status', 'completed')->count();
-        $shippedCount = Order::where('order_status', 'shipped')->orWhere('order_status', 'completed')->count();
+        $prosesCount = Order::where('order_status', 'proceed')
+        ->orWhere('order_status', 'shipped')
+        ->orWhere('order_status', 'completed')->count();
+        $shippedCount = Order::where('order_status', 'shipped')
+        ->orWhere('order_status', 'completed')->count();
         $completedCount = Order::where('order_status', 'completed')->count();
 
-        return view('OPERATOR.partial.main', compact('orders', 'prosesCount', 'shippedCount', 'completedCount'));
+        return view('OPERATOR.partial.main', 
+        compact('orders', 'prosesCount', 'shippedCount', 'completedCount'));
     }
 
     /**

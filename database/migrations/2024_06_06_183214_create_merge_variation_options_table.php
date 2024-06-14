@@ -19,9 +19,12 @@ return new class extends Migration {
             $table->integer('merge_price')->nullable();
             $table->integer('merge_price_after_discount')->nullable();
             $table->timestamps();
-            $table->foreign('variation_option_1_id')->references('id')->on('variation_option_id')->onDelete('cascade');
-            $table->foreign('variation_option_2_id')->references('id')->on('variation_option_id')->onDelete('cascade');
-            $table->foreign('product_id')->references('id')->on('product')->onDelete('cascade');
+            $table->foreign('variation_option_1_id')
+            ->references('id')->on('variation_option_id')->onDelete('cascade');
+            $table->foreign('variation_option_2_id')
+            ->references('id')->on('variation_option_id')->onDelete('cascade');
+            $table->foreign('product_id')
+            ->references('id')->on('product')->onDelete('cascade');
         });
     }
 

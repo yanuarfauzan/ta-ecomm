@@ -309,8 +309,8 @@
     @endforeach
 </div>
 </div>
-<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}"
-    data-navigate-track></script>
+<script src="https://app.sandbox.midtrans.com/snap/snap.js" 
+data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}" data-navigate-track></script>
 <script type="text/javascript" data-navigate-track>
     document.addEventListener('livewire:init', function() {
         Livewire.on('snapTokenGenerated', snapToken => {

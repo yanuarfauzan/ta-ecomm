@@ -394,35 +394,6 @@
     <script src="{{ asset('stisla/assets/js/page/modules-sweetalert.js') }}"></script>
 
     <script>
-        //filter
-        $(document).ready(function() {
-            $('.filter-btn').click(function() {
-                var category = $(this).data('category');
-
-                $.ajax({
-                    url: '/operator/filter/' + category,
-                    method: 'GET',
-                    success: function(response) {
-                        var html = '';
-
-                        response.forEach(function(order) {
-                            html += '<div class="card mt-1">' +
-                                '<div class="card-header">' +
-                                '</div>' +
-                                '</div>';
-                        });
-
-                        $('#order-list').html(html);
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(error);
-                    }
-                });
-            });
-        });
-    </script>
-
-    <script>
         //btnproses
         $(document).ready(function() {
             $(document).on('click', '.btnProses', function() {

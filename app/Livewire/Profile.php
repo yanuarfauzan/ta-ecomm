@@ -281,9 +281,9 @@ class Profile extends Component
             case 'cp':
                 $cartProduct = $this->user->order()->with([
                     'cartProduct' => function ($query) use ($id, $pickedVariationOption) {
-                        $query->where('cart_product.id', $id[1]) // menambahkan nama tabel atau alias
+                        $query->where('cart_product.id', $id[1])
                             ->whereHas('product.pickedVariationOption', function ($query) use ($pickedVariationOption) {
-                                $query->whereIn('variation_option.id', $pickedVariationOption); // menambahkan nama tabel atau alias
+                                $query->whereIn('variation_option.id', $pickedVariationOption);
                             });
                     }
                 ])->first()->cartProduct;
@@ -314,8 +314,20 @@ class Profile extends Component
             'order_status' => 'completed'
         ]);
         $this->tabActive = 'shipped';
-        $this->deliveredOrders = $this->user->order()->whereIn('order_status', ['delivered', 'shipped'])->with('cartProduct.product.hasImages', 'cartProduct.cart.hasProduct.pickedVariationOption', 'product')->get();
-        $this->completedOrders = $this->user->order()->where('order_status', 'completed')->with('cartProduct.product.hasImages', 'cartProduct.cart.hasProduct.pickedVariationOption', 'product')->get();
+        $this->deliveredOrders = $this->user->order()
+        ->whereIn('order_status', ['delivered', 'shipped'])
+        ->with(
+            'cartProduct.product.hasImages', 
+            'cartProduct.cart.hasProduct.pickedVariationOption', 
+            'product'
+        )->get();
+        $this->completedOrders = $this->user->order()
+        ->where('order_status', 'completed')
+        ->with(
+            'cartProduct.product.hasImages', 
+            'cartProduct.cart.hasProduct.pickedVariationOption', 
+            'product'
+        )->get();
     }
     public function getHistoryDelivery($order)
     {
