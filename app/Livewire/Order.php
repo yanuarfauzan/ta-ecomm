@@ -53,7 +53,16 @@ class Order extends Component
         'vrecipient_name.required' => 'Nama penerima tidak boleh kosong',
     ];
     public $listeners = ['addCostValueToTotalPrice', 'addVoucherToTotalPrice'];
-    public function mount($usersCarts, $productBuyNow, $user, $defaultUserAdress, $order, $countBuyNow, $variationBuyNow, $productVoucher, $userAddresses, $subTotal)
+    public function mount($usersCarts, 
+    $productBuyNow, 
+    $user, 
+    $defaultUserAdress, 
+    $order, 
+    $countBuyNow, 
+    $variationBuyNow, 
+    $productVoucher, 
+    $userAddresses, 
+    $subTotal)
     {
         $tempVarBuyNow = [];
         collect($variationBuyNow)->each(function ($var) use (&$tempVarBuyNow) {

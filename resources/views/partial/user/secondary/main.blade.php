@@ -40,8 +40,6 @@
     <script src="{{ asset('/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
     {{-- Swiper --}}
     <script src="{{ asset('/swiper/swiper-bundle.min.js') }}"></script>
-    {{-- Tawk --}}
-    <!--Start of Tawk.to Script-->
     <script type="text/javascript">
         var Tawk_API = Tawk_API || {},
             Tawk_LoadStart = new Date();
@@ -55,7 +53,6 @@
             s0.parentNode.insertBefore(s1, s0);
         })();
     </script>
-    <!--End of Tawk.to Script-->
 </body>
 
 </html>
