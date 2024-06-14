@@ -202,7 +202,8 @@
         </li>
         <li class="dropdown"><a href="#" data-toggle="dropdown"
                 class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                <img alt="image" src="{{ asset(Auth::user()->profile_image ? 'storage/' . Auth::user()->profile_image : asset('stisla/assets/img/avatar/avatar-1.png')) }}"
+                <img alt="image"
+                    src="{{ asset(Auth::user()->profile_image ? 'storage/' . Auth::user()->profile_image : 'stisla/assets/img/avatar/avatar-1.png') }}"
                     class="rounded-circle mr-1">
                 <div class="d-sm-none d-lg-inline-block">Hi, {{ Auth::user()->username }}</div>
             </a>
