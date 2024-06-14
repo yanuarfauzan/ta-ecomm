@@ -84,21 +84,21 @@
                                 </div>
                                 <div class="card-stats-items">
                                     <div class="card-stats-item">
-                                        <button class="btn btn-primary filter-btn" data-category="proceed">
+                                        <a href="{{ route('operator-index') . '?order_status=proceed' }}" class="btn btn-primary filter-btn" data-category="proceed">
                                             <div class="card-stats-item-count">{{ $prosesCount }}</div>
-                                        </button>
+                                        </a>
                                         <div class="card-stats-item-label">Proses</div>
                                     </div>
                                     <div class="card-stats-item">
-                                        <button class="btn btn-primary filter-btn" data-category="shipped">
+                                        <a href="{{ route('operator-index') . '?order_status=shipped' }}" class="btn btn-primary filter-btn" data-category="shipped">
                                             <div class="card-stats-item-count">{{ $shippedCount }}</div>
-                                        </button>
+                                        </a>
                                         <div class="card-stats-item-label">Shipped</div>
                                     </div>
                                     <div class="card-stats-item">
-                                        <button class="btn btn-primary filter-btn" data-category="completed">
+                                        <a href="{{ route('operator-index') . '?order_status=completed' }}" class="btn btn-primary filter-btn" data-category="completed">
                                             <div class="card-stats-item-count">{{ $completedCount }}</div>
-                                        </button>
+                                        </a>
                                         <div class="card-stats-item-label">Completed</div>
                                     </div>
                                 </div>
@@ -180,7 +180,7 @@
                                             </div>
                                         </div>
                                         <!-- Product Details -->
-                                        <div class="w-50">
+                                        <div class="w-25">
                                             <span>Produk :</span>
                                             <div class="d-flex flex-column mx-2">
                                                 @if ($order->product)
@@ -196,19 +196,20 @@
                                                         </div>
                                                     @endforeach
                                                 @endif
-                                                <div class="d-flex justify-content-between mx-2 mt-3">
-                                                    <span>Total:</span>
-                                                    <span>
-                                                        @if ($order->product)
-                                                            {{ $order->qty }}
-                                                        @else
-                                                            {{ $order->cartProducts->sum(function ($cartProduct) {
-                                                                return $cartProduct->cart->qty;
-                                                            }) }}
-                                                        @endif
-                                                        Pcs
-                                                    </span>
-                                                </div>
+                                                <hr>
+                                            </div>
+                                            <div class="d-flex justify-content-between">
+                                                <span>Total:</span>
+                                                <span class="me-2">
+                                                    @if ($order->product)
+                                                        {{ $order->qty }}
+                                                    @else
+                                                        {{ $order->cartProducts->sum(function ($cartProduct) {
+                                                            return $cartProduct->cart->qty;
+                                                        }) }}
+                                                    @endif
+                                                    Pcs
+                                                </span>
                                             </div>
                                         </div>
                                         <!-- Total Price -->

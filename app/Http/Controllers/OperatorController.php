@@ -15,11 +15,13 @@ class OperatorController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $orders = Order::with(['user', 'product', 'cartProducts.product', 'cartProducts.cart', 'shippingMethod', 'productAssessment.product'])
             ->whereNotIn('order_status', ['unpaid', 'pending'])
-            ->paginate(20);
+            ->when($request->order_status , function ($query) use ($request) {
+                $query->where('order_status', $request->order_status);
+            })->paginate(20);
 
         foreach ($orders as $order) {
             $order->formatted_status = $this->getStatusLabel($order->order_status);
@@ -55,7 +57,6 @@ class OperatorController extends Controller
 
     public function filterOrders($category)
     {
-        // Ambil hanya pesanan yang sesuai dengan kategori yang dipilih
         $filteredOrders = Order::where('order_status', $category)->get();
 
         return response()->json($filteredOrders);
