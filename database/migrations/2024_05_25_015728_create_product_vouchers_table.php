@@ -16,8 +16,10 @@ return new class extends Migration
             $table->uuid('product_id')->nullable();
             $table->uuid('voucher_id')->nullable();
             $table->timestamps();
-            $table->foreign('product_id')->references('id')->on('product')->onDelete('cascade');
-            $table->foreign('voucher_id')->references('id')->on('voucher')->onDelete('cascade');
+            $table->foreign('product_id')
+            ->references('id')->on('product')->onDelete('cascade');
+            $table->foreign('voucher_id')
+            ->references('id')->on('voucher')->onDelete('cascade');
         });
     }
 

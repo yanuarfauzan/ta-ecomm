@@ -20,14 +20,28 @@ return new class extends Migration {
             $table->date('order_date')->nullable();
             $table->integer('qty')->nullable();
             $table->integer('total_price')->nullable();
-            $table->enum('order_status', ['unpaid', 'pending', 'paid', 'failed', 'proceed', 'shipped', 'delivered', 'cancelled', 'completed'])->default('unpaid')->nullable();
+            $table->enum('order_status', 
+            ['unpaid',
+            'pending',
+            'paid',
+            'failed',
+            'proceed',
+            'shipped',
+            'delivered',
+            'cancelled',
+            'completed'
+            ])->default('unpaid')->nullable();
             $table->string('note')->nullable();
             $table->string('snap_token')->nullable();
             $table->timestamps();
-            $table->foreign('shipping_id')->references('id')->on('shipping')->onDelete('cascade');
-            $table->foreign('address_id')->references('id')->on('address')->onDelete('cascade');
-            $table->foreign('product_id')->references('id')->on('product')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
+            $table->foreign('shipping_id')
+            ->references('id')->on('shipping')->onDelete('cascade');
+            $table->foreign('address_id')
+            ->references('id')->on('address')->onDelete('cascade');
+            $table->foreign('product_id')
+            ->references('id')->on('product')->onDelete('cascade');
+            $table->foreign('user_id')
+            ->references('id')->on('user')->onDelete('cascade');
         });
     }
 

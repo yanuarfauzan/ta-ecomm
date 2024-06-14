@@ -1,19 +1,25 @@
 <div class="d-flex justify-content-end gap-2">
     <div class="d-flex gap-2 align-items-end me-3">
-        <span wire:click="deleteCartProduct('{{ $userCart->id }}')" class="font-main-color" style="cursor: pointer;">
+        <span wire:click="deleteCartProduct('{{ $userCart->id }}')" class="text-danger" style="cursor: pointer;">
             <i class="bi bi-trash" style="font-size: 20px"></i>
         </span>
     </div>
     <div class="d-flex flex-column">
         <div class="d-flex flex-column">
-            <h5 class="font-main-color"><strong>Rp
-                    {{ number_format(isset($product->discount) ? $userCart->total_price_after_discount : $userCart->total_price, 2, ',', '.') }}</strong>
-            </h5>
-            @if (isset($product->discount))
-                <p class="text-decoration-line-through font-main-color">
-                    <i>Rp
-                        {{ number_format($userCart->total_price, 2, ',', '.') }}</i>
-                </p>
+            @if (!$product->discount)
+                <h5><strong>Rp
+                        {{ number_format($userCart->total_price, 2, ',', '.') }}</strong>
+                </h5>
+            @else
+                <h5><strong>Rp
+                        {{ number_format($userCart->total_price_after_discount, 2, ',', '.') }}</strong>
+                </h5>
+                @if (isset($product->discount))
+                    <p class="text-decoration-line-through font-main-color">
+                        <i>Rp
+                            {{ number_format($userCart->total_price, 2, ',', '.') }}</i>
+                    </p>
+                @endif
             @endif
         </div>
         <div class="d-flex align-items-center gap-4 shadow-sm"

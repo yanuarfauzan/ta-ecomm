@@ -125,6 +125,7 @@ class Assessment extends Component
     {
         $productAssessmentsQuery = $this->product
             ->productAssessment()
+            ->with('user', 'order.pickedVariationOption', 'product', 'cart', 'attachments')
             ->when($this->filterByMedia == true, function ($query) {
                 $query->whereHas('attachments');
             })
@@ -147,7 +148,6 @@ class Assessment extends Component
         } else {
             $productAssessments = $productAssessmentsQuery->paginate(4);
         }
-
         return view('livewire.assessment', [
             'productAssessments' => $productAssessments,
             'attachments' => $attachments,

@@ -18,6 +18,8 @@ class IsUser
     {
         if (Auth::user() && Auth::user()->role == 'user') {
             return $next($request);
+        } else if (Auth::user() && Auth::user()->role == 'operator' || Auth::user() && Auth::user()->role == 'admin') {
+            return back();
         }
 
         return redirect()->route('user-login');

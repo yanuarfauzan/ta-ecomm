@@ -66,6 +66,10 @@
                     {{ 'Pesanan' }}
                 @elseif (request()->path() == 'user/profile' )
                     {{ 'Profile' }}
+                @elseif (request()->path() == 'login' )
+                    {{ 'Login' }}
+                @elseif (request()->path() == 'register' )
+                    {{ 'Login' }}
                 @endif
             </a>
         </div>

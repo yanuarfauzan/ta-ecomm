@@ -90,7 +90,7 @@ class AmountsAndNotes extends Component
             $cartProduct = $this->isCartExist($this->product->id);
             $cartProductId = Str::uuid(36);
             if ($cartProduct?->all() == null) {
-                $cart = $user->cart()->create([
+                $cart = $this->user->cart()->create([
                     'qty' => $results['qty'],
                     'total_price' => $this->price * $results['qty']
                 ]);
@@ -102,11 +102,12 @@ class AmountsAndNotes extends Component
                         'variation_option_id' => $variationItem['variation_option_id'],
                     ]);
                 });
-                $this->dispatch('openModalSuccessAddToCart', ['message' => 'Berhasil menambahkan produk ke keranjang']);
+                $this->dispatch('openModalSuccessAddToCart',
+                ['message' => 'Berhasil menambahkan produk ke keranjang']);
             } else {
                 $cartProductId = Str::uuid(36);
                 if ($this->isVariationDifferent($cartProduct, $results)) {
-                    $cart = $user->cart()->create([
+                    $cart = $this->user->cart()->create([
                         'qty' => $results['qty'],
                         'total_price' => $this->price * $results['qty']
                     ]);
@@ -118,13 +119,14 @@ class AmountsAndNotes extends Component
                             'variation_option_id' => $variationItem['variation_option_id'],
                         ]);
                     });
-                    $this->dispatch('openModalSuccessAddToCart', ['message' => 'Berhasil menambahkan produk dengan variasi berbeda ke keranjang']);
+                    $this->dispatch('openModalSuccessAddToCart',
+                    ['message' => 'Berhasil menambahkan produk dengan variasi berbeda ke keranjang']);
                 } else {
                     $cartProduct->update([
                         'qty' => $cartProduct->qty + $results['qty'],
                         'total_price' => $this->price * ($cartProduct->qty + $results['qty'])
                     ]);
-                    $this->dispatch('openModalSuccessAddToCart', ['message' => 'Produk sudah dimasukkan ke keranjang, jumlah ditambahkan']);
+                    $this->dispatch('openModalSuccessAddToCart',['message' => 'Produk sudah dimasukkan ke keranjang, jumlah ditambahkan']);
                 }
             }
     }

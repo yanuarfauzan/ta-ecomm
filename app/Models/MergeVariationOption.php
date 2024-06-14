@@ -17,6 +17,8 @@ class MergeVariationOption extends Model
         'variation_option_2_id',
         'product_id',
         'merge_stock',
+        'merge_price',
+        'merge_price_after_discount',
     ];
 
     public function getIncrement()

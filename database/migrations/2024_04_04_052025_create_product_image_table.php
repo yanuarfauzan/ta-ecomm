@@ -16,7 +16,8 @@ return new class extends Migration
             $table->uuid('product_id');
             $table->string('filepath_image', 225)->nullable();
             $table->timestamps();
-            $table->foreign('product_id')->references('id')->on('product')->onDelete('cascade');
+            $table->foreign('product_id')
+            ->references('id')->on('product')->onDelete('cascade');
         });
     }
 

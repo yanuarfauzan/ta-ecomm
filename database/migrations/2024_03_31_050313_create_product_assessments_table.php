@@ -19,9 +19,12 @@ return new class extends Migration {
             $table->string('content')->nullable();
             $table->string('response_operator') ->nullable();
             $table->timestamps();
-            $table->foreign('order_id')->references('id')->on('order')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
-            $table->foreign('product_id')->references('id')->on('product')->onDelete('cascade');
+            $table->foreign('order_id')
+            ->references('id')->on('order')->onDelete('cascade');
+            $table->foreign('user_id')
+            ->references('id')->on('user')->onDelete('cascade');
+            $table->foreign('product_id')
+            ->references('id')->on('product')->onDelete('cascade');
             $table->index('content', 'idx_content_fulltext')->fulltext();
         });
     }

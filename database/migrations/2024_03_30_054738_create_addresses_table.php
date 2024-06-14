@@ -23,7 +23,8 @@ return new class extends Migration {
             $table->boolean('is_default')->nullable();
             $table->boolean('is_picked')->nullable();
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
+            $table->foreign('user_id')
+            ->references('id')->on('user')->onDelete('cascade');
         });
     }
 

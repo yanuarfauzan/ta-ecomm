@@ -16,7 +16,8 @@ return new class extends Migration
             $table->uuid('product_assessment_id')->nullable();
             $table->string('filepath_image')->nullable();
             $table->timestamps();
-            $table->foreign('product_assessment_id')->references('id')->on('product_assessment')->onDelete('cascade');
+            $table->foreign('product_assessment_id')
+            ->references('id')->on('product_assessment')->onDelete('cascade');
         });
     }
 

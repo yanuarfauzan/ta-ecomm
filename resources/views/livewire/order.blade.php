@@ -41,10 +41,8 @@
                     @if (isset($productBuyNow->discount))
                         <div class="d-flex flex-column align-items-end">
                             <span>
-                                @if (isset($productBuyNow->discount))
-                                    <i class="bi bi-info-circle-fill me-1" style="cursor: pointer"
-                                        data-bs-toggle="tooltip" data-bs-title="harga setelah diskon"></i>
-                                @endif
+                                <i class="bi bi-info-circle-fill me-1" style="cursor: pointer" data-bs-toggle="tooltip"
+                                    data-bs-title="harga setelah diskon"></i>
                                 {{ $count }} x Rp
                                 {{ number_format($productBuyNow->price_after_dsicount, 2, ',', '.') }}
                             </span>
@@ -56,7 +54,7 @@
                     @else
                         <div class="d-flex flex-column align-items-end">
                             <span>{{ $count }} x Rp
-                                {{ number_format($productBuyNow->price, 2, ',', '.') }}</span>
+                                {{ number_format($productBuyNow->price_after_additional, 2, ',', '.') }}</span>
                             <span><strong>
                                     <h4>Rp {{ number_format($subTotal, 2, ',', '.') }}</h4>
                                 </strong></span>
@@ -86,7 +84,7 @@
                     <div class="card-product px-2 py-2 d-flex justify-content-between align-items-center"
                         style="width: 100%; height: 120px;">
                         <div class="d-flex justify-content-start align-items-center gap-4 position-relative">
-                            <img src="{{ Storage::url( $product->pickedVariationOption->whereNotNull('product_image_id')->first()->productImage->filepath_image) }}"
+                            <img src="{{ Storage::url($product->pickedVariationOption->whereNotNull('product_image_id')->first()->productImage->filepath_image) }}"
                                 alt="" style="width: 80px; height: 80px;">
                             <span style="width: 150px">
                                 <h5>{{ $product->name }}</h5>
@@ -99,10 +97,22 @@
                                 @endforeach
                             </span>
                         </div>
+                        @php
+                            $variationOptionId1 = $userCarts->pickedVariation[0]->variationOption->id;
+                            $variationOptionId2 = $userCarts->pickedVariation[1]->variationOption->id;
+
+                            $mergeVarOption = \App\Models\MergeVariationOption::where([
+                                ['variation_option_1_id', $variationOptionId1],
+                                ['variation_option_2_id', $variationOptionId2],
+                            ])->first();
+                        @endphp
                         @if (isset($product->discount))
                             <div class="d-flex flex-column align-items-end">
-                                <span>{{ $userCarts->qty }} x Rp
-                                    {{ number_format($product->price_after_dsicount, 2, ',', '.') }}</span>
+                                <span>
+                                    <i class="bi bi-info-circle-fill me-1" style="cursor: pointer"
+                                        data-bs-toggle="tooltip" data-bs-title="harga setelah diskon"></i>
+                                    {{ $userCarts->qty }} x Rp
+                                    {{ number_format($mergeVarOption->merge_price_after_discount, 2, ',', '.') }}</span>
                                 <span><strong>
                                         <h4>Rp {{ number_format($userCarts->total_price_after_discount, 2, ',', '.') }}
                                         </h4>
@@ -111,7 +121,7 @@
                         @else
                             <div class="d-flex flex-column align-items-end">
                                 <span>{{ $userCarts->qty }} x Rp
-                                    {{ number_format($product->price, 2, ',', '.') }}</span>
+                                    {{ number_format($mergeVarOption->merge_price, 2, ',', '.') }}</span>
                                 <span><strong>
                                         <h4>Rp {{ number_format($userCarts->total_price, 2, ',', '.') }}</h4>
                                     </strong></span>

@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\MergeVariationOption;
 use App\Models\Product;
 use Livewire\Component;
 use Illuminate\Support\Str;
@@ -24,7 +25,7 @@ class Cart extends Component
     public $userCartId = null;
     public $categoryIds;
     public $count;
-    public $stock;
+    public $discountExist = false;
     protected $listeners = ['changeAdditionalPrice', 'toggleChecked', 'toggleAllChecked', 'toggleAllUnCheck', 'decreaseQtyProduct', 'increaseQtyProduct', 'showSearchedProducts', 'deleteUserCart'];
 
     public function mount($usersCarts, $user)
@@ -33,19 +34,24 @@ class Cart extends Component
         $this->count = 1;
         $this->totalDiscount = 0;
         $this->usersCarts = $usersCarts;
+        $this->discountExist = $this->usersCarts->contains(function ($cart) {
+            return $cart->hasProduct()->whereNotNull('discount')->exists();
+        });
         $this->user = $user;
     }
-    public function changeAdditionalPrice($product, $userCart, $totalAdditionalPrice, $eventId, $stock)
+    public function changeAdditionalPrice($product, $userCart, $totalAdditionalPrice, $eventId, $mergeVarOptionId)
     {
-        $this->stock = $stock;
         $this->count = $userCart['qty'];
         $priceAfterAdditional = $product['price'] + $totalAdditionalPrice;
+        $discountPriceAfterAdditional = $priceAfterAdditional * ($product['discount'] / 100);
+        $priceAdditionalAfterDiscount = $priceAfterAdditional - $discountPriceAfterAdditional;
         if ($this->isDuplicateEvent($eventId)) return;
-        $fixPrice = $product['discount'] ? $priceAfterAdditional - $priceAfterAdditional * ($product['discount']/ 100)  : $priceAfterAdditional;
-        $product = Product::findOrFail($product['id'])->update([
-            'price_after_additional' => $fixPrice,
+        MergeVariationOption::findOrFail($mergeVarOptionId)->update([
+            'merge_price' => $priceAfterAdditional,
+            'merge_price_after_discount' => $priceAdditionalAfterDiscount
         ]);
-        $this->dispatch('changeTotalPrice', userCart: $userCart, fixPrice: $fixPrice, eventId: Str::uuid(36));
+        $this->totalPrice = $priceAfterAdditional * $this->count;
+        $this->dispatch('changeTotalPrice', userCart: $userCart, fixPrice: $priceAfterAdditional, eventId: Str::uuid(36));
     }
     public function showSearchedProducts($searchQuery)
     {
@@ -121,7 +127,6 @@ class Cart extends Component
                 }
             }
         }
-
     }
     public function toggleRelatedProducts($userCartId)
     {
