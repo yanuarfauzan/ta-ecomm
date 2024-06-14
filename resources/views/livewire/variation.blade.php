@@ -12,7 +12,7 @@
                 {{ $variation->variationOption->name }}{{ !$loop->last ? ',' : '' }}
             @endforeach
         </span>
-        <span>Stock {{ $product->stock }}</span>
+        <span>Stock {{ $stock }}</span>
     </div>
     <div class="collapse collapse-variation-{{ $index }} position-absolute border-0"
         style="top: 80%; width: 250px; height: auto; z-index: 1000" id="collapseVariation-{{ $index }}"

@@ -20,16 +20,25 @@ class Counter extends Component
     public $price;
     public $userCartId;
     public $receivedEventIds = [];
-    public $listeners = ['changeTotalPrice'];
+    public $listeners = ['changeTotalPrice', 'updateQtyIfVariationOptionSame'];
     public function mount($userCart, $product, $user)
     {
-        $this->price = $product->price_after_additional ?? $product->price;
+        $variationOptionId1 = $userCart->pickedVariation[0]->variationOption->id;
+        $variationOptionId2 = $userCart->pickedVariation[1]->variationOption->id;
+
+        $mergeVarOption = \App\Models\MergeVariationOption::where(function ($query) use ($variationOptionId1, $variationOptionId2, ) {
+            $query
+                ->where('variation_option_1_id', $variationOptionId1)
+                ->where('variation_option_2_id', $variationOptionId2);
+        })->first();
+
+        $this->price = $mergeVarOption->merge_price ?? $product->price;
         $this->userCart = $userCart;
         $this->product = $product;
         $this->count = $this->userCart->qty;
         $this->user = $user;
         $this->userCart->update([
-            'total_price' => $this->price 
+            'total_price' => $this->price * $this->userCart->qty
         ]);
         if (isset($this->product->discount)) {
             $discountProduct = $this->price * $this->product->discount / 100;
@@ -39,28 +48,48 @@ class Counter extends Component
             ]);
         }
     }
+    public function updateQtyIfVariationOptionSame($qty)
+    {
+        $this->count = $this->userCart->qty + $qty;
+        if (isset($this->product->discount)) {
+            $discountProduct = $this->price * $this->product->discount / 100;
+            $this->userCart->update([
+                'total_price_after_discount' => ($this->price - $discountProduct) * $this->userCart->qty,
+                'total_discount' => $discountProduct * $this->userCart->qty
+            ]);
+        }
+        $this->dispatch('increaseQtyProduct', userCartId: $this->userCart->id, productPrice: $this->price, discountProduct: $discountProduct);
+    }
     public function changeTotalPrice($fixPrice, $userCart, $eventId)
-    {   
-        if ($this->isDuplicateEvent($eventId)) return;
+    {
+        if ($this->isDuplicateEvent($eventId))
+            return;
         Log::info('changeTotalPrice called with:', ['fixPrice' => $fixPrice, 'userCart' => $userCart]);
 
         $userCart = Cart::findOrFail($userCart['id']);
         $userCart->update([
             'total_price' => $fixPrice * $this->count
         ]);
-        $this->userCart = $userCart;
+        if ($this->product->discount) {
+            $discountProduct = $fixPrice * $this->product->discount / 100;
+            $this->userCart->update([
+                'total_price_after_discount' => ($fixPrice - $discountProduct) * $this->userCart->qty,
+                'total_discount' => $discountProduct * $this->userCart->qty
+            ]);
+        }
+        $this->userCart = Cart::findOrFail($userCart['id']);
     }
 
     public function increase()
     {
         $this->count = $this->userCart->qty + 1;
-    
+
         // Perbarui nilai qty
         $newQty = $this->userCart->qty + 1;
         $this->userCart->update([
             'qty' => $newQty
         ]);
-    
+
         $this->userCart->update([
             'total_price' => $this->price * $newQty,
         ]);
@@ -72,26 +101,26 @@ class Counter extends Component
                 'total_discount' => $discountProduct * $this->userCart->qty
             ]);
         }
-    
+
         $this->dispatch('increaseQtyProduct', userCartId: $this->userCart->id, productPrice: $this->price, discountProduct: $discountProduct);
     }
-    
+
     public function decrease()
     {
         if ($this->userCart->qty > 1) {
             $this->count = $this->userCart->qty - 1;
-    
+
             $newQty = $this->userCart->qty - 1;
             $this->userCart->update([
                 'qty' => $newQty
             ]);
-    
-    
+
+
             $this->userCart->update([
                 'total_price' => $this->price * $newQty,
             ]);
             $discountProduct = null;
-            if(isset($this->product->discount)) {
+            if (isset($this->product->discount)) {
                 $discountProduct = $this->price * $this->product->discount / 100;
                 $this->userCart->update([
                     'total_price_after_discount' => ($this->price - $discountProduct) * $this->userCart->qty,
@@ -102,7 +131,7 @@ class Counter extends Component
         }
     }
     public function deleteCartProduct($userCartId)
-    {   
+    {
         $this->dispatch('deleteUserCart', userCartId: $userCartId);
     }
 
@@ -122,5 +151,5 @@ class Counter extends Component
     {
         return view('livewire.counter');
     }
-    
+
 }

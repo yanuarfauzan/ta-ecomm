@@ -34,11 +34,24 @@
                                 @livewire('variation', ['index' => $index, 'product' => $product, 'usersCarts' => $usersCarts, 'userCart' => $userCart])
                             </div>
                         </div>
+                        @php
+                            $variationOptionId1 = $userCart->pickedVariation[0]->variationOption->id;
+                            $variationOptionId2 = $userCart->pickedVariation[1]->variationOption->id;
+
+                            $mergeVarOption = \App\Models\MergeVariationOption::where(function ($query) use (
+                                $variationOptionId1,
+                                $variationOptionId2,
+                            ) {
+                                $query
+                                    ->where('variation_option_1_id', $variationOptionId1)
+                                    ->where('variation_option_2_id', $variationOptionId2);
+                            })->first();
+                        @endphp
                         <div class="d-flex flex-column justify-content-center align-items-center "
                             style="width: 150px;">
                             <div class="width: 100%">
                                 <h5><strong>Rp
-                                        {{ number_format($product->price_after_additional, 2, ',', '.') }}</strong>
+                                        {{ number_format($mergeVarOption->merge_price, 2, ',', '.') }}</strong>
                                 </h5>
                             </div>
                             @if (isset($product?->discount))
@@ -139,8 +152,8 @@
                                                 style="width: 100%; max-width: 150px; height: auto; cursor: pointer;">
                                                 <div style="overflow: hidden;">
                                                     <img src="{{ Storage::url($product?->hasImages->first()->filepath_image) }}"
-                                                        class="card-img-top rounded-0" alt="..."
-                                                        id="image-product" style="width: 100%;">
+                                                        class="card-img-top rounded-0" alt="..." id="image-product"
+                                                        style="width: 100%;">
                                                 </div>
                                                 @if (isset($product->discount))
                                                     <span

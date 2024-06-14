@@ -212,7 +212,7 @@
                     <div class="d-flex justify-content-end">
                         <button type="button" class="btn-close me-2 mt-2" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body d-flex flex-column justify-content-center align-items-center gap-4">
+                    <div class="modal-body d-flex flex-column justify-content-center align-items-center gap-4 text-center">
                         <span class="text-success fs-1">
                             <i class="bi bi-check-circle-fill"></i>
                         </span>

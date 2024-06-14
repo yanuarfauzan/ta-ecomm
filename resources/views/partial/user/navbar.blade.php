@@ -46,7 +46,7 @@
                     </li>
                 </ul>
             </div>
-            @if (auth()->user())
+            @if (auth()->user() && auth()->user()->role == 'user')
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="dropdown-toggle dropdown-toggle-profile d-flex justify-content-start align-items-center"
                         data-bs-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
@@ -133,7 +133,7 @@
     <div class="swiper-button-next text-light"><i class="bi bi-chevron-right"></i></div>
     <div class="swiper-button-prev text-light"><i class="bi bi-chevron-left"></i></div>
 </div>
-<div id="userId" data-user-id="{{ auth()->user() ? auth()->user()->id : '' }}" class="d-none"></div>
+<div id="userId" data-user-id="{{ auth()->user() && auth()->user()->role == 'user' ? auth()->user()->id : '' }}" class="d-none"></div>
 <script src="{{ asset('/ourjs/navbar.js') }}" data-navigate-track></script>
 <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 <script>

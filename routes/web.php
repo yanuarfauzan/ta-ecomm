@@ -39,14 +39,16 @@ Route::get('/', [UserController::class, 'home'])->name('user-home');
 Route::get('/product/detail-product/{productId}', [UserController::class, 'detailProduct'])->name('user-detail-product');
 
 // ROLE:OPERATOR
-Route::get('/operator', [OperatorController::class, 'index'])->name('operator-index')->middleware(IsOperator::class);
-Route::post('/operator/{id}/update-proses', [OperatorController::class, 'updateProses'])->middleware(IsOperator::class);
-Route::post('/operator/{id}/update-shipping', [OperatorController::class, 'updateShipping'])->middleware(IsOperator::class);
-Route::post('/operator/{order}/update-completed', [OperatorController::class, 'updateCompleted'])->middleware(IsOperator::class);
-Route::post('/operator/update-resi', [OperatorController::class, 'updateResi'])->name('update-resi')->middleware(IsOperator::class);
-Route::post('/operator/response-operator/{id}', [OperatorController::class, 'responseOperator'])->middleware(IsOperator::class);
-Route::get('/operator/profile', [ProfileController::class, 'indexOperator'])->name('profile.operator')->middleware(IsOperator::class);
-Route::get('/operator/filter/{category}', [OperatorController::class, 'filterOrders']);
+Route::middleware(IsOperator::class)->prefix('/operator')->group(function () {
+    Route::get('/', [OperatorController::class, 'index'])->name('operator-index');
+    Route::post('/{id}/update-proses', [OperatorController::class, 'updateProses']);
+    Route::post('/{id}/update-shipping', [OperatorController::class, 'updateShipping']);
+    Route::post('/{order}/update-completed', [OperatorController::class, 'updateCompleted']);
+    Route::post('/update-resi', [OperatorController::class, 'updateResi'])->name('update-resi');
+    Route::post('/response-operator/{id}', [OperatorController::class, 'responseOperator']);
+    Route::get('/profile', [ProfileController::class, 'indexOperator'])->name('profile.operator');
+    Route::get('/filter/{category}', [OperatorController::class, 'filterOrders']);
+});
 
 // AUTH
 Route::get('/register', [AuthController::class, 'registerPage'])->name('user-register');

@@ -17,9 +17,12 @@ return new class extends Migration {
             $table->uuid('order_id')->nullable();
             $table->boolean('is_reviewed')->nullable();
             $table->timestamps();
-            $table->foreign('product_id')->references('id')->on('product')->onDelete('cascade');
-            $table->foreign('cart_id')->references('id')->on('cart')->onDelete('cascade');
-            $table->foreign('order_id')->references('id')->on('order')->onDelete('cascade');
+            $table->foreign('product_id')
+            ->references('id')->on('product')->onDelete('cascade');
+            $table->foreign('cart_id')
+            ->references('id')->on('cart')->onDelete('cascade');
+            $table->foreign('order_id')
+            ->references('id')->on('order')->onDelete('cascade');
         });
     }
 

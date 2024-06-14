@@ -17,8 +17,10 @@ return new class extends Migration
             $table->unsignedBigInteger('notification_id');
             $table->boolean('is_read')->nullable();
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
-            $table->foreign('notification_id')->references('id')->on('notification')->onDelete('cascade');
+            $table->foreign('user_id')
+            ->references('id')->on('user')->onDelete('cascade');
+            $table->foreign('notification_id')
+            ->references('id')->on('notification')->onDelete('cascade');
         });
     }
 

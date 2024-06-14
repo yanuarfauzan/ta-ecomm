@@ -102,7 +102,8 @@ class AmountsAndNotes extends Component
                         'variation_option_id' => $variationItem['variation_option_id'],
                     ]);
                 });
-                $this->dispatch('openModalSuccessAddToCart', ['message' => 'Berhasil menambahkan produk ke keranjang']);
+                $this->dispatch('openModalSuccessAddToCart',
+                ['message' => 'Berhasil menambahkan produk ke keranjang']);
             } else {
                 $cartProductId = Str::uuid(36);
                 if ($this->isVariationDifferent($cartProduct, $results)) {
@@ -118,13 +119,14 @@ class AmountsAndNotes extends Component
                             'variation_option_id' => $variationItem['variation_option_id'],
                         ]);
                     });
-                    $this->dispatch('openModalSuccessAddToCart', ['message' => 'Berhasil menambahkan produk dengan variasi berbeda ke keranjang']);
+                    $this->dispatch('openModalSuccessAddToCart',
+                    ['message' => 'Berhasil menambahkan produk dengan variasi berbeda ke keranjang']);
                 } else {
                     $cartProduct->update([
                         'qty' => $cartProduct->qty + $results['qty'],
                         'total_price' => $this->price * ($cartProduct->qty + $results['qty'])
                     ]);
-                    $this->dispatch('openModalSuccessAddToCart', ['message' => 'Produk sudah dimasukkan ke keranjang, jumlah ditambahkan']);
+                    $this->dispatch('openModalSuccessAddToCart',['message' => 'Produk sudah dimasukkan ke keranjang, jumlah ditambahkan']);
                 }
             }
     }
