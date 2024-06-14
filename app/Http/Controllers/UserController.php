@@ -49,6 +49,7 @@ class UserController extends Controller
             ->when($keyword, function ($query) use ($keyword) {
                 $query->where('name', 'like', '%' . $keyword . '%');
             })
+            ->orderBy('created_at', 'desc')
             ->get();
         if ($request->loadMoreProduct == true) {
             return response()->json(
@@ -81,6 +82,7 @@ class UserController extends Controller
     {
         $user = $this->user;
         $usersCarts = $user?->cart()->with(
+            'pickedVariation.variationOption',
             'hasProduct',
             'hasProduct.pickedVariation',
             'hasProduct.pickedVariationOption',
@@ -132,6 +134,9 @@ class UserController extends Controller
             $defaultUserAddress = $user->userAddresses->where('is_default', true)->first();
         } else {
             $defaultUserAddress = [];
+        }
+        if ($defaultUserAddress === null) {
+            return back()->with(['showModal' => true]);
         }
 
         $product = Product::where('id', $productId)->with(
@@ -215,7 +220,13 @@ class UserController extends Controller
             $costResults = [];
             $defaultCost = [];
         }
-
+        $product->update([
+            'rate' => $acumulatedRating
+        ]);
+        $orderFromBuyNow = Order::where('product_id', $productId)->where('order_status', 'completed')->count();
+        $orderFromCart = Order::whereNull('product_id')->where('order_status', 'completed')->count();
+        $totalOrders = $orderFromBuyNow + $orderFromCart;
+        $totalReviews = $product->productAssessment()->count();
         return view(
             'user.detail-product',
             compact(
@@ -242,6 +253,8 @@ class UserController extends Controller
                 'twoStarsCount',
                 'percentOneStars',
                 'oneStarsCount',
+                'totalOrders',
+                'totalReviews'
             )
         );
     }
@@ -313,10 +326,12 @@ class UserController extends Controller
         $productVoucher = $usersCarts->map(function ($userCart) {
             $product = $userCart->hasProduct->first();
             if ($product && $product->voucher()->exists()) {
-                return $product->voucher()->get();
+                return $product->voucher; // Tidak perlu memanggil get() lagi
             }
             return collect();
-        })->filter()->flatten();
+        })->filter(function ($voucher) {
+            return $voucher->isNotEmpty(); // Memastikan kita hanya mengembalikan voucher yang tidak kosong
+        })->flatten()->unique('id');
 
         $userAddresses = $order->user->userAddresses()->get();
         return view('user.order', compact('usersCarts', 'user', 'defaultUserAdress', 'order', 'productVoucher', 'userAddresses'));
@@ -330,36 +345,51 @@ class UserController extends Controller
         $defaultUserAdress = $this->user->userAddresses->where('is_default', true)->first();
         $productBuyNow = Product::findOrFail($request->productId);
 
-        $order = $user->order()->where('product_id', $request->productId)->whereIn('order_status', ['unpaid', 'pending'])->first();
+        $order = $user->order()->where('product_id', $request->productId)
+        ->whereIn('order_status', ['unpaid', 'pending'])->first();
         if (!isset($order)) {
             $order = $user->order()->create([
                 'product_id' => $request->productId,
                 'order_number' => $this->generateOrderNumber(),
                 'order_date' => date('Ymd'),
                 'qty' => $countBuyNow,
-                'total_price' => isset($productBuyNow->discount) ? $countBuyNow * $productBuyNow->price_after_dsicount : $countBuyNow * $totalPriceBuyNow,
+                'total_price' => isset($productBuyNow->discount) ? 
+                $countBuyNow * $productBuyNow->price_after_dsicount 
+                : $countBuyNow * $totalPriceBuyNow,
                 'order_status' => 'unpaid'
             ]);
             collect($variationBuyNow)->each(function ($variation) use ($order, $request) {
                 $variationId = explode('_', $variation)[0];
                 $variationOptionId = explode('_', $variation)[1];
                 $productId = $request->productId;
-                $order->pickedVariation()->attach($variationId, ['id' => Str::uuid(36), 'product_id' => $productId, 'variation_option_id' => $variationOptionId]);
+                $order->pickedVariation()->attach($variationId, 
+                ['id' => Str::uuid(36), 
+                'product_id' => $productId, 
+                'variation_option_id' => $variationOptionId]);
             });
         } else {
             if ($countBuyNow != $order->qty) {
                 $order->update([
                     'qty' => $countBuyNow,
                     'order_date' => date('Ymd'),
-                    'total_price' => isset($productBuyNow->discount) ? $countBuyNow * $productBuyNow->price_after_dsicount : $countBuyNow * $totalPriceBuyNow,
+                    'total_price' => isset($productBuyNow->discount) ?
+                     $countBuyNow * $productBuyNow->price_after_dsicount 
+                     : $countBuyNow * $totalPriceBuyNow,
                 ]);
             }
         }
         $productVoucher = $productBuyNow->voucher()->get();
-
         $userAddresses = $order->user->userAddresses()->get();
-        return view('user.order', compact('productBuyNow', 'order', 'user', 'defaultUserAdress', 'countBuyNow', 'variationBuyNow', 'productVoucher', 'userAddresses', 'totalPriceBuyNow'));
-
+        return view('user.order', 
+        compact('productBuyNow', 
+        'order', 
+        'user', 
+        'defaultUserAdress', 
+        'countBuyNow', 
+        'variationBuyNow', 
+        'productVoucher', 
+        'userAddresses', 
+        'totalPriceBuyNow'));
     }
     private function generateOrderNumber()
     {

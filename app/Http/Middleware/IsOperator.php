@@ -18,8 +18,9 @@ class IsOperator
     {
         if (Auth::user() && Auth::user()->role == 'operator') {
             return $next($request);
+        } else if (Auth::user() && Auth::user()->role == 'user' || Auth::user() && Auth::user()->role == 'admin') {
+            return back();
         }
-
         return redirect()->route('user-login');
     }
 }

@@ -16,9 +16,12 @@ return new class extends Migration {
             $table->uuid('category_id')->nullable();
             $table->uuid('variation_id')->nullable();
             $table->timestamps();
-            $table->foreign('product_id')->references('id')->on('product')->onDelete('cascade');
-            $table->foreign('category_id')->references('id')->on('category')->onDelete('cascade');
-            $table->foreign('variation_id')->references('id')->on('variation')->onDelete('cascade');
+            $table->foreign('product_id')
+            ->references('id')->on('product')->onDelete('cascade');
+            $table->foreign('category_id')
+            ->references('id')->on('category')->onDelete('cascade');
+            $table->foreign('variation_id')
+            ->references('id')->on('variation')->onDelete('cascade');
         });
     }
 

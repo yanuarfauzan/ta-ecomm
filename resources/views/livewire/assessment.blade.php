@@ -247,15 +247,21 @@
                         <span>{{ floor($productAssessment->created_at->diffInDays()) }} hari yang lalu</span>
                     </div>
                     <div class="d-flex justify-content-start align-items-center gap-2 ms-4">
-                        <span><img src="{{ Storage::url($productAssessment->user->profile_image) }}" alt="" class="rounded-circle"
-                                style="width: 40px;"></span>
+                        <span><img src="{{ Storage::url($productAssessment->user->profile_image) }}" alt=""
+                                class="rounded-circle" style="width: 40px;"></span>
                         <span><strong>{{ $productAssessment->user->username }}</strong></span>
                     </div>
                     <div class="d-flex justify-content-start align-items-center ms-4">
                         <span>
-                            @foreach ($productAssessment->user?->cart->first()?->hasProduct->first()?->pickedVariationOption ?? $productAssessment->order->pickedVariationOption  as $variationOption)
-                                {{ $variationOption->name }}{{ !$loop->last ? ',' : '' }}
-                            @endforeach
+                            @if ($productAssessment->user?->cart->first())
+                                @foreach ($productAssessment->user?->cart->first()?->pickedVariation as $variation)
+                                    {{ $variation->variationOption->name }}{{ !$loop->last ? ',' : '' }}
+                                @endforeach
+                            @else
+                                @foreach ($productAssessment->order->pickedVariationOption as $variationOption)
+                                    {{ $variationOption->name }}{{ !$loop->last ? ',' : '' }}
+                                @endforeach
+                            @endif
                         </span>
                     </div>
                     <div class="d-flex justify-content-start align-items-center ms-4">
@@ -310,7 +316,7 @@
                 @else
                     <a wire:click="showAllReviews()" class="font-main-color" style="cursor: pointer"><strong>lihat
                             semua
-                            ulasan</strong></a> 
+                            ulasan</strong></a>
                 @endif
             </div>
         </div>

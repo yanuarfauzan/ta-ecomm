@@ -20,8 +20,10 @@ return new class extends Migration {
             $table->decimal('weight')->nullable();
             $table->string('dimensions')->nullable();
             $table->timestamps();
-            $table->foreign('variation_id')->references('id')->on('variation')->onDelete('cascade');
-            $table->foreign('product_image_id')->references('id')->on('product_image')->onDelete('cascade');
+            $table->foreign('variation_id')
+            ->references('id')->on('variation')->onDelete('cascade');
+            $table->foreign('product_image_id')
+            ->references('id')->on('product_image')->onDelete('cascade');
         });
     }
 

@@ -23,7 +23,7 @@ class DetailProductVariation extends Component
     public function mount($product, $firstVarOption, $firstVarOptionInit)
     {
         $this->product = $product;
-        $this->price = $product->price_after_additional;
+        $this->price = $product->price;
         $this->firstVarOption = explode('_', $firstVarOption)[0];
         $varOptionInitId = explode('_', $firstVarOptionInit)[1];
         $this->stock = VariationOption::findOrFail($varOptionInitId)->stock;
@@ -41,13 +41,16 @@ class DetailProductVariation extends Component
             )->first();
         
         $additionalPrice = $additionalData->price ?? 0;
+        $additionalStock = $additionalData->stock ?? 0;
         if ($index == 0) {
             if ($this->variationHasChoosen[$index] ?? null == $exploded[0]) {
                 $this->price -= $this->additionalPriceHasAdded[$index];
+                $this->stock -= $this->additionalStockHasAdded[$index];
             }
             $this->price += $additionalPrice;
             $this->variationHasChoosen[$index] = $exploded[0];
             $this->additionalPriceHasAdded[$index] = $additionalPrice;
+            $this->additionalStockHasAdded[$index] = $additionalStock;
             $this->lastIndex = $index;
             $this->product->update([
                 'price_after_additional' => $this->price
@@ -56,10 +59,12 @@ class DetailProductVariation extends Component
         } else {
             if ($this->variationHasChoosen[$index] ?? null == $exploded[0]) {
                 $this->price -= $this->additionalPriceHasAdded[$index];
+                $this->stock -= $this->additionalStockHasAdded[$index];
             }
             $this->price += $additionalPrice;
             $this->variationHasChoosen[$index] = $exploded[0];
             $this->additionalPriceHasAdded[$index] = $additionalPrice;
+            $this->additionalStockHasAdded[$index] = $additionalStock;
             $this->lastIndex = $index;
             $this->product->update([
                 'price_after_additional' => $this->price

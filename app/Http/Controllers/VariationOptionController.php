@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use App\Models\VariationOption;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class VariationOptionController extends Controller
@@ -36,8 +37,11 @@ class VariationOptionController extends Controller
 
     public function getImagesByProduct($productId)
     {
-        // dd('sini2');
-        $images = ProductImage::where('product_id', $productId)->get(['id', 'filepath_image']);
+        try {
+            $images = ProductImage::where('product_id', $productId)->get(['id', 'filepath_image']);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+        }
         return response()->json($images);
     }
 
@@ -67,15 +71,15 @@ class VariationOptionController extends Controller
         $dimensions = $validatedData['length'] . 'x' . $validatedData['width'] . 'x' . $validatedData['height'];
 
         Product::findOrFail($validatedData['product_id'])->variation
-        ->where('id', $validatedData['variation_id'])->first()
-        ->variationOption()->create([
-            'product_image_id' => $validatedData['product_image_id'] ?? null,
-            'name' => $validatedData['name'],
-            'stock' => $validatedData['stock'],
-            'price' => $validatedData['price'],
-            'weight' => $validatedData['weight'],
-            'dimensions' => $dimensions
-        ]);
+            ->where('id', $validatedData['variation_id'])->first()
+            ->variationOption()->create([
+                    'product_image_id' => $validatedData['product_image_id'] ?? null,
+                    'name' => $validatedData['name'],
+                    'stock' => $validatedData['stock'],
+                    'price' => $validatedData['price'],
+                    'weight' => $validatedData['weight'],
+                    'dimensions' => $dimensions
+                ]);
         return redirect('/admin/list-variation-option')->with('success', 'Variasi Opsi Berhasil Dibuat');
     }
 
@@ -117,7 +121,7 @@ class VariationOptionController extends Controller
             'height' => 'required'
         ]);
 
-        if ($validatedData->fails()){
+        if ($validatedData->fails()) {
             return back()->withErrors($validatedData->errors())->withInput();
         }
 

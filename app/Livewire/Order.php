@@ -78,7 +78,9 @@ class Order extends Component
         $this->productVoucher = $productVoucher;
         $this->userAddresses = $userAddresses;
         $this->note = $this->order->note;
-
+        $this->order->update([
+            'address_id' => $defaultUserAdress->id
+        ]);
         $this->provincies = collect(ProvinciesAndCities::pluck('province')->unique());
         $this->cities = collect(ProvinciesAndCities::pluck('city_name')->unique());
 
