@@ -52,7 +52,7 @@
                     @enderror
                 </div>
                 <div class="mb-3">
-                    <label for="phone_number" class="form-label">Phone Number</label>
+                    <label for="phone_number" class="form-label">No. Telepon</label>
                     <input type="text" class="form-control @error('phone_number') is-invalid @enderror" id="phone_number"
                         name="phone_number" value="{{ old('phone_number') }}">
                     @error('phone_number')
@@ -60,14 +60,14 @@
                     @enderror
                 </div>
                 <div class="mb-3">
-                    <label for="gender" class="form-label">Gender</label>
+                    <label for="gender" class="form-label">Jenis Kelamin</label>
                     <select class="form-control" id="gender" name="gender">
-                        <option value="0" {{ old('gender') == 0 ? 'checked' : '' }}>Female</option>
-                        <option value="1" {{ old('gender') == 1 ? 'checked' : '' }}>Male</option>
+                        <option value="0" {{ old('gender') == 0 ? 'checked' : '' }}>Perempuan</option>
+                        <option value="1" {{ old('gender') == 1 ? 'checked' : '' }}>Laki-laki</option>
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label for="birtdate" class="form-label">Birthdate</label>
+                    <label for="birtdate" class="form-label">Tanggal Lahir</label>
                     <input type="date" class="form-control @error('birtdate') is-invalid @enderror" id="birtdate"
                         name="birtdate" value="{{ old('birtdate') }}">
                     @error('birtdate')
@@ -102,7 +102,7 @@
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="address" class="form-label">Address</label>
+                        <label for="address" class="form-label">Alamat</label>
                         <input type="text" class="form-control @error('address.0.address') is-invalid @enderror"
                             id="address" name="address[0][address]" value="{{ old('address.0.address') }}">
                         @error('address.0.address')
@@ -110,7 +110,7 @@
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="detail" class="form-label">Detail</label>
+                        <label for="detail" class="form-label">Detail Alamat</label>
                         <input type="text" class="form-control @error('address.0.detail') is-invalid @enderror"
                             id="detail" name="address[0][detail]" value="{{ old('address.0.detail') }}">
                         @error('address.0.detail')
@@ -118,7 +118,7 @@
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="postal_code" class="form-label">Postal Code</label>
+                        <label for="postal_code" class="form-label">Kode Pos</label>
                         <input type="text" class="form-control @error('address.0.postal_code') is-invalid @enderror"
                             id="postal_code" name="address[0][postal_code]" value="{{ old('address.0.postal_code') }}">
                         @error('address.0.postal_code')
@@ -126,7 +126,7 @@
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="city" class="form-label">City</label>
+                        <label for="city" class="form-label">Kota/Kabupaten</label>
                         <input type="text" class="form-control @error('address.0.city') is-invalid @enderror"
                             id="city" name="address[0][city]" value="{{ old('address.0.city') }}">
                         @error('address.0.city')
@@ -134,7 +134,7 @@
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="province" class="form-label">Province</label>
+                        <label for="province" class="form-label">Provinsi</label>
                         <input type="text" class="form-control @error('address.0.province') is-invalid @enderror"
                             id="province" name="address[0][province]" value="{{ old('address.0.province') }}">
                         @error('address.0.province')
@@ -180,23 +180,23 @@
                         <input type="text" class="form-control" id="address_${newAddressCount}" name="address[${newAddressCount}][recipient_name]">
                     </div>
                     <div class="address-item mb-3">
-                        <label for="address_${newAddressCount}" class="form-label">Address</label>
+                        <label for="address_${newAddressCount}" class="form-label">Alamat</label>
                         <input type="text" class="form-control" id="address_${newAddressCount}" name="address[${newAddressCount}][address]">
                     </div>
                     <div class="address-item mb-3">
-                        <label for="detail_${newAddressCount}" class="form-label">Detail</label>
+                        <label for="detail_${newAddressCount}" class="form-label">Detail Alamat</label>
                         <input type="text" class="form-control" id="detail_${newAddressCount}" name="address[${newAddressCount}][detail]">
                     </div>
                     <div class="address-item mb-3">
-                        <label for="postal_code_${newAddressCount}" class="form-label">Postal Code</label>
+                        <label for="postal_code_${newAddressCount}" class="form-label">Kode Pos</label>
                         <input type="text" class="form-control" id="postal_code_${newAddressCount}" name="address[${newAddressCount}][postal_code]">
                     </div>
                     <div class="address-item mb-3">
-                        <label for="city_${newAddressCount}" class="form-label">City</label>
+                        <label for="city_${newAddressCount}" class="form-label">Kota/Kabupaten</label>
                         <input type="text" class="form-control" id="city_${newAddressCount}" name="address[${newAddressCount}][city]">
                     </div>
                     <div class="address-item mb-3">
-                        <label for="province_${newAddressCount}" class="form-label">Province</label>
+                        <label for="province_${newAddressCount}" class="form-label">Provinsi</label>
                         <input type="text" class="form-control" id="province_${newAddressCount}" name="address[${newAddressCount}][province]">
                     </div>
                 `;

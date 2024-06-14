@@ -34,7 +34,7 @@
                     @enderror
                 </div>
                 <div class="mb-3">
-                    <label for="phone_number" class="form-label">Phone Number</label>
+                    <label for="phone_number" class="form-label">No. Telepon</label>
                     <input type="text" class="form-control @error('phone_number') is-invalid @enderror" id="phone_number"
                         name="phone_number" value="{{ old('phone_number', $user->phone_number) }}">
                     @error('phone_number')
@@ -58,14 +58,14 @@
                     @enderror
                 </div>
                 <div class="mb-3">
-                    <label for="gender" class="form-label">Gender</label>
+                    <label for="gender" class="form-label">Jenis Kelamin</label>
                     <select class="form-control" id="gender" name="gender">
-                        <option value="0" {{ $user->gender == 0 ? 'selected' : '' }}>Female</option>
-                        <option value="1" {{ $user->gender == 1 ? 'selected' : '' }}>Male</option>
+                        <option value="0" {{ $user->gender == 0 ? 'selected' : '' }}>Perempuan</option>
+                        <option value="1" {{ $user->gender == 1 ? 'selected' : '' }}>Laki-laki</option>
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label for="birtdate" class="form-label">Birtdate</label>
+                    <label for="birtdate" class="form-label">Tanggal lahir</label>
                     <input type="date" class="form-control @error('birtdate') is-invalid @enderror" id="birtdate"
                         name="birtdate" value="{{ old('birtdate', $user->birtdate) }}">
                     @error('birtdate')
@@ -95,7 +95,7 @@
                     </select>
                 </div>
                 @foreach ($user->userAddresses as $index => $address)
-                    <h6>Address {{ $index + 1 }}</h6>
+                    <h6>Alamat {{ $index + 1 }}</h6>
                     <div class="mb-3">
                         <label for="recipient_name{{ $index }}" class="form-label">Nama Penerima</label>
                         <input type="text" class="form-control @error('recipient_name') is-invalid @enderror"
@@ -107,7 +107,7 @@
                     </div>
                     <input type="hidden" name="address[{{ $index }}][id]" value="{{ $address->id }}">
                     <div class="mb-3">
-                        <label for="address{{ $index }}" class="form-label">Address</label>
+                        <label for="address{{ $index }}" class="form-label">Alamat</label>
                         <input type="text" class="form-control @error('address') is-invalid @enderror"
                             id="address{{ $index }}" name="address[{{ $index }}][address]"
                             value="{{ old('address.' . $index . '.address', $address->address) }}">
@@ -116,7 +116,7 @@
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="detail{{ $index }}" class="form-label">Detail</label>
+                        <label for="detail{{ $index }}" class="form-label">Detail Alamat</label>
                         <input type="text" class="form-control @error('detail') is-invalid @enderror"
                             id="detail{{ $index }}" name="address[{{ $index }}][detail]"
                             value="{{ old('address.' . $index . '.detail', $address->detail) }}">
@@ -125,7 +125,7 @@
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="postal_code{{ $index }}" class="form-label">Postal Code</label>
+                        <label for="postal_code{{ $index }}" class="form-label">Kode Pos</label>
                         <input type="text" class="form-control @error('postal_code') is-invalid @enderror"
                             id="postal_code{{ $index }}" name="address[{{ $index }}][postal_code]"
                             value="{{ old('address.' . $index . '.postal_code', $address->postal_code) }}">
@@ -134,7 +134,7 @@
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="city{{ $index }}" class="form-label">City</label>
+                        <label for="city{{ $index }}" class="form-label">Kota/Kabupaten</label>
                         <input type="text" class="form-control @error('city') is-invalid @enderror"
                             id="city{{ $index }}" name="address[{{ $index }}][city]"
                             value="{{ old('address.' . $index . '.city', $address->city) }}">
@@ -143,7 +143,7 @@
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="province{{ $index }}" class="form-label">Province</label>
+                        <label for="province{{ $index }}" class="form-label">Provinsi</label>
                         <input type="text" class="form-control @error('province') is-invalid @enderror"
                             id="province{{ $index }}" name="address[{{ $index }}][province]"
                             value="{{ old('address.' . $index . '.province', $address->province) }}">

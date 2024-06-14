@@ -185,8 +185,10 @@ class AdminUsersController extends Controller
 
             $user->userAddresses()->delete();
 
-            foreach ($request->address as $addressData) {
-                $user->userAddresses()->create($addressData);
+            if ($request->has('address') && is_array($request->address)) {
+                foreach ($request->address as $addressData) {
+                    $user->userAddresses()->create($addressData);
+                }
             }
         }
 
