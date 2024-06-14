@@ -148,11 +148,11 @@
                             @foreach ($user->userAddresses as $address)
                                 <h6>Alamat {{ $loop->iteration }}</h6>
                                 <p><strong>Nama Penerima:</strong> {{ $address->recipient_name }}</p>
-                                <p><strong>Address:</strong> {{ $address->address }}</p>
-                                <p><strong>Detail:</strong> {{ $address->detail }}</p>
-                                <p><strong>Postal Code:</strong> {{ $address->postal_code }}</p>
-                                <p><strong>City:</strong> {{ $address->city }}</p>
-                                <p><strong>Province:</strong> {{ $address->province }}</p>
+                                <p><strong>Alamat:</strong> {{ $address->address }}</p>
+                                <p><strong>Detail Alamat:</strong> {{ $address->detail }}</p>
+                                <p><strong>Kode Pos:</strong> {{ $address->postal_code }}</p>
+                                <p><strong>Kota/Kabupaten:</strong> {{ $address->city }}</p>
+                                <p><strong>Provinsi:</strong> {{ $address->province }}</p>
                                 <hr>
                             @endforeach
                         @else
