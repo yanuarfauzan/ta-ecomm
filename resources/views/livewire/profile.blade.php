@@ -7,7 +7,7 @@
                         <div class="d-flex flex-column justify-content-between align-items-center gap-2 ms-4 my-4"
                             style="width: 50%;">
                             <div class="" style="width: 100%; height: 250px;">
-                                <img src="{{  $user->profile_image ? Storage::url($user->profile_image) : asset('oursvg/default_image.svg') }}"
+                                <img src="{{ $user->profile_image ? Storage::url($user->profile_image) : asset('oursvg/default_image.svg') }}"
                                     alt="" style="width: 100%; height: 100%">
                             </div>
                             <div class="card-product d-flex justify-content-center align-items-center"
@@ -34,8 +34,8 @@
                                     id="username" name="username" style="box-shadow: none; width: 100%; height: 40px;">
                             </div>
                             <div class="input-group" style="height: 55px">
-                                <input wire:model.lazy="birtdate" type="date" class="form-control rounded-0" placeholder="tanggal lahir"
-                                    id="email" name="birth_of_date"
+                                <input wire:model.lazy="birtdate" type="date" class="form-control rounded-0"
+                                    placeholder="tanggal lahir" id="email" name="birth_of_date"
                                     style="box-shadow: none; width: 100%; height: 40px;">
                             </div>
                             <div class="d-flex flex-column">
@@ -79,52 +79,54 @@
                             data-bs-toggle="modal" data-bs-target="#addAddress" style="width: 28%; height: 30px;">tambah
                             alamat</button>
                     </div>
-                    @if (!$addresses->isEmpty())                        
-                    <div class="d-flex flex-column justify-content-start align-items-center pb-4"
-                        style="overflow-y: scroll; height: 350px;">
-                        @foreach ($addresses as $address)
-                            <div class="card-product p-2 d-flex flex-column justify-content-start align-items-start"
-                                style="width: 95%; height: auto; margin-top: 20px;">
-                                <div class="d-flex justify-content-start align-items-center w-100">
-                                    <span><strong>{{ $address->recipient_name }}</strong>
-                                        @if ($address->is_default == true)
-                                            <span><strong class="font-main-color">(utama)</strong>
-                                        @endif
-                                </div>
-                                {{ $address->phone_number }}</span>
-                                <span><i class="bi bi-geo-alt"></i>{{ $address->address }} -
-                                    {{ $address->detail }}</span>
-                                <div class="d-flex justify-content-between mt-2 w-100 gap-2">
-                                    <div class="d-flex justify-content-start align-items-center w-50">
-                                        @if (!$address->is_default == true)
+                    @if (!$addresses->isEmpty())
+                        <div class="d-flex flex-column justify-content-start align-items-center pb-4"
+                            style="overflow-y: scroll; height: 350px;">
+                            @foreach ($addresses as $address)
+                                <div class="card-product p-2 d-flex flex-column justify-content-start align-items-start"
+                                    style="width: 95%; height: auto; margin-top: 20px;">
+                                    <div class="d-flex justify-content-start align-items-center w-100">
+                                        <span><strong>{{ $address->recipient_name }}</strong>
+                                            @if ($address->is_default == true)
+                                                <span><strong class="font-main-color">(utama)</strong>
+                                            @endif
+                                    </div>
+                                    {{ $address->phone_number }}</span>
+                                    <span><i class="bi bi-geo-alt"></i>{{ $address->address }} -
+                                        {{ $address->detail }}</span>
+                                    <div class="d-flex justify-content-between mt-2 w-100 gap-2">
+                                        <div class="d-flex justify-content-start align-items-center w-50">
+                                            @if (!$address->is_default == true)
+                                                <button
+                                                    class="btn rounded-0 bg-success text-white d-flex justify-content-center align-items-center"
+                                                    wire:click="setToDefaultAddress('{{ $address->id }}')"
+                                                    style="width: 50%; height: 30px;">jadikan utama</button>
+                                            @endif
+                                        </div>
+                                        <div class="d-flex justify-content-end align-items-center gap-2">
                                             <button
-                                                class="btn rounded-0 bg-success text-white d-flex justify-content-center align-items-center"
-                                                wire:click="setToDefaultAddress('{{ $address->id }}')"
-                                                style="width: 50%; height: 30px;">jadikan utama</button>
-                                        @endif
-                                    </div>
-                                    <div class="d-flex justify-content-end align-items-center gap-2">
-                                        <button
-                                            class="btn rounded-0 bg-danger text-white d-flex justify-content-center align-items-center w-30"
-                                            wire:click="deleteAddress('{{ $address->id }}')"
-                                            style="height: 30px;">hapus</button>
-                                        <button
-                                            class="btn rounded-0 bg-main-color text-white d-flex justify-content-center align-items-center w-70"
-                                            wire:click="editAddress('{{ $address->id }}')" data-bs-toggle="modal"
-                                            data-bs-target="#changeAddress-{{ $address->id }}"
-                                            style="height: 30px;">edit alamat</button>
-                                    </div>
+                                                class="btn rounded-0 bg-danger text-white d-flex justify-content-center align-items-center w-30"
+                                                wire:click="deleteAddress('{{ $address->id }}')"
+                                                style="height: 30px;">hapus</button>
+                                            <button
+                                                class="btn rounded-0 bg-main-color text-white d-flex justify-content-center align-items-center w-70"
+                                                wire:click="editAddress('{{ $address->id }}')" data-bs-toggle="modal"
+                                                data-bs-target="#changeAddress-{{ $address->id }}"
+                                                style="height: 30px;">edit alamat</button>
+                                        </div>
 
+                                    </div>
                                 </div>
-                            </div>
-                        @endforeach
-                    </div>
+                            @endforeach
+                        </div>
                     @else
-                    <div class="d-flex flex-column justify-content-start align-items-center pb-4 gap-2"
-                    style=" height: 350px;">
-                        <img src="{{ asset('oursvg/address.svg') }}" style="width: 300px;" alt="">
-                        <span><h5 class="font-main-color">Belum ada alamat</h5></span>
-                    </div>
+                        <div class="d-flex flex-column justify-content-start align-items-center pb-4 gap-2"
+                            style=" height: 350px;">
+                            <img src="{{ asset('oursvg/address.svg') }}" style="width: 300px;" alt="">
+                            <span>
+                                <h5 class="font-main-color">Belum ada alamat</h5>
+                            </span>
+                        </div>
                     @endif
 
                 </div>
@@ -186,7 +188,7 @@
                                                         id="card-product-PRODUCT_ID">
                                                         <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                             style="width: 30%;">
-                                                            <img src="{{ Storage::url($cartProduct->product->pickedVariationOption->whereNotNull('product_image_id')->first()->productImage->filepath_image) }}"
+                                                            <img src="{{ Storage::url($cartProduct->cart->pickedVariation->whereNotNull('variationOption.product_image_id')->first()->variationOption->productImage->filepath_image) }}"
                                                                 alt="" style="width: 80px; height: 80px;">
                                                             <div class="d-flex justify-content-between"
                                                                 style="width: auto; height: auto;">
@@ -237,7 +239,7 @@
                                                     id="card-product-PRODUCT_ID">
                                                     <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                         style="width: 30%;">
-                                                        <img src="{{ Storage::url( $order->product->hasImages()->first()->filepath_image) }}"
+                                                        <img src="{{ Storage::url($order->product->hasImages()->first()->filepath_image) }}"
                                                             alt="" style="width: 80px; height: 80px;">
                                                         <div wire:ignore
                                                             class="d-flex position-relative justify-content-between"
@@ -307,7 +309,7 @@
                                                         id="card-product-PRODUCT_ID">
                                                         <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                             style="width: 30%;">
-                                                            <img src="{{ Storage::url($cartProduct->product->pickedVariationOption->whereNotNull('product_image_id')->first()->productImage->filepath_image) }}"
+                                                            <img src="{{ Storage::url($cartProduct->cart->pickedVariation->whereNotNull('variationOption.product_image_id')->first()->variationOption->productImage->filepath_image) }}"
                                                                 alt="" style="width: 80px; height: 80px;">
                                                             <div wire:ignore
                                                                 class="d-flex position-relative justify-content-between"
@@ -356,7 +358,7 @@
                                                     id="card-product-PRODUCT_ID">
                                                     <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                         style="width: 30%;">
-                                                        <img src="{{ Storage::url( $order->product->hasImages()->first()->filepath_image) }}"
+                                                        <img src="{{ Storage::url($order->product->hasImages()->first()->filepath_image) }}"
                                                             alt="" style="width: 80px; height: 80px;">
                                                         <div wire:ignore
                                                             class="d-flex position-relative justify-content-between"
@@ -380,7 +382,7 @@
                                                     <div class="d-flex flex-column justify-content-center align-items-center me-2"
                                                         style="width: 30%;">
                                                         <span><strong>Rp
-                                                                {{ number_format($order->product->discount ? $order->product->price_after_additional - $order->product->price_after_additional * ($order->product->discount / 100) : $order->product->price_after_additional , 2, ',', '.') }}
+                                                                {{ number_format($order->product->discount ? $order->product->price_after_additional - $order->product->price_after_additional * ($order->product->discount / 100) : $order->product->price_after_additional, 2, ',', '.') }}
                                                                 x {{ $order->qty }}</strong></span>
                                                     </div>
                                                     <div class="d-flex flex-column justify-content-end align-items-end gap-2 px-2"
@@ -437,7 +439,7 @@
                                                         id="card-product-PRODUCT_ID">
                                                         <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                             style="width: 30%;">
-                                                            <img src="{{ Storage::url($cartProduct->product->pickedVariationOption->whereNotNull('product_image_id')->first()->productImage->filepath_image) }}"
+                                                            <img src="{{ Storage::url($cartProduct->cart->pickedVariation->whereNotNull('variationOption.product_image_id')->first()->variationOption->productImage->filepath_image) }}"
                                                                 alt="" style="width: 80px; height: 80px;">
                                                             <div wire:ignore
                                                                 class="d-flex position-relative justify-content-between"
@@ -452,8 +454,8 @@
                                                         <div class="d-flex flex-column align-items-start position-relative gap-0"
                                                             style="width: 200px; height: auto;">
                                                             <span>
-                                                                @foreach ($cartProduct->product->pickedVariationOption as $varOption)
-                                                                    {{ $varOption->name }}{{ $loop->last ? '' : ',' }}
+                                                                @foreach ($cartProduct->cart->pickedVariation as $variation)
+                                                                    {{ $variation->variationOption->name }}{{ $loop->last ? '' : ',' }}
                                                                 @endforeach
                                                             </span>
                                                         </div>
@@ -480,12 +482,13 @@
                                                                 {{ number_format($order->total_price, 2, ',', '.') }}</strong></span>
                                                     </div>
                                                 </div>
-                                                                                            <div class="card-all-check d-flex justify-content-between align-items-center gap-4 mb-4"
+                                            @else
+                                                <div class="card-all-check d-flex justify-content-between align-items-center gap-4 mb-4"
                                                     style="width: 100%; height: auto; background-color: white"
                                                     id="card-product-PRODUCT_ID">
                                                     <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                         style="width: 30%;">
-                                                        <img src="{{ Storage::url( $order->product->hasImages->first()->filepath_image) }}"
+                                                        <img src="{{ Storage::url($order->product->hasImages->first()->filepath_image) }}"
                                                             alt="" style="width: 80px; height: 80px;">
                                                         <div wire:ignore
                                                             class="d-flex position-relative justify-content-between"
@@ -509,7 +512,7 @@
                                                     <div class="d-flex flex-column justify-content-center align-items-center me-2"
                                                         style="width: 30%;">
                                                         <span><strong>Rp
-                                                                {{ number_format($order->product->discount ? $order->product->price_after_additional - $order->product->price_after_additional * ($order->product->discount / 100) : $order->product->price_after_additional , 2, ',', '.') }}
+                                                                {{ number_format($order->product->discount ? $order->product->price_after_additional - $order->product->price_after_additional * ($order->product->discount / 100) : $order->product->price_after_additional, 2, ',', '.') }}
                                                                 x {{ $order->qty }}</strong></span>
                                                     </div>
                                                     <div class="d-flex flex-column justify-content-end align-items-end gap-2 px-2"
@@ -550,12 +553,35 @@
                                             </div>
                                             @if ($order->cartProduct && count($order->cartProduct) > 0)
                                                 @foreach ($order->cartProduct as $cartProduct)
+                                                @php
+                                                $variationOptionId1 =
+                                                    $cartProduct->cart->pickedVariation[0]->variationOption->id;
+                                                $variationOptionId2 =
+                                                    $cartProduct->cart->pickedVariation[1]->variationOption->id;
+
+                                                $mergeVarOption = \App\Models\MergeVariationOption::where(
+                                                    function ($query) use (
+                                                        $variationOptionId1,
+                                                        $variationOptionId2,
+                                                    ) {
+                                                        $query
+                                                            ->where(
+                                                                'variation_option_1_id',
+                                                                $variationOptionId1,
+                                                            )
+                                                            ->where(
+                                                                'variation_option_2_id',
+                                                                $variationOptionId2,
+                                                            );
+                                                    },
+                                                )->first();
+                                            @endphp
                                                     <div class="card-all-check d-flex justify-content-between align-items-center gap-4 mb-4"
                                                         style="width: 100%; height: auto; background-color: white"
                                                         id="card-product-PRODUCT_ID">
                                                         <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                             style="width: 30%;">
-                                                            <img src="{{ Storage::url($cartProduct->product->pickedVariationOption->whereNotNull('product_image_id')->first()->productImage->filepath_image) }}"
+                                                            <img src="{{ Storage::url($cartProduct->cart->pickedVariation->whereNotNull('variationOption.product_image_id')->first()->variationOption->productImage->filepath_image) }}"
                                                                 alt="" style="width: 80px; height: 80px;">
                                                             <div wire:ignore
                                                                 class="d-flex position-relative justify-content-between"
@@ -578,7 +604,7 @@
                                                         <div class="d-flex flex-column justify-content-center align-items-center me-2"
                                                             style="width: 30%;">
                                                             <span><strong>Rp
-                                                                    {{ number_format($cartProduct->product->price_after_additional, 2, ',', '.') }}
+                                                                    {{ number_format($cartProduct->product->discount ? $mergeVarOption->merge_price_after_discount : $mergeVarOption->merge_price, 2, ',', '.') }}
                                                                     x
                                                                     {{ $cartProduct->product->cart->first()->qty }}</strong></span>
                                                         </div>
@@ -586,7 +612,7 @@
                                                             style="width: 30%">
                                                             <span>sub total :</span>
                                                             <span><strong>Rp
-                                                                    {{ number_format($cartProduct->product->cart->first()->total_price, 2, ',', '.') }}</strong></span>
+                                                                {{ number_format($cartProduct->product->discount ? $cartProduct->product->cart->first()->total_price_after_discount : $cartProduct->product->cart->first()->total_price, 2, ',', '.') }}</strong></span>
                                                         </div>
                                                         @if ($cartProduct->is_reviewed == false)
                                                             <div class="d-flex flex-column justify-content-end align-items-end gap-2 px-2"
@@ -615,7 +641,7 @@
                                                     id="card-product-PRODUCT_ID">
                                                     <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                         style="width: 30%;">
-                                                        <img src="{{ Storage::url( $order->product->hasImages->first()->filepath_image) }}"
+                                                        <img src="{{ Storage::url($order->product->hasImages->first()->filepath_image) }}"
                                                             alt="" style="width: 80px; height: 80px;">
                                                         <div wire:ignore
                                                             class="d-flex position-relative justify-content-between"
@@ -639,7 +665,7 @@
                                                     <div class="d-flex flex-column justify-content-center align-items-center me-2"
                                                         style="width: 30%;">
                                                         <span><strong>Rp
-                                                                {{ number_format($order->product->discount ? $order->product->price_after_additional - $order->product->price_after_additional * ($order->product->discount / 100) : $order->product->price_after_additional , 2, ',', '.') }}
+                                                                {{ number_format($order->product->discount ? $order->product->price_after_additional - $order->product->price_after_additional * ($order->product->discount / 100) : $order->product->price_after_additional, 2, ',', '.') }}
                                                                 x {{ $order->qty }}</strong></span>
                                                     </div>
                                                     <div class="d-flex flex-column justify-content-end align-items-end gap-2 px-2"
@@ -691,12 +717,35 @@
                                             </div>
                                             @if ($order->cartProduct && count($order->cartProduct) > 0)
                                                 @foreach ($order->cartProduct as $cartProduct)
+                                                    @php
+                                                        $variationOptionId1 =
+                                                            $cartProduct->cart->pickedVariation[0]->variationOption->id;
+                                                        $variationOptionId2 =
+                                                            $cartProduct->cart->pickedVariation[1]->variationOption->id;
+
+                                                        $mergeVarOption = \App\Models\MergeVariationOption::where(
+                                                            function ($query) use (
+                                                                $variationOptionId1,
+                                                                $variationOptionId2,
+                                                            ) {
+                                                                $query
+                                                                    ->where(
+                                                                        'variation_option_1_id',
+                                                                        $variationOptionId1,
+                                                                    )
+                                                                    ->where(
+                                                                        'variation_option_2_id',
+                                                                        $variationOptionId2,
+                                                                    );
+                                                            },
+                                                        )->first();
+                                                    @endphp
                                                     <div class="card-all-check d-flex justify-content-between align-items-center gap-4 mb-4"
                                                         style="width: 100%; height: auto; background-color: white"
                                                         id="card-product-PRODUCT_ID">
                                                         <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                             style="width: 30%;">
-                                                            <img src="{{ Storage::url($cartProduct->product->pickedVariationOption->whereNotNull('product_image_id')->first()->productImage->filepath_image) }}"
+                                                            <img src="{{ Storage::url($cartProduct->cart->pickedVariation->whereNotNull('variationOption.product_image_id')->first()->variationOption->productImage->filepath_image) }}"
                                                                 alt="" style="width: 80px; height: 80px;">
                                                             <div wire:ignore
                                                                 class="d-flex position-relative justify-content-between"
@@ -719,7 +768,7 @@
                                                         <div class="d-flex flex-column justify-content-center align-items-center me-2"
                                                             style="width: 30%;">
                                                             <span><strong>Rp
-                                                                    {{ number_format($cartProduct->product->price_after_additional, 2, ',', '.') }}
+                                                                    {{ number_format($cartProduct->product->discount ? $mergeVarOption->merge_price_after_discount : $mergeVarOption->merge_price, 2, ',', '.') }}
                                                                     x
                                                                     {{ $cartProduct->product->cart->first()->qty }}</strong></span>
                                                         </div>
@@ -727,10 +776,11 @@
                                                             style="width: 30%">
                                                             <span>sub total :</span>
                                                             <span><strong>Rp
-                                                                    {{ number_format($cartProduct->product->cart->first()->total_price, 2, ',', '.') }}</strong></span>
+                                                                    {{ number_format($cartProduct->product->discount ? $cartProduct->product->cart->first()->total_price_after_discount : $cartProduct->product->cart->first()->total_price, 2, ',', '.') }}</strong></span>
                                                         </div>
                                                     </div>
                                                 @endforeach
+                                            @else
                                                 <div class="d-flex justify-content-end align-items-center w-100 mb-2">
                                                     <div
                                                         class="d-flex flex-column justify-content-start align-items-end me-1">
@@ -739,12 +789,12 @@
                                                                 {{ number_format($order->total_price, 2, ',', '.') }}</strong></span>
                                                     </div>
                                                 </div>
-                                                                                            <div class="card-all-check d-flex justify-content-between align-items-center gap-4 mb-4"
+                                                <div class="card-all-check d-flex justify-content-between align-items-center gap-4 mb-4"
                                                     style="width: 100%; height: auto; background-color: white"
                                                     id="card-product-PRODUCT_ID">
                                                     <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                         style="width: 30%;">
-                                                        <img src="{{ Storage::url( $order->product->hasImages->first()->filepath_image) }}"
+                                                        <img src="{{ Storage::url($order->product->hasImages->first()->filepath_image) }}"
                                                             alt="" style="width: 80px; height: 80px;">
                                                         <div wire:ignore
                                                             class="d-flex position-relative justify-content-between"
@@ -768,7 +818,7 @@
                                                     <div class="d-flex flex-column justify-content-center align-items-center me-2"
                                                         style="width: 30%;">
                                                         <span><strong>Rp
-                                                                {{ number_format($order->product->discount ? $order->product->price_after_additional - $order->product->price_after_additional * ($order->product->discount / 100) : $order->product->price_after_additional , 2, ',', '.') }}
+                                                                {{ number_format($order->product->discount ? $order->product->price_after_additional - $order->product->price_after_additional * ($order->product->discount / 100) : $order->product->price_after_additional, 2, ',', '.') }}
                                                                 x {{ $order->qty }}</strong></span>
                                                     </div>
                                                     <div class="d-flex flex-column justify-content-end align-items-end gap-2 px-2"
@@ -1090,91 +1140,95 @@
     </div>
 
     @if (!$addresses->isEmpty())
-    @foreach ($addresses as $address)
-        <div wire:ignore.self class="modal fade" id="changeAddress-{{ $address->id }}" tabindex="-1"
-            aria-labelledby="changeAddress" aria-hidden="true" wire:key="modal-{{ $address->id }}">
-            <div class="modal-dialog">
-                <div class="modal-content rounded-0">
-                    <span class="mt-4 mx-4"><strong>Ubah Alamat</strong></span>
-                    <hr>
-                    <div class="modal-body">
-                        <form wire:submit.prevent="updateAddress('{{ $address->id }}')">
-                            <div class="mt-2">
-                                <label for="recepient_name">Nama penerima</label>
-                                <input type="text" class="form-control rounded-0 mt-2" id="username"
-                                    name="recepient_name" wire:model="recipient_name"
-                                    style="box-shadow: none; width: 100%; height: 50px;">
-                                @error('recipientName')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
+        @foreach ($addresses as $address)
+            <div wire:ignore.self class="modal fade" id="changeAddress-{{ $address->id }}" tabindex="-1"
+                aria-labelledby="changeAddress" aria-hidden="true" wire:key="modal-{{ $address->id }}">
+                <div class="modal-dialog">
+                    <div class="modal-content rounded-0">
+                        <span class="mt-4 mx-4"><strong>Ubah Alamat</strong></span>
+                        <hr>
+                        <div class="modal-body">
+                            <form wire:submit.prevent="updateAddress('{{ $address->id }}')">
+                                <div class="mt-2">
+                                    <label for="recepient_name">Nama penerima</label>
+                                    <input type="text" class="form-control rounded-0 mt-2" id="username"
+                                        name="recepient_name" wire:model="recipient_name"
+                                        style="box-shadow: none; width: 100%; height: 50px;">
+                                    @error('recipientName')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
 
-                            <div class="">
-                                <label for="address">Alamat lengkap</label>
-                                <textarea type="text" class="form-control rounded-0 mt-2" id="address" name="address" wire:model="address"
-                                    style="box-shadow: none; width: 100%; height: 50px;"></textarea>
-                            </div>
-                            <div class="mt-2">
-                                <label for="province">Provinsi</label>
-                                <select class="form-select form-select-lg rounded-0" aria-label="Large select example"
-                                    id="province" wire:model="province" name="province">
-                                    <option value="">pilih provinsi</option>
-                                    @foreach ($provincies as $key => $value)
-                                        <option value="{{ $value }}"
-                                            wire:key="province-{{ $key }}"
-                                            {{ $province == $address->province ? 'selected' : '' }}>
-                                            {{ $value }}</option>
-                                    @endforeach
-                                </select>
-                                @error('province')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="mt-2">
-                                <label for="province">Kota</label>
-                                <select class="form-select form-select-lg rounded-0" aria-label="Large select example"
-                                    id="city" wire:model="city" name="city">
-                                    <option value="">pilih kota</option>
-                                    @foreach ($cities as $key => $value)
-                                        <option value="{{ $value }}" wire:key="city-{{ $key }}"
-                                            {{ $city == $address->city ? 'selected' : '' }}>{{ $value }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('city')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="mt-2">
-                                <label for="detail">Detail</label>
-                                <input type="text" class="form-control rounded-0 mt-2" id="username"
-                                    name="detail" wire:model="detail"
-                                    style="box-shadow: none; width: 100%; height: 50px;">
-                                @error('detail')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="mt-2">
-                                <label for="postal_code">Kode pos</label>
-                                <input type="text" class="form-control rounded-0 mt-2" id="username"
-                                    name="postal_code" wire:model="postal_code"
-                                    style="box-shadow: none; width: 100%; height: 50px;">
-                                @error('postal_code')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="d-flex justify-content-end align-items-center gap-2 mt-4 me-4 mb-4">
-                                <button class="btn rounded-0 bg-danger text-white"
-                                    style="width: 20%;"><strong>kembali</strong></button>
-                                <button type="submit" id="checkout" class="btn rounded-0 bg-main-color text-white"
-                                    style="width: 20%;"><strong>ubah</strong></button>
-                            </div>
-                        </form>
+                                <div class="">
+                                    <label for="address">Alamat lengkap</label>
+                                    <textarea type="text" class="form-control rounded-0 mt-2" id="address" name="address" wire:model="address"
+                                        style="box-shadow: none; width: 100%; height: 50px;"></textarea>
+                                </div>
+                                <div class="mt-2">
+                                    <label for="province">Provinsi</label>
+                                    <select class="form-select form-select-lg rounded-0"
+                                        aria-label="Large select example" id="province" wire:model="province"
+                                        name="province">
+                                        <option value="">pilih provinsi</option>
+                                        @foreach ($provincies as $key => $value)
+                                            <option value="{{ $value }}"
+                                                wire:key="province-{{ $key }}"
+                                                {{ $province == $address->province ? 'selected' : '' }}>
+                                                {{ $value }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('province')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="mt-2">
+                                    <label for="province">Kota</label>
+                                    <select class="form-select form-select-lg rounded-0"
+                                        aria-label="Large select example" id="city" wire:model="city"
+                                        name="city">
+                                        <option value="">pilih kota</option>
+                                        @foreach ($cities as $key => $value)
+                                            <option value="{{ $value }}"
+                                                wire:key="city-{{ $key }}"
+                                                {{ $city == $address->city ? 'selected' : '' }}>{{ $value }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('city')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="mt-2">
+                                    <label for="detail">Detail</label>
+                                    <input type="text" class="form-control rounded-0 mt-2" id="username"
+                                        name="detail" wire:model="detail"
+                                        style="box-shadow: none; width: 100%; height: 50px;">
+                                    @error('detail')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="mt-2">
+                                    <label for="postal_code">Kode pos</label>
+                                    <input type="text" class="form-control rounded-0 mt-2" id="username"
+                                        name="postal_code" wire:model="postal_code"
+                                        style="box-shadow: none; width: 100%; height: 50px;">
+                                    @error('postal_code')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="d-flex justify-content-end align-items-center gap-2 mt-4 me-4 mb-4">
+                                    <button class="btn rounded-0 bg-danger text-white"
+                                        style="width: 20%;"><strong>kembali</strong></button>
+                                    <button type="submit" id="checkout"
+                                        class="btn rounded-0 bg-main-color text-white"
+                                        style="width: 20%;"><strong>ubah</strong></button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    @endforeach
+        @endforeach
     @endif
 </div>
 <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}"
@@ -1225,13 +1279,50 @@
                     console.log(pendingOrders[index].snap_token)
                     snap.pay(pendingOrders[index].snap_token, {
                         onSuccess: function(result) {
-                            window.location.href = "{{ route('user-home') }}"
+                            window.location.href =
+                                "{{ route('after-payment', ['payFrom' => 'profile']) }}&order_id=" +
+                                pendingOrders[index].order_number
                         },
                         onPending: function(result) {
-                            console.log('onPending', result);
+                            fetch("{{ route('after-payment') }}?order_id=" +
+                                    pendingOrders[index].order_number, {
+                                        method: 'GET'
+                                    })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Network response was not ok');
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    console.log(data);
+                                })
+                                .catch(error => {
+                                    console.error(
+                                        'There has been a problem with your fetch operation:',
+                                        error);
+                                });
+
                         },
                         onError: function(result) {
-                            console.log('onError', result);
+                            fetch("{{ route('after-payment') }}" + pendingOrders[index]
+                                    .order_number, {
+                                        method: 'GET'
+                                    })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Network response was not ok');
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    console.log(data);
+                                })
+                                .catch(error => {
+                                    console.error(
+                                        'There has been a problem with your fetch operation:',
+                                        error);
+                                });
                         }
                     });
                 };

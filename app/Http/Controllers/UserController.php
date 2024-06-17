@@ -53,13 +53,18 @@ class UserController extends Controller
             ->get();
         if ($request->loadMoreProduct == true) {
             return response()->json(
-                ['message' => 'load more products success',
-                'data' => $products,
-                'startIndex' => $startIndex + $take], 200);
+                [
+                    'message' => 'load more products success',
+                    'data' => $products,
+                    'startIndex' => $startIndex + $take
+                ],
+                200
+            );
         }
         $banners = BannerHome::all();
         $categories = Category::all();
-        return view('user.home', compact('products', 'categories', 'startIndex', 'banners'));
+        $title = 'Home';
+        return view('user.home', compact('products', 'categories', 'startIndex', 'banners', 'title'));
     }
     public function addAddresses(AddAddressessRequest $request)
     {
@@ -89,7 +94,8 @@ class UserController extends Controller
             'hasProduct.variation',
             'hasProduct.variation.variationOption'
         )->get();
-        return view('user.cart', compact('usersCarts', 'user'));
+        $title = 'Keranjang';
+        return view('user.cart', compact('usersCarts', 'user', 'title'));
     }
     public function isCartExist($productId)
     {
@@ -152,13 +158,13 @@ class UserController extends Controller
             $product->variation()->first()->id,
             $product->variation()->first()->variationOption()->first()->name,
             $product->variation()->first()->variationOption()->first()?->productImage()
-            ->first()?->filepath_image
+                ->first()?->filepath_image
         ];
         $dataForCart = [
             $product->variation()->first()->id,
             $product->variation()->first()->variationOption()->first()->id,
             $product->variation()->first()->variationOption()->first()?->productImage()
-            ->first()?->filepath_image
+                ->first()?->filepath_image
         ];
 
         $take = $request->loadMoreProduct == true ? 16 : 16;
@@ -227,9 +233,11 @@ class UserController extends Controller
         $orderFromCart = Order::whereNull('product_id')->where('order_status', 'completed')->count();
         $totalOrders = $orderFromBuyNow + $orderFromCart;
         $totalReviews = $product->productAssessment()->count();
+        $title = 'Detail Produk';
         return view(
             'user.detail-product',
             compact(
+                'title',
                 'categories',
                 'product',
                 'firstVarOption',
@@ -317,7 +325,14 @@ class UserController extends Controller
                     ->where('product_id', $cart->hasProduct->first()->id)
                     ->update(['order_id' => $order->id]);
             });
-            $totalAllPrice = $usersCarts->pluck('total_price')->sum();
+            $totalAllPrice = $usersCarts->reduce(function ($total, $cart) {
+                $product = $cart->hasProduct->first();
+                if ($product->discount) {
+                    return $total + $cart->total_price_after_discount;
+                } else {
+                    return $total + $cart->total_price;
+                }
+            }, 0);
             $order->update([
                 'total_price' => $totalAllPrice,
             ]);
@@ -334,7 +349,8 @@ class UserController extends Controller
         })->flatten()->unique('id');
 
         $userAddresses = $order->user->userAddresses()->get();
-        return view('user.order', compact('usersCarts', 'user', 'defaultUserAdress', 'order', 'productVoucher', 'userAddresses'));
+        $title = 'Pesanan';
+        return view('user.order', compact('usersCarts', 'user', 'defaultUserAdress', 'order', 'productVoucher', 'userAddresses', 'title'));
     }
     public function buyNow(Request $request)
     {
@@ -346,26 +362,30 @@ class UserController extends Controller
         $productBuyNow = Product::findOrFail($request->productId);
 
         $order = $user->order()->where('product_id', $request->productId)
-        ->whereIn('order_status', ['unpaid', 'pending'])->first();
+            ->whereIn('order_status', ['unpaid', 'pending'])->first();
         if (!isset($order)) {
             $order = $user->order()->create([
                 'product_id' => $request->productId,
                 'order_number' => $this->generateOrderNumber(),
                 'order_date' => date('Ymd'),
                 'qty' => $countBuyNow,
-                'total_price' => isset($productBuyNow->discount) ? 
-                $countBuyNow * $productBuyNow->price_after_dsicount 
-                : $countBuyNow * $totalPriceBuyNow,
+                'total_price' => isset($productBuyNow->discount) ?
+                    $countBuyNow * $productBuyNow->price_after_dsicount
+                    : $countBuyNow * $totalPriceBuyNow,
                 'order_status' => 'unpaid'
             ]);
             collect($variationBuyNow)->each(function ($variation) use ($order, $request) {
                 $variationId = explode('_', $variation)[0];
                 $variationOptionId = explode('_', $variation)[1];
                 $productId = $request->productId;
-                $order->pickedVariation()->attach($variationId, 
-                ['id' => Str::uuid(36), 
-                'product_id' => $productId, 
-                'variation_option_id' => $variationOptionId]);
+                $order->pickedVariation()->attach(
+                    $variationId,
+                    [
+                        'id' => Str::uuid(36),
+                        'product_id' => $productId,
+                        'variation_option_id' => $variationOptionId
+                    ]
+                );
             });
         } else {
             if ($countBuyNow != $order->qty) {
@@ -373,23 +393,29 @@ class UserController extends Controller
                     'qty' => $countBuyNow,
                     'order_date' => date('Ymd'),
                     'total_price' => isset($productBuyNow->discount) ?
-                     $countBuyNow * $productBuyNow->price_after_dsicount 
-                     : $countBuyNow * $totalPriceBuyNow,
+                        $countBuyNow * $productBuyNow->price_after_dsicount
+                        : $countBuyNow * $totalPriceBuyNow,
                 ]);
             }
         }
         $productVoucher = $productBuyNow->voucher()->get();
         $userAddresses = $order->user->userAddresses()->get();
-        return view('user.order', 
-        compact('productBuyNow', 
-        'order', 
-        'user', 
-        'defaultUserAdress', 
-        'countBuyNow', 
-        'variationBuyNow', 
-        'productVoucher', 
-        'userAddresses', 
-        'totalPriceBuyNow'));
+        $title = 'Pesanan';
+        return view(
+            'user.order',
+            compact(
+                'title',
+                'productBuyNow',
+                'order',
+                'user',
+                'defaultUserAdress',
+                'countBuyNow',
+                'variationBuyNow',
+                'productVoucher',
+                'userAddresses',
+                'totalPriceBuyNow'
+            )
+        );
     }
     private function generateOrderNumber()
     {
@@ -399,62 +425,73 @@ class UserController extends Controller
         return $prefix . $date . '-' . $randomNumber;
     }
 
-    public function callbackPayment(Request $request)
+    public function afterPayment(Request $request)
     {
         try {
             $order = Order::where('order_number', $request->order_id)->first();
             $user = $order->user()->first();
             $serverKey = config('midtrans.serverKey');
-            $hashed = hash('sha512', $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
-            if ($hashed == $request->signature_key) {
-                switch ($request->transaction_status) {
-                    case 'settlement':
-                    case 'capture':
-                        $order->update(['order_status' => 'paid']);
-                        if ($order->product_id) {
-                            $varOptionIds = $order->pickedVariationOption;
-                            $mergeVarOption = MergeVariationOption::where('variation_option_1_id', $varOptionIds[0]->id)
-                                ->where('variation_option_2_id', $varOptionIds[1]->id)
-                                ->first();
-                            $mergeVarOption->update([
-                                'merge_stock' => $mergeVarOption->merge_stock - $order->qty
-                            ]);
-                        }
-                        $message = '<strong class="ms-4"><h6>Pembayaran berhasil!🎉 </h6></strong>' .
-                            'Total Pembayaran : <strong>Rp ' . number_format($request->gross_amount, 2, ',', '.') . '</strong><br>' .
-                            'Metode Pembayaran : <strong>' . $request->acquirer . '</strong><br>' .
-                            'Tanggal Transaksi : <strong>' . Carbon::parse($request->transaction_time)->format('d-m-Y') . '</strong><br>' .
-                            '<strong>Terima kasih telah berbelanja dengan kami!</strong>
-                        <hr>';
-                        $message = htmlspecialchars_decode($message);
-                        $notif = Notification::create([
-                            'content' => $message
+            $hashed = base64_encode($serverKey . ':');
+            $response = Http::withHeaders([
+                'Accept' => 'application/json',
+                'Authorization' => 'Basic ' . $hashed
+            ])
+            ->get('https://api.sandbox.midtrans.com/v2/' . $request->order_id . '/status');
+            $response = $response->json();
+            switch ($response['transaction_status']) {
+                case 'settlement':
+                case 'success':
+                case 'capture':
+                    $order->update(['order_status' => 'paid']);
+                    if ($order->product_id) {
+                        $varOptionIds = $order->pickedVariationOption->pluck('id');
+                        $mergeVarOption = MergeVariationOption::whereIn('variation_option_1_id', $varOptionIds)
+                            ->whereIn('variation_option_2_id', $varOptionIds)
+                            ->first();
+                        $mergeVarOption->update([
+                            'merge_stock' => $mergeVarOption->merge_stock - $order->qty
                         ]);
-                        $user->notification()->attach($notif->id, ['id' => Str::uuid(36), 'is_read' => false, 'notification_id' => $notif->id, 'user_id' => $user->id]);
-                        Log::info($message);
-                        event(new PaymentNotifEvent($user->id, $message));
-                        break;
-                    case 'pending':
-                        $order->update(['order_status' => 'pending']);
-                        $message = 'Mohon segera lakukan pembayaran untuk pesanan Anda.
+                    }
+                    $message = '<strong class="ms-4"><h6>Pembayaran berhasil!🎉 </h6></strong>' .
+                        'Total Pembayaran : <strong>Rp ' . number_format($response['gross_amount'], 2, ',', '.') . '</strong><br>' .
+                        'Metode Pembayaran : <strong>' . $response['acquirer'] . '</strong><br>' .
+                        'Tanggal Transaksi : <strong>' . Carbon::parse($response['transaction_time'])->format('d-m-Y') . '</strong><br>' .
+                        '<strong>Terima kasih telah berbelanja dengan kami!</strong>
+                        <hr>';
+                    $message = htmlspecialchars_decode($message);
+                    $notif = Notification::create([
+                        'content' => $message
+                    ]);
+                    $user->notification()->attach($notif->id, ['id' => Str::uuid(36), 'is_read' => false, 'notification_id' => $notif->id, 'user_id' => $user->id]);
+                    Log::info($message);
+                    event(new PaymentNotifEvent($user->id, $message));
+                    if ($request->payFrom == 'profile') {
+                        return redirect()->route('user-profile');
+                    } else {
+                        return redirect()->route('user-home');
+                    }
+                case 'pending':
+                    $order->update(['order_status' => 'pending']);
+                    $message = 'Mohon segera lakukan pembayaran untuk pesanan Anda.
                         Pesanan Anda saat ini dalam status "Pending Pembayaran".
                         Kami akan memberitahu Anda segera setelah pembayaran Anda berhasil diproses.
                         Terima kasih atas kerjasama Anda!';
-                        Log::info($message);
-                        event(new PaymentNotifEvent($user->id, $message));
-                        break;
-                    case 'expire':
-                        $order->update(['order_status' => 'failed']);
-                        $message = 'Maaf, pembayaran Anda untuk pesanan telah kadaluarsa.
+                    Log::info($message);
+                    event(new PaymentNotifEvent($user->id, $message));
+                    return response()->json($response);
+                case 'expire':
+                    $order->update(['order_status' => 'failed']);
+                    $message = 'Maaf, pembayaran Anda untuk pesanan telah kadaluarsa.
                         Pesanan Anda saat ini dalam status "Pembayaran Kadaluarsa".
                         Silakan membuat pesanan baru jika Anda masih tertarik dengan produk kami.
                         Terima kasih atas perhatiannya.';
-                        Log::info($message);
-                        event(new PaymentNotifEvent($user->id, $message));
-                        break;
-                }
-            } else {
-                Log::error('masuk else');
+                    Log::info($message);
+                    $notif = Notification::create([
+                        'content' => $message
+                    ]);
+                    $user->notification()->attach($notif->id, ['id' => Str::uuid(36), 'is_read' => false, 'notification_id' => $notif->id, 'user_id' => $user->id]);
+                    event(new PaymentNotifEvent($user->id, $message));
+                    return response()->json($response);
             }
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -463,13 +500,13 @@ class UserController extends Controller
     public function profile()
     {
         $user = User::with(
-                'userAddresses',
-                'order',
-                'order.product',
-                'order.product.pickedVariationOption',
-                'notification'
-            )->findOrFail($this->user->id);
-
-            return view('user.profile', compact('user'));
+            'userAddresses',
+            'order',
+            'order.product',
+            'order.product.pickedVariationOption',
+            'notification'
+        )->findOrFail($this->user->id);
+        $title = 'Profil';
+        return view('user.profile', compact('user', 'title'));
     }
 }

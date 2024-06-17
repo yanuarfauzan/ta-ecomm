@@ -51,6 +51,7 @@ class Counter extends Component
     public function updateQtyIfVariationOptionSame($qty)
     {
         $this->count = $this->userCart->qty + $qty;
+        $discountProduct = 0;
         if (isset($this->product->discount)) {
             $discountProduct = $this->price * $this->product->discount / 100;
             $this->userCart->update([
@@ -60,25 +61,29 @@ class Counter extends Component
         }
         $this->dispatch('increaseQtyProduct', userCartId: $this->userCart->id, productPrice: $this->price, discountProduct: $discountProduct);
     }
-    public function changeTotalPrice($fixPrice, $userCart, $eventId)
+    public function changeTotalPrice($userCart, $fixPrice, $eventId)
     {
-        if ($this->isDuplicateEvent($eventId))
+        if ($this->isDuplicateEvent($eventId)) {
             return;
+        }
+
         Log::info('changeTotalPrice called with:', ['fixPrice' => $fixPrice, 'userCart' => $userCart]);
 
-        $userCart = Cart::findOrFail($userCart['id']);
-        $userCart->update([
-            'total_price' => $fixPrice * $this->count
-        ]);
+        $cartItem = Cart::findOrFail($userCart['id']);
+        $totalPrice = $fixPrice * $cartItem->qty;
+        $cartItem->update(['total_price' => $totalPrice]);
         if ($this->product->discount) {
-            $discountProduct = $fixPrice * $this->product->discount / 100;
-            $this->userCart->update([
-                'total_price_after_discount' => ($fixPrice - $discountProduct) * $this->userCart->qty,
-                'total_discount' => $discountProduct * $this->userCart->qty
+            $discountAmount = $fixPrice * ($this->product->discount / 100);
+            $totalPriceAfterDiscount = ($fixPrice - $discountAmount) * $cartItem->qty;
+            $totalDiscount = $discountAmount * $cartItem->qty;
+
+            $cartItem->update([
+                'total_price_after_discount' => $totalPriceAfterDiscount,
+                'total_discount' => $totalDiscount
             ]);
         }
-        $this->userCart = Cart::findOrFail($userCart['id']);
     }
+
 
     public function increase()
     {

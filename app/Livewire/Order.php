@@ -103,7 +103,7 @@ class Order extends Component
         }
 
         $this->totalPrice = $this->subTotal + $this->costValue;
-        if ($this->order->snap_token == null) {
+        if (!$this->order->snap_token) {
             $this->generateSnapTokenForPayment();
         } else {
             $this->snapToken = $this->order->snap_token;

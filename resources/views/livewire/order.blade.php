@@ -309,21 +309,55 @@
     @endforeach
 </div>
 </div>
-<script src="https://app.sandbox.midtrans.com/snap/snap.js" 
-data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}" data-navigate-track></script>
+<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}"
+    data-navigate-track></script>
 <script type="text/javascript" data-navigate-track>
     document.addEventListener('livewire:init', function() {
         Livewire.on('snapTokenGenerated', snapToken => {
             document.getElementById('checkout-payment').onclick = function() {
                 snap.pay(snapToken[0].snapToken, {
                     onSuccess: function(result) {
-                        window.location.href = "{{ route('user-home') }}"
+                        window.location.href =
+                            "{{ route('after-payment', ['order_id' => $order->order_number]) }}"
                     },
                     onPending: function(result) {
-                        console.log('onPending', result);
+                        fetch("{{ route('after-payment', ['order_id' => $order->order_number]) }}", {
+                                method: 'GET'
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                console.log(data);
+                            })
+                            .catch(error => {
+                                console.error(
+                                    'There has been a problem with your fetch operation:',
+                                    error);
+                            });
+
                     },
                     onError: function(result) {
-                        console.log('onError', result);
+                        fetch("{{ route('after-payment', ['order_id' => $order->order_number]) }}", {
+                                method: 'GET'
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                console.log(data);
+                            })
+                            .catch(error => {
+                                console.error(
+                                    'There has been a problem with your fetch operation:',
+                                    error);
+                            });
                     }
                 });
             };

@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title> &mdash; e-comm</title>
+    <title>{{ $title }}</title>
+    {{-- favicon --}}
+    <link rel="shortcut icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
     <!-- Bootstrap -->
     <link href="{{ asset('/bootstrap-icons/font/bootstrap-icons.css') }}" rel="stylesheet">
     <link href="{{ asset('/bootstrap-icons/font/bootstrap-icons.min.css') }}" rel="stylesheet">

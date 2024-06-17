@@ -72,7 +72,7 @@ class Profile extends Component
         }
 
         $this->completedOrders = $user->order()->where('order_status', 'completed')->with('cartProduct.product.hasImages', 'cartProduct.cart.hasProduct.pickedVariationOption', 'product', 'pickedVariationOption.productImage')->get();
-        $this->cancelledOrders = $user->order()->where('order_status', 'cancelled')->with('cartProduct.product.hasImages', 'cartProduct.cart.hasProduct.pickedVariationOption', 'product', 'pickedVariationOption.productImage')->get();
+        $this->cancelledOrders = $user->order()->where('order_status', 'failed')->with('cartProduct.product.hasImages', 'cartProduct.cart.hasProduct.pickedVariationOption', 'product', 'pickedVariationOption.productImage')->get();
         $this->username = $user->username;
         $this->birtdate = $user->birtdate;
         $user->gender == 1 ? $this->gender1 = $user->gender : $this->gender2 = $user->gender;
