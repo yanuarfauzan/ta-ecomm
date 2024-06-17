@@ -27,24 +27,41 @@
                     <i class="bi bi-cart" style="font-size: 25px"></i>
                 </span>
             </a>
+
             <div iv class="position-relative">
                 <a href="#" class="text-white position-relative" id="notificationButton"
                     style="text-decoration: none;">
                     <i class="bi bi-bell" style="font-size: 25px;"></i>
-                    {{-- <span
+                    @if (auth()->user())
+                    <span
                         class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-0 rounded-circle"
                         style="width: 15px; height: 15px;">
                         <span class="position-absolute top-50 start-50 translate-middle"
                             style="color: white; font-size: 12px;">
                             
                         </span>
-                    </span> --}}
+                    </span>
+                    @endif
                 </a>
-                <ul class="dropdown-menu-notif dropdown-menu dropdown-menu-end" aria-labelledby="notificationButton">
+                @php
+                    if (auth()->user()) {
+                        $user = \App\Models\User::where('id', auth()->user()->id)->first();
+                        $notifications = \App\Models\NotifUser::with('notification')
+                            ->where('user_id', $user->id)
+                            ->get();
+                    }
+                @endphp
+                @if(auth()->user())
+                <ul class="dropdown-menu-notif dropdown-menu dropdown-menu-end" aria-labelledby="notificationButton"
+                    style="height: 500px; overflow-y: scroll">
                     <li class="ms-4 me-4">
                         <span id="list-notif"></span>
+                        @foreach ($notifications as $notif)
+                            <span>{!! $notif->notification->content !!}</span>
+                        @endforeach
                     </li>
                 </ul>
+                @endif
             </div>
             @if (auth()->user() && auth()->user()->role == 'user')
                 <div class="d-flex justify-content-between align-items-center">
@@ -133,7 +150,8 @@
     <div class="swiper-button-next text-light"><i class="bi bi-chevron-right"></i></div>
     <div class="swiper-button-prev text-light"><i class="bi bi-chevron-left"></i></div>
 </div>
-<div id="userId" data-user-id="{{ auth()->user() && auth()->user()->role == 'user' ? auth()->user()->id : '' }}" class="d-none"></div>
+<div id="userId" data-user-id="{{ auth()->user() && auth()->user()->role == 'user' ? auth()->user()->id : '' }}"
+    class="d-none"></div>
 <script src="{{ asset('/ourjs/navbar.js') }}" data-navigate-track></script>
 <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 <script>

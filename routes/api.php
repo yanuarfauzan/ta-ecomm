@@ -28,5 +28,3 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/add-product-to-fav/{productId}', [UserController::class, 'addProductToFav']);
     Route::get('/user/show-cart', [UserController::class, 'showCart']);
 });
-
-Route::post('/callback-payment', [UserController::class, 'callbackPayment'])->name('callback-payment');

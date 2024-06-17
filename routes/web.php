@@ -149,10 +149,11 @@ Route::prefix('/user')->group(function () {
     Route::middleware(IsUser::class)->group(function () {
         Route::get('/cart', [UserController::class, 'showCart'])->name('user-cart');
         Route::get('/profile', [UserController::class, 'profile'])->name('user-profile');
+        Route::get('/after-payment', [UserController::class, 'afterPayment'])->name('after-payment');
+        Route::get('/notif-payment', [UserController::class, 'notifPayment'])->name('notif-payment');
         Route::prefix('/product')->group(function () {
             Route::get('/order', [UserController::class, 'order'])->name('user-order');
             Route::get('/buy-now', [UserController::class, 'buyNow'])->name('user-buy-now');
-            Route::get('/send-notif-payment', [UserController::class, 'sendNotifPa'])->name('send-notif-payment');
         });
     });
 });

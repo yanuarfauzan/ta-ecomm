@@ -28,7 +28,9 @@ class OperatorController extends Controller
             ->whereNotIn('order_status', ['unpaid', 'pending'])
             ->when($request->order_status , function ($query) use ($request) {
                 $query->where('order_status', $request->order_status);
-            })->paginate(20);
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
 
         foreach ($orders as $order) {
             $order->formatted_status = $this->getStatusLabel($order->order_status);

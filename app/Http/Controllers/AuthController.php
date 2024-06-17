@@ -20,24 +20,29 @@ class AuthController extends Controller
 {
     public function registerPage()
     {
-        return view('user.auth.register');
+        $title = 'Register';
+        return view('user.auth.register', compact('register'));
     }
     public function verifyPage()
     {
         $user = Session::get('pre-regis');
-        return view('user.auth.verify', compact('user'));
+        $title = 'Verifikasi';
+        return view('user.auth.verify', compact('user', 'verifikasi'));
     }
     public function loginPage()
     {
-        return view('user.auth.login');
+        $title = 'Login';
+        return view('user.auth.login', compact('title'));
     }
     public function forgotPasswordPage()
     {
-        return view('user.auth.forgot_password');
+        $title = 'Forgot Password';
+        return view('user.auth.forgot_password', compact('title'));
     }
     public function resetPasswordPage($token)
     {
-        return view('user.auth.reset_password', compact('token'));
+        $title = 'Reset Password';
+        return view('user.auth.reset_password', compact('token', compact('title')));
     }
     public function preRegister(RegisterRequest $request)
     {
