@@ -33,7 +33,7 @@
                         </div>
                         <div class="input-group mt-4">
                             <button type="submit" class="rounded-0 bg-main-color text-white border-0"
-                                style="box-shadow: none; width: 100%; height: 40px;">kirim</button>
+                                style="box-shadow: none; width: 100%; height: 40px;">Kirim</button>
                         </div>
                     </form>
                 </div>

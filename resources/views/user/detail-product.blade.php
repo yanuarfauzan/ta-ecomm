@@ -3,13 +3,13 @@
     <div class="container">
         <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('user-home') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('user-home') }}" class="text-secondary text-opacity-50">Beranda</a></li>
                 <li class="breadcrumb-item"><a
-                        href="{{ route('user-home') . '?category=' . $product->hasCategory->first()->id }}">{{ $product->hasCategory->first()->name }}</a>
+                        href="{{ route('user-home') . '?category=' . $product->hasCategory->first()->id }}" class="text-secondary text-opacity-50">{{ $product->hasCategory->first()->name }}</a>
                 </li>
                 <li class="breadcrumb-item active" aria-current="page"><a
                         href="{{ route('user-detail-product', ['productId' => $product->id]) }}"
-                        style="text-decoration: none; color: black;">{{ $product->name }}</a></li>
+                        class="font-main-color text-opacity-50" style="text-decoration: none;">{{ $product->name }}</a></li>
             </ol>
         </nav>
     </div>
@@ -46,19 +46,19 @@
             <div class="d-flex flex-column gap-2 mt-2 px-4" style="width: 40%;">
                 <div class="d-flex flex-column">
                     <span>
-                        <h2><strong>{{ $product->name }}</strong></h2>
+                        <h4><strong>{{ $product->name }}</strong></h4>
                     </span>
                     <div class="d-flex gap-2">
-                        <span>
+                        <span class="text-dark text-opacity-50">
                             {{ $totalOrders }} terjual
                         </span>
                         <div class="divider-black"></div>
-                        <span>
-                            {{ $totalReviews }} review
+                        <span class="text-dark text-opacity-50">
+                            {{ $totalReviews }} ulasan
                         </span>
                         <div class="divider-black"></div>
                         <div class="d-flex justify-content-start gap-1 align-items-center">
-                            <span>
+                            <span class="text-dark text-opacity-50">
                                 {{ $product->rate }}
                             </span>
                             @for ($i = 1; $i <= $product->rate; $i++)
@@ -72,10 +72,10 @@
                 @livewire('DetailProductVariation', ['product' => $product, 'firstVarOption' => $firstVarOption, 'firstVarOptionInit' => $firstVarOptionForCart])
                 <div class="d-flex flex-column gap-4 mt-2">
                     <div class="d-flex flex-column gap-2">
-                        <span><strong>deskripsi : </strong></span>
+                        <span><strong>Deskripsi : </strong></span>
                         <div class="d-flex flex-column">
-                            <span>Package size: {{ $product->dimensions }}cm</span>
-                            <span>Weight: {{ $product->weight }}kg</span>
+                            <span>Dimensi : {{ $product->dimensions }}cm</span>
+                            <span>Berat : {{ $product->weight }}kg</span>
                         </div>
                         <div class="d-flex gap-2 justify-content-start">
                             {{ $product->desc }}
@@ -85,7 +85,7 @@
                 @if ($defaultUserAddress != [])
                     <div class="d-flex flex-column gap-4 mt-2">
                         <div class="d-flex flex-column gap-2">
-                            <span><strong>pengiriman : </strong></span>
+                            <span><strong>Pengiriman : </strong></span>
                             <div class="d-flex flex-column gap-2 justify-content-start">
                                 <span><i class="bi bi-geo-alt"></i> Pengiriman ke
                                     <strong>{{ $defaultUserAddress->city }}</strong></span>
@@ -127,7 +127,7 @@
         <div class="container mb-4 mt-2">
             <div class="d-flex justify-content-between ms-2 mt-3">
                 <span><strong>
-                        <h4>produk serupa</h4>
+                        <h5>Produk serupa</h5>
                     </strong></span>
                 <span class="font-main-color">
                     <strong>lihat lainnya</strong>
@@ -151,14 +151,14 @@
                                             <img src="{{ asset('/icons-png/out-of-stock.png') }}" class=""
                                                 style="width: 70px;" alt="">
                                             <span>
-                                                <h4>Out Of Stock</h4>
+                                                <h4>Stok Habis</h4>
                                             </span>
                                         </div>
                                     </div>
                                 @endif
                                 @if (isset($product->discount))
                                     <span class="text-dark bg-light position-absolute border border-secondary text-center"
-                                        style="top: 262px; width: 70px;">Discount</span>
+                                        style="top: 262px; width: 70px;">Diskon</span>
                                     <span
                                         class="text-dark bg-main-color position-absolute border border-secondary text-center"
                                         style="top: 262px; left: 70px; width: 40px;"><i
@@ -167,7 +167,7 @@
                                 <div class="card-body pb-2">
                                     <div class="d-flex justify-content-between">
                                         <strong>{{ $product->name }}</strong>
-                                        <p>Stock {{ $product->stock }}</p>
+                                        <p>Stok {{ $product->stock }}</p>
                                     </div>
                                     @if (isset($product->discount))
                                         <div class="d-flex gap-2">
@@ -194,8 +194,7 @@
                                         </span>
                                         <div class="low-divider-black"></div>
                                         <span>
-                                            {{-- TODO (menampilkan total jualproduk), produk relasi order --}}
-                                            10 Terjual
+                                            {{ $product?->order?->where('order_status', 'completed')?->count() ?? 0 }} Terjual
                                         </span>
                                     </div>
                                 </div>

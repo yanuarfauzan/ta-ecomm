@@ -2,9 +2,9 @@
 @section('content')
     <section class="section text-center">
         <div class="section-header">
-            <h1>PRODUCT</h1>
+            <h1>PRODUK</h1>
             <div class="section-header-button">
-                <a href="/admin/create-product" class="btn btn-success">Add New</a>
+                <a href="/admin/create-product" class="btn btn-success">Tambah</a>
             </div>
         </div>
     </section>
@@ -28,7 +28,7 @@
 
     <div class="card mx-auto">
         <div class="card-header text-center">
-            <h4>List Product</h4>
+            <h4>Daftar Produk</h4>
         </div>
         <div class="card-body">
             <div class="table-responsive">

@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title> &mdash; e-comm</title>
-
+    <title>{{ $title }}</title>
+    <link rel="shortcut icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
     <!-- General CSS Files -->
     <link rel="stylesheet" href="{{ asset('stisla/node_modules/bootstrap/dist/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('stisla/node_modules/@fortawesome/fontawesome-free/css/all.min.css') }}">

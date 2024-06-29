@@ -19,7 +19,8 @@ class VoucherController extends Controller
     public function index()
     {
         $voucher = Voucher::orderBy('name')->paginate(10);
-        return view('ADMIN.voucher.list', compact('voucher'));
+        $title = 'Kupon';
+        return view('ADMIN.voucher.list', compact('voucher', 'title'));
     }
 
     /**
@@ -27,7 +28,8 @@ class VoucherController extends Controller
      */
     public function create()
     {
-        return view('ADMIN.voucher.create');
+        $title = 'Tambah Kupon';
+        return view('ADMIN.voucher.create', compact('title'));
     }
 
     /**
@@ -96,7 +98,8 @@ class VoucherController extends Controller
     public function edit($id)
     {
         $voucher = Voucher::findOrFail($id);
-        return view('ADMIN.voucher.edit', compact('voucher'));
+        $title = 'Edit Kupon';
+        return view('ADMIN.voucher.edit', compact('voucher', 'title'));
     }
 
     /**

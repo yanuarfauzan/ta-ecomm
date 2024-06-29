@@ -17,7 +17,8 @@ class BannerHomeController extends Controller
     public function index()
     {
         $bannerHome = BannerHome::paginate(10);
-        return view('ADMIN.banner.list', compact('bannerHome'));
+        $title = 'Baner';
+        return view('ADMIN.banner.list', compact('bannerHome', 'title'));
     }
 
     /**
@@ -25,7 +26,8 @@ class BannerHomeController extends Controller
      */
     public function create()
     {
-        return view('ADMIN.banner.create');
+        $title = 'Tambah Baner';
+        return view('ADMIN.banner.create', compact('title'));
     }
 
     /**
@@ -77,7 +79,8 @@ class BannerHomeController extends Controller
     public function edit($id)
     {
         $bannerHome = BannerHome::findOrFail($id);
-        return view('ADMIN.banner.edit', compact('bannerHome'));
+        $title = 'Edit Baner';
+        return view('ADMIN.banner.edit', compact('bannerHome', 'title'));
     }
 
     /**

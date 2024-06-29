@@ -5,7 +5,7 @@
             <div class="section-header-back">
                 <a href="{{ url('/admin/list-users') }}"><i class="fas fa-arrow-left"></i></a>
             </div>
-            <h1>USERS</h1>
+            <h1>PENGGUNA</h1>
         </div>
 
         <div class="section-body">
@@ -14,7 +14,7 @@
 
     <div class="card">
         <div class="card-header">
-            <h4>INPUT USERS</h4>
+            <h4>ISI DATA PENGGUNA</h4>
         </div>
         <div class="card-body col">
             <form action="{{ url('/admin/store-users') }}" method="post" enctype="multipart/form-data">
@@ -44,7 +44,7 @@
                     @enderror
                 </div>
                 <div class="mb-3">
-                    <label for="password_confirmation" class="form-label">Confirm Password</label>
+                    <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
                     <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror"
                         id="password_confirmation" name="password_confirmation">
                     @error('password_confirmation')
@@ -75,7 +75,7 @@
                     @enderror
                 </div>
                 <div class="mb-3">
-                    <label for="profile_image" class="form-label">Profile Image</label>
+                    <label for="profile_image" class="form-label">Foto Profil</label>
                     <input type="file" class="form-control-file @error('profile_image') is-invalid @enderror"
                         id="profile_image" name="profile_image" value="{{ old('profile_image') }}">
                     @error('profile_image')
@@ -83,9 +83,9 @@
                     @enderror
                 </div>
                 <div class="mb-3">
-                    <label for="role" class="form-label">Role</label>
+                    <label for="role" class="form-label">Peran</label>
                     <select class="form-control" id="role" name="role">
-                        <option>Pilih Role</option>
+                        <option>Pilih Peran</option>
                         <option value="user" {{ old('role') == 'user' ? 'selected' : '' }}>User</option>
                         <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
                         <option value="operator" {{ old('role') == 'operator' ? 'selected' : '' }}>Operator</option>
@@ -144,7 +144,7 @@
                     <a href="#" id="add-address">Tambah Alamat</a>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
             </form>
         </div>
     </div>

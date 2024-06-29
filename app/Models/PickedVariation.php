@@ -23,7 +23,8 @@ class PickedVariation extends Model
         'variation_id',
         'product_id',
         'cart_id',
-        'variation_option_id'
+        'variation_option_id',
+        'order_id'
     ];
     public function product()
     {

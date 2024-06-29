@@ -98,11 +98,13 @@ class Order extends Component
             $this->subTotal = $subTotal;
         } else {
             $this->subTotal = $usersCarts->sum(function ($cart) {
-                return isset($cart->total_price_after_discount) ? $cart->total_price_after_discount : $cart->total_price;
+                return isset($cart->total_price_after_discount) ? 
+                $cart->total_price_after_discount : $cart->total_price;
             });
         }
 
         $this->totalPrice = $this->subTotal + $this->costValue;
+        $this->order->total_price = $this->totalPrice;
         if (!$this->order->snap_token) {
             $this->generateSnapTokenForPayment();
         } else {
@@ -152,6 +154,7 @@ class Order extends Component
                 $this->totalPrice += $this->prevVoucherValue;
             }
             $this->totalPrice = $this->totalPrice - $this->voucherValue;
+            $this->order->total_price = $this->totalPrice;
             $this->prevVoucherValue = $this->costValue;
         } else {
             $this->voucherValue = $discountValue;
@@ -159,6 +162,7 @@ class Order extends Component
                 $this->totalPrice += $this->prevVoucherValue;
             }
             $this->totalPrice = $this->totalPrice - $this->voucherValue;
+            $this->order->total_price = $this->totalPrice;
             $this->prevVoucherValue = $discountValue;
         }
         $this->generateSnapTokenForPayment();
@@ -169,6 +173,7 @@ class Order extends Component
         $this->costValue = $costValue;
         $this->totalPrice -= $this->previousCostValue;
         $this->totalPrice = $this->subTotal + $this->costValue;
+        $this->order->total_price = $this->totalPrice;
         $this->previousCostValue = $costValue;
         $this->generateSnapTokenForPayment();
     }

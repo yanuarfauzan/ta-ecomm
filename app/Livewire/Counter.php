@@ -70,6 +70,7 @@ class Counter extends Component
         Log::info('changeTotalPrice called with:', ['fixPrice' => $fixPrice, 'userCart' => $userCart]);
 
         $cartItem = Cart::findOrFail($userCart['id']);
+        Log::info($cartItem);
         $totalPrice = $fixPrice * $cartItem->qty;
         $cartItem->update(['total_price' => $totalPrice]);
         if ($this->product->discount) {

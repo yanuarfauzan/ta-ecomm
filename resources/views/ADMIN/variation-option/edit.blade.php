@@ -5,13 +5,13 @@
             <div class="section-header-back">
                 <a href="{{ url('/admin/list-variation-option') }}"><i class="fas fa-arrow-left"></i></a>
             </div>
-            <h1>EDIT VARIATION OPTION</h1>
+            <h1>EDIT SUB VARIASI</h1>
         </div>
     </section>
 
     <div class="card">
         <div class="card-header">
-            <h4>Edit Variation Option</h4>
+            <h4>Edit Sub Variasi</h4>
         </div>
         <div class="card-body col">
             <form action="{{ url('/admin/update-variation-option/' . $variationOption->id) }}" method="post"
@@ -46,7 +46,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="name">Nama Variasi Opsi</label>
+                    <label for="name">Nama Sub Variasi</label>
                     <input type="text" name="name" class="form-control  @error('name') is-invalid @enderror"
                         id="name" value="{{ old('name', $variationOption->name) }}">
                     @error('name')
@@ -69,7 +69,7 @@
                 </div>
                 @if ($variationOption->productImage)
                     <div id="selected_product_image_container" class="form-group">
-                        <label for="selected_product_image">Preview Gambar Produk</label><br>
+                        <label for="selected_product_image">Pratinjau Gambar Produk</label><br>
                         <img id="selected_product_image"
                             src="{{ Storage::url($variationOption->productImage->filepath_image) }}" alt="Gambar Produk"
                             style="max-width: 200px;">
@@ -84,7 +84,7 @@
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label for="stock">Stock</label>
+                    <label for="stock">Stok</label>
                     <input type="number" name="stock" class="form-control  @error('stock') is-invalid @enderror"
                         id="stock" value="{{ old('stock', $variationOption->stock) }}">
                     @error('stock')
@@ -92,7 +92,7 @@
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label for="weight">Weight</label>
+                    <label for="weight">Berat</label>
                     <input type="number" name="weight" class="form-control  @error('weight') is-invalid @enderror"
                         id="weight" value="{{ old('weight', $variationOption->weight) }}">
                     @error('weight')
@@ -115,7 +115,7 @@
                             value="{{ old('height', $dimensions[2] ?? '') }}">
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Update</button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
             </form>
         </div>
     </div>

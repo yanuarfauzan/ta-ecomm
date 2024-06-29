@@ -14,7 +14,7 @@
                                 style="cursor: pointer; width: 100%; height: 50px;">
                                 <span style="cursor: pointer;"
                                     onclick="document.getElementById('profileImage').click()">
-                                    <h5 class="">Ubah foto</h5>
+                                    <h5 class="mt-1">Ubah foto</h5>
                                 </span>
                                 <input type="file" wire:model.lazy="profileImage" id="profileImage" name="file"
                                     style="display: none;">
@@ -23,7 +23,7 @@
                                 <span style="cursor: pointer;">
                                     <button role="button" class="btn rounded-0 bg-main-color text-white"
                                         data-bs-toggle="modal" data-bs-target="#changePassword"
-                                        style="width: 100%; height: 50px;"><strong>Ubah password</strong></button>
+                                        style="width: 100%; height: 50px;">Ubah password</button>
                                 </span>
                             </div>
                         </div>
@@ -161,7 +161,7 @@
                         <li class="nav-item" role="presentation">
                             <a class="nav-link {{ $tabActive == 'cancelled' ? 'active text-dark' : 'text-dark' }}"
                                 id="cancelled-tab" data-bs-toggle="tab" href="#cancelled" role="tab"
-                                aria-controls="cancelled" aria-selected="false">Dibatalkan</a>
+                                aria-controls="cancelled" aria-selected="false">Batal</a>
                         </li>
                     </ul>
 
@@ -182,7 +182,30 @@
                                                     style="width: 10%; height: 30px;">bayar</button>
                                             </div>
                                             @if ($order->cartProduct && count($order->cartProduct) > 0)
-                                                @foreach ($order->cartProduct as $cartProduct)
+                                                @foreach ($order->cartProduct as $index => $cartProduct)
+                                                {{-- @dd($order->cartProduct) --}}
+                                                    @php
+                                                        $variationOptionId1 =
+                                                            $cartProduct->cart->pickedVariation[0]->variationOption->id;
+                                                        $variationOptionId2 =
+                                                            $cartProduct->cart->pickedVariation[1]->variationOption->id;
+                                                        $mergeVarOption = \App\Models\MergeVariationOption::where(
+                                                            function ($query) use (
+                                                                $variationOptionId1,
+                                                                $variationOptionId2,
+                                                            ) {
+                                                                $query
+                                                                    ->where(
+                                                                        'variation_option_1_id',
+                                                                        $variationOptionId1,
+                                                                    )
+                                                                    ->where(
+                                                                        'variation_option_2_id',
+                                                                        $variationOptionId2,
+                                                                    );
+                                                            },
+                                                        )->first();
+                                                    @endphp
                                                     <div class="card-all-check d-flex justify-content-between align-items-center gap-4 mb-4"
                                                         style="width: 100%; height: auto; background-color: white"
                                                         id="card-product-PRODUCT_ID">
@@ -213,33 +236,46 @@
                                                         <div class="d-flex flex-column justify-content-center align-items-center me-2"
                                                             style="width: 30%;">
                                                             <span><strong>Rp
-                                                                    {{ number_format($cartProduct->product->price_after_additional, 2, ',', '.') }}
+                                                                    {{ number_format($cartProduct->product->discount ? $mergeVarOption->merge_price_after_discount : $mergeVarOption->merge_price, 2, ',', '.') }}
                                                                     x
-                                                                    {{ $cartProduct->product->cart->first()->qty }}</strong></span>
+                                                                    {{ $cartProduct->cart->qty }}</strong></span>
                                                         </div>
                                                         <div class="d-flex flex-column justify-content-end align-items-end gap-2 px-2"
                                                             style="width: 30%">
                                                             <span>sub total :</span>
                                                             <span><strong>Rp
-                                                                    {{ number_format($cartProduct->product->cart->first()->total_price, 2, ',', '.') }}</strong></span>
+                                                                    {{ number_format($cartProduct->product->discount ? $cartProduct->cart->total_price_after_discount : $cartProduct->cart->total_price, 2, ',', '.') }}</strong></span>
                                                         </div>
                                                     </div>
                                                 @endforeach
                                                 <div class="d-flex justify-content-end align-items-center w-100 mb-2">
                                                     <div
                                                         class="d-flex flex-column justify-content-start align-items-end me-1">
+                                                        <span>ongkos kirim :</span>
+                                                        <span><strong>Rp
+                                                                {{ number_format($order->shipping->cost, 2, ',', '.') }}</strong></span>
                                                         <span>total :</span>
                                                         <span><strong>Rp
                                                                 {{ number_format($order->total_price, 2, ',', '.') }}</strong></span>
                                                     </div>
                                                 </div>
                                             @else
+                                                @php
+                                                    $variationOptionIds = $order->pickedVariationOption->pluck('id');
+                                                    $mergeVarOption = \App\Models\MergeVariationOption::where(function (
+                                                        $query,
+                                                    ) use ($variationOptionIds) {
+                                                        $query
+                                                            ->whereIn('variation_option_1_id', $variationOptionIds)
+                                                            ->whereIn('variation_option_2_id', $variationOptionIds);
+                                                    })->first();
+                                                @endphp
                                                 <div class="card-all-check d-flex justify-content-between align-items-center gap-4 mb-4"
                                                     style="width: 100%; height: auto; background-color: white"
                                                     id="card-product-PRODUCT_ID">
                                                     <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                         style="width: 30%;">
-                                                        <img src="{{ Storage::url($order->product->hasImages()->first()->filepath_image) }}"
+                                                        <img src="{{ Storage::url($mergeVarOption->variationOption1->productImage->filepath_image ?? $mergeVarOption->variationOption2->productImage->filepath_image) }}"
                                                             alt="" style="width: 80px; height: 80px;">
                                                         <div wire:ignore
                                                             class="d-flex position-relative justify-content-between"
@@ -263,11 +299,14 @@
                                                     <div class="d-flex flex-column justify-content-center align-items-center me-2"
                                                         style="width: 30%;">
                                                         <span><strong>Rp
-                                                                {{ number_format($order->product->discount ? $order->product->price_after_additional - $order->product->price_after_additional * ($order->product->discount / 100) : $order->product->price_after_additional, 2, ',', '.') }}
+                                                                {{ number_format($order->product->discount ? $mergeVarOption->merge_price_after_discount : $mergeVarOption->merge_price, 2, ',', '.') }}
                                                                 x {{ $order->qty }}</strong></span>
                                                     </div>
                                                     <div class="d-flex flex-column justify-content-end align-items-end gap-2 px-2"
                                                         style="width: 30%">
+                                                        <span>ongkos kirim:</span>
+                                                        <span><strong>Rp
+                                                                {{ number_format($order->shipping->cost, 2, ',', '.') }}</strong></span>
                                                         <span>total pesanan:</span>
                                                         <span><strong>Rp
                                                                 {{ number_format($order->total_price, 2, ',', '.') }}</strong></span>
@@ -300,259 +339,10 @@
                                         <div
                                             class="card-product d-flex flex-column justify-content-between px-4 align-items-center shadow-sm">
                                             <div class="d-flex justify-content-between align-items-center w-100 my-2">
-                                                <span class="text-success">Dikirim</span>
+                                                <span class="text-success">Dikemas</span>
                                             </div>
                                             @if ($order->cartProduct && count($order->cartProduct) > 0)
-                                                @foreach ($order->cartProduct as $cartProduct)
-                                                    <div class="card-all-check d-flex justify-content-between align-items-center gap-4 mb-4"
-                                                        style="width: 100%; height: auto; background-color: white"
-                                                        id="card-product-PRODUCT_ID">
-                                                        <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
-                                                            style="width: 30%;">
-                                                            <img src="{{ Storage::url($cartProduct->cart->pickedVariation->whereNotNull('variationOption.product_image_id')->first()->variationOption->productImage->filepath_image) }}"
-                                                                alt="" style="width: 80px; height: 80px;">
-                                                            <div wire:ignore
-                                                                class="d-flex position-relative justify-content-between"
-                                                                style="width: auto; height: auto;">
-                                                                <div class="d-flex flex-column align-items-start position-relative gap-0"
-                                                                    style="width: 200px; height: auto;">
-                                                                    <strong
-                                                                        class="font-main-color">{{ $cartProduct->product->name }}</strong>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="d-flex flex-column align-items-start position-relative gap-0"
-                                                            style="width: 200px; height: auto;">
-                                                            <span>
-                                                                @foreach ($cartProduct->cart->pickedVariation as $variation)
-                                                                    {{ $variation->variationOption->name }}{{ $loop->last ? '' : ',' }}
-                                                                @endforeach
-                                                            </span>
-                                                        </div>
-                                                        <div class="d-flex flex-column justify-content-center align-items-center me-2"
-                                                            style="width: 30%;">
-                                                            <span><strong>Rp
-                                                                    {{ number_format($cartProduct->product->price_after_additional, 2, ',', '.') }}
-                                                                    x
-                                                                    {{ $cartProduct->product->cart->first()->qty }}</strong></span>
-                                                        </div>
-                                                        <div class="d-flex flex-column justify-content-end align-items-end gap-2 px-2"
-                                                            style="width: 30%">
-                                                            <span>sub total :</span>
-                                                            <span><strong>Rp
-                                                                    {{ number_format($cartProduct->product->cart->first()->total_price, 2, ',', '.') }}</strong></span>
-                                                        </div>
-                                                    </div>
-                                                @endforeach
-                                                <div class="d-flex justify-content-end align-items-center w-100 mb-2">
-                                                    <div
-                                                        class="d-flex flex-column justify-content-start align-items-end me-1">
-                                                        <span>total :</span>
-                                                        <span><strong>Rp
-                                                                {{ number_format($order->total_price, 2, ',', '.') }}</strong></span>
-                                                    </div>
-                                                </div>
-                                            @else
-                                                <div class="card-all-check d-flex justify-content-between align-items-center gap-4 mb-4"
-                                                    style="width: 100%; height: auto; background-color: white"
-                                                    id="card-product-PRODUCT_ID">
-                                                    <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
-                                                        style="width: 30%;">
-                                                        <img src="{{ Storage::url($order->product->hasImages()->first()->filepath_image) }}"
-                                                            alt="" style="width: 80px; height: 80px;">
-                                                        <div wire:ignore
-                                                            class="d-flex position-relative justify-content-between"
-                                                            style="width: auto; height: auto;">
-                                                            <div class="d-flex flex-column align-items-start position-relative gap-0"
-                                                                style="width: 200px; height: auto;">
-                                                                <strong
-                                                                    class="font-main-color">{{ $order->product->name }}</strong>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="d-flex flex-column align-items-start position-relative gap-0"
-                                                        style="width: 200px; height: auto;">
-                                                        <span>
-                                                            @foreach ($order->pickedVariationOption as $varOption)
-                                                                {{ $varOption->name }}
-                                                                {{ $loop->last ? '' : ',' }}
-                                                            @endforeach
-                                                        </span>
-                                                    </div>
-                                                    <div class="d-flex flex-column justify-content-center align-items-center me-2"
-                                                        style="width: 30%;">
-                                                        <span><strong>Rp
-                                                                {{ number_format($order->product->discount ? $order->product->price_after_additional - $order->product->price_after_additional * ($order->product->discount / 100) : $order->product->price_after_additional, 2, ',', '.') }}
-                                                                x {{ $order->qty }}</strong></span>
-                                                    </div>
-                                                    <div class="d-flex flex-column justify-content-end align-items-end gap-2 px-2"
-                                                        style="width: 30%">
-                                                        <span>total pesanan:</span>
-                                                        <span><strong>Rp
-                                                                {{ number_format($order->total_price, 2, ',', '.') }}</strong></span>
-                                                    </div>
-                                                </div>
-                                            @endif
-                                        </div>
-                                    @endforeach
-                                @else
-                                    <div class="d-flex align-items-center justify-content-center mt-5">
-                                        <div class="d-flex flex-column align-items-center gap-2">
-                                            <img src="{{ asset('/oursvg/empty_order.svg') }}" alt=""
-                                                style="width: 400px;">
-                                            <span>
-                                                <h3 class="font-main-color">belum ada pesanan</h3>
-                                            </span>
-                                        </div>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-                        {{-- end packed --}}
-                        {{-- delivered --}}
-                        <div class="tab-pane {{ $tabActive == 'delivered' ? 'show active' : '' }} fade w-100"
-                            id="delivered" role="tabpanel" aria-labelledby="delivered-tab">
-                            <!-- Content for Dikirim -->
-                            <div class="d-flex flex-column justify-content-start gap-2 w-100">
-                                @if (!$deliveredOrders->isEmpty())
-                                    @foreach ($deliveredOrders as $order)
-                                        <div
-                                            class="card-product d-flex flex-column justify-content-between px-4 align-items-center shadow-sm">
-                                            <div class="d-flex justify-content-between align-items-center w-100 my-2">
-                                                <span class="text-info">dikirim</span>
-                                                <div class="d-flex justify-content-between align-items-center gap-2">
-                                                    <button
-                                                        class="btn rounded-0 bg-main-color text-white d-flex justify-content-center align-items-center mt-1"
-                                                        style="width: 200px; height: 30px;" data-bs-toggle="modal"
-                                                        data-bs-target="#detail-delivered-{{ $order->id }}">lacak
-                                                        pengiriman</button>
-                                                    <button wire:click="orderAccept('{{ $order->id }}')"
-                                                        class="btn rounded-0 bg-success text-white d-flex justify-content-center align-items-center mt-1"
-                                                        style="width: 200px; height: 30px;">pesanan telah
-                                                        diterima</button>
-                                                </div>
-                                            </div>
-                                            @if ($order->cartProduct && count($order->cartProduct) > 0)
-                                                @foreach ($order->cartProduct as $cartProduct)
-                                                    <div class="card-all-check d-flex justify-content-between align-items-center gap-4 mb-4"
-                                                        style="width: 100%; height: auto; background-color: white"
-                                                        id="card-product-PRODUCT_ID">
-                                                        <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
-                                                            style="width: 30%;">
-                                                            <img src="{{ Storage::url($cartProduct->cart->pickedVariation->whereNotNull('variationOption.product_image_id')->first()->variationOption->productImage->filepath_image) }}"
-                                                                alt="" style="width: 80px; height: 80px;">
-                                                            <div wire:ignore
-                                                                class="d-flex position-relative justify-content-between"
-                                                                style="width: auto; height: auto;">
-                                                                <div class="d-flex flex-column align-items-start position-relative gap-0"
-                                                                    style="width: 200px; height: auto;">
-                                                                    <strong
-                                                                        class="font-main-color">{{ $cartProduct->product->name }}</strong>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="d-flex flex-column align-items-start position-relative gap-0"
-                                                            style="width: 200px; height: auto;">
-                                                            <span>
-                                                                @foreach ($cartProduct->cart->pickedVariation as $variation)
-                                                                    {{ $variation->variationOption->name }}{{ $loop->last ? '' : ',' }}
-                                                                @endforeach
-                                                            </span>
-                                                        </div>
-                                                        <div class="d-flex flex-column justify-content-center align-items-center me-2"
-                                                            style="width: 30%;">
-                                                            <span><strong>Rp
-                                                                    {{ number_format($cartProduct->product->price_after_additional, 2, ',', '.') }}
-                                                                    x
-                                                                    {{ $cartProduct->product->cart->first()->qty }}</strong></span>
-                                                        </div>
-                                                        <div class="d-flex flex-column justify-content-end align-items-end gap-2 px-2"
-                                                            style="width: 30%">
-                                                            <span>sub total :</span>
-                                                            <span><strong>Rp
-                                                                    {{ number_format($cartProduct->product->cart->first()->total_price, 2, ',', '.') }}</strong></span>
-                                                        </div>
-                                                    </div>
-                                                @endforeach
-                                                <div class="d-flex justify-content-end align-items-center w-100 mb-2">
-                                                    <div
-                                                        class="d-flex flex-column justify-content-start align-items-end me-1">
-                                                        <span>total :</span>
-                                                        <span><strong>Rp
-                                                                {{ number_format($order->total_price, 2, ',', '.') }}</strong></span>
-                                                    </div>
-                                                </div>
-                                            @else
-                                                <div class="card-all-check d-flex justify-content-between align-items-center gap-4 mb-4"
-                                                    style="width: 100%; height: auto; background-color: white"
-                                                    id="card-product-PRODUCT_ID">
-                                                    <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
-                                                        style="width: 30%;">
-                                                        <img src="{{ Storage::url($order->product->hasImages->first()->filepath_image) }}"
-                                                            alt="" style="width: 80px; height: 80px;">
-                                                        <div wire:ignore
-                                                            class="d-flex position-relative justify-content-between"
-                                                            style="width: auto; height: auto;">
-                                                            <div class="d-flex flex-column align-items-start position-relative gap-0"
-                                                                style="width: 200px; height: auto;">
-                                                                <strong
-                                                                    class="font-main-color">{{ $order->product->name }}</strong>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="d-flex flex-column align-items-start position-relative gap-0"
-                                                        style="width: 200px; height: auto;">
-                                                        <span>
-                                                            @foreach ($order->pickedVariationOption as $varOption)
-                                                                {{ $varOption->name }}
-                                                                {{ $loop->last ? '' : ',' }}
-                                                            @endforeach
-                                                        </span>
-                                                    </div>
-                                                    <div class="d-flex flex-column justify-content-center align-items-center me-2"
-                                                        style="width: 30%;">
-                                                        <span><strong>Rp
-                                                                {{ number_format($order->product->discount ? $order->product->price_after_additional - $order->product->price_after_additional * ($order->product->discount / 100) : $order->product->price_after_additional, 2, ',', '.') }}
-                                                                x {{ $order->qty }}</strong></span>
-                                                    </div>
-                                                    <div class="d-flex flex-column justify-content-end align-items-end gap-2 px-2"
-                                                        style="width: 30%">
-                                                        <span>total pesanan:</span>
-                                                        <span><strong>Rp
-                                                                {{ number_format($order->total_price, 2, ',', '.') }}</strong></span>
-                                                    </div>
-                                                </div>
-                                            @endif
-                                        </div>
-                                    @endforeach
-                                @else
-                                    <div class="d-flex align-items-center justify-content-center mt-5">
-                                        <div class="d-flex flex-column align-items-center gap-2">
-                                            <img src="{{ asset('/oursvg/empty_order.svg') }}" alt=""
-                                                style="width: 400px;">
-                                            <span>
-                                                <h3 class="font-main-color">belum ada pesanan</h3>
-                                            </span>
-                                        </div>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-                        {{-- end delivered --}}
-                        {{-- completed --}}
-                        <div class="tab-pane {{ $tabActive == 'completed' ? 'show active' : '' }} fade w-100"
-                            id="completed" role="tabpanel" aria-labelledby="completed-tab">
-                            <!-- Content for Selesai -->
-                            <div class="d-flex flex-column justify-content-start gap-2 w-100">
-                                @if (!$completedOrders->isEmpty())
-                                    @foreach ($completedOrders as $order)
-                                        <div
-                                            class="card-product d-flex flex-column justify-content-between px-4 align-items-center shadow-sm">
-                                            <div class="d-flex justify-content-between align-items-center w-100 my-2">
-                                                <span class="text-success">selesai</span>
-                                            </div>
-                                            @if ($order->cartProduct && count($order->cartProduct) > 0)
-                                                @foreach ($order->cartProduct as $cartProduct)
+                                                @foreach ($order->cartProduct as $index => $cartProduct)
                                                 @php
                                                 $variationOptionId1 =
                                                     $cartProduct->cart->pickedVariation[0]->variationOption->id;
@@ -606,42 +396,44 @@
                                                             <span><strong>Rp
                                                                     {{ number_format($cartProduct->product->discount ? $mergeVarOption->merge_price_after_discount : $mergeVarOption->merge_price, 2, ',', '.') }}
                                                                     x
-                                                                    {{ $cartProduct->product->cart->first()->qty }}</strong></span>
+                                                                    {{ $cartProduct->cart->qty }}</strong></span>
                                                         </div>
                                                         <div class="d-flex flex-column justify-content-end align-items-end gap-2 px-2"
                                                             style="width: 30%">
                                                             <span>sub total :</span>
                                                             <span><strong>Rp
-                                                                {{ number_format($cartProduct->product->discount ? $cartProduct->product->cart->first()->total_price_after_discount : $cartProduct->product->cart->first()->total_price, 2, ',', '.') }}</strong></span>
+                                                                    {{ number_format($cartProduct->product->discount ? $cartProduct->cart->total_price_after_discount : $cartProduct->cart->total_price, 2, ',', '.') }}</strong></span>
                                                         </div>
-                                                        @if ($cartProduct->is_reviewed == false)
-                                                            <div class="d-flex flex-column justify-content-end align-items-end gap-2 px-2"
-                                                                style="width: 30%">
-                                                                <button
-                                                                    class="btn rounded-0 bg-main-color text-white d-flex justify-content-center align-items-center mt-1"
-                                                                    style="width: 200px; height: 30px;"
-                                                                    data-bs-toggle="modal"
-                                                                    data-bs-target="#review-modal-cart-{{ $cartProduct->id }}">beri
-                                                                    ulasan</button>
-                                                            </div>
-                                                        @endif
                                                     </div>
                                                 @endforeach
                                                 <div class="d-flex justify-content-end align-items-center w-100 mb-2">
                                                     <div
                                                         class="d-flex flex-column justify-content-start align-items-end me-1">
+                                                        <span>ongkos kirim :</span>
+                                                        <span><strong>Rp
+                                                                {{ number_format($order->shipping->cost, 2, ',', '.') }}</strong></span> 
                                                         <span>total :</span>
                                                         <span><strong>Rp
                                                                 {{ number_format($order->total_price, 2, ',', '.') }}</strong></span>
                                                     </div>
                                                 </div>
                                             @else
+                                                @php
+                                                    $variationOptionIds = $order->pickedVariationOption->pluck('id');
+                                                    $mergeVarOption = \App\Models\MergeVariationOption::where(function (
+                                                        $query,
+                                                    ) use ($variationOptionIds) {
+                                                        $query
+                                                            ->whereIn('variation_option_1_id', $variationOptionIds)
+                                                            ->whereIn('variation_option_2_id', $variationOptionIds);
+                                                    })->first();
+                                                @endphp
                                                 <div class="card-all-check d-flex justify-content-between align-items-center gap-4 mb-4"
                                                     style="width: 100%; height: auto; background-color: white"
                                                     id="card-product-PRODUCT_ID">
                                                     <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                         style="width: 30%;">
-                                                        <img src="{{ Storage::url($order->product->hasImages->first()->filepath_image) }}"
+                                                        <img src="{{ Storage::url($mergeVarOption->variationOption1->productImage->filepath_image ?? $mergeVarOption->variationOption2->productImage->filepath_image) }}"
                                                             alt="" style="width: 80px; height: 80px;">
                                                         <div wire:ignore
                                                             class="d-flex position-relative justify-content-between"
@@ -665,11 +457,351 @@
                                                     <div class="d-flex flex-column justify-content-center align-items-center me-2"
                                                         style="width: 30%;">
                                                         <span><strong>Rp
-                                                                {{ number_format($order->product->discount ? $order->product->price_after_additional - $order->product->price_after_additional * ($order->product->discount / 100) : $order->product->price_after_additional, 2, ',', '.') }}
+                                                                {{ number_format($order->product->discount ? $mergeVarOption->merge_price_after_discount : $mergeVarOption->merge_price, 2, ',', '.') }}
                                                                 x {{ $order->qty }}</strong></span>
                                                     </div>
                                                     <div class="d-flex flex-column justify-content-end align-items-end gap-2 px-2"
                                                         style="width: 30%">
+                                                        <span>ongkos kirim:</span>
+                                                        <span><strong>Rp
+                                                                {{ number_format($order->shipping->cost, 2, ',', '.') }}</strong></span>
+                                                        <span>total pesanan:</span>
+                                                        <span><strong>Rp
+                                                                {{ number_format($order->total_price, 2, ',', '.') }}</strong></span>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <div class="d-flex align-items-center justify-content-center mt-5">
+                                        <div class="d-flex flex-column align-items-center gap-2">
+                                            <img src="{{ asset('/oursvg/empty_order.svg') }}" alt=""
+                                                style="width: 400px;">
+                                            <span>
+                                                <h3 class="font-main-color">belum ada pesanan</h3>
+                                            </span>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                        {{-- end packed --}}
+                        {{-- delivered --}}
+                        <div class="tab-pane {{ $tabActive == 'delivered' ? 'show active' : '' }} fade w-100"
+                            id="delivered" role="tabpanel" aria-labelledby="delivered-tab">
+                            <!-- Content for Dikirim -->
+                            <div class="d-flex flex-column justify-content-start gap-2 w-100">
+                                @if (!$deliveredOrders->isEmpty())
+                                    @foreach ($deliveredOrders as $order)
+                                        <div
+                                            class="card-product d-flex flex-column justify-content-between px-4 align-items-center shadow-sm">
+                                            <div class="d-flex justify-content-between align-items-center w-100 my-2">
+                                                <span class="text-info">dikirim</span>
+                                                <div class="d-flex justify-content-between align-items-center gap-2">
+                                                    <button
+                                                        class="btn rounded-0 bg-main-color text-white d-flex justify-content-center align-items-center mt-1"
+                                                        style="width: 200px; height: 30px;" data-bs-toggle="modal"
+                                                        data-bs-target="#detail-delivered-{{ $order->id }}">lacak
+                                                        pengiriman</button>
+                                                    <button wire:click="orderAccept('{{ $order->id }}')"
+                                                        class="btn rounded-0 bg-success text-white d-flex justify-content-center align-items-center mt-1"
+                                                        style="width: 200px; height: 30px;">pesanan telah
+                                                        diterima</button>
+                                                </div>
+                                            </div>
+                                            @if ($order->cartProduct && count($order->cartProduct) > 0)
+                                                @foreach ($order->cartProduct as $index => $cartProduct)
+                                                @php
+                                                $variationOptionId1 =
+                                                    $cartProduct->cart->pickedVariation[0]->variationOption->id;
+                                                $variationOptionId2 =
+                                                    $cartProduct->cart->pickedVariation[1]->variationOption->id;
+
+                                                $mergeVarOption = \App\Models\MergeVariationOption::where(
+                                                    function ($query) use (
+                                                        $variationOptionId1,
+                                                        $variationOptionId2,
+                                                    ) {
+                                                        $query
+                                                            ->where(
+                                                                'variation_option_1_id',
+                                                                $variationOptionId1,
+                                                            )
+                                                            ->where(
+                                                                'variation_option_2_id',
+                                                                $variationOptionId2,
+                                                            );
+                                                    },
+                                                )->first();
+                                            @endphp
+                                                    <div class="card-all-check d-flex justify-content-between align-items-center gap-4 mb-4"
+                                                        style="width: 100%; height: auto; background-color: white"
+                                                        id="card-product-PRODUCT_ID">
+                                                        <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
+                                                            style="width: 30%;">
+                                                            <img src="{{ Storage::url($cartProduct->cart->pickedVariation->whereNotNull('variationOption.product_image_id')->first()->variationOption->productImage->filepath_image) }}"
+                                                                alt="" style="width: 80px; height: 80px;">
+                                                            <div wire:ignore
+                                                                class="d-flex position-relative justify-content-between"
+                                                                style="width: auto; height: auto;">
+                                                                <div class="d-flex flex-column align-items-start position-relative gap-0"
+                                                                    style="width: 200px; height: auto;">
+                                                                    <strong
+                                                                        class="font-main-color">{{ $cartProduct->product->name }}</strong>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="d-flex flex-column align-items-start position-relative gap-0"
+                                                            style="width: 200px; height: auto;">
+                                                            <span>
+                                                                @foreach ($cartProduct->cart->pickedVariation as $variation)
+                                                                    {{ $variation->variationOption->name }}{{ $loop->last ? '' : ',' }}
+                                                                @endforeach
+                                                            </span>
+                                                        </div>
+                                                        <div class="d-flex flex-column justify-content-center align-items-center me-2"
+                                                            style="width: 30%;">
+                                                            <span><strong>Rp
+                                                                    {{ number_format($cartProduct->product->discount ? $mergeVarOption->merge_price_after_discount : $mergeVarOption->merge_price, 2, ',', '.') }}
+                                                                    x
+                                                                    {{ $cartProduct->cart->qty }}</strong></span>
+                                                        </div>
+                                                        <div class="d-flex flex-column justify-content-end align-items-end gap-2 px-2"
+                                                            style="width: 30%">
+                                                            <span>sub total :</span>
+                                                            <span><strong>Rp
+                                                                    {{ number_format($cartProduct->product->discount ? $cartProduct->cart->total_price_after_discount : $cartProduct->cart->total_price, 2, ',', '.') }}</strong></span>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                                <div class="d-flex justify-content-end align-items-center w-100 mb-2">
+                                                    <div
+                                                        class="d-flex flex-column justify-content-start align-items-end me-1">
+                                                        <span>ongkos kirim :</span>
+                                                        <span><strong>Rp
+                                                                {{ number_format($order->shipping->cost, 2, ',', '.') }}</strong></span>
+                                                        <span>total :</span>
+                                                        <span><strong>Rp
+                                                                {{ number_format($order->total_price, 2, ',', '.') }}</strong></span>
+                                                    </div>
+                                                </div>
+                                            @else
+                                                @php
+                                                    $variationOptionIds = $order->pickedVariationOption->pluck('id');
+                                                    $mergeVarOption = \App\Models\MergeVariationOption::where(function (
+                                                        $query,
+                                                    ) use ($variationOptionIds) {
+                                                        $query
+                                                            ->whereIn('variation_option_1_id', $variationOptionIds)
+                                                            ->whereIn('variation_option_2_id', $variationOptionIds);
+                                                    })->first();
+                                                @endphp
+                                                <div class="card-all-check d-flex justify-content-between align-items-center gap-4 mb-4"
+                                                    style="width: 100%; height: auto; background-color: white"
+                                                    id="card-product-PRODUCT_ID">
+                                                    <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
+                                                        style="width: 30%;">
+                                                        <img src="{{ Storage::url($mergeVarOption->variationOption1->productImage->filepath_image ?? $mergeVarOption->variationOption2->productImage->filepath_image) }}"
+                                                            alt="" style="width: 80px; height: 80px;">
+                                                        <div wire:ignore
+                                                            class="d-flex position-relative justify-content-between"
+                                                            style="width: auto; height: auto;">
+                                                            <div class="d-flex flex-column align-items-start position-relative gap-0"
+                                                                style="width: 200px; height: auto;">
+                                                                <strong
+                                                                    class="font-main-color">{{ $order->product->name }}</strong>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex flex-column align-items-start position-relative gap-0"
+                                                        style="width: 200px; height: auto;">
+                                                        <span>
+                                                            @foreach ($order->pickedVariationOption as $varOption)
+                                                                {{ $varOption->name }}
+                                                                {{ $loop->last ? '' : ',' }}
+                                                            @endforeach
+                                                        </span>
+                                                    </div>
+                                                    <div class="d-flex flex-column justify-content-center align-items-center me-2"
+                                                        style="width: 30%;">
+                                                        <span><strong>Rp
+                                                                {{ number_format($order->product->discount ? $mergeVarOption->merge_price_after_discount : $mergeVarOption->merge_price, 2, ',', '.') }}
+                                                                x {{ $order->qty }}</strong></span>
+                                                    </div>
+                                                    <div class="d-flex flex-column justify-content-end align-items-end gap-2 px-2"
+                                                        style="width: 30%">
+                                                        <span>ongkos kirim:</span>
+                                                        <span><strong>Rp
+                                                                {{ number_format($order->shipping->cost, 2, ',', '.') }}</strong></span>
+                                                        <span>total pesanan:</span>
+                                                        <span><strong>Rp
+                                                                {{ number_format($order->total_price, 2, ',', '.') }}</strong></span>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <div class="d-flex align-items-center justify-content-center mt-5">
+                                        <div class="d-flex flex-column align-items-center gap-2">
+                                            <img src="{{ asset('/oursvg/empty_order.svg') }}" alt=""
+                                                style="width: 400px;">
+                                            <span>
+                                                <h3 class="font-main-color">belum ada pesanan</h3>
+                                            </span>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                        {{-- end delivered --}}
+                        {{-- completed --}}
+                        <div class="tab-pane {{ $tabActive == 'completed' ? 'show active' : '' }} fade w-100"
+                            id="completed" role="tabpanel" aria-labelledby="completed-tab">
+                            <!-- Content for Selesai -->
+                            <div class="d-flex flex-column justify-content-start gap-2 w-100">
+                                @if (!$completedOrders->isEmpty())
+                                    @foreach ($completedOrders as $order)
+                                        <div
+                                            class="card-product d-flex flex-column justify-content-between px-4 align-items-center shadow-sm">
+                                            <div class="d-flex justify-content-between align-items-center w-100 my-2">
+                                                <span class="text-success">selesai</span>
+                                            </div>
+                                            @if ($order->cartProduct && count($order->cartProduct) > 0)
+                                                @foreach ($order->cartProduct as $index => $cartProduct)
+                                                    @php
+                                                        $variationOptionId1 =
+                                                            $cartProduct->cart->pickedVariation[0]->variationOption->id;
+                                                        $variationOptionId2 =
+                                                            $cartProduct->cart->pickedVariation[1]->variationOption->id;
+                                                        $mergeVarOption = \App\Models\MergeVariationOption::where(
+                                                            function ($query) use (
+                                                                $variationOptionId1,
+                                                                $variationOptionId2,
+                                                            ) {
+                                                                $query
+                                                                    ->where(
+                                                                        'variation_option_1_id',
+                                                                        $variationOptionId1,
+                                                                    )
+                                                                    ->where(
+                                                                        'variation_option_2_id',
+                                                                        $variationOptionId2,
+                                                                    );
+                                                            },
+                                                        )->first();
+                                                    @endphp
+                                                    <div class="card-all-check d-flex justify-content-between align-items-center gap-4 mb-4"
+                                                        style="width: 100%; height: auto; background-color: white"
+                                                        id="card-product-PRODUCT_ID">
+                                                        <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
+                                                            style="width: 30%;">
+                                                            <img src="{{ Storage::url($cartProduct->cart->pickedVariation->whereNotNull('variationOption.product_image_id')->first()->variationOption->productImage->filepath_image) }}"
+                                                                alt="" style="width: 80px; height: 80px;">
+                                                            <div wire:ignore
+                                                                class="d-flex position-relative justify-content-between"
+                                                                style="width: auto; height: auto;">
+                                                                <div class="d-flex flex-column align-items-start position-relative gap-0"
+                                                                    style="width: 200px; height: auto;">
+                                                                    <strong
+                                                                        class="font-main-color">{{ $cartProduct->product->name }}</strong>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="d-flex flex-column align-items-start position-relative gap-0"
+                                                            style="width: 200px; height: auto;">
+                                                            <span>
+                                                                @foreach ($cartProduct->cart->pickedVariation as $variation)
+                                                                    {{ $variation->variationOption->name }}{{ $loop->last ? '' : ',' }}
+                                                                @endforeach
+                                                            </span>
+                                                        </div>
+                                                        <div class="d-flex flex-column justify-content-center align-items-center me-2"
+                                                            style="width: 30%;">
+                                                            <span><strong>Rp
+                                                                    {{ number_format($cartProduct->product->discount ? $mergeVarOption->merge_price_after_discount : $mergeVarOption->merge_price, 2, ',', '.') }}
+                                                                    x
+                                                                    {{ $cartProduct->cart->qty }}</strong></span>
+                                                        </div>
+                                                        <div class="d-flex flex-column justify-content-end align-items-end gap-2 px-2"
+                                                            style="width: 30%">
+                                                            <span>sub total :</span>
+                                                            <span><strong>Rp
+                                                                    {{ number_format($cartProduct->product->discount ? $cartProduct->cart->total_price_after_discount : $cartProduct->cart->total_price, 2, ',', '.') }}</strong></span>
+                                                        </div>
+                                                        @if ($cartProduct->is_reviewed == false)
+                                                            <div class="d-flex flex-column justify-content-end align-items-end gap-2 px-2"
+                                                                style="width: 30%">
+                                                                <button
+                                                                    class="btn rounded-0 bg-main-color text-white d-flex justify-content-center align-items-center mt-1"
+                                                                    style="width: 200px; height: 30px;"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#review-modal-cart-{{ $cartProduct->id }}">beri
+                                                                    ulasan</button>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                @endforeach
+                                                <div class="d-flex justify-content-end align-items-center w-100 mb-2">
+                                                    <div
+                                                        class="d-flex flex-column justify-content-start align-items-end me-1">
+                                                        <span>ongkos kirim :</span>
+                                                        <span><strong>Rp
+                                                                {{ number_format($order->shipping->cost, 2, ',', '.') }}</strong></span>
+                                                        <span>total :</span>
+                                                        <span><strong>Rp
+                                                                {{ number_format($order->total_price, 2, ',', '.') }}</strong></span>
+                                                    </div>
+                                                </div>
+                                            @else
+                                                @php
+                                                    $variationOptionIds = $order->pickedVariationOption->pluck('id');
+                                                    $mergeVarOption = \App\Models\MergeVariationOption::where(function (
+                                                        $query,
+                                                    ) use ($variationOptionIds) {
+                                                        $query
+                                                            ->whereIn('variation_option_1_id', $variationOptionIds)
+                                                            ->whereIn('variation_option_2_id', $variationOptionIds);
+                                                    })->first();
+                                                @endphp
+                                                <div class="card-all-check d-flex justify-content-between align-items-center gap-4 mb-4"
+                                                    style="width: 100%; height: auto; background-color: white"
+                                                    id="card-product-PRODUCT_ID">
+                                                    <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
+                                                        style="width: 30%;">
+                                                        <img src="{{ Storage::url($mergeVarOption->variationOption1->productImage->filepath_image ?? $mergeVarOption->variationOption2->productImage->filepath_image) }}"
+                                                            alt="" style="width: 80px; height: 80px;">
+                                                        <div wire:ignore
+                                                            class="d-flex position-relative justify-content-between"
+                                                            style="width: auto; height: auto;">
+                                                            <div class="d-flex flex-column align-items-start position-relative gap-0"
+                                                                style="width: 200px; height: auto;">
+                                                                <strong
+                                                                    class="font-main-color">{{ $order->product->name }}</strong>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex flex-column align-items-start position-relative gap-0"
+                                                        style="width: 200px; height: auto;">
+                                                        <span>
+                                                            @foreach ($order->pickedVariationOption as $varOption)
+                                                                {{ $varOption->name }}
+                                                                {{ $loop->last ? '' : ',' }}
+                                                            @endforeach
+                                                        </span>
+                                                    </div>
+                                                    <div class="d-flex flex-column justify-content-center align-items-center me-2"
+                                                        style="width: 30%;">
+                                                        <span><strong>Rp
+                                                                {{ number_format($order->product->discount ? $mergeVarOption->merge_price_after_discount : $mergeVarOption->merge_price, 2, ',', '.') }}
+                                                                x {{ $order->qty }}</strong></span>
+                                                    </div>
+                                                    <div class="d-flex flex-column justify-content-end align-items-end gap-2 px-2"
+                                                        style="width: 30%">
+                                                        <span>ongkos kirim:</span>
+                                                        <span><strong>Rp
+                                                                {{ number_format($order->shipping->cost, 2, ',', '.') }}</strong></span>
                                                         <span>total pesanan:</span>
                                                         <span><strong>Rp
                                                                 {{ number_format($order->total_price, 2, ',', '.') }}</strong></span>
@@ -713,10 +845,10 @@
                                         <div
                                             class="card-product d-flex flex-column justify-content-between px-4 align-items-center shadow-sm">
                                             <div class="d-flex justify-content-between align-items-center w-100 my-2">
-                                                <span class="text-danger">dibatalkan</span>
+                                                <span class="text-danger">batal</span>
                                             </div>
                                             @if ($order->cartProduct && count($order->cartProduct) > 0)
-                                                @foreach ($order->cartProduct as $cartProduct)
+                                                @foreach ($order->cartProduct as $index => $cartProduct)
                                                     @php
                                                         $variationOptionId1 =
                                                             $cartProduct->cart->pickedVariation[0]->variationOption->id;
@@ -770,7 +902,7 @@
                                                             <span><strong>Rp
                                                                     {{ number_format($cartProduct->product->discount ? $mergeVarOption->merge_price_after_discount : $mergeVarOption->merge_price, 2, ',', '.') }}
                                                                     x
-                                                                    {{ $cartProduct->product->cart->first()->qty }}</strong></span>
+                                                                    {{ $cartProduct->cart->qty }}</strong></span>
                                                         </div>
                                                         <div class="d-flex flex-column justify-content-end align-items-end gap-2 px-2"
                                                             style="width: 30%">
@@ -780,7 +912,6 @@
                                                         </div>
                                                     </div>
                                                 @endforeach
-                                            @else
                                                 <div class="d-flex justify-content-end align-items-center w-100 mb-2">
                                                     <div
                                                         class="d-flex flex-column justify-content-start align-items-end me-1">
@@ -789,12 +920,23 @@
                                                                 {{ number_format($order->total_price, 2, ',', '.') }}</strong></span>
                                                     </div>
                                                 </div>
+                                            @else
+                                                @php
+                                                    $variationOptionIds = $order->pickedVariationOption->pluck('id');
+                                                    $mergeVarOption = \App\Models\MergeVariationOption::where(function (
+                                                        $query,
+                                                    ) use ($variationOptionIds) {
+                                                        $query
+                                                            ->whereIn('variation_option_1_id', $variationOptionIds)
+                                                            ->whereIn('variation_option_2_id', $variationOptionIds);
+                                                    })->first();
+                                                @endphp
                                                 <div class="card-all-check d-flex justify-content-between align-items-center gap-4 mb-4"
                                                     style="width: 100%; height: auto; background-color: white"
                                                     id="card-product-PRODUCT_ID">
                                                     <div class="d-flex justify-content-start align-items-center gap-2 pe-2"
                                                         style="width: 30%;">
-                                                        <img src="{{ Storage::url($order->product->hasImages->first()->filepath_image) }}"
+                                                        <img src="{{ Storage::url($mergeVarOption->variationOption1->productImage->filepath_image ?? $mergeVarOption->variationOption2->productImage->filepath_image) }}"
                                                             alt="" style="width: 80px; height: 80px;">
                                                         <div wire:ignore
                                                             class="d-flex position-relative justify-content-between"
@@ -818,11 +960,14 @@
                                                     <div class="d-flex flex-column justify-content-center align-items-center me-2"
                                                         style="width: 30%;">
                                                         <span><strong>Rp
-                                                                {{ number_format($order->product->discount ? $order->product->price_after_additional - $order->product->price_after_additional * ($order->product->discount / 100) : $order->product->price_after_additional, 2, ',', '.') }}
+                                                                {{ number_format($order->product->discount ? $mergeVarOption->merge_price_after_discount : $mergeVarOption->merge_price, 2, ',', '.') }}
                                                                 x {{ $order->qty }}</strong></span>
                                                     </div>
                                                     <div class="d-flex flex-column justify-content-end align-items-end gap-2 px-2"
                                                         style="width: 30%">
+                                                        <span>ongkos kirim:</span>
+                                                        <span><strong>Rp
+                                                                {{ number_format($order->shipping->cost, 2, ',', '.') }}</strong></span>
                                                         <span>total pesanan:</span>
                                                         <span><strong>Rp
                                                                 {{ number_format($order->total_price, 2, ',', '.') }}</strong></span>
@@ -854,7 +999,7 @@
 
     {{-- modal review --}}
     @foreach ($completedOrders as $order)
-        @foreach ($order->cartProduct as $cartProduct)
+        @foreach ($order->cartProduct as $index => $cartProduct)
             <div wire:ignore class="modal fade" id="review-modal-cart-{{ $cartProduct->id }}" tabindex="-1"
                 aria-labelledby="changeAddress" aria-hidden="true" wire:key="modal">
                 <div class="modal-dialog">

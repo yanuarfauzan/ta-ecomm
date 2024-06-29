@@ -1,18 +1,18 @@
 <div>
     <div class="d-flex flex-column align-items-start position-relative gap-0" style="width: 200px; height: auto;">
-        <strong class="font-main-color">{{ $product->name }}</strong>
-        <span>
+        <strong class="text-dark">{{ $product->name }}</strong>
+        <span class="text-dark text-opacity-75">
             <a href="#collapseVariation-{{ $index }}" id="toggleButtonVariation" role="button" aria-expanded="false"
                 aria-controls="categoryCollapse-{{ $product->id }}"
                 class="dropdown-toggle btn bg-transparent border-0 px-0 py-0 toggle-button-variation-{{ $index }}"
                 data-bs-toggle="collapse">Variasi</a>
         </span>
-        <span>
+        <span class="text-dark text-opacity-75">
             @foreach ($userCart->pickedVariation as $variation)
                 {{ $variation->variationOption->name }}{{ !$loop->last ? ',' : '' }}
             @endforeach
         </span>
-        <span>Stock {{ $stock }}</span>
+        <span class="text-dark text-opacity-75">Stok {{ $stock }}</span>
     </div>
     <div class="collapse collapse-variation-{{ $index }} position-absolute border-0"
         style="top: 80%; width: 250px; height: auto; z-index: 1000" id="collapseVariation-{{ $index }}"
@@ -21,7 +21,7 @@
             <div class="d-flex flex-column gap-2">
                 <div class="container d-flex flex-column">
                     @foreach ($product->variation as $index => $variation)
-                        <strong>{{ $variation->name }} :</strong>
+                        <span>{{ $variation->name }} :</span>
                         <div class="row row-cols-4 gap-2 mt-2 ms-3 border-0">
                             @foreach ($variation->variationOption as $varOption)
                                 @php

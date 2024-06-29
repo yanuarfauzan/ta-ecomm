@@ -82,12 +82,11 @@
     .swiper-button-next, .swiper-button-prev {
         width: 40px; /* Atur lebar */
         height: 40px; /* Atur tinggi */
-        background: #6777ef; /* Warna background */
         border-radius: 50%; /* Membuat bentuk bulat */
         position: absolute;
         top: 50%; /* Menengahkan vertikal */
         transform: translateY(-50%); /* Ajustmen tengah vertikal */
-        color: white; /* Warna teks atau ikon */
+        color: #6777ef; /* Warna teks atau ikon */
         display: flex;
         align-items: center;
         justify-content: center;

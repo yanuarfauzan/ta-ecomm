@@ -9,7 +9,7 @@
             <div class="bg-white" style="width: 40%">
                 <div class="d-flex flex-column align-items-start m-4 gap-1">
                     <span>
-                        <h4>Register</h4>
+                        <h4>Daftar</h4>
                     </span>
                     <form action="{{ route('user-preRegister-act') }}" method="POST" class="d-flex flex-column gap-2"
                         style="width: 100%;">
@@ -30,7 +30,7 @@
                         </div>
                         <div class="input-group" style="height: 55px">
                             <input type="number" class="form-control rounded-0" id="no_handphone" name="phone_number" value="{{ old('phone_number') }}"
-                                placeholder="no handphone" style="box-shadow: none; width: 100%; height: 40px;">
+                                placeholder="nomor telepon" style="box-shadow: none; width: 100%; height: 40px;">
                             @if ($errors->has('phone_number'))
                                 <span class="text-danger" style="font-size: 0.8em;">{{ $errors->first('phone_number') }}</span>
                             @endif
@@ -73,11 +73,11 @@
                         </div>
                         <div class="input-group mt-2">
                             <button type="submit" class="rounded-0 bg-main-color text-white border-0"
-                                style="box-shadow: none; width: 100%; height: 40px;">daftar</button>
+                                style="box-shadow: none; width: 100%; height: 40px;">Daftar</button>
                         </div>
                     </form>
                     <div class="d-flex justify-content-start align-items-center" style="width: 100%">
-                        <span>punya akun? <a href="/login" class="font-main-color">login</a></span>
+                        <span>punya akun? <a href="/login" class="font-main-color">masuk</a></span>
                     </div>
                 </div>
             </div>

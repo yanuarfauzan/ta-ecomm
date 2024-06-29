@@ -38,7 +38,7 @@ class UserController extends Controller
         $startIndex = $request->input('startIndex', 0);
         $categoryId = $request->category;
         $keyword = $request->keyword;
-        $products = Product::with('hasImages', 'hasCategory')
+        $products = Product::with('hasImages', 'hasCategory', 'order.cartProduct',)
             ->skip($startIndex)
             ->take($take)
             ->when($categoryId, function ($query) use ($categoryId) {
@@ -63,25 +63,11 @@ class UserController extends Controller
         }
         $banners = BannerHome::all();
         $categories = Category::all();
-        $title = 'Home';
-        return view('user.home', compact('products', 'categories', 'startIndex', 'banners', 'title'));
-    }
-    public function addAddresses(AddAddressessRequest $request)
-    {
-        if ($this->user) {
-            collect($request->address)->each(function ($item) {
-                $this->user->address()->create([
-                    'address' => $item['address'],
-                    'postal_code' => $item['postal_code'],
-                    'province' => $item['province'],
-                    'city' => $item['city'],
-                    'detail' => $item['detail']
-                ]);
-            });
-            return response()->json(['message' => 'Berhasil menambahkan alamat']);
-        } else {
-            return response()->json(['message' => 'Anda harus login terlebih dahulu']);
-        }
+        $title = 'Beranda';
+        return view(
+            'user.home',
+            compact('products', 'categories', 'startIndex', 'banners', 'title')
+        );
     }
     public function showCart(Request $request)
     {
@@ -117,21 +103,6 @@ class UserController extends Controller
             }
         });
         return $isDifferent;
-    }
-    public function addProductToFav($productId)
-    {
-        if ($this->user) {
-            $favouriteProduct = $this->user->favouriteProduct();
-            if (!$this->user->favouriteProduct->contains($productId)) {
-                $favouriteProduct->attach($productId, ['id' => Str::uuid(36)]);
-                return response()->json(['message' => 'Berhasil menambahkan produk ke favorit']);
-            } else {
-                $favouriteProduct->detach($productId);
-                return response()->json(['message' => 'Berhasil menghapus produk dari favorit']);
-            }
-        } else {
-            return response()->json(['message' => 'Anda harus login terlebih dahulu']);
-        }
     }
     public function detailProduct(Request $request, $productId)
     {
@@ -269,11 +240,12 @@ class UserController extends Controller
 
     public function getCostValueShipping($product, $defaultUserAddress)
     {
-        $user = $this->user;
-        $defaultOperatorAddress = User::where('role', 'operator')->first()->userAddresses->where('is_default')->first();
-        $userCityId = ProvinciesAndCities::where('city_name', $defaultUserAddress->city)->first()->city_id;
-        $operatorCityId = ProvinciesAndCities::where('city_name', $defaultOperatorAddress->city)->first()->city_id;
-        try {
+        $defaultOperatorAddress = User::where('role', 'operator')
+        ->first()->userAddresses->where('is_default')->first();
+        $userCityId = ProvinciesAndCities::where('city_name', $defaultUserAddress->city)
+        ->first()->city_id;
+        $operatorCityId = ProvinciesAndCities::where('city_name', $defaultOperatorAddress->city)
+        ->first()->city_id;
             $costs = Http::withHeaders([
                 'key' => env('API_KEY_RAJAONGKIR')
             ])->post(env('API_BASE_URL_RAJA_ONGKIR') . '/cost', [
@@ -282,9 +254,6 @@ class UserController extends Controller
                         'weight' => $product->weight,
                         'courier' => 'jne'
                     ]);
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
-        }
         return $costs;
     }
 
@@ -341,16 +310,27 @@ class UserController extends Controller
         $productVoucher = $usersCarts->map(function ($userCart) {
             $product = $userCart->hasProduct->first();
             if ($product && $product->voucher()->exists()) {
-                return $product->voucher; // Tidak perlu memanggil get() lagi
+                return $product->voucher;
             }
             return collect();
         })->filter(function ($voucher) {
-            return $voucher->isNotEmpty(); // Memastikan kita hanya mengembalikan voucher yang tidak kosong
+            return $voucher->isNotEmpty();
         })->flatten()->unique('id');
 
         $userAddresses = $order->user->userAddresses()->get();
         $title = 'Pesanan';
-        return view('user.order', compact('usersCarts', 'user', 'defaultUserAdress', 'order', 'productVoucher', 'userAddresses', 'title'));
+        return view(
+            'user.order',
+            compact(
+                'usersCarts',
+                'user',
+                'defaultUserAdress',
+                'order',
+                'productVoucher',
+                'userAddresses',
+                'title'
+            )
+        );
     }
     public function buyNow(Request $request)
     {
@@ -362,7 +342,7 @@ class UserController extends Controller
         $productBuyNow = Product::findOrFail($request->productId);
 
         $order = $user->order()->where('product_id', $request->productId)
-            ->whereIn('order_status', ['unpaid', 'pending'])->first();
+            ->where('order_status', 'unpaid')->first();
         if (!isset($order)) {
             $order = $user->order()->create([
                 'product_id' => $request->productId,
@@ -378,6 +358,11 @@ class UserController extends Controller
                 $variationId = explode('_', $variation)[0];
                 $variationOptionId = explode('_', $variation)[1];
                 $productId = $request->productId;
+
+                Log::info('Variation ID: ' . $variationId);
+                Log::info('Variation Option ID: ' . $variationOptionId);
+                Log::info('Product ID: ' . $productId);
+
                 $order->pickedVariation()->attach(
                     $variationId,
                     [
@@ -386,6 +371,12 @@ class UserController extends Controller
                         'variation_option_id' => $variationOptionId
                     ]
                 );
+
+                Log::info('Attach data: ', [
+                    'variation_id' => $variationId,
+                    'product_id' => $productId,
+                    'variation_option_id' => $variationOptionId
+                ]);
             });
         } else {
             if ($countBuyNow != $order->qty) {
@@ -427,74 +418,78 @@ class UserController extends Controller
 
     public function afterPayment(Request $request)
     {
-        try {
-            $order = Order::where('order_number', $request->order_id)->first();
-            $user = $order->user()->first();
-            $serverKey = config('midtrans.serverKey');
-            $hashed = base64_encode($serverKey . ':');
-            $response = Http::withHeaders([
-                'Accept' => 'application/json',
-                'Authorization' => 'Basic ' . $hashed
-            ])
+        $order = Order::where('order_number', $request->order_id)->first();
+        $user = $order->user()->first();
+        $serverKey = config('midtrans.serverKey');
+        $hashed = base64_encode($serverKey . ':');
+        $response = Http::withHeaders([
+            'Accept' => 'application/json',
+            'Authorization' => 'Basic ' . $hashed
+        ])
             ->get('https://api.sandbox.midtrans.com/v2/' . $request->order_id . '/status');
-            $response = $response->json();
-            switch ($response['transaction_status']) {
-                case 'settlement':
-                case 'success':
-                case 'capture':
-                    $order->update(['order_status' => 'paid']);
-                    if ($order->product_id) {
-                        $varOptionIds = $order->pickedVariationOption->pluck('id');
-                        $mergeVarOption = MergeVariationOption::whereIn('variation_option_1_id', $varOptionIds)
-                            ->whereIn('variation_option_2_id', $varOptionIds)
-                            ->first();
-                        $mergeVarOption->update([
-                            'merge_stock' => $mergeVarOption->merge_stock - $order->qty
-                        ]);
-                    }
-                    $message = '<strong class="ms-4"><h6>Pembayaran berhasil!🎉 </h6></strong>' .
-                        'Total Pembayaran : <strong>Rp ' . number_format($response['gross_amount'], 2, ',', '.') . '</strong><br>' .
-                        'Metode Pembayaran : <strong>' . $response['acquirer'] . '</strong><br>' .
-                        'Tanggal Transaksi : <strong>' . Carbon::parse($response['transaction_time'])->format('d-m-Y') . '</strong><br>' .
-                        '<strong>Terima kasih telah berbelanja dengan kami!</strong>
-                        <hr>';
-                    $message = htmlspecialchars_decode($message);
-                    $notif = Notification::create([
-                        'content' => $message
+        $response = $response->json();
+        switch ($response['transaction_status']) {
+            case 'settlement':
+            case 'success':
+            case 'capture':
+                $order->update(['order_status' => 'paid']);
+                if ($order->product_id) {
+                    $varOptionIds = $order->pickedVariationOption->pluck('id');
+                    $mergeVarOption = MergeVariationOption::whereIn('variation_option_1_id', $varOptionIds)
+                        ->whereIn('variation_option_2_id', $varOptionIds)
+                        ->first();
+                    $mergeVarOption->update([
+                        'merge_stock' => $mergeVarOption->merge_stock - $order->qty
                     ]);
-                    $user->notification()->attach($notif->id, ['id' => Str::uuid(36), 'is_read' => false, 'notification_id' => $notif->id, 'user_id' => $user->id]);
-                    Log::info($message);
-                    event(new PaymentNotifEvent($user->id, $message));
-                    if ($request->payFrom == 'profile') {
-                        return redirect()->route('user-profile');
-                    } else {
-                        return redirect()->route('user-home');
-                    }
-                case 'pending':
-                    $order->update(['order_status' => 'pending']);
-                    $message = 'Mohon segera lakukan pembayaran untuk pesanan Anda.
+                }
+                $message = '<strong class="ms-4"><h6>Pembayaran berhasil!🎉 </h6></strong>' .
+                    'Total Pembayaran : <strong>Rp ' . number_format($response['gross_amount'], 2, ',', '.') . '</strong><br>' .
+                    'Metode Pembayaran : <strong>' . $response['acquirer'] . '</strong><br>' .
+                    'Tanggal Transaksi : <strong>' . Carbon::parse($response['transaction_time'])->format('d-m-Y') . '</strong><br>' .
+                    '<strong>Terima kasih telah berbelanja dengan kami!</strong>
+                        <hr>';
+                $message = htmlspecialchars_decode($message);
+                $notif = Notification::create([
+                    'content' => $message
+                ]);
+                $user->notification()
+                    ->attach(
+                        $notif->id,
+                        ['id' => Str::uuid(36), 'is_read' => false, 'notification_id' => $notif->id, 'user_id' => $user->id]
+                    );
+                Log::info($message);
+                event(new PaymentNotifEvent($user->id, $message));
+                if ($request->payFrom == 'profile') {
+                    return redirect()->route('user-profile');
+                } else {
+                    return redirect()->route('user-home');
+                }
+            case 'pending':
+                $order->update(['order_status' => 'pending']);
+                $message = 'Mohon segera lakukan pembayaran untuk pesanan Anda.
                         Pesanan Anda saat ini dalam status "Pending Pembayaran".
                         Kami akan memberitahu Anda segera setelah pembayaran Anda berhasil diproses.
                         Terima kasih atas kerjasama Anda!';
-                    Log::info($message);
-                    event(new PaymentNotifEvent($user->id, $message));
-                    return response()->json($response);
-                case 'expire':
-                    $order->update(['order_status' => 'failed']);
-                    $message = 'Maaf, pembayaran Anda untuk pesanan telah kadaluarsa.
+                Log::info($message);
+                event(new PaymentNotifEvent($user->id, $message));
+                return response()->json($response);
+            case 'expire':
+                $order->update(['order_status' => 'failed']);
+                $message = 'Maaf, pembayaran Anda untuk pesanan telah kadaluarsa.
                         Pesanan Anda saat ini dalam status "Pembayaran Kadaluarsa".
                         Silakan membuat pesanan baru jika Anda masih tertarik dengan produk kami.
                         Terima kasih atas perhatiannya.';
-                    Log::info($message);
-                    $notif = Notification::create([
-                        'content' => $message
-                    ]);
-                    $user->notification()->attach($notif->id, ['id' => Str::uuid(36), 'is_read' => false, 'notification_id' => $notif->id, 'user_id' => $user->id]);
-                    event(new PaymentNotifEvent($user->id, $message));
-                    return response()->json($response);
-            }
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
+                Log::info($message);
+                $notif = Notification::create([
+                    'content' => $message
+                ]);
+                $user->notification()
+                    ->attach(
+                        $notif->id,
+                        ['id' => Str::uuid(36), 'is_read' => false, 'notification_id' => $notif->id, 'user_id' => $user->id]
+                    );
+                event(new PaymentNotifEvent($user->id, $message));
+                return response()->json($response);
         }
     }
     public function profile()

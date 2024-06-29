@@ -209,11 +209,11 @@
             </a>
             <div class="dropdown-menu dropdown-menu-right">
                 <a href="{{ route('profile.operator') }}" class="dropdown-item has-icon">
-                    <i class="far fa-user"></i> Profile
+                    <i class="far fa-user"></i> Profil
                 </a>
                 <div class="dropdown-divider"></div>
                 <a href="{{ route('user-logout-act') }}" class="dropdown-item has-icon text-danger">
-                    <i class="fas fa-sign-out-alt"></i> Logout
+                    <i class="fas fa-sign-out-alt"></i> Keluar
                 </a>
             </div>
         </li>

@@ -9,7 +9,7 @@
             <div class="bg-white" style="width: 40%">
                 <div class="d-flex flex-column align-items-start m-4 gap-4">
                     <span>
-                        <h4>Login</h4>
+                        <h4>Masuk</h4>
                     </span>
                     <form action="{{ route('user-login-act') }}" method="POST" class="d-flex flex-column gap-4"
                         style="width: 100%;">
@@ -41,7 +41,7 @@
                         </div>
                         <div class="input-group mt-4">
                             <button type="submit" class="rounded-0 bg-main-color text-white border-0"
-                                style="box-shadow: none; width: 100%; height: 50px;">login</button>
+                                style="box-shadow: none; width: 100%; height: 50px;">Masuk</button>
                         </div>
                     </form>
                     <div class="d-flex justify-content-between align-items-center" style="width: 100%">

@@ -129,7 +129,6 @@ class NoteAndShippingMethod extends Component
                 }
             }
             $this->costs = $costResults;
-            // dd($this->costs);
             $this->dispatch('addCostValueToTotalPrice', costValue: $this->costValue);
         } else {
             $this->costs = null;

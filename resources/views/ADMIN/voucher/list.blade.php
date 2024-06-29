@@ -2,9 +2,9 @@
 @section('content')
     <section class="section text-center">
         <div class="section-header">
-            <h1>VOUCHER</h1>
+            <h1>KUPON</h1>
             <div class="section-header-button">
-                <a href="/admin/create-voucher" class="btn btn-success">Add New</a>
+                <a href="/admin/create-voucher" class="btn btn-success">Tambah</a>
             </div>
         </div>
     </section>
@@ -36,7 +36,7 @@
 
     <div class="card mx-auto">
         <div class="card-header text-center">
-            <h4>List Voucher</h4>
+            <h4>Daftar Kupon</h4>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -44,10 +44,10 @@
                     <thead>
                         <tr>
                             <th scope="col">No.</th>
-                            <th scope="col">Voucher Icon</th>
-                            <th scope="col">Kode Voucher</th>
-                            <th scope="col">Tipe Voucher</th>
-                            <th scope="col">Nama Voucher</th>
+                            <th scope="col">Ikon</th>
+                            <th scope="col">Kode Kupon</th>
+                            <th scope="col">Tipe Kupon</th>
+                            <th scope="col">Nama Kupon</th>
                             <th scope="col">Detail</th>
                             <th scope="col">Status</th>
                             <th scope="col">Aksi</th>
@@ -65,7 +65,7 @@
                                         <img src="{{ Storage::url('public/voucher-icon/' . $v->voucher_icon) }}" alt="{{ $v->name }}"
                                             style="max-height: 100px;">
                                     @else
-                                        No Image
+                                        Tidak ada foto
                                     @endif
                                 </td>
                                 <td>{{ $v->voucher_code }}</td>

@@ -2,9 +2,9 @@
     @if ($product->discount)
         <div class="d-flex flex-column gap-2 align-items-start">
             <span class="d-flex flex-column p-0">
-                <h2><strong>Rp
+                <h4><strong>Rp
                         {{ number_format($price - $price * ($product->discount / 100), 2, ',', '.') }}</strong>
-                </h2>
+                </h4>
                 <div class="d-flex gap-2">
                     <span class="text-dark bg-main-color border border-secondary text-center" style="width: 40px;"><i
                             class="text-white">{{ floor($product->discount) }}%</i></span>
@@ -24,7 +24,7 @@
         @foreach ($product->variation as $index => $variation)
             <div class="d-flex flex-column align-items-start gap-2" style="width: auto">
                 <span>
-                    <strong>{{ $variation->name }}</strong>
+                    {{ $variation->name }}
                 </span>
                     <div class="row row-cols-2 gap-1 ms-1">
                         @foreach ($variation->variationOption as $varOption)

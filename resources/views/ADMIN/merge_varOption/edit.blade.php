@@ -5,22 +5,22 @@
             <div class="section-header-back">
                 <a href="{{ url('/admin/list-merge-varOption') }}"><i class="fas fa-arrow-left"></i></a>
             </div>
-            <h1>EDIT MERGE VARIATION OPTION</h1>
+            <h1>EDIT GABUNGAN SUB VARIASI</h1>
         </div>
     </section>
 
     <div class="card">
         <div class="card-header">
-            <h4>Edit Merge Variation Option</h4>
+            <h4>Edit Gabungan Sub Variasi</h4>
         </div>
         <div class="card-body col">
             <form action="{{ url('/admin/update-merge-varOption/' . $mergeVariationOption->id) }}" method="post">
                 @csrf
                 @method('PUT')
                 <div class="form-group">
-                    <label for="product_id">Product</label>
+                    <label for="product_id">Produk</label>
                     <select name="product_id" id="product_id" class="form-control" required>
-                        <option value="" disabled>Select Product</option>
+                        <option value="" disabled>Pilih Produk</option>
                         @foreach ($products as $product)
                             <option value="{{ $product->id }}"
                                 {{ $mergeVariationOption->product_id == $product->id ? 'selected' : '' }}>
@@ -30,25 +30,25 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="variation_option_1_id" id="label_varOp_1">Variasi Opsi 1</label>
+                    <label for="variation_option_1_id" id="label_varOp_1">Sub Variasi 1</label>
                     <select name="variation_option_1_id" id="variation_option_1_id" class="form-control" >
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="variation_option_2_id" id="label_varOp_2">Variasi Opsi 2</label>
+                    <label for="variation_option_2_id" id="label_varOp_2">Sub Variasi 2</label>
                     <select name="variation_option_2_id" id="variation_option_2_id" class="form-control" >
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="merge_stock">Merge Stock</label>
+                    <label for="merge_stock">Stok</label>
                     <input type="number" name="merge_stock" class="form-control @error('merge_stock') is-invalid @enderror"
                         value="{{ old('merge_stock', $mergeVariationOption->merge_stock) }}" required>
                     @error('merge_stock')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-                <button type="submit" class="btn btn-primary">Update</button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
             </form>
         </div>
     </div>

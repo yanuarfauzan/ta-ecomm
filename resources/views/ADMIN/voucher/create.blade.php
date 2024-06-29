@@ -5,7 +5,7 @@
             <div class="section-header-back">
                 <a href="{{ url('/admin/list-voucher') }}"><i class="fas fa-arrow-left"></i></a>
             </div>
-            <h1>VOUCHER</h1>
+            <h1>KUPON</h1>
         </div>
 
         <div class="section-body">
@@ -22,13 +22,13 @@
     @endif
     <div class="card">
         <div class="card-header">
-            <h4>INPUT VOUCHER</h4>
+            <h4>ISI DATA KUPON</h4>
         </div>
         <div class="card-body col">
             <form action="{{ url('/admin/store-voucher') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-3">
-                    <label for="name" class="form-label">Nama voucher</label>
+                    <label for="name" class="form-label">Nama kupon</label>
                     <input type="text" class="form-control @error('name') is-invalid @enderror" id="name"
                         name="name" value="{{ old('name') }}">
                     @error('name')
@@ -36,7 +36,7 @@
                     @enderror
                 </div>
                 <div class="mb-3">
-                    <label for="type" class="form-label">Tipe voucher</label>
+                    <label for="type" class="form-label">Tipe kupon</label>
                     <select class="form-control @error('type') is-invalid @enderror" id="type" name="type" required>
                         <option>Pilih Tipe</option>
                         <option value="free ongkir" {{ old('type') == 'free ongkir' ? 'selected' : '' }}>Free Ongkir</option>
@@ -47,7 +47,7 @@
                     @enderror
                 </div>
                 <div class="mb-3">
-                    <label for="voucher_icon" class="form-label">Voucher Icon</label>
+                    <label for="voucher_icon" class="form-label">Gambar kupon</label>
                     <input type="file" class="form-control-file @error('voucher_icon') is-invalid @enderror"
                         id="voucher_icon" name="voucher_icon">
                     @error('voucher_icon')
@@ -79,7 +79,7 @@
                     @enderror
                 </div>
                 <div class="mb-3">
-                    <label for="expired_at" class="form-label">Tenggat Voucher</label>
+                    <label for="expired_at" class="form-label">Tenggat kupon</label>
                     <input type="date" class="form-control @error('expired_at') is-invalid @enderror" id="expired_at"
                         name="expired_at" value="{{ old('expired_at') }}">
                     @error('expired_at')
@@ -87,7 +87,7 @@
                     @enderror
                 </div>
                 <input type="hidden" name="is_active" value="1">
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
             </form>
         </div>
     </div>

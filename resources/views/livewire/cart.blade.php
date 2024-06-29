@@ -58,7 +58,7 @@
                                 <div class="d-flex" style="width: auto">
                                     <span class="text-dark bg-light border-main-color text-center"
                                         style="width: 80px; height: 27px;">
-                                        <p class="font-main-color">Discount</p>
+                                        <p class="font-main-color">Diskon</p>
                                     </span>
                                     <span class="text-dark bg-main-color border-main-color text-center"
                                         style="width: 40px; height: 27px"><i
@@ -71,7 +71,7 @@
                                     wire:click="toggleRelatedProducts('{{ $userCart?->id }}')"
                                     {{ $userCartId === $userCart?->id ? 'checked' : '' }}>
                                 <label class="btn rounded-0 mt-2 p-0" for="btn-check-outlined-{{ $userCart?->id }}"
-                                    style="width: 120px; height: 27px;">produk serupa</label><br>
+                                    style="width: 120px; height: 27px;">Produk serupa</label><br>
                             </span>
                         </div>
                         <div wire:ignore>
@@ -87,15 +87,15 @@
                 <div class="shadow-sm card-summary bg-light" style="width: 100%; height: auto;">
                     <div class="container d-flex flex-column py-4 px-4 gap-2" style="width: 100%; height: 100%">
                         <span>
-                            <strong class="font-main-color">
+                            <strong class="text-dark">
                                 <h5>Detail pemesanan</h5>
                             </strong>
                         </span>
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex flex-column align-items-start">
-                                <span><strong>Subtotal</strong></span>
+                                <span>Sub total :</span>
                                 @if ($discountExist)
-                                    <span><strong>Discount</strong></span>
+                                    <span>Diskon :</span>
                                 @endif
                             </div>
                             <div class="d-flex flex-column align-items-start">
@@ -108,18 +108,18 @@
                         </div>
                         <hr class="border border-secondary bg-main-color opacity-50">
                         <div class="d-flex justify-content-between align-items-center">
-                            <span><strong>Total :</strong></span>
+                            <span>Total :</span>
                             <span><strong>Rp
                                     {{ number_format($totalPrice - $totalDiscount, 2, ',', '.') }}</strong></span>
                         </div>
                         @if ($checkedProducts)
                             <a href="{{ route('user-order') . '?' . http_build_query(['cartIds' => $checkedProducts]) }}"
                                 role="button" id="checkout" class="btn rounded-0 mt-3 bg-main-color text-white"
-                                style="width: 100%;"><strong>Checkout</strong></a>
+                                style="width: 100%;">Buat pesanan</a>
                         @else
                             <button role="button" id="checkout"
                                 class="btn rounded-0 mt-3 bg-main-color text-white opacity-50"
-                                style="width: 100%; cursor: default;" disable><strong>Checkout</strong></button>
+                                style="width: 100%; cursor: default;" disable>Buat pesanan</button>
                         @endif
 
                     </div>
@@ -129,7 +129,7 @@
                     <div class="container mb-4" style="width: 100%; height: auto">
                         <div class="d-flex flex-column position-relative">
                             <span class="d-flex justify-content-between mt-4 mx-3">
-                                <strong class="font-main-color">
+                                <strong class="text-dark">
                                     <h5>Produk serupa</h5>
                                 </strong>
                                 <form action="/test" method="GET">
@@ -139,7 +139,7 @@
                                             value="{{ $categoryIds[$i] ?? null }}">
                                     @endfor
                                     <button type="submit" class="font-main-color bg-transparent border-0">
-                                        <p>view more..</p>
+                                        <p>lihat lainnya...</p>
                                     </button>
                                 </form>
                             </span>
@@ -158,7 +158,7 @@
                                                 @if (isset($product->discount))
                                                     <span
                                                         class="text-dark bg-light position-absolute border border-secondary text-center"
-                                                        style="top: 127px; width: 50px; font-size: 10px;">Discount</span>
+                                                        style="top: 127px; width: 50px; font-size: 10px;">Diskon</span>
                                                     <span
                                                         class="text-dark bg-main-color position-absolute border border-secondary text-center"
                                                         style="top: 127px; left: 50px; width: 30px; font-size: 10px;"><i
@@ -167,7 +167,7 @@
                                                 <div class="card-body p-2">
                                                     <div class="d-flex justify-content-between">
                                                         <strong style="font-size: 10px;">{{ $product->name }}</strong>
-                                                        <p style="font-size: 10px;">Stock
+                                                        <p style="font-size: 10px;">Stok
                                                             {{ $stock ?? $product->stock }}</p>
                                                     </div>
                                                     @if (isset($product->discount))

@@ -5,13 +5,13 @@
             <div class="section-header-back">
                 <a href="{{ url('/admin/list-product') }}"><i class="fas fa-arrow-left"></i></a>
             </div>
-            <h1>EDIT PRODUCT</h1>
+            <h1>EDIT PRODUK</h1>
         </div>
     </section>
 
     <div class="card">
         <div class="card-header">
-            <h4>Edit Product</h4>
+            <h4>Edit Produk</h4>
         </div>
         <div class="card-body col">
             <form action="{{ url('/admin/update-product/' . $product->id) }}" method="post" enctype="multipart/form-data">
@@ -159,7 +159,7 @@
                         @enderror
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Update</button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
             </form>
         </div>
     </div>

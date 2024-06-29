@@ -61,9 +61,24 @@ class Profile extends Component
         \Midtrans\Config::$is3ds = true;
 
         $this->user = $user;
-        $this->pendingOrders = $user->order()->where('order_status', 'pending')->with('cartProduct.product.hasImages', 'cartProduct.cart.hasProduct.pickedVariationOption', 'product', 'pickedVariationOption.productImage')->get();
-        $this->packedOrders = $user->order()->where('order_status', 'proceed')->with('cartProduct.product.hasImages', 'cartProduct.cart.hasProduct.pickedVariationOption', 'product', 'pickedVariationOption.productImage')->get();
-        $this->deliveredOrders = $user->order()->whereIn('order_status', ['delivered', 'shipped'])->with('cartProduct.product.hasImages', 'cartProduct.cart.hasProduct.pickedVariationOption', 'product', 'pickedVariationOption.productImage')->get();
+        $this->pendingOrders = $user->order()->where('order_status', 'pending')
+        ->with('cartProduct.product.hasImages', 
+        'cartProduct.cart.hasProduct.pickedVariationOption', 
+        'product', 
+        'pickedVariationOption.productImage')
+        ->get();
+        $this->packedOrders = $user->order()->where('order_status', 'proceed')
+        ->with('cartProduct.product.hasImages', 
+        'cartProduct.cart.hasProduct.pickedVariationOption', 
+        'product', 
+        'pickedVariationOption.productImage')
+        ->get();
+        $this->deliveredOrders = $user->order()->whereIn('order_status', ['delivered', 'shipped'])
+        ->with('cartProduct.product.hasImages', 
+        'cartProduct.cart.hasProduct.pickedVariationOption', 
+        'product', 
+        'pickedVariationOption.productImage')
+        ->get();
 
         if ($this->deliveredOrders) {
             $this->deliveredOrders->each(function ($order) {
@@ -71,8 +86,18 @@ class Profile extends Component
             });
         }
 
-        $this->completedOrders = $user->order()->where('order_status', 'completed')->with('cartProduct.product.hasImages', 'cartProduct.cart.hasProduct.pickedVariationOption', 'product', 'pickedVariationOption.productImage')->get();
-        $this->cancelledOrders = $user->order()->where('order_status', 'failed')->with('cartProduct.product.hasImages', 'cartProduct.cart.hasProduct.pickedVariationOption', 'product', 'pickedVariationOption.productImage')->get();
+        $this->completedOrders = $user->order()->where('order_status', 'completed')
+        ->with('cartProduct.product.hasImages', 
+        'cartProduct.cart.hasProduct.pickedVariationOption', 
+        'product', 
+        'pickedVariationOption.productImage')
+        ->get();
+        $this->cancelledOrders = $user->order()->where('order_status', 'failed')
+        ->with('cartProduct.product.hasImages', 
+        'cartProduct.cart.hasProduct.pickedVariationOption', 
+        'product', 
+        'pickedVariationOption.productImage')
+        ->get();
         $this->username = $user->username;
         $this->birtdate = $user->birtdate;
         $user->gender == 1 ? $this->gender1 = $user->gender : $this->gender2 = $user->gender;

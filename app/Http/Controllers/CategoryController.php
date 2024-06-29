@@ -17,7 +17,8 @@ class CategoryController extends Controller
     public function index()
     {
         $category = Category::orderBy('name')->paginate(10);
-        return view('ADMIN.category.list', compact('category'));
+        $title = 'Kategori';
+        return view('ADMIN.category.list', compact('category', 'title'));
     }
 
     /**
@@ -25,7 +26,8 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('ADMIN.category.create');
+        $title = 'Tambah Kategori';
+        return view('ADMIN.category.create', compact('title'));
     }
 
     /**
@@ -78,7 +80,8 @@ class CategoryController extends Controller
     public function edit($id)
     {
         $category = Category::findOrFail($id);
-        return view('ADMIN.category.edit', compact('category'));
+        $title = 'Edit Kategori';
+        return view('ADMIN.category.edit', compact('category', 'title'));
     }
 
     /**

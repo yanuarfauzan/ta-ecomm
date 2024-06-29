@@ -54,8 +54,8 @@
 <nav class="navbar navbar-expand-lg fixed-top d-flex justify-content-center text-white bg-light shadow"
     style="height: 80px; {{ in_array(substr(url()->current(), strrpos(url()->current(), '/') + 1), ['login', 'register', 'verify', 'forgot-password', $token ?? null]) ? '' : 'margin-top: 36px' }}">
     <div class="container-fluid mx-4" style="width: 84%">
-        <div class="d-flex align-items-center justify-content-start" style="width: 20%;">
-            <a class="navbar-brand font-main-color" href="{{ route('user-home') }}"><strong>E-COMM</strong></a>
+        <div class="d-flex align-items-center justify-content-start" style="width: 25%;">
+            <a class="navbar-brand font-main-color mt-1" href="{{ route('user-home') }}"><strong><h3>E-COMM</h3></strong></a>
             <div class="divider" style="background-color: #6777ef"></div>
             <a href="#categoryCollapse" class="font-main-color ms-2" style="text-decoration: none;"
                 data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="categoryCollapse"
@@ -65,11 +65,17 @@
                 @elseif (request()->path() == 'user/product/buy-now' || request()->path() == 'user/product/order'  )
                     {{ 'Pesanan' }}
                 @elseif (request()->path() == 'user/profile' )
-                    {{ 'Profile' }}
+                    {{ 'Profil' }}
                 @elseif (request()->path() == 'login' )
-                    {{ 'Login' }}
+                    {{ 'Masuk' }}
                 @elseif (request()->path() == 'register' )
-                    {{ 'Login' }}
+                    {{ 'Daftar' }}
+                @elseif (request()->path() == 'forgot-password' )
+                    {{ 'Lupa Password' }}
+                @elseif (request()->path() == 'reset-password' )
+                    {{ 'Reset Password' }}
+                @elseif (request()->path() == 'verify' )
+                    {{ 'Verifikasi' }}
                 @endif
             </a>
         </div>

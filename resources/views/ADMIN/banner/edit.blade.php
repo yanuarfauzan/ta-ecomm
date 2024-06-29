@@ -5,20 +5,20 @@
             <div class="section-header-back">
                 <a href="{{ url('/admin/list-banner') }}"><i class="fas fa-arrow-left"></i></a>
             </div>
-            <h1>EDIT BANNER HOME</h1>
+            <h1>EDIT BANER</h1>
         </div>
     </section>
 
     <div class="card">
         <div class="card-header">
-            <h4>Edit Banner Home</h4>
+            <h4>Edit Baner</h4>
         </div>
         <div class="card-body col">
             <form action="{{ url('/admin/update-banner/' . $bannerHome->id) }}" method="post" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="mb-3">
-                    <label for="banner_home">Banner Image</label>
+                    <label for="banner_home">Gambar Baner</label>
                     @if ($bannerHome->banner_image)
                         <div class="mb-2">
                             <img src="{{ Storage::url($bannerHome->banner_image) }}" alt="Banner Home"
@@ -39,7 +39,7 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-                <button type="submit" class="btn btn-primary">Update</button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
             </form>
         </div>
     </div>

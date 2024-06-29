@@ -28,3 +28,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/add-product-to-fav/{productId}', [UserController::class, 'addProductToFav']);
     Route::get('/user/show-cart', [UserController::class, 'showCart']);
 });
+
+Route::get('test-shipping', function() {
+    $response = Http::withHeaders(
+        [
+            'key' => env('API_KEY_RAJAONGKIR')
+        ]
+    )->post(env('API_BASE_URL_RAJA_ONGKIR') . '/cost', [
+        'origin' => 'bandung',
+        'destination' => 'yogyakarta',
+        'weight' => 1,
+        'courier' => 'jne'
+    ]);
+    dd($response->json());
+});

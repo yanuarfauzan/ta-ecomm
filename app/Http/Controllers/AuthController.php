@@ -20,8 +20,8 @@ class AuthController extends Controller
 {
     public function registerPage()
     {
-        $title = 'Register';
-        return view('user.auth.register', compact('register'));
+        $title = 'Daftar';
+        return view('user.auth.register', compact('title'));
     }
     public function verifyPage()
     {
@@ -31,18 +31,18 @@ class AuthController extends Controller
     }
     public function loginPage()
     {
-        $title = 'Login';
+        $title = 'Masuk';
         return view('user.auth.login', compact('title'));
     }
     public function forgotPasswordPage()
     {
-        $title = 'Forgot Password';
+        $title = 'Lupa Password';
         return view('user.auth.forgot_password', compact('title'));
     }
     public function resetPasswordPage($token)
     {
         $title = 'Reset Password';
-        return view('user.auth.reset_password', compact('token', compact('title')));
+        return view('user.auth.reset_password', compact('token', 'title'));
     }
     public function preRegister(RegisterRequest $request)
     {

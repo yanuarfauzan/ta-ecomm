@@ -5,7 +5,7 @@
             <div class="section-header-back">
                 <a href="{{ url('/admin/list-merge-varOption') }}"><i class="fas fa-arrow-left"></i></a>
             </div>
-            <h1>MERGE VARIATION OPTION</h1>
+            <h1>GABUNGAN SUB VARIASI</h1>
         </div>
 
         <div class="section-body">
@@ -22,7 +22,7 @@
     @endif
     <div class="card">
         <div class="card-header">
-            <h4>INPUT MERGE VARIATION OPTION</h4>
+            <h4>ISI DATA GABUNGAN SUB VARIASI</h4>
         </div>
         <div class="card-body col">
             <form action="{{ url('/admin/store-merge-varOption') }}" method="POST">
@@ -37,12 +37,12 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="variation_option_1_id" id="label_varOp_1">Variasi Opsi 1</label>
+                    <label for="variation_option_1_id" id="label_varOp_1">Sub Variasi 1</label>
                     <select name="variation_option_1_id" id="variation_option_1_id" class="form-control" >
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="variation_option_2_id" id="label_varOp_2">Variasi Opsi 2</label>
+                    <label for="variation_option_2_id" id="label_varOp_2">Sub Variasi 2</label>
                     <select name="variation_option_2_id" id="variation_option_2_id" class="form-control" >
                     </select>
                 </div>

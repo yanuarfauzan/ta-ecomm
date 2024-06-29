@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->uuid('user_id');
             $table->uuid('product_id');
             $table->integer('rating')->nullable();
-            $table->string('content')->nullable();
+            $table->fullText('content')->nullable();
             $table->string('response_operator') ->nullable();
             $table->timestamps();
             $table->foreign('order_id')
@@ -25,7 +25,6 @@ return new class extends Migration {
             ->references('id')->on('user')->onDelete('cascade');
             $table->foreign('product_id')
             ->references('id')->on('product')->onDelete('cascade');
-            $table->index('content', 'idx_content_fulltext')->fulltext();
         });
     }
 

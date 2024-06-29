@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title> &mdash; e-comm</title>
-
+    <title>Beranda Operator</title>
+    <link rel="shortcut icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
     <link href="{{ asset('/bootstrap-icons/font/bootstrap-icons.css') }}" rel="stylesheet">
     <link href="{{ asset('/bootstrap-icons/font/bootstrap-icons.min.css') }}" rel="stylesheet">
     <link href="{{ asset('/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
@@ -93,13 +93,13 @@
                                         <a href="{{ route('operator-index') . '?order_status=shipped' }}" class="btn btn-primary filter-btn" data-category="shipped">
                                             <div class="card-stats-item-count">{{ $shippedCount }}</div>
                                         </a>
-                                        <div class="card-stats-item-label">Shipped</div>
+                                        <div class="card-stats-item-label">Dikirim</div>
                                     </div>
                                     <div class="card-stats-item">
                                         <a href="{{ route('operator-index') . '?order_status=completed' }}" class="btn btn-primary filter-btn" data-category="completed">
                                             <div class="card-stats-item-count">{{ $completedCount }}</div>
                                         </a>
-                                        <div class="card-stats-item-label">Completed</div>
+                                        <div class="card-stats-item-label">Selesai</div>
                                     </div>
                                 </div>
                             </div>
@@ -132,7 +132,7 @@
                                         </div>
                                         <h2 class="m-4">
                                             <i class="fas fa-comments card-icon m-2"></i>
-                                            Live Chat<br>Customer
+                                            Live Chat<br>Pembeli
                                         </h2>
                                     </div>
                                     <div class="card-stats-items">
@@ -153,8 +153,24 @@
                                 </div>
                                 <div class="card-header-action d-flex justify-content-start align-items-center gap-2">
                                     <div class="badge d-flex justify-content-center align-items-center"
-                                        style="height: 30px; background-color: @if (in_array($order->order_status, ['paid', 'proceed', 'shipped'])) #ffc107 @else #28a745 @endif">
-                                        {{ $order->formatted_status }}
+                                        style="height: 30px; background-color: @if (in_array($order->order_status, ['paid', 'proceed', 'shipped',])) #ffc107 @elseif($order->order_status == 'completed') #006400 @else #FF0000 @endif">
+                                        @switch($order->order_status)
+                                            @case('paid')
+                                                lunas
+                                                @break
+                                            @case('proceed')
+                                                proses
+                                                @break
+                                            @case('shipped')
+                                                terkirim
+                                                @break
+                                            @case('completed')
+                                                selesai
+                                                @break
+                                            @case('failed')
+                                                gagal
+                                                @break
+                                        @endswitch
                                     </div>
                                     <button class="btn btn-icon btn-info" data-toggle="collapse"
                                         data-target="#order-details-{{ $order->id }}" aria-expanded="false"
@@ -217,14 +233,20 @@
                                             <div class="card-header bg-primary d-flex justify-content-between">
                                                 <h4 class="text-white">Total:</h4>
                                                 <h4 class="text-white">Rp
-                                                    {{ number_format($order->total_price + $order->shippingMethod->cost, 0, ',', '.') }}
+                                                    {{ number_format($order->total_price, 0, ',', '.') }}
                                                 </h4>
                                             </div>
                                             <div class="card-body">
                                                 <div class="d-flex justify-content-between">
                                                     <span>Harga produk:</span>
+                                                    @if ($order->product)
+                                                    {{ number_format($order->total_price - $order->shippingMethod->cost, 0, ',', '.') }}
+                                                    @else
                                                     <span>Rp
-                                                        {{ number_format($order->total_price, 0, ',', '.') }}</span>
+                                                        {{ number_format($order->cartProducts->sum(function ($cartProduct) {
+                                                            return $cartProduct->cart->total_price;
+                                                        }), 0, ',', '.') }}</span>
+                                                    @endif
                                                 </div>
                                             </div>
                                             <div class="card-body">
