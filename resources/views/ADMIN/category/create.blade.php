@@ -5,7 +5,7 @@
             <div class="section-header-back">
                 <a href="{{ url('/admin/list-category') }}"><i class="fas fa-arrow-left"></i></a>
             </div>
-            <h1>CATEGORY</h1>
+            <h1>KETEGORI</h1>
         </div>
 
         <div class="section-body">
@@ -22,7 +22,7 @@
     @endif
     <div class="card">
         <div class="card-header">
-            <h4>INPUT CATEGORY</h4>
+            <h4>Isi Data Kategori</h4>
         </div>
         <div class="card-body col">
             <form action="{{ url('/admin/store-category') }}" method="post" enctype="multipart/form-data">
@@ -35,13 +35,13 @@
                 @enderror
                 </div>
                 <div class="mb-3">
-                    <label for="icon">Icon</label>
+                    <label for="icon">Ikon</label>
                     <input type="file" class="form-control-file @error('icon') is-invalid @enderror" id="icon" name="icon" value="{{old('icon')}}">
                     @error('icon')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
             </form>
         </div>
     </div>

@@ -20,7 +20,8 @@ class VariationOptionController extends Controller
     public function index()
     {
         $variationOptions = VariationOption::with('variation', 'productImage')->paginate(10);
-        return view('ADMIN.variation-option.list', compact('variationOptions'));
+        $title = 'Sub Variasi';
+        return view('ADMIN.variation-option.list', compact('variationOptions', 'title'));
     }
 
     /**
@@ -32,7 +33,8 @@ class VariationOptionController extends Controller
         $variations = Variation::all();
         $categories = Category::all();
         $variationOption = new VariationOption(); // Create a new empty VariationOption object
-        return view('ADMIN.variation-option.create', compact('variations', 'products', 'variationOption', 'categories'));
+        $title = 'Tambah Sub Variasi';
+        return view('ADMIN.variation-option.create', compact('variations', 'products', 'variationOption', 'categories', 'title'));
     }
 
     public function getImagesByProduct($productId)
@@ -100,7 +102,8 @@ class VariationOptionController extends Controller
         $variations = Variation::all();
         $products = Product::all();
         $categories = Category::all();
-        return view('ADMIN.variation-option.edit', compact('variationOption', 'variations', 'products', 'categories'));
+        $title = 'Edit Sub Variasi';
+        return view('ADMIN.variation-option.edit', compact('variationOption', 'variations', 'products', 'categories', 'title'));
     }
 
     /**

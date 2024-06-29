@@ -50,6 +50,7 @@ class Cart extends Component
             'merge_price' => $priceAfterAdditional,
             'merge_price_after_discount' => $priceAdditionalAfterDiscount
         ]);
+        // $this->totalPrice = $priceAfterAdditional * $this->count;
         $this->dispatch('changeTotalPrice', userCart: $userCart, fixPrice: $priceAfterAdditional, eventId: Str::uuid(36));
     }
     public function showSearchedProducts($searchQuery)

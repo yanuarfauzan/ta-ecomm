@@ -2,9 +2,9 @@
 @section('content')
     <section class="section text-center">
         <div class="section-header">
-            <h1>MERGE VARIATION OPTION</h1>
+            <h1>GABUNGAN SUB VARIASI</h1>
             <div class="section-header-button">
-                <a href="/admin/create-merge-varOption" class="btn btn-success">Add New</a>
+                <a href="/admin/create-merge-varOption" class="btn btn-success">Tambah</a>
             </div>
         </div>
     </section>
@@ -28,7 +28,7 @@
 
     <div class="card mx-auto">
         <div class="card-header text-center">
-            <h4>List Merge Variation Option</h4>
+            <h4>Daftar Gabungan Sub Variasi</h4>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -37,8 +37,8 @@
                         <tr>
                             <th scope="col">No.</th>
                             <th scope="col">Produk</th>
-                            <th scope="col">Variation Option</th>
-                            <th scope="col">Merge Stock</th>
+                            <th scope="col">Sub Variasi</th>
+                            <th scope="col">Stok</th>
                             <th scope="col">Aksi</th>
                         </tr>
                     </thead>

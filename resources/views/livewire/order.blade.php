@@ -9,13 +9,13 @@
             style="width: 100%; background-color: white" id="card-product">
             <div class="d-flex flex-column" style="width: 100%; height: 100%">
                 <h5><strong>Alamat pengiriman</strong></h5>
-                <span class="mt-2"><strong>{{ $defaultUserAdress->recipient_name }}</strong>
+                <span class="mt-2">{{ $defaultUserAdress->recipient_name }}
                     {{ $defaultUserAdress->phone_number }}</span>
                 <span><i class="bi bi-geo-alt"></i> {{ $defaultUserAdress->address }} -
                     ({{ $defaultUserAdress->detail }})</span>
                 <div class="d-flex justify-content-end mt-2">
                     <button id="checkout" class="btn rounded-0 bg-main-color text-white" data-bs-toggle="modal"
-                        data-bs-target="#modalAddress" style="width: 20%;"><strong>ganti alamat</strong></button>
+                        data-bs-target="#modalAddress" style="width: 20%;">Ganti alamat</button>
                 </div>
             </div>
         </div>
@@ -64,7 +64,7 @@
                 <div class="d-flex justify-content-between align-items-center gap-2" style="width: 100%;">
                     <div class="d-flex justify-content-start gap-2 align-items-center" style="width: 100%">
                         <span for="note" class="bg-main-color px-3 text-white text-center"
-                            style="padding-top: 12px; padding-bottom: 12px;">pesan:
+                            style="padding-top: 12px; padding-bottom: 12px;">Pesan:
                         </span>
                         <input wire:model.lazy="note" type="text" class="form-control rounded-0" id="note"
                             name="note" placeholder="tuliskan pesan anda disini"
@@ -132,7 +132,7 @@
                 <div class="d-flex justify-content-between align-items-center gap-2" style="width: 100%;">
                     <div class="d-flex justify-content-start gap-2 align-items-center" style="width: 100%">
                         <span for="note" class="bg-main-color px-3 text-white text-center"
-                            style="padding-top: 12px; padding-bottom: 12px;">pesan:
+                            style="padding-top: 12px; padding-bottom: 12px;">Pesan:
                         </span>
                         <input wire:model.lazy="note" type="text" class="form-control rounded-0" id="note"
                             name="note" placeholder="tuliskan pesan anda disini"
@@ -146,17 +146,17 @@
     <div class="d-flex flex-column align-items-start gap-2" style="width: 30%; height: auto;">
         <div class="shadow-sm card-summary bg-light" style="width: 100%; height: auto">
             <div class="container d-flex flex-column py-4 px-4 gap-2" style="width: 100%; height: auto">
-                <span>
-                    <strong class="font-main-color">
+                <span class="text-dark">
+                    <strong>
                         <h5>Detail pemesanan</h5>
                     </strong>
                 </span>
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="d-flex flex-column align-items-start">
-                        <span>Subtotal</span>
+                        <span>Sub total</span>
                         <span>Ongkos kirim</span>
                         @if (isset($voucherValue))
-                            <span>Voucher</span>
+                            <span>Kupon</span>
                         @endif
                     </div>
                     <div class="d-flex flex-column align-items-start">
@@ -174,7 +174,7 @@
                     <span><strong>Rp {{ number_format($totalPrice, 2, ',', '.') }}</strong></span>
                 </div>
                 <button id="checkout-payment" class="btn rounded-0 mt-3 bg-main-color text-white"
-                    style="width: 100%;"><strong>Bayar</strong></button>
+                    style="width: 100%;">Bayar</button>
             </div>
         </div>
     </div>
@@ -338,7 +338,6 @@
                                     'There has been a problem with your fetch operation:',
                                     error);
                             });
-
                     },
                     onError: function(result) {
                         fetch("{{ route('after-payment', ['order_id' => $order->order_number]) }}", {

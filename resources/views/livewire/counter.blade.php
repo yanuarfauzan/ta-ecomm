@@ -15,7 +15,7 @@
                         {{ number_format($userCart->total_price_after_discount, 2, ',', '.') }}</strong>
                 </h5>
                 @if (isset($product->discount))
-                    <p class="text-decoration-line-through font-main-color">
+                    <p class="text-decoration-line-through text-dark text-opacity-75">
                         <i>Rp
                             {{ number_format($userCart->total_price, 2, ',', '.') }}</i>
                     </p>

@@ -5,13 +5,13 @@
             <div class="section-header-back">
                 <a href="{{ url('/admin/list-category') }}"><i class="fas fa-arrow-left"></i></a>
             </div>
-            <h1>EDIT CATEGORY</h1>
+            <h1>EDIT KATEGORI</h1>
         </div>
     </section>
 
     <div class="card">
         <div class="card-header">
-            <h4>Edit Category</h4>
+            <h4>Edit Kategori</h4>
         </div>
         <div class="card-body col">
             <form action="{{ url('/admin/update-category/' . $category->id) }}" method="post" enctype="multipart/form-data">
@@ -25,7 +25,7 @@
                     @enderror
                 </div>
                 <div class="mb-3">
-                    <label for="icon">Icon</label>
+                    <label for="icon">Ikon</label>
                     @if ($category->icon)
                         <div class="mb-2">
                             <img src="{{ Storage::url($category->icon) }}" alt="Category Icon" style="max-width: 100px;">
@@ -37,7 +37,7 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-                <button type="submit" class="btn btn-primary">Update</button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
             </form>
         </div>
     </div>

@@ -16,20 +16,22 @@ class AdminUsersController extends Controller
 {
     public function home()
     {
-        return view('ADMIN.partial.home');
+        $title = 'Beranda Admin';
+        return view('ADMIN.partial.home', compact('title'));
     }
 
     public function index()
     {
         $users = User::with('userAddresses')->orderBy('username')->paginate(10);
         $address = Address::all();
-
-        return view('ADMIN.users.list', compact('users', 'address'));
+        $title = 'Pengguna';
+        return view('ADMIN.users.list', compact('users', 'address', 'title'));
     }
 
     public function create()
     {
-        return view('ADMIN.users.create');
+        $title = 'Tambah Pengguna';
+        return view('ADMIN.users.create', compact('title'));
     }
 
     public function store(Request $request)
@@ -104,7 +106,8 @@ class AdminUsersController extends Controller
     public function edit($id)
     {
         $user = User::findOrFail($id);
-        return view('ADMIN.users.edit', compact('user'));
+        $title = 'Edit Pengguna';
+        return view('ADMIN.users.edit', compact('user', 'title'));
     }
 
     public function update(Request $request, $id)

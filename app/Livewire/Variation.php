@@ -47,19 +47,12 @@ class Variation extends Component
         $mergeVarOptionId = MergeVariationOption::whereIn('variation_option_1_id', $varOptionIds)->whereIn('variation_option_2_id', $varOptionIds)->first()->id;
         $totalAdditionalPrice = VariationOption::whereIn('id', $varOptionIds)->get()->sum('price');
         $this->stock = VariationOption::whereIn('id', $varOptionIds)->get()->sum('stock');
-        $this->dispatch('changeAdditionalPrice', product: $this->product, userCart: $this->product->cart()->first(), totalAdditionalPrice: $totalAdditionalPrice, eventId: Str::uuid(36), mergeVarOptionId: $mergeVarOptionId);
+        $this->dispatch('changeAdditionalPrice', product: $this->product, userCart: $this->userCart, totalAdditionalPrice: $totalAdditionalPrice, eventId: Str::uuid(36), mergeVarOptionId: $mergeVarOptionId);
         collect($this->selectedVariations)->each(function ($item) {
             $pickedVariation = $this->userCart->pickedVariation->where('variation_id', $item['variationId'])->first();
-
-            // if ($pickedVariation) {
-            //     if ($pickedVariation->variation_option_id == $item['varOptionId']) {
-            //         $this->dispatch('updateQtyIfVariationOptionSame', qty: $this->product->cart()->first()->qty);
-            //     } else {
             $pickedVariation->update([
                 'variation_option_id' => $item['varOptionId']
             ]);
-            //         }
-            //     }
         });
     }
     public function render()

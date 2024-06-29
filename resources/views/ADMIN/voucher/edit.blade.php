@@ -5,20 +5,20 @@
             <div class="section-header-back">
                 <a href="{{ url('/admin/list-voucher') }}"><i class="fas fa-arrow-left"></i></a>
             </div>
-            <h1>EDIT VOUCHER</h1>
+            <h1>EDIT KUPON</h1>
         </div>
     </section>
 
     <div class="card">
         <div class="card-header">
-            <h4>Edit Voucher</h4>
+            <h4>Edit Kupon</h4>
         </div>
         <div class="card-body col">
             <form action="{{ url('/admin/update-voucher/' . $voucher->id) }}" method="post" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="mb-3">
-                    <label for="name" class="form-label">Nama Voucher</label>
+                    <label for="name" class="form-label">Nama kupon</label>
                     <input type="text" class="form-control @error('name') is-invalid @enderror" id="name"
                         name="name" value="{{ old('name', $voucher->name) }}">
                     @error('name')
@@ -26,7 +26,7 @@
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label for="type">Tipe Voucher</label>
+                    <label for="type">Tipe kupon</label>
                     <select class="form-control" id="type" name="type" required>
                         <option value="free ongkir" {{ $voucher->type === 'free ongkir' ? 'selected' : '' }}>Free Ongkir
                         </option>
@@ -34,7 +34,7 @@
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label for="voucher_icon">Icon Voucher</label>
+                    <label for="voucher_icon">Gambar kupon</label>
                     @if ($voucher->voucher_icon)
                         <div class="mb-2">
                             <img src="{{ Storage::url($voucher->voucher_icon) }}" alt="Voucher Icon"
@@ -64,7 +64,7 @@
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label for="expired_at">Tenggat Voucher</label>
+                    <label for="expired_at">Tenggat kupon</label>
                     <input type="date" class="form-control" id="expired_at @error('expired_at') is-invalid @enderror"
                         name="expired_at" value="{{ old('expired_at', $voucher->expired_at) }}" required>
                     @error('expired_at')
@@ -79,7 +79,7 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-                <button type="submit" class="btn btn-primary">Update</button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
             </form>
         </div>
     </div>

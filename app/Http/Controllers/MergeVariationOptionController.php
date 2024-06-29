@@ -14,14 +14,15 @@ class MergeVariationOptionController extends Controller
     public function index()
     {
         $mergeVariationOptions = MergeVariationOption::paginate(10);
-        return view('ADMIN.merge_varOption.list', compact('mergeVariationOptions'));
+        $title = 'Gabungan Sub Variasi';
+        return view('ADMIN.merge_varOption.list', compact('mergeVariationOptions', 'title'));
     }
 
     public function create(Request $request)
     {
         $products = Product::all();
-
-        return view('ADMIN.merge_varOption.create', compact('products'));
+        $title = 'Tambah Gabungan Sub Variasi';
+        return view('ADMIN.merge_varOption.create', compact('products', 'title'));
     }
 
     public function store(Request $request)
@@ -65,8 +66,8 @@ class MergeVariationOptionController extends Controller
         $variationOptions2 = VariationOption::whereHas('productImage', function ($query) use ($mergeVariationOption) {
             $query->where('product_id', $mergeVariationOption->product_id);
         })->get();
-
-        return view('ADMIN.merge_varOption.edit', compact('mergeVariationOption', 'products', 'variationOptions1', 'variationOptions2'));
+        $title = 'Edit Gabungan Sub Variasi';
+        return view('ADMIN.merge_varOption.edit', compact('mergeVariationOption', 'products', 'variationOptions1', 'variationOptions2', 'title'));
     }
     public function update(Request $request, $id)
     {
@@ -87,7 +88,6 @@ class MergeVariationOptionController extends Controller
         $mergeVariationOption->variation_option_2_id = $request->variation_option_2_id;
         $mergeVariationOption->merge_stock = $request->merge_stock;
         $mergeVariationOption->save();
-
         return redirect('/admin/list-merge-varOption')->with('success', 'Merge Variation Option Berhasil Diperbarui.');
     }
 

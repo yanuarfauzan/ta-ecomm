@@ -3,7 +3,7 @@
         <div class="d-flex flex-column justify-content-center gap-2 card-detail-product mt-4 bg-white"
             style="width: 100%">
             <div class="container mt-4 d-flex flex-column gap-2 ms-4">
-                <h4><strong>ulasan pembeli</strong></h4>
+                <h5><strong>Ulasan pembeli</strong></h5>
             </div>
             <div class="container d-flex flex-column gap-2">
                 <div class="d-flex flex-column align-items-center justify-content-center">
@@ -25,12 +25,12 @@
             </div>
             <div class="container d-flex flex-column align-items-center">
                 <span>
-                    {{ $arrayStars['acumulatedInPercentRating'] }}% pembeli merasa puas
+                    <strong>{{ $arrayStars['acumulatedInPercentRating'] }}%</strong> pembeli merasa puas
                 </span>
                 <div class="d-flex gap-2 justify-content-center align-items-center">
-                    <span>{{ $arrayStars['totalRating'] }} rating</span>
+                    <span class="text-dark text-opacity-75">{{ $arrayStars['totalRating'] }} penilaian</span>
                     <div class="low-divider-black"></div>
-                    <span>{{ $arrayStars['totalReviews'] }} ulasan</span>
+                    <span class="text-dark text-opacity-75">{{ $arrayStars['totalReviews'] }} ulasan</span>
                 </div>
             </div>
             <div class="d-flex flex-column mb-4">
@@ -93,10 +93,10 @@
         </div>
         <div class="d-flex flex-column justify-content-center gap-2 card-detail-product bg-white" style="width: 100%">
             <div class="container my-2 d-flex flex-column gap-2">
-                <h4 class="ms-4 mt-4"><strong>filter ulasan</strong></h4>
+                <h5 class="ms-4 mt-4"><strong>Filter ulasan</strong></h5>
                 <div class="container d-flex flex-column">
                     <div class="ms-2">
-                        <span><strong>media</strong></span>
+                        <span><strong>Media</strong></span>
                     </div>
                     <hr class="m-0">
                     <div class="d-flex justify-content-start align-items-center gap-2 my-2 ms-2">
@@ -110,7 +110,7 @@
                 </div>
                 <div class="container d-flex flex-column">
                     <div>
-                        <span class="ms-2"><strong>rating</strong></span>
+                        <span class="ms-2"><strong>Rating</strong></span>
                     </div>
                     <hr class="m-0">
                     <div class="d-flex justify-content-start align-items-start gap-2 my-2 ms-2">
@@ -148,7 +148,7 @@
                 </div>
                 <div class="container d-flex flex-column">
                     <div>
-                        <span class="ms-2"><strong>topik ulasan</strong></span>
+                        <span class="ms-2"><strong>Topik ulasan</strong></span>
                     </div>
                     <hr class="m-0">
                     <div class="d-flex flex-column justify-content-start align-items-start gap-2 my-2 ms-2">
@@ -194,7 +194,7 @@
     </div>
     <div class="d-flex flex-column gap-2 card-detail-product mt-4 bg-white" style="width: 70%">
         <div class="container my-4 d-flex flex-column gap-2" style="100%;">
-            <h4 class="ms-4"><strong>foto produk</strong></h4>
+            <h5 class="ms-4"><strong>Foto produk</strong></h5>
             <div class="d-flex align-items-center justify-content-start gap-2 ms-4">
                 @foreach ($attachments as $attachment)
                     <span>
@@ -207,13 +207,13 @@
         <div class="container d-flex flex-column gap-2">
             <div class="d-flex justify-content-between ms-4">
                 <div class="d-flex flex-column gap-2">
-                    <h4><strong>ulasan pilihan</strong></h4>
+                    <h5><strong>Ulasan pilihan</strong></h5>
                     @if ($isShowAllReview == true)
-                        <div>
+                        <div class="text-dark text-opacity-50">
                             <p class="small text-muted">Menampilkan semua ulasan</p>
                         </div>
                     @else
-                        <div>
+                        <div class="text-dark text-opacity-75">
                             <p class="small text-muted">
                                 {!! __('Menampilkan') !!}
                                 <span class="fw-semibold">{{ $productAssessments->lastItem() }}</span>
@@ -229,8 +229,8 @@
                     <select class="form-select form-select-lg mb-3 rounded-0 custom-select" style="height: 50px"
                         aria-label="Large select example" wire:model.lazy="sortField">
                         <option value="terbaru">terbaru</option>
-                        <option value="tertinggi">rating tertinggi</option>
-                        <option value="terendah">rating terendah</option>
+                        <option value="tertinggi">penilaian tertinggi</option>
+                        <option value="terendah">penilaian terendah</option>
                     </select>
                 </div>
             </div>
@@ -244,7 +244,7 @@
                                 <i class="bi bi-star-fill" style="color: #ffd900"></i>
                             </span>
                         @endfor
-                        <span>{{ floor($productAssessment->created_at->diffInDays()) }} hari yang lalu</span>
+                        <span class="text-dark text-opacity-50">{{ floor($productAssessment->created_at->diffInDays()) }} hari yang lalu</span>
                     </div>
                     <div class="d-flex justify-content-start align-items-center gap-2 ms-4">
                         <span><img src="{{ Storage::url($productAssessment->user->profile_image) }}" alt=""

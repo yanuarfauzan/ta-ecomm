@@ -1,16 +1,16 @@
 <nav class="navbar navbar-expand-lg fixed-top d-flex justify-content-center text-white bg-main-color shadow"
     style="height: 125px;">
     <div class="container-fluid mx-4 d-flex align-items-center" style="width: 84%">
-        <div class="d-flex align-items-center justify-content-evenly" style="width: 17%;">
-            <a class="navbar-brand text-white" href="{{ route('user-home') }}"><strong>E-COMM</strong></a>
+        <div class="d-flex align-items-center justify-content-evenly align-items-center" style="width: 17%;">
+            <a class="navbar-brand text-white mt-1" href="{{ route('user-home') }}"><strong><h3>E-COMM</h3></strong></a>
             <a href="#categoryCollapse" class="text-white" style="text-decoration: none;" data-bs-toggle="collapse"
                 role="button" aria-expanded="false" aria-controls="categoryCollapse"
-                id="categoryCollapseToggle">Category</a>
+                id="categoryCollapseToggle">Kategori</a>
         </div>
         <form action="{{ route('user-home') }}" class="d-flex align-items-center mt-3" role="search" method="GET">
             @csrf
             <div class="input-group">
-                <input type="text" class="form-control rounded-0" id="search-home" placeholder="Search..."
+                <input type="text" class="form-control rounded-0" id="search-home" placeholder="Cari..."
                     name="keyword" style="box-shadow: none; width: 720px;">
                 <div class="input-group-append" style="height : 80%;">
                     <button type="submit"
@@ -27,7 +27,6 @@
                     <i class="bi bi-cart" style="font-size: 25px"></i>
                 </span>
             </a>
-
             <div iv class="position-relative">
                 <a href="#" class="text-white position-relative" id="notificationButton"
                     style="text-decoration: none;">
@@ -107,7 +106,7 @@
     <!-- item-->
     <a class="dropdown-item notify-item  text-danger" href="{{ route('user-logout-act') }}">
         <i class="fe-log-out"></i>
-        <span>Logout</span>
+        <span>Keluar</span>
     </a>
 </div>
 <div class="collapse position-fixed rounded-0" id="categoryCollapse"
@@ -140,15 +139,14 @@
                         </div>
                     </div>
                 @endforeach
-
             </div>
             <div class="mt-5">
                 <div class="swiper-pagination"></div>
             </div>
         </div>
     </div>
-    <div class="swiper-button-next text-light"><i class="bi bi-chevron-right"></i></div>
-    <div class="swiper-button-prev text-light"><i class="bi bi-chevron-left"></i></div>
+    <div class="swiper-button-next"><i class="bi bi-chevron-right"></i></div>
+    <div class="swiper-button-prev"><i class="bi bi-chevron-left"></i></div>
 </div>
 <div id="userId" data-user-id="{{ auth()->user() && auth()->user()->role == 'user' ? auth()->user()->id : '' }}"
     class="d-none"></div>

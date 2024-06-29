@@ -5,7 +5,7 @@
             <div class="section-header-back">
                 <a href="{{ url('/admin/list-variation-option') }}"><i class="fas fa-arrow-left"></i></a>
             </div>
-            <h1>VARIATION OPTION</h1>
+            <h1>SUB VARIASI</h1>
         </div>
 
         <div class="section-body">
@@ -22,7 +22,7 @@
     @endif
     <div class="card">
         <div class="card-header">
-            <h4>INPUT VARIATION OPTION</h4>
+            <h4>ISI DATA SUB VARIASI</h4>
         </div>
         <div class="card-body col">
             <form action="{{ url('/admin/store-variation-option') }}" method="post" enctype="multipart/form-data">
@@ -46,7 +46,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="name">Nama Variasi Opsi</label>
+                    <label for="name">Nama Sub Variasi</label>
                     <input type="text" name="name" class="form-control  @error('name') is-invalid @enderror"
                         id="name">
                     @error('name')
@@ -61,7 +61,7 @@
                     </select>
                 </div>
                 <div id="selected_product_image_container" class="form-group">
-                    <label for="selected_product_image">Preview Gambar Produk</label><br>
+                    <label for="selected_product_image">Pratinjau Gambar Produk</label><br>
                     <img id="selected_product_image"
                         src="{{ $variationOption->productImage ? Storage::url($variationOption->productImage->filepath_image) : '' }}"
                         alt="Gambar Produk" style="max-width: 200px;">
@@ -75,7 +75,7 @@
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label for="stock">Stock</label>
+                    <label for="stock">Stok</label>
                     <input type="number" name="stock" class="form-control  @error('stock') is-invalid @enderror"
                         id="stock">
                     @error('stock')
@@ -83,7 +83,7 @@
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label for="weight">Weight</label>
+                    <label for="weight">Berat</label>
                     <input type="number" name="weight" class="form-control  @error('weight') is-invalid @enderror"
                         id="weight">
                     @error('weight')
@@ -100,7 +100,7 @@
                         <input type="text" class="form-control" id="height" name="height" placeholder="Tinggi">
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
             </form>
         </div>
     </div>

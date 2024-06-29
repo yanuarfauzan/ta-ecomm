@@ -5,7 +5,7 @@
             <div class="section-header-back">
                 <a href="{{ url('/admin/list-banner') }}"><i class="fas fa-arrow-left"></i></a>
             </div>
-            <h1>BANNER HOME</h1>
+            <h1>BANER</h1>
         </div>
 
         <div class="section-body">
@@ -13,13 +13,13 @@
     </section>
     <div class="card">
         <div class="card-header">
-            <h4>INPUT BANNER HOME</h4>
+            <h4>ISI DATA BANER</h4>
         </div>
         <div class="card-body col">
             <form action="{{ url('/admin/store-banner') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-3">
-                    <label for="banner_image">Banner Image</label>
+                    <label for="banner_image">Gambar Baner</label>
                     <input type="file" class="form-control-file @error('banner_image') is-invalid @enderror"
                         id="banner_image" name="banner_image" value="{{ old('banner_image') }}">
                     @error('banner_image')
@@ -34,7 +34,7 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
             </form>
         </div>
     </div>

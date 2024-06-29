@@ -2,9 +2,9 @@
 @section('content')
     <section class="section text-center">
         <div class="section-header">
-            <h1>USERS</h1>
+            <h1>PENGGUNA</h1>
             <div class="section-header-button">
-                <a href="/admin/create-users" class="btn btn-success">Add New</a>
+                <a href="/admin/create-users" class="btn btn-success">Tambah</a>
             </div>
         </div>
     </section>
@@ -28,7 +28,7 @@
 
     <div class="card mx-auto">
         <div class="card-header text-center">
-            <h4>List Users</h4>
+            <h4>Daftar pengguna</h4>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -39,10 +39,10 @@
                             <th scope="col">Username</th>
                             <th scope="col">Email</th>
                             <th scope="col">No. Telepon</th>
-                            <th scope="col">Gender</th>
+                            <th scope="col">Jenis Kelamin</th>
                             <th scope="col">Tanggal Lahir</th>
-                            <th scope="col">Foto Profile</th>
-                            <th scope="col">Role</th>
+                            <th scope="col">Foto Profil</th>
+                            <th scope="col">Peran</th>
                             <th scope="col">Alamat</th>
                             <th scope="col">Aksi</th>
                         </tr>

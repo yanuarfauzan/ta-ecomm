@@ -5,13 +5,13 @@
             <div class="section-header-back">
                 <a href="{{ url('/admin/list-users') }}"><i class="fas fa-arrow-left"></i></a>
             </div>
-            <h1>EDIT USER</h1>
+            <h1>EDIT PENGGUNA</h1>
         </div>
     </section>
 
     <div class="card">
         <div class="card-header">
-            <h4>Edit User</h4>
+            <h4>Edit Pengguna</h4>
         </div>
         <div class="card-body col">
             <form action="{{ url('/admin/update-users/' . $user->id) }}" method="post" enctype="multipart/form-data">
@@ -50,7 +50,7 @@
                     @enderror
                 </div>
                 <div class="mb-3">
-                    <label for="password_confirmation" class="form-label">Confirm Password</label>
+                    <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
                     <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror"
                         id="password_confirmation" name="password_confirmation">
                     @error('password_confirmation')
@@ -73,7 +73,7 @@
                     @enderror
                 </div>
                 <div class="mb-3">
-                    <label for="profile_image">Profile Image</label>
+                    <label for="profile_image">Foto Profil</label>
                     @if ($user->profile_image)
                         <div class="mb-2">
                             <img src="{{ Storage::url($user->profile_image) }}" alt="Profile Image"
@@ -87,7 +87,7 @@
                     @enderror
                 </div>
                 <div class="mb-3">
-                    <label for="role" class="form-label">Role</label>
+                    <label for="role" class="form-label">Peran</label>
                     <select class="form-control" id="role" name="role" disabled>
                         <option value="user" {{ $user->role == 'user' ? 'selected' : '' }}>User</option>
                         <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
@@ -152,7 +152,7 @@
                         @enderror
                     </div>
                 @endforeach
-                <button type="submit" class="btn btn-primary">Update</button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
             </form>
         </div>
     </div>

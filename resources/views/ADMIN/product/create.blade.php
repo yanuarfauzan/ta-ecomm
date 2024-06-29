@@ -5,7 +5,7 @@
             <div class="section-header-back">
                 <a href="{{ url('/admin/list-product') }}"><i class="fas fa-arrow-left"></i></a>
             </div>
-            <h1>PRODUCT</h1>
+            <h1>PRODUK</h1>
         </div>
 
         <div class="section-body">
@@ -22,7 +22,7 @@
     @endif
     <div class="card">
         <div class="card-header">
-            <h4>INPUT PRODUCT</h4>
+            <h4>ISI DATA PRODUK</h4>
         </div>
         <div class="card-body col">
             <form action="{{ url('/admin/store-product') }}" method="post" enctype="multipart/form-data">
@@ -156,7 +156,7 @@
                         @enderror
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
             </form>
         </div>
     </div>

@@ -40,14 +40,14 @@
                                             <img src="{{ asset('/icons-png/out-of-stock.png') }}" class=""
                                                 style="width: 70px;" alt="">
                                             <span>
-                                                <h4>Out Of Stock</h4>
+                                                <h4>Stok Habis</h4>
                                             </span>
                                         </div>
                                     </div>
                                 @endif
                                 @if (isset($product->discount))
                                     <span class="text-dark bg-light position-absolute border border-secondary text-center"
-                                        style="top: 262px; width: 70px;">Discount</span>
+                                        style="top: 262px; width: 70px;">Diskon</span>
                                     <span
                                         class="text-dark bg-main-color position-absolute border border-secondary text-center"
                                         style="top: 262px; left: 70px; width: 40px;"><i
@@ -56,7 +56,7 @@
                                 <div class="card-body pb-2">
                                     <div class="d-flex justify-content-between">
                                         <strong>{{ $product->name }}</strong>
-                                        <p>Stock {{ $product->stock }}</p>
+                                        <p>Stok {{ $product->stock }}</p>
                                     </div>
                                     @if (isset($product->discount))
                                         <div class="d-flex gap-2">
@@ -83,8 +83,7 @@
                                         </span>
                                         <div class="low-divider-black"></div>
                                         <span>
-                                            {{-- TODO (menampilkan total jualproduk), produk relasi order --}}
-                                            10 Terjual
+                                            {{ $product?->order?->where('order_status', 'completed')?->count() ?? 0 }} Terjual
                                         </span>
                                     </div>
                                 </div>

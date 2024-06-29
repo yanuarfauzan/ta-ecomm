@@ -23,7 +23,8 @@ class ProductController extends Controller
     public function index()
     {
         $product = Product::orderBy('name')->paginate(10);
-        return view('ADMIN.product.list', compact('product'));
+        $title = 'Produk';
+        return view('ADMIN.product.list', compact('product', 'title'));
     }
 
     /**
@@ -34,7 +35,8 @@ class ProductController extends Controller
         $categories = Category::all();
         $variations = Variation::all();
         $vouchers = Voucher::all();
-        return view('ADMIN.product.create', compact('categories', 'variations', 'vouchers'));
+        $title = 'Tambah Produk';
+        return view('ADMIN.product.create', compact('categories', 'variations', 'vouchers', 'title'));
     }
 
     /**
@@ -139,7 +141,8 @@ class ProductController extends Controller
         $categories = Category::all();
         $variations = Variation::all();
         $vouchers = Voucher::all();
-        return view('ADMIN.product.edit', compact('product', 'categories', 'variations', 'vouchers'));
+        $title = 'Edit Produk';
+        return view('ADMIN.product.edit', compact('product', 'categories', 'variations', 'vouchers', 'title'));
     }
 
     /** 

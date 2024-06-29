@@ -2,7 +2,7 @@
     <div class="d-flex justify-content-between align-items-center gap-2" style="width: 100%;">
         <div class="d-flex justify-content-start gap-2 align-items-center" style="width: 55%">
             <span for="note" class="bg-main-color px-4 text-white"
-                style="padding-top: 12px; padding-bottom: 12px">voucher:
+                style="padding-top: 12px; padding-bottom: 12px">Kupon:
             </span>
             <span style="cursor: pointer; border: 1px solid #ccc; box-shadow: none; width: 100%; height: 50px;"
                 class="d-flex justify-content-center align-items-center" data-bs-toggle="modal"
@@ -25,13 +25,13 @@
                         </div>
                     </div>
                 @else
-                    <h5 class="opacity-50"><i class="bi bi-tag-fill"></i> gunakan voucher</h5>
+                    <h5 class="opacity-50"><i class="bi bi-tag-fill"></i> Gunakan kupon</h5>
                 @endif
             </span>
         </div>
         <div class="d-flex justify-content-start gap-2 align-items-center" style="width: 45%">
             <span for="note" class="bg-main-color px-4 text-white text-center"
-                style="padding-top: 12px; padding-bottom: 12px; width: 50%;">opsi pengiriman: </span>
+                style="padding-top: 12px; padding-bottom: 12px; width: 50%;">Opsi pengiriman: </span>
             <select wire:ignore class="form-select form-select-lg rounded-0" aria-label="Large select example"
                 style="width: 50%" wire:change="showCost($event.target.value)">
                 <option value="jne" {{ $courier == 'jne' ? 'selected' : '' }}>JNE</option>
@@ -58,7 +58,7 @@
                     </div>
                     <div class="d-flex justify-content-start align-items-center gap-2">
                         <span>Estimasi sampai</span>
-                        <span>{{ $cost['cost'][0]['etd'] }}</span>
+                        <span>{{ $cost['cost'][0]['etd'] }} hari</span>
                     </div>
                 </div>
             </li>
@@ -68,7 +68,7 @@
         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content rounded-0">
-                <span class="mt-4 mx-4"><strong>Pilihan Voucher</strong></span>
+                <span class="mt-4 mx-4"><strong>Pilihan Kupon</strong></span>
                 <hr>
                 <div class="modal-body" style="overflow-y: scroll; max-height: 450px;">
                     @foreach ($productVoucher as $voucher)

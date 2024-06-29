@@ -2,10 +2,11 @@
 
 namespace App\Livewire;
 
+use Livewire\Component;
+use App\Models\VariationOption;
+use Illuminate\Support\Facades\Log;
 use App\Models\MergeVariationOption;
 use App\Models\ProductCategoryVariationDetail;
-use App\Models\VariationOption;
-use Livewire\Component;
 
 class DetailProductVariation extends Component
 {
@@ -71,6 +72,7 @@ class DetailProductVariation extends Component
             ]);
             $this->dispatch('showChoosedVarOptions', choosedVarOptions: $choosedVarOptions, price: $this->price, stock: $this->stock);
         }
+        Log::info($choosedVarOptions);
     }
     public function render()
     {
